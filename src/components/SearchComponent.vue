@@ -1,6 +1,6 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
-import {ref, toRefs, watch} from "vue";
+import {ref, toRefs, watch} from "vue"
 
 const props = defineProps({
   id: String,
@@ -12,6 +12,11 @@ const { text, isLock } = toRefs(props)
 // 默认文本内容
 let content = ref(text.value)
 let isEditing = ref(false)
+
+// 搜索
+function search() {
+  window.open('https://example.com', '_blank')
+}
 
 watch(isLock, (newValue) => {
   if (newValue) {
@@ -42,19 +47,17 @@ function load() {
 }
 defineExpose({
   save, load
-});
+})
 </script>
 
 <template>
   <div class="content" @dblclick="edit">
-    <el-text v-if="!isEditing" v-html="content"/>
     <el-input
-      v-else
       v-model="content"
       class="input"
       :rows="2"
-      type="textarea"
       placeholder="Please input"
+      @keydown.enter="search"
     />
   </div>
 </template>

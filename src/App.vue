@@ -1,47 +1,172 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    <button @click="addItem('text')" class="btn">添加文本格子</button>
+    <button @click="addItem('search')" class="btn">添加搜索格子</button>
+    <button v-if="!isLock" @click="lock" class="btn">锁定</button>
+    <button v-if="isLock" @click="unlock" class="btn">解锁</button>
+    <div ref="gridEl" class="grid-stack"></div>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script setup>
+import {createApp, h, onMounted, ref} from 'vue'
+import {GridStack} from 'gridstack'
+import 'gridstack/dist/gridstack.min.css'
+import textComponent from './components/TextComponent.vue'
+import searchComponent from './components/SearchComponent.vue'
+import { v4 } from 'uuid'
+
+// 格子高度
+let itemHeight = 50
+// 总列数
+const columns = 24
+// GridStack实例
+let grid
+// 锁定状态
+const isLock = ref(false)
+
+// 初始化GridStack
+onMounted(() => {
+  // 初始化GridStack
+  grid = GridStack.init({
+    // 每个格子的高度（px）
+    cellHeight: itemHeight,
+    // 格子间距
+    margin: 0,
+    // 允许格子自由浮动
+    float: true,
+    // 最小行数
+    minRow: 2,
+    // 始终显示调整手柄
+    alwaysShowResizeHandle: false,
+    // 4列
+    column: columns,
+  })
+
+  // 恢复布局
+  const layout = window.localStorage.getItem('layout')
+  if (layout) {
+    const parse = JSON.parse(layout)
+    for (let el of parse) {
+      // 添加格子
+      addItem(el.type, el.x, el.y, el.w, el.h, el.id)
+    }
+  } else {
+    // 添加初始格子
+    addItem(el.text)
+  }
+
+  // 监听拖拽和调整大小事件
+  grid.on('dragstop resizestop', (event, el) => {
+    saveLayout()
+  })
+})
+
+// 保存布局
+function saveLayout() {
+  const nodes = grid.engine.nodes; // 获取所有格子节点数据
+  const simplifiedLayout = nodes.map(node => ({
+    type: node.el?.type,
+    id: node.el?.id,
+    x: node.x,
+    y: node.y,
+    w: node.w,
+    h: node.h,
+  }))
+  // 保存布局数据
+  window.localStorage.setItem('layout', JSON.stringify(simplifiedLayout))
+}
+// 锁定布局
+function lock() {
+  grid.disable()
+  grid.enableMove(false)
+  grid.enableResize(false)
+  isLock.value = true
+}
+// 解锁布局
+function unlock() {
+  grid.enable()
+  grid.enableMove(true)
+  grid.enableResize(true)
+  isLock.value = false
+}
+// 添加空白格子
+const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
+  // 创建格子DOM
+  const itemEl = document.createElement('div')
+  itemEl.className = 'grid-stack-item'
+  itemEl.type = type // 自定义类型
+  itemEl.id = id || v4()
+  itemEl.setAttribute('gs-w', w)
+  itemEl.setAttribute('gs-h', h)
+  itemEl.setAttribute('gs-x', x)
+  itemEl.setAttribute('gs-y', y)
+  // 挂载Vue组件到格子
+  let component = textComponent
+  if (type === 'search') {
+    component = searchComponent
+  }
+  const app = createApp(component, {id: itemEl.id, text: `格子-${grid.engine.nodes.length + 1}`, isLock: isLock})
+  const instance = app.mount(itemEl)
+  // 尝试加载组件数据
+  instance.load()
+  itemEl.element = app
+  // 添加到GridStack
+  grid.makeWidget(itemEl)
+
+  // 保存布局
+  saveLayout()
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+</script>
+
+<style>
+/* 栅格容器样式 */
+.grid-stack {
+  background: #f5f5f5;
+  border: 1px dashed #ddd;
+  min-height: 300px;
+  margin-top: 10px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+/* 格子样式 */
+.grid-stack-item {
+  background: white;
+  padding: 10px;
+  margin: 1px;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+/* 可拖拽样式 */
+.grid-stack-item.ui-resizable-autohide::before {
+  content: ""; /* 必须设置 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg, /* 45度斜角 */
+    rgba(150, 150, 150, 0.1), /* 黑色半透明 */
+    rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */
+    rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */
+    rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
+  );
+  z-index: 1; /* 确保蒙层在内容上方 */
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+/* 拖拽手柄样式 */
+.grid-stack-item .ui-resizable-handle {
+  background: #1890ff;
+  width: 12px;
+  height: 12px;
+}
+
+.btn {
+  padding: 8px 16px;
+  background: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
