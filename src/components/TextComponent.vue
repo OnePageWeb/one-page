@@ -1,6 +1,6 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
-import {ref, toRefs, watch} from "vue"
+import {onMounted, ref, toRefs, watch} from "vue"
 
 const props = defineProps({
   id: String,
@@ -34,6 +34,9 @@ watch(isEditing, (newValue) => {
   }
 })
 
+onMounted(() => {
+  load()
+})
 function load() {
   const save = window.localStorage.getItem(props.id)
   if (save) {
@@ -66,14 +69,12 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffe1d5;
 }
 
 .input, .el-text{
   width: 100%;
   height: 100%;
   font-size: 18px;
-  background-color: #ffe1d5;
 }
 
 .input .el-textarea__inner {

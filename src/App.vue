@@ -4,6 +4,7 @@
     <button @click="addItem('search')" class="btn">添加搜索格子</button>
     <button v-if="!isLock" @click="lock" class="btn">锁定</button>
     <button v-if="isLock" @click="unlock" class="btn">解锁</button>
+    <button @click="deleteItem" class="btn">删除格子</button>
     <div ref="gridEl" class="grid-stack"></div>
   </div>
 </template>
@@ -12,9 +13,10 @@
 import {createApp, h, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
 import 'gridstack/dist/gridstack.min.css'
+import deleteButton from './items/DeleteButton.vue'
 import textComponent from './components/TextComponent.vue'
 import searchComponent from './components/SearchComponent.vue'
-import { v4 } from 'uuid'
+import {v4} from 'uuid'
 
 // 格子高度
 let itemHeight = 50
@@ -91,6 +93,38 @@ function unlock() {
   isLock.value = false
 }
 // 添加空白格子
+function createItemComponent(component) {
+  return {
+    components: {
+      component: component,
+      deleteButton: deleteButton
+    },
+    props: ['id', 'isLock'],
+    render() {
+      return h('div', {
+        style: {
+          height: '100%',
+          width: '100%',
+          position: 'relative'
+        }
+      }, [
+        h(deleteButton, {
+          ref: 'deleteButton',
+          style: {position: 'absolute', 'z-index': 1000},
+          id: this.id,
+          isLock: isLock,
+          onOnDelete: deleteItem
+        }),
+        h(component, {
+          ref: 'component',
+          style: {position: 'absolute', 'z-index': 1},
+          id: this.id,
+          isLock: isLock
+        }),
+      ]);
+    }
+  }
+}
 const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
   // 创建格子DOM
   const itemEl = document.createElement('div')
@@ -106,10 +140,8 @@ const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
   if (type === 'search') {
     component = searchComponent
   }
-  const app = createApp(component, {id: itemEl.id, text: `格子-${grid.engine.nodes.length + 1}`, isLock: isLock})
-  const instance = app.mount(itemEl)
-  // 尝试加载组件数据
-  instance.load()
+  const app = createApp(createItemComponent(component), {id: itemEl.id, isLock: isLock})
+  app.mount(itemEl)
   itemEl.element = app
   // 添加到GridStack
   grid.makeWidget(itemEl)
@@ -117,7 +149,11 @@ const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
   // 保存布局
   saveLayout()
 }
-
+// 删除格子
+function deleteItem(id) {
+  const selectedItems = grid.engine.nodes
+  console.log(selectedItems)
+}
 </script>
 
 <style>
@@ -131,7 +167,6 @@ const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
 
 /* 格子样式 */
 .grid-stack-item {
-  background: white;
   padding: 10px;
   margin: 1px;
 }
