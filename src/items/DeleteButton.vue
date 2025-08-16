@@ -11,7 +11,6 @@ const props = defineProps({
 const {id, isLock} = toRefs(props)
 
 function deleteItem() {
-  console.log(id);
   setTimeout(() => emit('onDelete', id), 300)
 }
 </script>

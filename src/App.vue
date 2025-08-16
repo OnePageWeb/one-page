@@ -1,22 +1,41 @@
 <template>
-  <div>
-    <button @click="addItem('text')" class="btn">添加文本格子</button>
-    <button @click="addItem('search')" class="btn">添加搜索格子</button>
+  <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
+    <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
+      <el-option
+          v-for="item in itemType"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+      />
+    </el-select>
     <button v-if="!isLock" @click="lock" class="btn">锁定</button>
     <button v-if="isLock" @click="unlock" class="btn">解锁</button>
-    <button @click="deleteItem" class="btn">删除格子</button>
-    <div ref="gridEl" class="grid-stack"></div>
   </div>
+  <div ref="gridEl" class="grid-stack" @dblclick="() => showMenu = !showMenu"></div>
 </template>
 
 <script setup>
 import {createApp, h, nextTick, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
+import {ElSelect, ElOption, ElCollapse, ElCollapseItem} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import deleteButton from './items/DeleteButton.vue'
 import textComponent from './components/TextComponent.vue'
 import searchComponent from './components/SearchComponent.vue'
 import {v4} from 'uuid'
+
+const itemType = [
+  {
+    value: 'text',
+    label: '文本格子'
+  },
+  {
+    value: 'search',
+    label: '搜索格子'
+  }
+]
+// 菜单是否显示
+let showMenu = ref(false)
 
 // 格子高度
 let itemHeight = 50
@@ -55,7 +74,8 @@ onMounted(() => {
     }
   } else {
     // 添加初始格子
-    addItem(el.text)
+    addItem('text')
+    addItem('search')
   }
 
   // 监听拖拽和调整大小事件
@@ -110,7 +130,7 @@ function createItemComponent(componentItem) {
       }, [
         h(deleteButton, {
           ref: 'deleteButton',
-          style: {position: 'absolute', 'z-index': 1000},
+          style: {position: 'absolute', 'z-index': 2},
           id: this.id,
           isLock: isLock,
           onOnDelete: deleteItem
@@ -125,7 +145,7 @@ function createItemComponent(componentItem) {
     }
   }
 }
-const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
+const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   // 创建格子DOM
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
@@ -153,18 +173,43 @@ const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
 function deleteItem(id) {
   nextTick(() => {
     grid.removeWidget(document.getElementById(id.value))
-    // saveLayout()
+    // 删除本地存储
+    window.localStorage.removeItem(id.value)
+    // 保存布局
+    saveLayout()
   })
 }
 </script>
 
 <style>
+body {
+  margin: 0 !important;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  transition: height 0.3s ease;
+}
+.menu-show {
+  height: 80px;
+}
+.menu-hide {
+  height: 0;
+}
+
+/* 选择器样式 */
+.el-select.addItemSelect {
+  width: 160px;
+}
+
 /* 栅格容器样式 */
 .grid-stack {
   background: #f5f5f5;
   border: 1px dashed #ddd;
   min-height: 300px;
-  margin-top: 10px;
 }
 
 /* 格子样式 */
@@ -188,7 +233,7 @@ function deleteItem(id) {
     rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */
     rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
   );
-  z-index: 1; /* 确保蒙层在内容上方 */
+  z-index: 99; /* 确保蒙层在内容上方 */
 }
 
 /* 拖拽手柄样式 */

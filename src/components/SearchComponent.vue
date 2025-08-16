@@ -1,13 +1,14 @@
 <script setup>
-import {ElInput, ElSelect, ElOption} from "element-plus"
+import {ElIcon, ElInput, ElOption, ElSelect, ElDialog, ElButton} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
-z
+import {Tools} from "@element-plus/icons-vue";
+
 const props = defineProps({
   id: String,
   text: String,
   isLock: Object
 })
-const { text, isLock } = toRefs(props)
+const {text, isLock} = toRefs(props)
 
 // 默认搜索引擎
 const defaultSearchEngine = [
@@ -39,14 +40,14 @@ function search() {
 }
 
 watch(isLock, (newValue) => {
-  if (newValue) {
-    isEditing.value = false
-  }
+  isEditing.value = !newValue
 })
-function edit() {
-  if (!isLock.value) {
-    isEditing.value = true
-  }
+
+// 编辑搜索引擎
+const dialogVisible = ref(false)
+
+function editSearchEngine() {
+  dialogVisible.value = true
 }
 
 function save() {
@@ -64,15 +65,18 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
+  console.log(isLock.value)
+  isEditing.value = !isLock.value
 })
-function load() {
-  const save = window.localStorage.getItem(props.id)
+
+function load(data) {
+  const save = data || window.localStorage.getItem(props.id)
   if (save) {
     const parse = JSON.parse(save)
     searchEngineMap.value = parse.searchEngineMap
     nowSearchEngine.value = parse.nowSearchEngine
   }
-  if (!searchEngineMap.value) {
+  if (!searchEngineMap.value || Object.keys(searchEngineMap.value).length === 0) {
     // 将默认搜索引擎转换为Map，key是name，value是自身
     searchEngineMap.value = defaultSearchEngine.reduce((prev, cur) => {
       prev[cur.name] = cur
@@ -84,6 +88,7 @@ function load() {
   }
   searchEngineList.value = Object.keys(searchEngineMap.value)
 }
+
 defineExpose({
   save, load
 })
@@ -111,9 +116,32 @@ defineExpose({
           :rows="2"
           placeholder="Please input"
           @keydown.enter="search"
-      />
+      >
+        <template v-if="isEditing" #prepend>
+          <el-icon class="editIcon" @click="editSearchEngine">
+            <Tools/>
+          </el-icon>
+        </template>
+      </el-input>
     </div>
   </div>
+
+  <!-- 编辑搜索引擎弹窗 -->
+  <el-dialog
+      v-model="dialogVisible"
+      title="编辑搜索引擎"
+      width="500"
+  >
+    <span>This is a message</span>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">
+          保存
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <style>
@@ -137,13 +165,13 @@ defineExpose({
   border-radius: 48px 0 0 48px !important;
 }
 
-.el-select {
+.searchContent .el-select {
   width: 20% !important;
   min-width: 100px;
   max-width: 160px;
 }
 
-.el-select__wrapper {
+.searchContent .el-select__wrapper {
   height: 100%;
   border-radius: 48px 0 0 48px !important;
   box-shadow: unset !important;
@@ -152,32 +180,47 @@ defineExpose({
   min-height: unset !important;
 }
 
-.el-input__inner {
+.searchContent .el-input__inner {
   font-weight: bold;
 }
 
-.el-select__selected-item {
+.searchContent .el-select__selected-item {
   color: white !important;
   font-weight: bolder;
   font-size: large;
 }
 
-.el-select__placeholder {
+.searchContent .el-select__placeholder {
   display: flex !important;
   justify-content: space-around;
 }
 
-.input {
+.searchContent .input {
   height: 100%;
-  width: calc(100% - 200px);
+  width: 100%;
   font-size: 18px;
   border-radius: 0 48px 48px 0 !important;
 }
 
-.input .el-input__wrapper {
+.searchContent .input .el-input__wrapper {
   width: 100%;
   height: 100%;
   border-radius: 0 48px 48px 0 !important;
   box-shadow: unset !important;
+}
+
+.searchContent .el-input-group__prepend {
+  box-shadow: unset !important;
+  cursor: pointer;
+}
+
+.searchContent .el-input-group__prepend {
+  padding: unset !important;
+}
+
+.searchContent .el-icon.editIcon {
+  height: 100% !important;
+  width: 100% !important;
+  padding: 0 20px;
 }
 </style>

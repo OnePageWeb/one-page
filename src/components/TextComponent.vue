@@ -1,6 +1,6 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
-import {onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 
 const props = defineProps({
   id: String,
@@ -18,9 +18,13 @@ watch(isLock, (newValue) => {
     isEditing.value = false
   }
 })
+const input = ref(null)
 function edit() {
   if (!isLock.value) {
     isEditing.value = true
+    nextTick(() => {
+      input.value.focus()
+    })
   }
 }
 
@@ -37,8 +41,8 @@ watch(isEditing, (newValue) => {
 onMounted(() => {
   load()
 })
-function load() {
-  const save = window.localStorage.getItem(props.id)
+function load(data) {
+  const save = data || window.localStorage.getItem(props.id)
   if (save) {
     content.value = JSON.parse(save).text
   }
@@ -54,15 +58,17 @@ defineExpose({
     <el-input
       v-else
       v-model="content"
+      ref="input"
       class="input"
       :rows="2"
       type="textarea"
       placeholder="Please input"
+      @blur="() => isEditing = false"
     />
   </div>
 </template>
 
-<style>
+<style scoped>
 .content {
   height: 100%;
   width: 100%;
@@ -71,13 +77,13 @@ defineExpose({
   justify-content: center;
 }
 
-.input, .el-text{
+.input, :deep(.el-text) {
   width: 100%;
   height: 100%;
   font-size: 18px;
 }
 
-.input .el-textarea__inner {
+.input :deep(.el-textarea__inner) {
   width: 100%;
   height: 100%;
 }
