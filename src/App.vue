@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import {createApp, h, onMounted, ref} from 'vue'
+import {createApp, h, nextTick, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
 import 'gridstack/dist/gridstack.min.css'
 import deleteButton from './items/DeleteButton.vue'
@@ -93,10 +93,10 @@ function unlock() {
   isLock.value = false
 }
 // 添加空白格子
-function createItemComponent(component) {
+function createItemComponent(componentItem) {
   return {
     components: {
-      component: component,
+      componentItem: componentItem,
       deleteButton: deleteButton
     },
     props: ['id', 'isLock'],
@@ -115,8 +115,8 @@ function createItemComponent(component) {
           isLock: isLock,
           onOnDelete: deleteItem
         }),
-        h(component, {
-          ref: 'component',
+        h(componentItem, {
+          ref: 'componentItem',
           style: {position: 'absolute', 'z-index': 1},
           id: this.id,
           isLock: isLock
@@ -151,8 +151,10 @@ const addItem = (type, x = '1', y = '1', w = '2', h = '2', id) => {
 }
 // 删除格子
 function deleteItem(id) {
-  const selectedItems = grid.engine.nodes
-  console.log(selectedItems)
+  nextTick(() => {
+    grid.removeWidget(document.getElementById(id.value))
+    // saveLayout()
+  })
 }
 </script>
 

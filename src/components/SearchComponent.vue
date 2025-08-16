@@ -1,7 +1,7 @@
 <script setup>
 import {ElInput, ElSelect, ElOption} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
-
+z
 const props = defineProps({
   id: String,
   text: String,
