@@ -23,6 +23,7 @@ import deleteButton from './items/DeleteButton.vue'
 import textComponent from './components/TextComponent.vue'
 import searchComponent from './components/SearchComponent.vue'
 import iframeComponent from './components/IframeComponent.vue'
+import linkComponent from './components/LinkComponent.vue'
 import {v4} from 'uuid'
 
 const itemType = [
@@ -40,6 +41,11 @@ const itemType = [
     value: 'iframe',
     label: '网页格子',
     component: iframeComponent
+  },
+  {
+    value: 'link',
+    label: '快速链接',
+    component: linkComponent
   }
 ]
 // 菜单是否显示
@@ -139,18 +145,18 @@ function createItemComponent(componentItem) {
           position: 'relative'
         }
       }, [
+        h(componentItem, {
+          ref: 'componentItem',
+          style: {position: 'absolute'},
+          id: this.id,
+          isLock: isLock
+        }),
         h(deleteButton, {
           ref: 'deleteButton',
-          style: {position: 'absolute', 'z-index': 2},
+          style: {position: 'absolute'},
           id: this.id,
           isLock: isLock,
           onOnDelete: deleteItem
-        }),
-        h(componentItem, {
-          ref: 'componentItem',
-          style: {position: 'absolute', 'z-index': 1},
-          id: this.id,
-          isLock: isLock
         }),
       ]);
     }
@@ -224,31 +230,14 @@ body {
   min-height: 300px;
 }
 
+.grid-stack-item.ui-resizable-autohide {
+  border: 1px dashed #dcdcdc;
+}
+
 /* 格子样式 */
 .grid-stack-item {
   padding: 10px;
   margin: 1px;
-}
-
-/* 可拖拽样式 */
-.grid-stack-item.ui-resizable-autohide::before {
-  content: ""; /* 必须设置 */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-      45deg, /* 45度斜角 */ rgba(150, 150, 150, 0.1), /* 黑色半透明 */ rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */ rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */ rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
-  );
-  z-index: 99; /* 确保蒙层在内容上方 */
-}
-
-/* 拖拽手柄样式 */
-.grid-stack-item .ui-resizable-handle {
-  background: #1890ff;
-  width: 12px;
-  height: 12px;
 }
 
 .btn {

@@ -49,9 +49,13 @@ let tempSearchEngineList = ref([])
 
 function editSearchEngine() {
   dialogVisible.value = true
-  tempSearchEngineList.value = searchEngineList.value
+  tempSearchEngineList.value.length = 0
+  tempSearchEngineList.value.push(...searchEngineList.value)
 }
-
+function cancelEdit() {
+  dialogVisible.value = false
+  tempSearchEngineList.value = []
+}
 function saveEdit() {
   // 去除空格，并去除无效项
   tempSearchEngineList.value = tempSearchEngineList.value
@@ -67,6 +71,9 @@ function saveEdit() {
   }, {})
   save()
   dialogVisible.value = false
+}
+function deleteSearch(index) {
+  tempSearchEngineList.value.splice(index, 1)
 }
 
 function save() {
@@ -132,7 +139,7 @@ defineExpose({
           v-model="searchContent"
           class="input"
           :rows="2"
-          placeholder="Please input"
+          placeholder="输入搜索内容"
           @keydown.enter="search"
       >
         <template #prepend>
@@ -158,7 +165,7 @@ defineExpose({
             <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
               <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
             </el-form-item>
-            <el-form-item>
+            <el-form-item @click="deleteSearch(index)">
               <el-icon class="deleteItem">
                 <Close/>
               </el-icon>
@@ -173,7 +180,7 @@ defineExpose({
               <Plus/>
             </el-icon>
           </el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="cancelEdit">取消</el-button>
           <el-button type="primary" @click="saveEdit">
             保存
           </el-button>
@@ -303,7 +310,9 @@ defineExpose({
 .deleteItem {
   cursor: pointer;
   pointer-events: auto;
-  height: 20px;
-  width: 20px;
+  height: 20px !important;
+  width: 20px !important;
+  border-radius: 20px;
+  background-color: #b6b6b6;
 }
 </style>

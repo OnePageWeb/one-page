@@ -53,7 +53,7 @@ function deleteItem() {
   height: unset !important;
   width: unset !important;
   border-radius: 48px;
-  background-color: red;
+  background-color: #b6b6b6;
   padding: 4px;
 }
 </style>
