@@ -1,6 +1,6 @@
 <script setup>
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
-import {ElIcon, ElInput} from "element-plus";
+import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {ElButton, ElIcon, ElInput} from "element-plus";
 import {ChromeFilled, Search} from "@element-plus/icons-vue";
 
 const props = defineProps({
@@ -11,28 +11,31 @@ const props = defineProps({
 const {defaultUrl, isLock} = toRefs(props)
 
 // 默认文本内容
-let url = ref(defaultUrl.value)
+let url = ref(defaultUrl.value || '')
 let isEditing = ref(false)
 
 watch(isLock, (newValue) => {
   isEditing.value = !newValue
 })
 
+// iframe
+let changeTime = ref(Date.now())
+const iframeUrl = computed(() => url.value ? (url.value + `?t=${changeTime.value}`) : '');
 function loadIframe() {
-  const iframe = document.querySelector('.iframeContainer iframe')
-  iframe.contentWindow.location.reload()
-  console.log('刷新iframe')
+  nextTick(() => {
+    changeTime.value = Date.now()
+  })
 }
 
+function saveEdit() {
+  save()
+  loadIframe()
+}
 function save() {
   window.localStorage.setItem(props.id, JSON.stringify({url: url.value}))
 }
 
 watch(isEditing, (newValue) => {
-  // 编辑结束后刷新iframe
-  nextTick(() => {
-    loadIframe()
-  })
   if (!newValue) {
     save()
   }
@@ -41,13 +44,16 @@ watch(isEditing, (newValue) => {
 onMounted(() => {
   load()
   isEditing.value = !isLock.value
-  loadIframe()
+  setTimeout(() => {
+    loadIframe()
+  }, 1000)
 })
 
 function load(data) {
   const save = data || window.localStorage.getItem(props.id)
   if (save) {
-    url.value = JSON.parse(save).url
+    const parse = JSON.parse(save)
+    url.value = parse.url
   }
 }
 
@@ -59,7 +65,7 @@ defineExpose({
 <template>
   <div class="content">
     <div class="urlEdit" v-if="isEditing">
-      <el-input v-model="url" placeholder="请输入网址" clearable @blur="save">
+      <el-input v-model="url" placeholder="请输入网址" clearable @blur="saveEdit">
         <template #prepend>
           <el-icon>
             <ChromeFilled/>
@@ -75,7 +81,7 @@ defineExpose({
       </el-input>
     </div>
     <div class="iframeContainer">
-      <iframe :src="url" class="iframe" frameborder="0" width="100%" height="100%"></iframe>
+      <iframe :src="iframeUrl" :class="['iframe']" border="none" width="100%" height="100%"></iframe>
     </div>
   </div>
 </template>
@@ -107,11 +113,15 @@ defineExpose({
   z-index: 1;
 }
 
+.iframe {
+  border: none;
+}
+
 .urlEdit :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0 !important;
 }
-.urlEdit :deep(el-button) {
-  padding: 0 20px !important;
+:deep(.el-input-group__append button.el-button) {
+  padding: 0 30px !important;
   cursor: pointer;
 }
 </style>

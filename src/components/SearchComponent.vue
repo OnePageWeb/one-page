@@ -142,45 +142,45 @@ defineExpose({
         </template>
       </el-input>
     </div>
-  </div>
 
-  <!-- 编辑搜索引擎弹窗 -->
-  <el-dialog
-      v-model="dialogVisible"
-      title="编辑搜索引擎"
-      width="40%"
-  >
-    <el-form ref="formRef" label-width="100px" class="searchForm">
-      <template v-for="(item, index) in tempSearchEngineList">
-        <div class="searchItem">
-          <el-form-item label="搜索引擎名称" prop="name" class="searchName">
-            <el-input v-model="item.name" placeholder="请输入搜索引擎名称"/>
-          </el-form-item>
-          <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
-            <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
-          </el-form-item>
-          <el-form-item>
-            <el-icon class="deleteItem">
-              <Close/>
+    <!-- 编辑搜索引擎弹窗 -->
+    <el-dialog
+        v-model="dialogVisible"
+        title="编辑搜索引擎"
+        width="40%"
+    >
+      <el-form ref="formRef" label-width="100px" class="searchForm">
+        <template v-for="(item, index) in tempSearchEngineList">
+          <div class="searchItem">
+            <el-form-item label="搜索引擎名称" prop="name" class="searchName">
+              <el-input v-model="item.name" placeholder="请输入搜索引擎名称"/>
+            </el-form-item>
+            <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
+              <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
+            </el-form-item>
+            <el-form-item>
+              <el-icon class="deleteItem">
+                <Close/>
+              </el-icon>
+            </el-form-item>
+          </div>
+        </template>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="() => tempSearchEngineList.push({name: '', url: ''})">
+            <el-icon>
+              <Plus/>
             </el-icon>
-          </el-form-item>
+          </el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="saveEdit">
+            保存
+          </el-button>
         </div>
       </template>
-    </el-form>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button type="primary" @click="() => tempSearchEngineList.push({name: '', url: ''})">
-          <el-icon>
-            <Plus/>
-          </el-icon>
-        </el-button>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveEdit">
-          保存
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+    </el-dialog>
+  </div>
 </template>
 
 <style>

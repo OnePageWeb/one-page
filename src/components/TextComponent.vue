@@ -61,7 +61,7 @@ defineExpose({
       class="input"
       :rows="2"
       type="textarea"
-      placeholder="Please input"
+      placeholder="输入内容"
       @blur="() => isEditing = false"
     />
   </div>
