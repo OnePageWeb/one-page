@@ -17,21 +17,29 @@
 <script setup>
 import {createApp, h, nextTick, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
-import {ElSelect, ElOption, ElCollapse, ElCollapseItem} from 'element-plus'
+import {ElOption, ElSelect} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import deleteButton from './items/DeleteButton.vue'
 import textComponent from './components/TextComponent.vue'
 import searchComponent from './components/SearchComponent.vue'
+import iframeComponent from './components/IframeComponent.vue'
 import {v4} from 'uuid'
 
 const itemType = [
   {
     value: 'text',
-    label: '文本格子'
+    label: '文本格子',
+    component: textComponent
   },
   {
     value: 'search',
-    label: '搜索格子'
+    label: '搜索格子',
+    component: searchComponent
+  },
+  {
+    value: 'iframe',
+    label: '网页格子',
+    component: iframeComponent
   }
 ]
 // 菜单是否显示
@@ -98,6 +106,7 @@ function saveLayout() {
   // 保存布局数据
   window.localStorage.setItem('layout', JSON.stringify(simplifiedLayout))
 }
+
 // 锁定布局
 function lock() {
   grid.disable()
@@ -105,6 +114,7 @@ function lock() {
   grid.enableResize(false)
   isLock.value = true
 }
+
 // 解锁布局
 function unlock() {
   grid.enable()
@@ -112,6 +122,7 @@ function unlock() {
   grid.enableResize(true)
   isLock.value = false
 }
+
 // 添加空白格子
 function createItemComponent(componentItem) {
   return {
@@ -145,6 +156,7 @@ function createItemComponent(componentItem) {
     }
   }
 }
+
 const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   // 创建格子DOM
   const itemEl = document.createElement('div')
@@ -156,10 +168,7 @@ const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   itemEl.setAttribute('gs-x', x)
   itemEl.setAttribute('gs-y', y)
   // 挂载Vue组件到格子
-  let component = textComponent
-  if (type === 'search') {
-    component = searchComponent
-  }
+  let component = itemType.find(item => item.value === type).component
   const app = createApp(createItemComponent(component), {id: itemEl.id, isLock: isLock})
   app.mount(itemEl)
   itemEl.element = app
@@ -169,6 +178,7 @@ const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   // 保存布局
   saveLayout()
 }
+
 // 删除格子
 function deleteItem(id) {
   nextTick(() => {
@@ -193,9 +203,11 @@ body {
   padding: 0 10px;
   transition: height 0.3s ease;
 }
+
 .menu-show {
   height: 80px;
 }
+
 .menu-hide {
   height: 0;
 }
@@ -227,11 +239,7 @@ body {
   width: 100%;
   height: 100%;
   background: repeating-linear-gradient(
-    45deg, /* 45度斜角 */
-    rgba(150, 150, 150, 0.1), /* 黑色半透明 */
-    rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */
-    rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */
-    rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
+      45deg, /* 45度斜角 */ rgba(150, 150, 150, 0.1), /* 黑色半透明 */ rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */ rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */ rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
   );
   z-index: 99; /* 确保蒙层在内容上方 */
 }

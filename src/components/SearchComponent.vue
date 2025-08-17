@@ -1,7 +1,7 @@
 <script setup>
-import {ElIcon, ElInput, ElOption, ElSelect, ElDialog, ElButton} from "element-plus"
+import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElOption, ElSelect} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
-import {Tools} from "@element-plus/icons-vue";
+import {Close, Plus, Tools} from "@element-plus/icons-vue";
 
 const props = defineProps({
   id: String,
@@ -45,9 +45,28 @@ watch(isLock, (newValue) => {
 
 // 编辑搜索引擎
 const dialogVisible = ref(false)
+let tempSearchEngineList = ref([])
 
 function editSearchEngine() {
   dialogVisible.value = true
+  tempSearchEngineList.value = searchEngineList.value
+}
+
+function saveEdit() {
+  // 去除空格，并去除无效项
+  tempSearchEngineList.value = tempSearchEngineList.value
+      .map(item => ({
+        name: item.name.trim(),
+        url: item.url.trim(),
+      }))
+      .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
+  // 映射到Map
+  searchEngineMap.value = tempSearchEngineList.value.reduce((prev, cur) => {
+    prev[cur.name] = cur
+    return prev
+  }, {})
+  save()
+  dialogVisible.value = false
 }
 
 function save() {
@@ -65,7 +84,6 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
-  console.log(isLock.value)
   isEditing.value = !isLock.value
 })
 
@@ -86,7 +104,7 @@ function load(data) {
   if (!nowSearchEngine.value) {
     nowSearchEngine.value = defaultSearchEngine[0].name
   }
-  searchEngineList.value = Object.keys(searchEngineMap.value)
+  searchEngineList.value = Object.values(searchEngineMap.value)
 }
 
 defineExpose({
@@ -105,9 +123,9 @@ defineExpose({
       >
         <el-option
             v-for="item in searchEngineList"
-            :key="item"
-            :label="item"
-            :value="item"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name"
         />
       </el-select>
       <el-input
@@ -117,8 +135,8 @@ defineExpose({
           placeholder="Please input"
           @keydown.enter="search"
       >
-        <template v-if="isEditing" #prepend>
-          <el-icon class="editIcon" @click="editSearchEngine">
+        <template #prepend>
+          <el-icon class="editIcon" :class="{'hide': !isEditing}" @click="editSearchEngine">
             <Tools/>
           </el-icon>
         </template>
@@ -130,13 +148,34 @@ defineExpose({
   <el-dialog
       v-model="dialogVisible"
       title="编辑搜索引擎"
-      width="500"
+      width="40%"
   >
-    <span>This is a message</span>
+    <el-form ref="formRef" label-width="100px" class="searchForm">
+      <template v-for="(item, index) in tempSearchEngineList">
+        <div class="searchItem">
+          <el-form-item label="搜索引擎名称" prop="name" class="searchName">
+            <el-input v-model="item.name" placeholder="请输入搜索引擎名称"/>
+          </el-form-item>
+          <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
+            <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
+          </el-form-item>
+          <el-form-item>
+            <el-icon class="deleteItem">
+              <Close/>
+            </el-icon>
+          </el-form-item>
+        </div>
+      </template>
+    </el-form>
     <template #footer>
       <div class="dialog-footer">
+        <el-button type="primary" @click="() => tempSearchEngineList.push({name: '', url: ''})">
+          <el-icon>
+            <Plus/>
+          </el-icon>
+        </el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
+        <el-button type="primary" @click="saveEdit">
           保存
         </el-button>
       </div>
@@ -222,5 +261,49 @@ defineExpose({
   height: 100% !important;
   width: 100% !important;
   padding: 0 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.searchContent .el-icon.editIcon.hide {
+  height: 100% !important;
+  width: 0 !important;
+  padding: 0;
+}
+
+.searchForm .searchItem {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #aaaaaa;
+  /* 最后一个不添加 */
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: unset;
+  }
+
+  /* 第一个不添加 */
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.searchForm .searchName {
+  display: block !important;
+  width: 160px !important;
+}
+
+.searchForm .searchUrl {
+  display: block !important;
+  width: calc(100% - 180px) !important;
+}
+
+.deleteItem {
+  cursor: pointer;
+  pointer-events: auto;
+  height: 20px;
+  width: 20px;
 }
 </style>

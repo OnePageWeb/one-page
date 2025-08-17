@@ -14,9 +14,7 @@ let content = ref(text.value)
 let isEditing = ref(false)
 
 watch(isLock, (newValue) => {
-  if (newValue) {
-    isEditing.value = false
-  }
+  isEditing.value = !newValue
 })
 const input = ref(null)
 function edit() {
@@ -40,6 +38,7 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
+  isEditing.value = !isLock.value
 })
 function load(data) {
   const save = data || window.localStorage.getItem(props.id)
