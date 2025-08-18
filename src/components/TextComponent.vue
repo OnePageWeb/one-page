@@ -55,14 +55,12 @@ defineExpose({
   <div class="content" @dblclick="edit">
     <el-text :class="{'editing': isEditing}" v-html="content"/>
     <el-input
-      v-if="isEditing"
       v-model="content"
       ref="input"
-      class="input"
+      :class="[isEditing ? 'editing' : 'input']"
       :rows="2"
       type="textarea"
       placeholder="输入内容"
-      @blur="() => isEditing = false"
     />
   </div>
 </template>
@@ -77,18 +75,31 @@ defineExpose({
 }
 
 .editing {
-  width: 50%;
-  height: 100%;
-}
-
-.input, :deep(.el-text) {
   width: 100%;
   height: 100%;
   font-size: 18px;
 }
 
+:deep(.el-text) {
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+}
+
+.input {
+  width: 0;
+  height: 100%;
+}
+
+.editing :deep(.el-textarea__inner) {
+  width: 100%;
+  height: 100%;
+}
+
 .input :deep(.el-textarea__inner) {
   width: 100%;
   height: 100%;
+  min-width: unset !important;
+  padding: 0 !important;
 }
 </style>

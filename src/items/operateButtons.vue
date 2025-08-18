@@ -1,6 +1,6 @@
 <script setup>
 import {nextTick, ref, toRefs, defineEmits} from 'vue'
-import {Close, Picture} from "@element-plus/icons-vue"
+import {Close, Picture, Top} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm} from "element-plus"
 
 const emit = defineEmits(['onDelete', 'onStyleEdit'])
@@ -46,49 +46,37 @@ function editStyle() {
   height: 100%;
   width: 100%;
   opacity: 0.4;
-  pointer-events: none; /* 禁用此元素的鼠标事件 */
+  pointer-events: none;
 }
 .container:hover {
   opacity: 1;
 }
 
-.deleteItem {
+.deleteItem, .editStyle, .review {
   position: absolute;
-  right: 0;
   top: 0;
   cursor: pointer;
+  width: 20px;
   pointer-events: auto;
-  transition: all 0.3s ease-in-out;
 }
 
-.deleteItem.el-icon svg {
+.deleteItem {
+  right: 0;
+}
+
+.el-icon svg {
   height: unset !important;
   width: unset !important;
   border-radius: 48px;
-  background-color: #b6b6b6;
+  background-color: #ff5050;
   padding: 4px;
 }
 
 .editStyle {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  cursor: pointer;
-  pointer-events: auto;
-  width: 30px;
-  transition: all 0.3s ease-in-out;
+  right: 24px;
 }
 
 .editStyle :deep(path) {
-  fill: #ff5050;
+  fill: #ffc9c9;
 }
-
-.editStyle.el-icon svg {
-  height: unset !important;
-  width: unset !important;
-  border-radius: 48px;
-  background-color: #ffffff;
-  padding: 4px;
-}
-
 </style>

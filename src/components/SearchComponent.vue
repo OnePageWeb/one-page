@@ -155,7 +155,7 @@ defineExpose({
     <el-dialog
         v-model="dialogVisible"
         title="编辑搜索引擎"
-        width="40%"
+        width="60%"
     >
       <el-form ref="formRef" label-width="100px" class="searchForm">
         <template v-for="(item, index) in tempSearchEngineList">
@@ -166,8 +166,8 @@ defineExpose({
             <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
               <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
             </el-form-item>
-            <el-form-item @click="deleteSearch(index)">
-              <el-icon class="deleteItem">
+            <el-form-item class="deleteIcon" @click="deleteSearch(index)">
+              <el-icon>
                 <Close/>
               </el-icon>
             </el-form-item>
@@ -268,7 +268,6 @@ defineExpose({
   height: 100% !important;
   width: 100% !important;
   padding: 0 20px;
-  transition: all 0.3s ease-in-out;
 }
 
 .searchContent .el-icon.editIcon.hide {
@@ -279,19 +278,16 @@ defineExpose({
 
 .searchForm .searchItem {
   display: flex;
-  gap: 20px;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px dashed #aaaaaa;
   /* 最后一个不添加 */
-
   &:last-child {
     padding-bottom: 0;
     border-bottom: unset;
   }
 
   /* 第一个不添加 */
-
   &:first-child {
     padding-top: 0;
   }
@@ -305,14 +301,5 @@ defineExpose({
 .searchForm .searchUrl {
   display: block !important;
   width: calc(100% - 180px) !important;
-}
-
-.deleteItem {
-  cursor: pointer;
-  pointer-events: auto;
-  height: 20px !important;
-  width: 20px !important;
-  border-radius: 20px;
-  background-color: #b6b6b6;
 }
 </style>

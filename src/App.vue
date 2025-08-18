@@ -8,21 +8,21 @@
           :value="item.value"
       />
     </el-select>
-    <el-button v-if="!isLock" @click="lock" class="btn">锁定</el-button>
-    <el-button v-if="isLock" @click="unlock" class="btn">解锁</el-button>
+    <el-button v-if="!isLock" @click="lock" class="btn">查看模式</el-button>
+    <el-button v-if="isLock" @click="unlock" class="btn">编辑模式</el-button>
     <el-button @click="editGlobeStyle" class="btn">全局样式</el-button>
     <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
   </div>
-  <div ref="gridEl" class="grid-stack" @dblclick="() => showMenu = !showMenu"></div>
+  <div ref="gridEl" class="grid-stack" @dblclick="() => showMenu = !showMenu && !viewMode"></div>
 
   <!-- 全局样式弹窗 -->
   <el-dialog title="全局样式" v-model="isEditGlobeStyle" width="50%" class="globeStyleDialog">
     <el-input
-      v-model="globeStyle"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入全局样式"
+        v-model="globeStyle"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入全局样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshStyle">刷新</el-button>
@@ -31,13 +31,34 @@
 
   <!-- 配置加载弹窗 -->
   <el-dialog title="加载配置" v-model="configLoaderVisible" width="50%" class="globeStyleDialog">
+    <template #header="{ close, titleId, titleClass }">
+      <div class="configLoaderHeader">
+        <div :id="titleId" :class="titleClass">加载配置</div>
+        <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true"><InfoFilled /></el-icon>
+      </div>
+    </template>
     <el-input
-      v-model="configData"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入配置URL"
+        v-model="configData"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入配置URL或拖拽JSON文件到此处"
+        @dragover.prevent
+        @drop.prevent="handleFileDrop"
     />
+
+    <!-- 配置提示弹窗 -->
+    <el-dialog v-model="configLoaderTipVisible" title="Tips" width="50%" draggable>
+      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。</div>
+      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。</div>
+      <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。</div>
+      <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="configLoaderTipVisible = false">关闭</el-button>
+        </div>
+      </template>
+    </el-dialog>
     <template #footer>
       <el-button type="primary" @click="downloadConfig">下载</el-button>
       <el-button type="primary" @click="loadConfig">加载</el-button>
@@ -47,11 +68,11 @@
   <!-- 组件样式弹窗 -->
   <el-dialog title="组件样式" v-model="isEditComponentStyle" width="50%" class="globeStyleDialog">
     <el-input
-      v-model="componentStyle"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入样式"
+        v-model="componentStyle"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -62,7 +83,7 @@
 <script setup>
 import {createApp, h, nextTick, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
-import {ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect} from 'element-plus'
+import {ElButton, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElPopover, ElSelect} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
@@ -70,8 +91,9 @@ import searchComponent from './components/SearchComponent.vue'
 import iframeComponent from './components/IframeComponent.vue'
 import linkComponent from './components/LinkComponent.vue'
 import {v4} from 'uuid'
-import {startsWith} from './js/string.js'
-import {parseBlobJson} from './js/url.js'
+import {startsWith} from "@/js/string.js";
+import {parseBlobJson} from "@/js/url.js";
+import {InfoFilled} from "@element-plus/icons-vue";
 
 const itemType = [
   {
@@ -108,11 +130,12 @@ let grid
 const isLock = ref(false)
 // 全局样式
 let globeStyle = ref(`.grid-stack {
-  background-color: #f5f5f5;
+  min-height: 300px;
 }`)
+let viewMode = ref(false)
 
 // 初始化GridStack
-onMounted(() => {
+onMounted(async () => {
   // 初始化GridStack
   grid = GridStack.init({
     // 每个格子的高度（px）
@@ -128,6 +151,18 @@ onMounted(() => {
     // 4列
     column: columns,
   })
+
+  // 从地址栏尝试获取config参数
+  const urlParams = new URLSearchParams(window.location.search)
+  const configUrl = urlParams.get('config')
+  if (configUrl) {
+    ElMessage.info('正在加载配置...')
+    configData.value = configUrl
+    if (await loadConfig(false)) {
+      ElMessage.success('配置加载完成，编辑模式已关闭')
+      viewMode.value = true
+    }
+  }
 
   // 恢复布局
   const layout = window.localStorage.getItem('layout')
@@ -177,6 +212,7 @@ function saveLayout() {
   // 保存布局数据
   window.localStorage.setItem('layout', JSON.stringify(simplifiedLayout))
 }
+
 // 锁定布局
 function lock() {
   grid.disable()
@@ -184,6 +220,7 @@ function lock() {
   grid.enableResize(false)
   isLock.value = true
 }
+
 // 解锁布局
 function unlock() {
   grid.enable()
@@ -227,6 +264,7 @@ function createItemComponent(componentItem) {
     }
   }
 }
+
 const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   // 创建格子DOM
   const itemEl = document.createElement('div')
@@ -248,6 +286,7 @@ const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   // 保存布局
   saveLayout()
 }
+
 // 删除格子
 function deleteItem(id) {
   nextTick(() => {
@@ -258,16 +297,19 @@ function deleteItem(id) {
     saveLayout()
   })
 }
+
 // 编辑组件样式
 let curComponentId = ref('')
 let isEditComponentStyle = ref(false)
 let componentStyle = ref('')
+
 function editStyle(id) {
   curComponentId.value = id.value
   // 获取组件样式
   componentStyle.value = document.getElementById(id.value + '-container').style.cssText
   isEditComponentStyle.value = true
 }
+
 function refreshComponentStyle(id) {
   const idValue = id.value || curComponentId.value
   document.getElementById(idValue + '-container').style.cssText = componentStyle.value
@@ -278,9 +320,11 @@ function refreshComponentStyle(id) {
 
 // 编辑全局样式
 let isEditGlobeStyle = ref(false)
+
 function editGlobeStyle() {
   isEditGlobeStyle.value = true
 }
+
 function refreshStyle() {
   // 先删除旧的样式
   const oldStyle = document.getElementById('globeStyle')
@@ -297,12 +341,15 @@ function refreshStyle() {
 
 let configData = ref('')
 let configLoaderVisible = ref(false)
+let configLoaderTipVisible = ref(false)
+
 // 打开加载配置弹窗
 function openLoadConfig() {
   const config = generateConfig()
   configData.value = JSON.stringify(config)
   configLoaderVisible.value = true
 }
+
 // 生成配置对象
 function generateConfig() {
   // 汇总所有配置为一个json
@@ -330,6 +377,7 @@ function generateConfig() {
   }
   return config
 }
+
 // 清除旧配置
 function clearConfig() {
   window.localStorage.removeItem('layout')
@@ -343,8 +391,9 @@ function clearConfig() {
     window.localStorage.removeItem(id + '-style')
   }
 }
+
 // 加载配置
-async function loadConfig() {
+async function loadConfig(reload = true) {
   if (!configData.value) {
     ElMessage.error('无配置内容')
     return
@@ -359,16 +408,20 @@ async function loadConfig() {
       config = JSON.parse(configData.value)
     }
   } catch (error) {
-    ElMessage.error('配置文件格式错误')
+    ElMessage.error('配置文件无法加载')
     return
   }
   if (!config || typeof config !== 'object') {
     ElMessage.error('配置文件格式错误')
     return
   }
+  // 校验配置
+  if (!config.globeStyle || !config.layout || !config.components) {
+    ElMessage.error('配置文件格式错误')
+    return
+  }
   // 清除旧配置
   clearConfig()
-  console.log('config', config)
   // 加载全局样式
   window.localStorage.setItem('globeStyle', config.globeStyle)
   // 加载布局
@@ -384,15 +437,19 @@ async function loadConfig() {
     }
   }
   // 刷新页面
-  window.location.reload()
+  if (reload) {
+    window.location.reload()
+  }
+  return true
 }
+
 // 下载配置
 function downloadConfig() {
   // 1. 将JSON转换为字符串
   const jsonStr = JSON.stringify(generateConfig(), null, 2); // 第三个参数美化格式
   const filename = 'config.json'
   // 2. 创建Blob对象
-  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const blob = new Blob([jsonStr], {type: 'application/json'});
   // 3. 生成下载链接
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -407,6 +464,21 @@ function downloadConfig() {
     URL.revokeObjectURL(url);
   }, 100);
 }
+
+// 处理文件拖拽
+function handleFileDrop(e) {
+  e.preventDefault()
+  const file = e.dataTransfer.files[0]
+  if (file.type !== 'application/json') {
+    ElMessage.error('请上传JSON文件')
+    return
+  }
+  const reader = new FileReader()
+  reader.readAsText(file, 'utf-8')
+  reader.onload = () => {
+    configData.value = reader.result
+  }
+}
 </script>
 
 <style>
@@ -414,12 +486,16 @@ body {
   margin: 0 !important;
 }
 
+* {
+  transition: all 0.3s ease-in-out;
+}
+
+/* 菜单样式开始 */
 .menu {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 0 10px;
-  transition: height 0.3s ease;
 }
 
 .menu-show {
@@ -430,6 +506,17 @@ body {
   height: 0;
 }
 
+/* 对menu-hide中的所有元素添加margin-top */
+.menu-hide * {
+  margin-top: -80px;
+}
+
+.menu .el-button + .el-button {
+  margin-left: 0;
+}
+
+/* 菜单样式结束 */
+
 /* 选择器样式 */
 .el-select.addItemSelect {
   width: 160px;
@@ -437,13 +524,13 @@ body {
 
 /* 栅格容器样式 */
 .grid-stack {
-  background: #f5f5f5;
-  border: 1px dashed #ddd;
   min-height: 300px;
 }
 
 .grid-stack-item.ui-resizable-autohide {
-  border: 1px dashed #dcdcdc;
+  background: repeating-linear-gradient(
+      45deg, /* 45度斜角 */ rgba(150, 150, 150, 0.1), /* 黑色半透明 */ rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */ rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */ rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
+  );
 }
 
 /* 格子样式 */
@@ -461,13 +548,84 @@ body {
   cursor: pointer;
 }
 
+/* 弹窗样式开始 */
+.el-dialog__header {
+  border-bottom: 3px solid #e1e1e1;
+  margin-bottom: 24px;
+}
+
+/* 弹窗样式结束 */
+
+/* 删除图标样式开始 */
+.deleteIcon {
+  cursor: pointer;
+  pointer-events: auto;
+  height: 20px !important;
+  width: 20px !important;
+  border-radius: 20px;
+  padding: 8px !important;
+  margin: 8px 8px 8px 16px;
+  background-color: #ffb6b6 !important;
+}
+
+.deleteIcon:hover {
+  transform: rotate(90deg);
+}
+
+.deleteIcon .el-form-item__content {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  cursor: pointer;
+  justify-content: center;
+}
+
+.deleteIcon path {
+  fill: #fff;
+}
+
+/* 删除图标样式结束 */
+
+/* 表单样式开始 */
+.el-form-item__label {
+  border-left: 8px solid #ffa217;
+  padding-left: 8px !important;
+  height: 26px !important;
+  line-height: 26px !important;
+  margin-bottom: 4px;
+}
+
+.el-form-item__label {
+  background-color: #eaf5ff;
+}
+
+.el-form-item {
+  background-color: aliceblue;
+  padding: 8px;
+}
+
+/* 表单样式结束 */
+
+/* 全局样式弹窗样式开始 */
 .globeStyleDialog {
   height: 60%;
 }
+
 .globeStyleDialog .el-dialog__body {
-  height: calc(100% - 90px);
+  height: calc(100% - 110px);
 }
+
 .globeStyleDialog .el-textarea__inner, .globeStyleDialog .el-textarea {
   height: 100% !important;
 }
+
+/* 全局样式弹窗样式结束 */
+
+/* 配置加载器弹窗样式开始 */
+.configLoaderHeader {
+  display: flex;
+  align-items: center;
+}
+
+/* 配置加载器弹窗样式结束 */
 </style>

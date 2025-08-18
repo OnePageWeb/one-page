@@ -138,28 +138,30 @@ defineExpose({
     <el-dialog
       v-model="dialogVisible"
       title="编辑快速链接"
-      width="40%"
+      width="60%"
     >
-      <el-form ref="formRef" label-width="100px" class="linkForm">
-        <template v-for="(item, index) in tempLinks">
-          <div class="searchItem">
-            <el-form-item label="快速链接名称" prop="name" class="linkName">
-              <el-input v-model="item.name" placeholder="请输入搜索引擎名称"/>
-            </el-form-item>
-            <el-form-item label="快速链接URL" prop="url" class="linkUrl">
-              <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
-            </el-form-item>
-            <el-form-item label="快速链接图片地址" prop="img" class="linkImg">
-              <el-input v-model="item.img" placeholder="请输入搜索引擎图片地址"/>
-            </el-form-item>
-            <el-form-item class="deleteItem" @click="deleteLink(index)">
-              <el-icon>
-                <Close/>
-              </el-icon>
-            </el-form-item>
-          </div>
-        </template>
-      </el-form>
+      <div class="linkEditContainer">
+        <el-form ref="formRef" class="linkForm">
+          <template v-for="(item, index) in tempLinks">
+            <div class="linkEditItem">
+              <el-form-item label="快速链接名称" prop="name" class="linkName">
+                <el-input v-model="item.name" placeholder="请输入快速链接名称"/>
+              </el-form-item>
+              <el-form-item label="链接URL" prop="url" class="linkUrl">
+                <el-input v-model="item.url" placeholder="请输入快速链接URL"/>
+              </el-form-item>
+              <el-form-item label="链接图标地址" prop="img" class="linkImg">
+                <el-input v-model="item.img" placeholder="请输入快速链接图标地址"/>
+              </el-form-item>
+              <el-form-item class="deleteIcon" @click="deleteLink(index)">
+                <el-icon>
+                  <Close/>
+                </el-icon>
+              </el-form-item>
+            </div>
+          </template>
+        </el-form>
+      </div>
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="() => tempLinks.push({name: '', url: '', img: ''})">
@@ -192,7 +194,6 @@ defineExpose({
   cursor: pointer;
   padding: 10px;
   height: calc(100% - 30px);
-  transition: all 0.2s ease-in-out;
 }
 
 .linkContainer:hover {
@@ -235,9 +236,8 @@ defineExpose({
   fill: #737373;
 }
 
-.linkForm .searchItem {
+.linkForm .linkEditItem {
   display: flex;
-  gap: 20px;
   align-items: center;
   justify-content: center;
   padding: 10px 0;
@@ -256,35 +256,18 @@ defineExpose({
   }
 }
 
-.linkForm .linkName {
+.linkEditContainer .linkName {
   display: block !important;
   width: 160px !important;
 }
 
-.linkForm .linkUrl {
+.linkEditContainer .linkUrl {
   display: block !important;
   width: calc(100% - 380px) !important;
 }
 
-.linkForm .linkImg {
+.linkEditContainer .linkImg {
   display: block !important;
   width: 200px !important;
-}
-
-.searchItem .deleteItem {
-  cursor: pointer;
-  pointer-events: auto;
-  height: 20px !important;
-  width: 20px !important;
-  border-radius: 20px;
-  background-color: #b6b6b6;
-}
-
-.searchItem .deleteItem :deep(.el-form-item__content) {
-  width: 20px !important;
-  height: 20px !important;
-  margin: 0 !important;
-  cursor: pointer;
-  justify-content: center;
 }
 </style>
