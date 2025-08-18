@@ -104,13 +104,11 @@ defineExpose({
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  z-index: 2;
 }
 
 .iframeContainer {
   height: 100%;
   width: 100%;
-  z-index: 1;
 }
 
 .iframe {

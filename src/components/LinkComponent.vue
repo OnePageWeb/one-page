@@ -1,7 +1,7 @@
 <script setup>
-import {ElIcon, ElInput, ElPopconfirm, ElText} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
-import {Close} from "@element-plus/icons-vue";
+import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElText} from "element-plus"
+import {onMounted, ref, toRefs, watch} from "vue"
+import {Close, Operation, Plus} from "@element-plus/icons-vue"
 
 const defaultLinks = [
   {
@@ -28,18 +28,42 @@ watch(isLock, (newValue) => {
   isEditing.value = !newValue
 })
 
+let dialogVisible = ref(false)
+let tempLinks = ref([])
+
 function edit() {
-  if (!isLock.value) {
-    isEditing.value = true
-  }
+  isEditing.value = true
+  dialogVisible.value = true
+  tempLinks.value.length = 0
+  tempLinks.value = [...links.value]
 }
+
+function cancelEdit() {
+  isEditing.value = false
+  dialogVisible.value = false
+}
+
 function deleteLink(index) {
-  links.value.splice(index, 1)
+  tempLinks.value.splice(index, 1)
+}
+
+function saveEdit() {
+  links.value = [...tempLinks.value]
+  dialogVisible.value = false
+  isEditing.value = false
+  refreshIcon()
 }
 
 // 打开窗口
 function open(url) {
   window.open(url, '_blank')
+}
+// 打开弹窗
+let modalVisible = ref(false)
+let curLink = ref({})
+function openModal(link) {
+  modalVisible.value = true
+  curLink.value = link
 }
 
 function save() {
@@ -64,6 +88,10 @@ function load(data) {
   } else {
     links.value.push(...defaultLinks)
   }
+  refreshIcon()
+}
+
+function refreshIcon() {
   // 处理图标
   for (let link of links.value) {
     if (!link.img) {
@@ -71,44 +99,81 @@ function load(data) {
     }
   }
 }
+
 function getFaviconUrl(url) {
   try {
-    const domain = new URL(url).origin;
-    return `${domain}/favicon.ico`;
+    const domain = new URL(url).origin
+    return `${domain}/favicon.ico`
   } catch {
     return null;
   }
 }
+
 defineExpose({
   save, load
 })
+
 </script>
 
 <template>
-  <div class="content" @dblclick="edit">
-    <div v-for="(link, index) in links" class="linkContainer" @click="open(link.url)">
+  <div class="content">
+    <div
+      v-for="(link, index) in links"
+      class="linkContainer"
+      @click="open(link.url)"
+    >
       <div class="linkItem">
         <img :src="link.img" alt="图标"/>
         <el-text tag="b">{{ link.name }}</el-text>
       </div>
-
-      <div v-show="!isLock" class="deleteContainer" @click.stop>
-        <el-popconfirm
-            class="deleteLink"
-            title="确定删除此组件"
-            placement="top-start"
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            @confirm="deleteLink(index)"
-        >
-          <template #reference>
-            <el-icon class="deleteLink">
-              <Close/>
-            </el-icon>
-          </template>
-        </el-popconfirm>
-      </div>
     </div>
+
+    <div v-show="!isLock" class="editContainer" @click.stop="edit">
+      <el-icon>
+        <Operation/>
+      </el-icon>
+    </div>
+
+    <!-- 编辑搜索引擎弹窗 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="编辑快速链接"
+      width="40%"
+    >
+      <el-form ref="formRef" label-width="100px" class="linkForm">
+        <template v-for="(item, index) in tempLinks">
+          <div class="searchItem">
+            <el-form-item label="快速链接名称" prop="name" class="linkName">
+              <el-input v-model="item.name" placeholder="请输入搜索引擎名称"/>
+            </el-form-item>
+            <el-form-item label="快速链接URL" prop="url" class="linkUrl">
+              <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
+            </el-form-item>
+            <el-form-item label="快速链接图片地址" prop="img" class="linkImg">
+              <el-input v-model="item.img" placeholder="请输入搜索引擎图片地址"/>
+            </el-form-item>
+            <el-form-item class="deleteItem" @click="deleteLink(index)">
+              <el-icon>
+                <Close/>
+              </el-icon>
+            </el-form-item>
+          </div>
+        </template>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="() => tempLinks.push({name: '', url: '', img: ''})">
+            <el-icon>
+              <Plus/>
+            </el-icon>
+          </el-button>
+          <el-button @click="cancelEdit">取消</el-button>
+          <el-button type="primary" @click="saveEdit">
+            保存
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -124,37 +189,102 @@ defineExpose({
 
 .linkContainer {
   position: relative;
+  cursor: pointer;
+  padding: 10px;
+  height: calc(100% - 30px);
+  transition: all 0.2s ease-in-out;
 }
+
+.linkContainer:hover {
+  border-radius: 20px;
+  box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
+}
+
 .linkContainer, .linkItem {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.linkItem {
   height: 100%;
 }
+
 .linkItem img {
-  height: 35%;
+  height: 40%;
   margin-bottom: 8px;
 }
 
-.deleteContainer {
-  height: 100%;
-  width: 100%;
+.editContainer {
+  height: 40px;
+  width: 40px;
   position: absolute;
   pointer-events: auto;
+  background-color: rgba(182, 182, 182, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 40px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
-.deleteLink {
-  position: absolute;
-  right: -10px;
-  top: 0;
+
+.editContainer :deep(path) {
+  fill: #737373;
+}
+
+.linkForm .searchItem {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #aaaaaa;
+  /* 最后一个不添加 */
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: unset;
+  }
+
+  /* 第一个不添加 */
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.linkForm .linkName {
+  display: block !important;
+  width: 160px !important;
+}
+
+.linkForm .linkUrl {
+  display: block !important;
+  width: calc(100% - 380px) !important;
+}
+
+.linkForm .linkImg {
+  display: block !important;
+  width: 200px !important;
+}
+
+.searchItem .deleteItem {
   cursor: pointer;
   pointer-events: auto;
-}
-:deep(.el-icon svg) {
-  height: unset !important;
-  width: unset !important;
-  border-radius: 48px;
+  height: 20px !important;
+  width: 20px !important;
+  border-radius: 20px;
   background-color: #b6b6b6;
-  padding: 4px;
+}
+
+.searchItem .deleteItem :deep(.el-form-item__content) {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  cursor: pointer;
+  justify-content: center;
 }
 </style>

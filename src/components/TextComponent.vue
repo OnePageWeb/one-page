@@ -53,9 +53,9 @@ defineExpose({
 
 <template>
   <div class="content" @dblclick="edit">
-    <el-text v-if="!isEditing" v-html="content"/>
+    <el-text :class="{'editing': isEditing}" v-html="content"/>
     <el-input
-      v-else
+      v-if="isEditing"
       v-model="content"
       ref="input"
       class="input"
@@ -74,6 +74,11 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.editing {
+  width: 50%;
+  height: 100%;
 }
 
 .input, :deep(.el-text) {

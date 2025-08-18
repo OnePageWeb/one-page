@@ -141,6 +141,7 @@ defineExpose({
           :rows="2"
           placeholder="输入搜索内容"
           @keydown.enter="search"
+          clearable
       >
         <template #prepend>
           <el-icon class="editIcon" :class="{'hide': !isEditing}" @click="editSearchEngine">
@@ -253,15 +254,14 @@ defineExpose({
   height: 100%;
   border-radius: 0 48px 48px 0 !important;
   box-shadow: unset !important;
+  padding: 0 11px;
 }
 
 .searchContent .el-input-group__prepend {
   box-shadow: unset !important;
   cursor: pointer;
-}
-
-.searchContent .el-input-group__prepend {
   padding: unset !important;
+  border-radius: unset !important;
 }
 
 .searchContent .el-icon.editIcon {
