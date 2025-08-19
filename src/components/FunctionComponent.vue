@@ -40,6 +40,7 @@ function onMouseLeave() {
 }
 
 function save() {
+  onFocus.value = false
   saveData(props.id, JSON.stringify({
     content: functionContent.value,
     result: functionResult.value,
@@ -60,6 +61,7 @@ function listener(event) {
   // 验证消息来源（重要！）
   if (event.source !== iframe.contentWindow) return
   functionResult.value = event.data.data
+  save()
 }
 
 onMounted(() => {
@@ -71,7 +73,6 @@ onUnmounted(() => {
 })
 
 async function safeExecute() {
-  onFocus.value = false
   const blob = new Blob([`
     <script>
       try {
@@ -91,6 +92,7 @@ async function safeExecute() {
     <\/script>
   `], {type: 'text/html'})
   iframe.src = URL.createObjectURL(blob)
+  save()
 }
 
 onMounted(() => {
@@ -131,14 +133,13 @@ defineExpose({
           :rows="2"
           type="textarea"
           placeholder="输入方法内容"
-          @blur="onFocus = false"
+          @blur="save"
           @keydown.ctrl.enter="safeExecute"
       />
     </div>
     <div :class="['params', isLock ? 'hide' : '']">
       <div :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">载入时运行</div>
       <div :class="['paramItem']" @click="safeExecute">运行</div>
-      <div :class="['paramItem']" @click="save">保存</div>
     </div>
   </div>
 </template>

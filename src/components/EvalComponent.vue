@@ -39,6 +39,7 @@ function onMouseLeave() {
 }
 
 function save() {
+  onFocus.value = false
   saveData(props.id, JSON.stringify({
     content: functionContent.value,
     result: functionResult.value,
@@ -54,7 +55,6 @@ watch(isLock, (newValue) => {
 
 // 执行方法
 async function execute() {
-  onFocus.value = false
   function executeCode() {
     return eval(functionContent.value)
   }
@@ -63,6 +63,7 @@ async function execute() {
   } catch (e) {
     functionResult.value = `错误: ${e}`
   }
+  save()
 }
 
 onMounted(() => {
@@ -101,14 +102,13 @@ defineExpose({
           :rows="2"
           type="textarea"
           placeholder="输入方法内容（请勿执行来源不明的代码，否则可能会导致安全问题）"
-          @blur="onFocus = false"
+          @blur="save"
           @keydown.ctrl.enter="execute"
       />
     </div>
     <div :class="['params', isLock ? 'hide' : '']">
       <div :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">载入时运行</div>
       <div :class="['paramItem']" @click="execute">运行</div>
-      <div :class="['paramItem']" @click="save">保存</div>
     </div>
   </div>
 </template>

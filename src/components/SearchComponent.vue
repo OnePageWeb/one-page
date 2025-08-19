@@ -37,12 +37,16 @@ let isEditing = ref(false)
 // 搜索
 function search() {
   const searchUrl = searchEngineMap.value[nowSearchEngine.value].url
-  window.open(searchUrl.replace('{query}', searchContent.value), '_blank')
+  window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', '_blank')
 }
 
 watch(isLock, (newValue) => {
   isEditing.value = !newValue
 })
+
+// 前后置
+const prefix = ref('')
+const suffix = ref('')
 
 // 编辑搜索引擎
 const dialogVisible = ref(false)
@@ -84,6 +88,8 @@ function save() {
   saveData(props.id, JSON.stringify({
     searchEngineMap: searchEngineMap.value,
     nowSearchEngine: nowSearchEngine.value,
+    prefix: prefix.value,
+    suffix: suffix.value
   }))
 }
 
@@ -104,6 +110,8 @@ function load(data) {
     const parse = JSON.parse(save)
     searchEngineMap.value = parse.searchEngineMap
     nowSearchEngine.value = parse.nowSearchEngine
+    prefix.value = parse.prefix
+    suffix.value = parse.suffix
   }
   if (!searchEngineMap.value || Object.keys(searchEngineMap.value).length === 0) {
     // 将默认搜索引擎转换为Map，key是name，value是自身
@@ -162,6 +170,14 @@ defineExpose({
       width="60%"
     >
       <el-form ref="formRef" label-width="100px" class="searchForm">
+        <div class="appendContainer">
+          <el-form-item label="前置内容" prop="prefix" class="prefix">
+            <el-input v-model="prefix" placeholder="在链接前的内容，通常是空"/>
+          </el-form-item>
+          <el-form-item label="后置内容" prop="suffix" class="suffix">
+            <el-input v-model="suffix" placeholder="在链接后的内容，通常是高级搜索"/>
+          </el-form-item>
+        </div>
         <template v-for="(item, index) in tempSearchEngineList">
           <div class="searchItem">
             <el-form-item label="搜索引擎名称" prop="name" class="searchName">
@@ -285,6 +301,25 @@ defineExpose({
 }
 
 .searchForm {
+
+  .appendContainer {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #aaaaaa;
+
+    .prefix {
+      width: 45%;
+    }
+
+    .suffix {
+      width: 45%;
+    }
+
+    .el-form-item__label {
+      border-left: 8px solid #1bc3b3;
+    }
+  }
+
   .searchItem {
     display: flex;
     align-items: center;
