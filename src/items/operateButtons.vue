@@ -1,7 +1,7 @@
 <script setup>
 import {defineEmits, toRefs} from 'vue'
-import {Close, Picture} from "@element-plus/icons-vue"
-import {ElIcon, ElPopconfirm} from "element-plus"
+import {Close, Coordinate, Picture} from "@element-plus/icons-vue"
+import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
 const emit = defineEmits(['onDelete', 'onStyleEdit'])
 const props = defineProps({
@@ -30,14 +30,40 @@ function editStyle() {
       @confirm="deleteItem"
     >
       <template #reference>
-        <el-icon class="deleteItem">
-          <Close/>
-        </el-icon>
+        <el-tooltip
+            class="deleteItem"
+            effect="light"
+            content="删除组件"
+            placement="bottom-start"
+        >
+          <el-icon class="deleteItem">
+            <Close/>
+          </el-icon>
+        </el-tooltip>
       </template>
     </el-popconfirm>
-    <el-icon class="editStyle" @click="editStyle">
-      <Picture/>
-    </el-icon>
+
+    <el-tooltip
+        class="editStyle"
+        effect="light"
+        content="编辑组件样式"
+        placement="bottom-start"
+    >
+      <el-icon class="editStyle" @click="editStyle">
+        <Picture/>
+      </el-icon>
+    </el-tooltip>
+
+    <el-tooltip
+        class="dragHandle"
+        effect="light"
+        content="拖动组件"
+        placement="bottom-start"
+    >
+      <el-icon class="dragHandle">
+        <Coordinate/>
+      </el-icon>
+    </el-tooltip>
   </div>
 </template>
 
@@ -53,7 +79,7 @@ function editStyle() {
   opacity: 1;
 }
 
-.deleteItem, .editStyle, .review {
+.deleteItem, .editStyle, .dragHandle {
   position: absolute;
   top: 0;
   cursor: pointer;
@@ -63,6 +89,10 @@ function editStyle() {
 
 .deleteItem {
   right: 0;
+
+  :deep(path) {
+    fill: #ffc9c9;
+  }
 }
 
 .el-icon svg {
@@ -79,5 +109,19 @@ function editStyle() {
   :deep(path) {
     fill: #ffc9c9;
   }
+}
+
+.dragHandle {
+  right: 48px;
+  cursor: move;
+
+  svg {
+    background-color: #1d9333;
+  }
+
+  :deep(path) {
+    fill: #ffffff;
+  }
+
 }
 </style>

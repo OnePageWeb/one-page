@@ -110,6 +110,7 @@ import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
 import searchComponent from './components/SearchComponent.vue'
 import iframeComponent from './components/IframeComponent.vue'
+import htmlComponent from "./components/HtmlComponent.vue"
 import linkComponent from './components/LinkComponent.vue'
 import functionComponent from './components/FunctionComponent.vue'
 import evalComponent from "./components/EvalComponent.vue"
@@ -118,7 +119,7 @@ import {startsWith} from "@/js/string.js"
 import {parseBlobJson} from "@/js/url.js"
 import {InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
-import {loadData, saveData, removeData} from "@/js/data.js";
+import {loadData, saveData, removeData} from "@/js/data.js"
 
 const itemType = [
   {
@@ -135,9 +136,15 @@ const itemType = [
   },
   {
     value: 'iframe',
-    label: '网页格子',
-    desc: '用于嵌入网页的格子，不支持跨域',
+    label: '网址格子',
+    desc: '用于嵌入网页地址的格子，不支持跨域',
     component: iframeComponent
+  },
+  {
+    value: 'html',
+    label: '网页格子',
+    desc: '用于嵌入网页代码的格子',
+    component: htmlComponent
   },
   {
     value: 'link',
