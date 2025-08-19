@@ -97,12 +97,14 @@ defineExpose({
 .input {
   width: 0;
   height: 100%;
+}
 
-  :deep(.el-textarea__inner) {
-    width: 100%;
-    height: 100%;
-    min-width: unset !important;
-    padding: 0 !important;
-  }
+.input :deep(.el-textarea__inner) {
+  width: 0;
+  height: 0;
+  opacity: 0 !important;
+  min-width: unset !important;
+  min-height: unset !important;
+  padding: 0 !important;
 }
 </style>

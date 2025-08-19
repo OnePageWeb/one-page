@@ -168,6 +168,7 @@ onMounted(async () => {
     if (await loadConfig(false)) {
       ElMessage.success('配置加载完成，编辑模式已关闭')
       viewMode.value = true
+      lock()
     }
   }
 
@@ -489,10 +490,6 @@ function handleFileDrop(e) {
 </script>
 
 <style>
-body {
-  margin: 0 !important;
-}
-
 * {
   transition: all 0.3s ease-in-out;
 }
