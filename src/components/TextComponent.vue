@@ -55,8 +55,8 @@ defineExpose({
 </script>
 
 <template>
-  <div class="content" @dblclick="edit">
-    <el-text :class="{'editing': isEditing}" v-html="content"/>
+  <div class="textContent" @dblclick="edit">
+    <el-text v-html="content"/>
     <el-input
       v-model="content"
       ref="input"
@@ -69,23 +69,43 @@ defineExpose({
 </template>
 
 <style scoped>
-.content {
+.textContent {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* 当textContent被选中时，改变editing的宽度 */
+  &:hover {
+    .editing {
+      width: 200%;
+      opacity: 1;
+    }
+  }
 }
 
 .editing {
-  width: 100%;
+  width: 0;
+  opacity: 0;
   height: 100%;
   font-size: 18px;
+  border: unset;
 }
 
 .editing :deep(.el-textarea__inner) {
   width: 100%;
   height: 100%;
+  border-radius: 0;
+  color: #3a3a3a;
+  font-weight: bold;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(240, 240, 240, 0.9),
+    rgba(240, 240, 240, 0.9) 40px,
+    rgba(255, 255, 255, 0.9) 40px,
+    rgba(255, 255, 255, 0.9) 80px
+  );
 }
 
 :deep(.el-text) {
@@ -97,6 +117,10 @@ defineExpose({
 .input {
   width: 0;
   height: 100%;
+}
+
+:deep(textarea) {
+  resize: none;
 }
 
 .input :deep(.el-textarea__inner) {

@@ -244,6 +244,10 @@ defineExpose({
     font-size: 18px;
     border-radius: 0 48px 48px 0 !important;
 
+    &:hover {
+      width: 140%;
+    }
+
     .el-input__wrapper {
       width: 100%;
       height: 100%;

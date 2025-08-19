@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import wasmPack from '@wasm-tool/wasm-pack-plugin'
 
 // 根据环境变量设置 base（GitHub Pages 部署需要）
 const base = process.env.NODE_ENV === 'production' ? '/one/' : '/'
@@ -17,4 +18,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  optimizeDeps: {
+    exclude: ['quickjs-emscripten']
+  }
 })

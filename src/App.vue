@@ -1,19 +1,29 @@
 <template>
   <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
     <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
-      <el-option
+      <el-popover
+        class="box-item"
         v-for="item in itemType"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+        :title="item.label"
+        :content="item.desc"
+        width="300"
+        placement="right-start"
+      >
+        <template #reference>
+          <el-option
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </template>
+      </el-popover>
     </el-select>
     <el-button v-if="!isLock" @click="lock" class="btn">查看模式</el-button>
     <el-button v-if="isLock" @click="unlock" class="btn">编辑模式</el-button>
     <el-button @click="editGlobeStyle" class="btn">全局样式</el-button>
     <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
   </div>
-  <div ref="gridEl" class="grid-stack" @dblclick="() => showMenu = !showMenu && !viewMode"></div>
+  <div ref="gridEl" class="grid-stack"></div>
 
   <!-- 全局样式弹窗 -->
   <el-dialog title="全局样式" v-model="isEditGlobeStyle" width="50%" class="globeStyleDialog">
@@ -85,43 +95,60 @@
       <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
     </template>
   </el-dialog>
+
+  <edge-mouse-move
+    @onLeftEdge="() => showMenu = !showMenu && !viewMode"
+  />
 </template>
 
 <script setup>
 import {createApp, h, nextTick, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
-import {ElButton, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElSelect} from 'element-plus'
+import {ElButton, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElPopover, ElSelect} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
 import searchComponent from './components/SearchComponent.vue'
 import iframeComponent from './components/IframeComponent.vue'
 import linkComponent from './components/LinkComponent.vue'
+import functionComponent from './components/FunctionComponent.vue'
+import evalComponent from "./components/EvalComponent.vue"
 import {v4} from 'uuid'
-import {startsWith} from "@/js/string.js";
-import {parseBlobJson} from "@/js/url.js";
-import {InfoFilled} from "@element-plus/icons-vue";
+import {startsWith} from "@/js/string.js"
+import {parseBlobJson} from "@/js/url.js"
+import {InfoFilled} from "@element-plus/icons-vue"
+import edgeMouseMove from './items/edgeMouseMove.vue'
 
 const itemType = [
   {
     value: 'text',
     label: '文本格子',
+    desc: '用于显示文本内容的格子，允许html标签',
     component: textComponent
   },
   {
     value: 'search',
-    label: '搜索格子',
+    label: '搜索栏',
+    desc: '搜索引擎输入框，用于搜索指定内容',
     component: searchComponent
   },
   {
     value: 'iframe',
     label: '网页格子',
+    desc: '用于嵌入网页的格子，不支持跨域',
     component: iframeComponent
   },
   {
     value: 'link',
     label: '快速链接',
+    desc: '用于快速跳转的格子，支持自定义链接',
     component: linkComponent
+  },
+  {
+    value: 'function',
+    label: '安全函数',
+    desc: '用于执行安全函数的格子，支持自定义函数。使用模式下双击格子即可运行',
+    component: functionComponent
   }
 ]
 // 菜单是否显示
@@ -171,6 +198,16 @@ onMounted(async () => {
       lock()
     }
   }
+  // 是否开启函数格子
+  const enableFunction = urlParams.get('enableFunction')
+  if (enableFunction) {
+    itemType.push({
+      value: 'eval',
+      label: '危险函数',
+      desc: '用于执行自定义函数的格子，支持自定义函数。使用模式下双击格子即可运行',
+      component: evalComponent
+    })
+  }
 
   // 恢复布局
   const layout = window.localStorage.getItem('layout')
@@ -189,8 +226,8 @@ onMounted(async () => {
     }
   } else {
     // 添加初始格子
-    addItem('text')
-    addItem('search')
+    addItem('link', 6, 10, 11, 2)
+    addItem('search', 6, 8, 11, 2)
   }
 
   // 恢复样式
@@ -273,7 +310,7 @@ function createItemComponent(componentItem) {
   }
 }
 
-const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
+const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
   // 创建格子DOM
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
@@ -284,7 +321,11 @@ const addItem = (type, x = '1', y = '1', w = '3', h = '2', id) => {
   itemEl.setAttribute('gs-x', x)
   itemEl.setAttribute('gs-y', y)
   // 挂载Vue组件到格子
-  let component = itemType.find(item => item.value === type).component
+  let component = itemType.find(item => item.value === type)?.component
+  if (!component) {
+    ElMessage.error(`未找到对应的组件 - ${type}`)
+    return
+  }
   const app = createApp(createItemComponent(component), {id: itemEl.id, isLock: isLock})
   app.mount(itemEl)
   itemEl.element = app
@@ -532,7 +573,11 @@ function handleFileDrop(e) {
 
 .grid-stack-item.ui-resizable-autohide {
   background: repeating-linear-gradient(
-    45deg, /* 45度斜角 */ rgba(150, 150, 150, 0.1), /* 黑色半透明 */ rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */ rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */ rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
+    45deg,
+    rgba(150, 150, 150, 0.1),
+    rgba(150, 150, 150, 0.1) 40px,
+    rgba(255, 255, 255, 0.1) 40px,
+    rgba(255, 255, 255, 0.1) 80px
   );
 }
 
@@ -609,10 +654,16 @@ function handleFileDrop(e) {
 /* 表单样式结束 */
 
 /* 全局样式弹窗样式开始 */
-.globeStyleDialog {
-  height: 60%;
+.el-dialog {
+  height: calc(80% - 2px);
+  max-height: 80%;
   .el-dialog__body {
     height: calc(100% - 110px);
+    /* 对其中的第一个子组件设置高度为100% */
+    > *:first-child {
+      height: 100% !important;
+      overflow: auto;
+    }
   }
   .el-textarea__inner, .el-textarea {
     height: 100% !important;
