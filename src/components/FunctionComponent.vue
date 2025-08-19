@@ -1,7 +1,7 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
-import { getQuickJS } from 'quickjs-emscripten'
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
+import {loadData, saveData} from "@/js/data.js";
 
 const props = defineProps({
   id: String,
@@ -16,16 +16,12 @@ let autoExecute = ref(false)
 let functionContent = ref(text.value)
 // 方法结果
 let functionResult = ref('')
-let isEditing = ref(false)
 
-watch(isLock, (newValue) => {
-  isEditing.value = !newValue
-})
 const input = ref(null)
+let onFocus = ref(false)
 
 function dbclick() {
   if (!isLock.value) {
-    isEditing.value = true
     nextTick(() => {
       input.value.focus()
     })
@@ -34,45 +30,75 @@ function dbclick() {
   }
 }
 
+function onMouseLeave() {
+  const inputElement = input?.value.$el
+  // 获取第一个子元素
+  const firstChild = inputElement?.firstElementChild
+  if (firstChild !== document.activeElement) {
+    onFocus.value = false
+  }
+}
+
 function save() {
-  window.localStorage.setItem(props.id, JSON.stringify({
+  saveData(props.id, JSON.stringify({
     content: functionContent.value,
     result: functionResult.value,
     autoExecute: autoExecute.value
   }))
 }
 
-watch(isEditing, (newValue) => {
-  if (!newValue) {
+watch(isLock, (newValue) => {
+  if (newValue) {
     save()
   }
 })
 
 // 执行方法
-async function safeExecute() {
-  const QuickJS = await getQuickJS()
-  const vm = QuickJS.newContext()
+let iframe
+// 监听 iframe 的消息
+function listener(event) {
+  // 验证消息来源（重要！）
+  if (event.source !== iframe.contentWindow) return
+  functionResult.value = event.data.data
+}
 
-  try {
-    const res = vm.evalCode(functionContent.value)
-    const dump = vm.dump(res);
-    if (dump !== undefined) {
-      functionResult.value = dump
-    }
-    res.dispose()
-  } catch (e) {
-    functionResult.value = `错误: ${e}`
-  } finally {
-    vm.dispose()
-  }
+onMounted(() => {
+  iframe = document.getElementById('sandbox')
+  window.addEventListener('message', listener)
+})
+onUnmounted(() => {
+  window.removeEventListener('message', listener)
+})
+
+async function safeExecute() {
+  onFocus.value = false
+  const blob = new Blob([`
+    <script>
+      try {
+        const result = eval(${JSON.stringify(functionContent.value)})
+        window.parent.postMessage({
+          type: 'result',
+          data: result,
+          success: true
+        }, '*')
+      } catch (error) {
+        window.parent.postMessage({
+          type: 'error',
+          error: error.message,
+          success: false
+        }, '*')
+      }
+    <\/script>
+  `], {type: 'text/html'})
+  iframe.src = URL.createObjectURL(blob)
 }
 
 onMounted(() => {
   load()
-  isEditing.value = !isLock.value
 })
+
 function load(data) {
-  const save = data || window.localStorage.getItem(props.id)
+  const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
     functionContent.value = parse.content
@@ -91,18 +117,25 @@ defineExpose({
 
 <template>
   <div class="functionContent" @dblclick="dbclick">
-    <div class="textContainer">
-      <el-text :class="[isEditing ? 'runtimeResult' : 'result']" v-html="functionResult"/>
+    <div
+        class="textContainer"
+        @mouseenter="onFocus = true"
+        @mouseleave="onMouseLeave"
+    >
+      <iframe id="sandbox" sandbox="allow-scripts" style="display: none;"></iframe>
+      <el-text :class="['result', (onFocus && !isLock) ? 'resultOnFocus' : '']" v-html="functionResult"/>
       <el-input
-        v-model="functionContent"
-        ref="input"
-        :class="[isEditing ? 'editing' : 'input']"
-        :rows="2"
-        type="textarea"
-        placeholder="输入方法内容"
+          v-model="functionContent"
+          ref="input"
+          :class="['input', (onFocus && !isLock) ? 'inputOnFocus' : '']"
+          :rows="2"
+          type="textarea"
+          placeholder="输入方法内容"
+          @blur="onFocus = false"
+          @keydown.ctrl.enter="safeExecute"
       />
     </div>
-    <div :class="['params', {'hide': !isEditing}]">
+    <div :class="['params', isLock ? 'hide' : '']">
       <div :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">载入时运行</div>
       <div :class="['paramItem']" @click="safeExecute">运行</div>
       <div :class="['paramItem']" @click="save">保存</div>
@@ -127,46 +160,33 @@ defineExpose({
 
 .textContainer {
   opacity: 1;
-  height: 100%;
+  height: calc(100% - 40px);
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: auto;
+  scrollbar-width: none;
 
-  /* 当textContent被选中时，改变editing的宽度 */
-  &:hover {
-    .runtimeResult {
-      width: 0;
-      opacity: 0;
-    }
-    .editing {
-      width: 100%;
-      opacity: 1;
-    }
+  * {
+    scrollbar-width: none;
+  }
+
+  .resultOnFocus {
+    width: 0;
+    display: none;
+    opacity: 0;
+  }
+
+  .inputOnFocus {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
   }
 }
 
-.editing {
-  width: 0;
-  opacity: 0;
-  height: 100%;
-  font-size: 18px;
-  border: unset;
-}
-
-.editing :deep(.el-textarea__inner) {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-  color: #3a3a3a;
-  font-weight: bold;
-  background: repeating-linear-gradient(
-    -45deg,
-    rgba(240, 240, 240, 0.9),
-    rgba(240, 240, 240, 0.9) 40px,
-    rgba(255, 255, 255, 0.9) 40px,
-    rgba(255, 255, 255, 0.9) 80px
-  );
+.inputOnFocus :deep(.el-textarea__inner) {
+  padding: 8px !important;
 }
 
 :deep(.el-text) {
@@ -178,6 +198,7 @@ defineExpose({
 .input {
   width: 0;
   height: 100%;
+  opacity: 0;
 }
 
 :deep(textarea) {
@@ -185,16 +206,27 @@ defineExpose({
 }
 
 .input :deep(.el-textarea__inner) {
-  width: 0;
-  height: 0;
-  opacity: 0 !important;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
   min-width: unset !important;
   min-height: unset !important;
-  padding: 0 !important;
+  padding: 0;
+  border-radius: 0;
+  color: #3a3a3a;
+  font-weight: bold;
+  background: repeating-linear-gradient(
+      -45deg,
+      rgba(240, 240, 240, 0.9),
+      rgba(240, 240, 240, 0.9) 40px,
+      rgba(255, 255, 255, 0.9) 40px,
+      rgba(255, 255, 255, 0.9) 80px
+  );
 }
 
 .params {
   width: 100%;
+  height: 40px;
   opacity: 1;
   padding: 4px;
   display: flex;

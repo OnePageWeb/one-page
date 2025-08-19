@@ -50,7 +50,6 @@ function detectEdge(event) {
 }
 
 const emitMovingResult = debounce((currentEdge) => {
-    console.log(currentEdge)
     emit(`on${currentEdge.charAt(0).toUpperCase() + currentEdge.slice(1)}Edge`)
   }, 300)
 </script>

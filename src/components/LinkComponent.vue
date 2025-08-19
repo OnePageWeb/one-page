@@ -2,6 +2,7 @@
 import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElText} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
 import {Close, Operation, Plus} from "@element-plus/icons-vue"
+import {loadData, saveData} from "@/js/data.js";
 
 const defaultLinks = [
   {
@@ -69,7 +70,7 @@ function openModal(link) {
 }
 
 function save() {
-  window.localStorage.setItem(props.id, JSON.stringify({links: links.value}))
+  saveData(props.id, JSON.stringify({links: links.value}))
 }
 
 watch(isEditing, (newValue) => {
@@ -84,7 +85,7 @@ onMounted(() => {
 
 function load(data) {
   links.value.length = 0
-  const save = data || window.localStorage.getItem(props.id)
+  const save = data || loadData(props.id)
   if (save) {
     links.value = JSON.parse(save).links
   } else {

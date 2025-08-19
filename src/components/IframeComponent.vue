@@ -2,6 +2,7 @@
 import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {ElButton, ElIcon, ElInput} from "element-plus";
 import {ChromeFilled, Search} from "@element-plus/icons-vue";
+import {loadData, saveData} from "@/js/data.js";
 
 const props = defineProps({
   id: String,
@@ -34,7 +35,7 @@ function saveEdit() {
 }
 
 function save() {
-  window.localStorage.setItem(props.id, JSON.stringify({url: url.value}))
+  saveData(props.id, JSON.stringify({url: url.value}))
 }
 
 watch(isEditing, (newValue) => {
@@ -52,7 +53,7 @@ onMounted(() => {
 })
 
 function load(data) {
-  const save = data || window.localStorage.getItem(props.id)
+  const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
     url.value = parse.url

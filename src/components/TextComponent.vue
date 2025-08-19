@@ -1,6 +1,7 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
 import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {loadData, saveData} from "@/js/data.js";
 
 const props = defineProps({
   id: String,
@@ -11,39 +12,42 @@ const {text, isLock} = toRefs(props)
 
 // 默认文本内容
 let content = ref(text.value)
-let isEditing = ref(false)
+let onFocus = ref(false)
 
-watch(isLock, (newValue) => {
-  isEditing.value = !newValue
-})
 const input = ref(null)
 
 function edit() {
   if (!isLock.value) {
-    isEditing.value = true
     nextTick(() => {
       input.value.focus()
     })
   }
 }
-
-function save() {
-  window.localStorage.setItem(props.id, JSON.stringify({text: content.value}))
+function onMouseLeave() {
+  const inputElement = input?.value.$el
+  // 获取第一个子元素
+  const firstChild = inputElement?.firstElementChild
+  if (firstChild !== document.activeElement) {
+    onFocus.value = false
+  }
 }
 
-watch(isEditing, (newValue) => {
-  if (!newValue) {
+function save() {
+  saveData(props.id, JSON.stringify({text: content.value}))
+}
+
+watch(isLock, (newValue) => {
+  if (newValue) {
     save()
   }
 })
 
 onMounted(() => {
   load()
-  isEditing.value = !isLock.value
 })
 
 function load(data) {
-  const save = data || window.localStorage.getItem(props.id)
+  const save = data || loadData(props.id)
   if (save) {
     content.value = JSON.parse(save).text
   }
@@ -55,15 +59,21 @@ defineExpose({
 </script>
 
 <template>
-  <div class="textContent" @dblclick="edit">
-    <el-text v-html="content"/>
+  <div
+      class="textContent"
+      @dblclick="edit"
+      @mouseenter="onFocus = true"
+      @mouseleave="onMouseLeave"
+  >
+    <el-text :class="['result', onFocus && !isLock ? 'resultOnFocus' : '']" v-html="content"/>
     <el-input
       v-model="content"
       ref="input"
-      :class="[isEditing ? 'editing' : 'input']"
+      :class="['input', onFocus && !isLock ? 'inputOnFocus' : '']"
       :rows="2"
       type="textarea"
       placeholder="输入内容"
+      @blur="onFocus = false"
     />
   </div>
 </template>
@@ -76,36 +86,22 @@ defineExpose({
   align-items: center;
   justify-content: center;
 
-  /* 当textContent被选中时，改变editing的宽度 */
-  &:hover {
-    .editing {
-      width: 200%;
-      opacity: 1;
-    }
+  .resultOnFocus {
+    width: 40%;
+  }
+  .inputOnFocus {
+    width: 60%;
+    height: 100%;
+    opacity: 1;
   }
 }
 
-.editing {
-  width: 0;
-  opacity: 0;
-  height: 100%;
-  font-size: 18px;
-  border: unset;
+.inputOnFocus :deep(.el-textarea__inner) {
+  padding: 8px !important;
 }
 
-.editing :deep(.el-textarea__inner) {
+.result {
   width: 100%;
-  height: 100%;
-  border-radius: 0;
-  color: #3a3a3a;
-  font-weight: bold;
-  background: repeating-linear-gradient(
-    -45deg,
-    rgba(240, 240, 240, 0.9),
-    rgba(240, 240, 240, 0.9) 40px,
-    rgba(255, 255, 255, 0.9) 40px,
-    rgba(255, 255, 255, 0.9) 80px
-  );
 }
 
 :deep(.el-text) {
@@ -117,6 +113,7 @@ defineExpose({
 .input {
   width: 0;
   height: 100%;
+  opacity: 0;
 }
 
 :deep(textarea) {
@@ -124,11 +121,22 @@ defineExpose({
 }
 
 .input :deep(.el-textarea__inner) {
-  width: 0;
-  height: 0;
-  opacity: 0 !important;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
   min-width: unset !important;
   min-height: unset !important;
-  padding: 0 !important;
+  padding: 0;
+  border-radius: 0;
+  color: #3a3a3a;
+  font-weight: bold;
+  background: repeating-linear-gradient(
+      -45deg,
+      rgba(240, 240, 240, 0.9),
+      rgba(240, 240, 240, 0.9) 40px,
+      rgba(255, 255, 255, 0.9) 40px,
+      rgba(255, 255, 255, 0.9) 80px
+  );
 }
+
 </style>

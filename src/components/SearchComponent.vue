@@ -2,6 +2,7 @@
 import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElOption, ElSelect} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
 import {Close, Plus, Tools} from "@element-plus/icons-vue";
+import {loadData, saveData} from "@/js/data.js";
 
 const props = defineProps({
   id: String,
@@ -80,7 +81,7 @@ function deleteSearch(index) {
 }
 
 function save() {
-  window.localStorage.setItem(props.id, JSON.stringify({
+  saveData(props.id, JSON.stringify({
     searchEngineMap: searchEngineMap.value,
     nowSearchEngine: nowSearchEngine.value,
   }))
@@ -98,7 +99,7 @@ onMounted(() => {
 })
 
 function load(data) {
-  const save = data || window.localStorage.getItem(props.id)
+  const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
     searchEngineMap.value = parse.searchEngineMap

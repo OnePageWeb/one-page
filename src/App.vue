@@ -118,6 +118,7 @@ import {startsWith} from "@/js/string.js"
 import {parseBlobJson} from "@/js/url.js"
 import {InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
+import {loadData, saveData, removeData} from "@/js/data.js";
 
 const itemType = [
   {
@@ -161,7 +162,7 @@ const columns = 24
 // GridStack实例
 let grid
 // 锁定状态
-const isLock = ref(false)
+const isLock = ref(true)
 // 全局样式
 let globeStyle = ref(`.grid-stack {
   min-height: 300px;
@@ -210,7 +211,7 @@ onMounted(async () => {
   }
 
   // 恢复布局
-  const layout = window.localStorage.getItem('layout')
+  const layout = loadData('layout')
   if (layout) {
     const parse = JSON.parse(layout)
     for (let el of parse) {
@@ -219,7 +220,7 @@ onMounted(async () => {
       addItem(el.type, el.x, el.y, el.w, el.h, componentId)
 
       // 恢复组件样式
-      const componentStyle = window.localStorage.getItem(componentId + '-style')
+      const componentStyle = loadData(componentId + '-style')
       if (componentStyle) {
         document.getElementById(componentId + '-container').style.cssText = componentStyle
       }
@@ -231,11 +232,13 @@ onMounted(async () => {
   }
 
   // 恢复样式
-  const style = window.localStorage.getItem('globeStyle')
+  const style = loadData('globeStyle')
   if (style) {
     globeStyle.value = style
     refreshStyle()
   }
+
+  lock()
 
   // 监听拖拽和调整大小事件
   grid.on('dragstop resizestop', (event, el) => {
@@ -255,7 +258,7 @@ function saveLayout() {
     h: node.h,
   }))
   // 保存布局数据
-  window.localStorage.setItem('layout', JSON.stringify(simplifiedLayout))
+  saveData('layout', JSON.stringify(simplifiedLayout))
 }
 
 // 锁定布局
@@ -341,7 +344,7 @@ function deleteItem(id) {
   nextTick(() => {
     grid.removeWidget(document.getElementById(id.value))
     // 删除本地存储
-    window.localStorage.removeItem(id.value)
+    removeData(id.value)
     // 保存布局
     saveLayout()
   })
@@ -363,7 +366,7 @@ function refreshComponentStyle(id) {
   const idValue = id.value || curComponentId.value
   document.getElementById(idValue + '-container').style.cssText = componentStyle.value
   // 保存组件样式
-  window.localStorage.setItem(idValue + '-style', componentStyle.value)
+  saveData(idValue + '-style', componentStyle.value)
   isEditComponentStyle.value = false
 }
 
@@ -385,7 +388,7 @@ function refreshStyle() {
   style.innerHTML = globeStyle.value
   document.head.appendChild(style)
   // 保存全局样式
-  window.localStorage.setItem('globeStyle', globeStyle.value)
+  saveData('globeStyle', globeStyle.value)
 }
 
 let configData = ref('')
@@ -404,7 +407,7 @@ function generateConfig() {
   // 汇总所有配置为一个json
   let config = {
     globeStyle: globeStyle.value,
-    layout: JSON.parse(window.localStorage.getItem('layout')),
+    layout: JSON.parse(loadData('layout')),
     components: []
   }
   // 所有组件
@@ -414,7 +417,7 @@ function generateConfig() {
     // 组件样式
     const componentStyle = document.getElementById(id + '-container').style.cssText
     // 组件数据
-    const componentData = window.localStorage.getItem(id)
+    const componentData = loadData(id)
     // 组件类型
     const componentType = document.getElementById(id).type
     config.components.push({
@@ -429,15 +432,15 @@ function generateConfig() {
 
 // 清除旧配置
 function clearConfig() {
-  window.localStorage.removeItem('layout')
-  window.localStorage.removeItem('globeStyle')
+  removeData('layout')
+  removeData('globeStyle')
   const nodes = grid.engine.nodes; // 获取所有格子节点数据
   const ids = nodes.map(node => node.el.id)
   for (let id of ids) {
     // 删除组件数据
-    window.localStorage.removeItem(id)
+    removeData(id)
     // 删除组件样式
-    window.localStorage.removeItem(id + '-style')
+    removeData(id + '-style')
   }
 }
 
@@ -472,17 +475,17 @@ async function loadConfig(reload = true) {
   // 清除旧配置
   clearConfig()
   // 加载全局样式
-  window.localStorage.setItem('globeStyle', config.globeStyle)
+  saveData('globeStyle', config.globeStyle)
   // 加载布局
-  window.localStorage.setItem('layout', JSON.stringify(config.layout))
+  saveData('layout', JSON.stringify(config.layout))
   // 加载组件
   for (let component of config.components) {
     if (component.data) {
-      window.localStorage.setItem(component.id, component.data)
+      saveData(component.id, component.data)
     }
     // 加载组件样式
     if (component.style) {
-      window.localStorage.setItem(component.id + '-style', component.style)
+      saveData(component.id + '-style', component.style)
     }
   }
   // 刷新页面
