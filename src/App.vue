@@ -2,10 +2,10 @@
   <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
     <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
       <el-option
-          v-for="item in itemType"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+        v-for="item in itemType"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
       />
     </el-select>
     <el-button v-if="!isLock" @click="lock" class="btn">查看模式</el-button>
@@ -18,11 +18,11 @@
   <!-- 全局样式弹窗 -->
   <el-dialog title="全局样式" v-model="isEditGlobeStyle" width="50%" class="globeStyleDialog">
     <el-input
-        v-model="globeStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入全局样式"
+      v-model="globeStyle"
+      class="globeStyleInput"
+      type="textarea"
+      resize="none"
+      placeholder="请输入全局样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshStyle">刷新</el-button>
@@ -34,24 +34,31 @@
     <template #header="{ close, titleId, titleClass }">
       <div class="configLoaderHeader">
         <div :id="titleId" :class="titleClass">加载配置</div>
-        <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true"><InfoFilled /></el-icon>
+        <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true">
+          <InfoFilled/>
+        </el-icon>
       </div>
     </template>
     <el-input
-        v-model="configData"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入配置URL或拖拽JSON文件到此处"
-        @dragover.prevent
-        @drop.prevent="handleFileDrop"
+      v-model="configData"
+      class="globeStyleInput"
+      type="textarea"
+      resize="none"
+      placeholder="请输入配置URL或拖拽JSON文件到此处"
+      @dragover.prevent
+      @drop.prevent="handleFileDrop"
     />
 
     <!-- 配置提示弹窗 -->
     <el-dialog v-model="configLoaderTipVisible" title="Tips" width="50%" draggable>
-      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。</div>
-      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。</div>
-      <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。</div>
+      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
+        可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
+      </div>
+      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
+      </div>
+      <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
+        href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+      </div>
       <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
       <template #footer>
         <div class="dialog-footer">
@@ -68,11 +75,11 @@
   <!-- 组件样式弹窗 -->
   <el-dialog title="组件样式" v-model="isEditComponentStyle" width="50%" class="globeStyleDialog">
     <el-input
-        v-model="componentStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入样式"
+      v-model="componentStyle"
+      class="globeStyleInput"
+      type="textarea"
+      resize="none"
+      placeholder="请输入样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -83,7 +90,7 @@
 <script setup>
 import {createApp, h, nextTick, onMounted, ref} from 'vue'
 import {GridStack} from 'gridstack'
-import {ElButton, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElPopover, ElSelect} from 'element-plus'
+import {ElButton, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElSelect} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
@@ -496,6 +503,10 @@ body {
   align-items: center;
   gap: 10px;
   padding: 0 10px;
+
+  .el-button + .el-button {
+    margin-left: 0;
+  }
 }
 
 .menu-show {
@@ -504,15 +515,10 @@ body {
 
 .menu-hide {
   height: 0;
-}
 
-/* 对menu-hide中的所有元素添加margin-top */
-.menu-hide * {
-  margin-top: -80px;
-}
-
-.menu .el-button + .el-button {
-  margin-left: 0;
+  * {
+    margin-top: -80px;
+  }
 }
 
 /* 菜单样式结束 */
@@ -529,7 +535,7 @@ body {
 
 .grid-stack-item.ui-resizable-autohide {
   background: repeating-linear-gradient(
-      45deg, /* 45度斜角 */ rgba(150, 150, 150, 0.1), /* 黑色半透明 */ rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */ rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */ rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
+    45deg, /* 45度斜角 */ rgba(150, 150, 150, 0.1), /* 黑色半透明 */ rgba(150, 150, 150, 0.1) 40px, /* 条纹宽度 */ rgba(255, 255, 255, 0.1) 40px, /* 白色半透明 */ rgba(255, 255, 255, 0.1) 80px /* 条纹间距 */
   );
 }
 
@@ -566,24 +572,23 @@ body {
   padding: 8px !important;
   margin: 8px 8px 8px 16px;
   background-color: #ffb6b6 !important;
+
+  .el-form-item__content {
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 !important;
+    cursor: pointer;
+    justify-content: center;
+  }
+
+  path {
+    fill: #fff;
+  }
 }
 
 .deleteIcon:hover {
   transform: rotate(90deg);
 }
-
-.deleteIcon .el-form-item__content {
-  width: 20px !important;
-  height: 20px !important;
-  margin: 0 !important;
-  cursor: pointer;
-  justify-content: center;
-}
-
-.deleteIcon path {
-  fill: #fff;
-}
-
 /* 删除图标样式结束 */
 
 /* 表单样式开始 */
@@ -609,16 +614,13 @@ body {
 /* 全局样式弹窗样式开始 */
 .globeStyleDialog {
   height: 60%;
+  .el-dialog__body {
+    height: calc(100% - 110px);
+  }
+  .el-textarea__inner, .el-textarea {
+    height: 100% !important;
+  }
 }
-
-.globeStyleDialog .el-dialog__body {
-  height: calc(100% - 110px);
-}
-
-.globeStyleDialog .el-textarea__inner, .globeStyleDialog .el-textarea {
-  height: 100% !important;
-}
-
 /* 全局样式弹窗样式结束 */
 
 /* 配置加载器弹窗样式开始 */

@@ -1,6 +1,6 @@
 <script setup>
-import {nextTick, ref, toRefs, defineEmits} from 'vue'
-import {Close, Picture, Top} from "@element-plus/icons-vue"
+import {defineEmits, toRefs} from 'vue'
+import {Close, Picture} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm} from "element-plus"
 
 const emit = defineEmits(['onDelete', 'onStyleEdit'])
@@ -22,12 +22,12 @@ function editStyle() {
 <template>
   <div v-show="!isLock" class="container">
     <el-popconfirm
-        class="deleteItem"
-        title="确定删除此组件"
-        placement="top-start"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        @confirm="deleteItem"
+      class="deleteItem"
+      title="确定删除此组件"
+      placement="top-start"
+      confirm-button-text="确定"
+      cancel-button-text="取消"
+      @confirm="deleteItem"
     >
       <template #reference>
         <el-icon class="deleteItem">
@@ -36,7 +36,7 @@ function editStyle() {
       </template>
     </el-popconfirm>
     <el-icon class="editStyle" @click="editStyle">
-      <Picture />
+      <Picture/>
     </el-icon>
   </div>
 </template>
@@ -48,6 +48,7 @@ function editStyle() {
   opacity: 0.4;
   pointer-events: none;
 }
+
 .container:hover {
   opacity: 1;
 }
@@ -74,9 +75,9 @@ function editStyle() {
 
 .editStyle {
   right: 24px;
-}
 
-.editStyle :deep(path) {
-  fill: #ffc9c9;
+  :deep(path) {
+    fill: #ffc9c9;
+  }
 }
 </style>

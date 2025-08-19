@@ -58,9 +58,11 @@ function saveEdit() {
 function open(url) {
   window.open(url, '_blank')
 }
+
 // 打开弹窗
 let modalVisible = ref(false)
 let curLink = ref({})
+
 function openModal(link) {
   modalVisible.value = true
   curLink.value = link
@@ -210,11 +212,11 @@ defineExpose({
 
 .linkItem {
   height: 100%;
-}
 
-.linkItem img {
-  height: 40%;
-  margin-bottom: 8px;
+  img {
+    height: 40%;
+    margin-bottom: 8px;
+  }
 }
 
 .editContainer {
@@ -230,10 +232,10 @@ defineExpose({
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
 
-.editContainer :deep(path) {
-  fill: #737373;
+  :deep(path) {
+    fill: #737373;
+  }
 }
 
 .linkForm .linkEditItem {
@@ -254,20 +256,20 @@ defineExpose({
   &:first-child {
     padding-top: 0;
   }
-}
 
-.linkEditContainer .linkName {
-  display: block !important;
-  width: 160px !important;
-}
+  .linkName {
+    display: block !important;
+    width: 160px !important;
+  }
 
-.linkEditContainer .linkUrl {
-  display: block !important;
-  width: calc(100% - 380px) !important;
-}
+  .linkUrl {
+    display: block !important;
+    width: calc(100% - 380px) !important;
+  }
 
-.linkEditContainer .linkImg {
-  display: block !important;
-  width: 200px !important;
+  .linkImg {
+    display: block !important;
+    width: 200px !important;
+  }
 }
 </style>

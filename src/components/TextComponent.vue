@@ -7,7 +7,7 @@ const props = defineProps({
   text: String,
   isLock: Object
 })
-const { text, isLock } = toRefs(props)
+const {text, isLock} = toRefs(props)
 
 // 默认文本内容
 let content = ref(text.value)
@@ -17,6 +17,7 @@ watch(isLock, (newValue) => {
   isEditing.value = !newValue
 })
 const input = ref(null)
+
 function edit() {
   if (!isLock.value) {
     isEditing.value = true
@@ -40,12 +41,14 @@ onMounted(() => {
   load()
   isEditing.value = !isLock.value
 })
+
 function load(data) {
   const save = data || window.localStorage.getItem(props.id)
   if (save) {
     content.value = JSON.parse(save).text
   }
 }
+
 defineExpose({
   save, load
 })
@@ -80,6 +83,11 @@ defineExpose({
   font-size: 18px;
 }
 
+.editing :deep(.el-textarea__inner) {
+  width: 100%;
+  height: 100%;
+}
+
 :deep(.el-text) {
   width: 100%;
   height: 100%;
@@ -89,17 +97,12 @@ defineExpose({
 .input {
   width: 0;
   height: 100%;
-}
 
-.editing :deep(.el-textarea__inner) {
-  width: 100%;
-  height: 100%;
-}
-
-.input :deep(.el-textarea__inner) {
-  width: 100%;
-  height: 100%;
-  min-width: unset !important;
-  padding: 0 !important;
+  :deep(.el-textarea__inner) {
+    width: 100%;
+    height: 100%;
+    min-width: unset !important;
+    padding: 0 !important;
+  }
 }
 </style>

@@ -21,6 +21,7 @@ watch(isLock, (newValue) => {
 // iframe
 let changeTime = ref(Date.now())
 const iframeUrl = computed(() => url.value ? (url.value + `?t=${changeTime.value}`) : '');
+
 function loadIframe() {
   nextTick(() => {
     changeTime.value = Date.now()
@@ -31,6 +32,7 @@ function saveEdit() {
   save()
   loadIframe()
 }
+
 function save() {
   window.localStorage.setItem(props.id, JSON.stringify({url: url.value}))
 }
@@ -63,8 +65,8 @@ defineExpose({
 </script>
 
 <template>
-  <div class="content">
-    <div class="urlEdit" v-if="isEditing">
+  <div class="iframeContent">
+    <div :class="['urlEdit', isEditing ? 'editing' : 'hide']">
       <el-input v-model="url" placeholder="请输入网址" clearable @blur="saveEdit">
         <template #prepend>
           <el-icon>
@@ -87,23 +89,40 @@ defineExpose({
 </template>
 
 <style scoped>
-.content {
+.iframeContent {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  .hide {
+    height: 0;
+
+    .el-input-group {
+      opacity: 0;
+    }
+  }
+
+  .editing {
+    height: 40px;
+  }
 }
 
 .urlEdit {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+
+  :deep(.el-input-group__append, .el-input-group__prepend) {
+    padding: 0 !important;
+  }
+
+  :deep(.el-input-group__append button.el-button) {
+    padding: 0 30px !important;
+    cursor: pointer;
+  }
 }
 
 .iframeContainer {
@@ -115,11 +134,4 @@ defineExpose({
   border: none;
 }
 
-.urlEdit :deep(.el-input-group__append, .el-input-group__prepend) {
-  padding: 0 !important;
-}
-:deep(.el-input-group__append button.el-button) {
-  padding: 0 30px !important;
-  cursor: pointer;
-}
 </style>
