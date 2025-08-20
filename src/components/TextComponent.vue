@@ -65,7 +65,7 @@ defineExpose({
       @mouseenter="onFocus = true"
       @mouseleave="onMouseLeave"
   >
-    <el-text :class="['result', onFocus && enableEdit ? 'resultOnFocus' : '']" v-html="content"/>
+    <div :class="['result', onFocus && enableEdit ? 'resultOnFocus' : '']" v-html="content"/>
     <el-input
       v-model="content"
       ref="input"
@@ -102,6 +102,7 @@ defineExpose({
 
 .result {
   width: 100%;
+  font-size: 18px;
 }
 
 :deep(.el-text) {
