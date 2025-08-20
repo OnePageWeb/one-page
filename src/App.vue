@@ -18,8 +18,8 @@
         </template>
       </el-popover>
     </el-select>
-    <el-button v-if="!isLock" @click="lock" class="btn">查看模式</el-button>
-    <el-button v-if="isLock" @click="unlock" class="btn">编辑模式</el-button>
+    <el-checkbox v-model="enableMove" label="开启移动" border/>
+    <el-checkbox v-model="isLock" label="锁定编辑" border/>
     <el-button @click="editGlobeStyle" class="btn">全局样式</el-button>
     <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
   </div>
@@ -102,9 +102,9 @@
 </template>
 
 <script setup>
-import {createApp, h, nextTick, onMounted, ref} from 'vue'
+import {createApp, h, nextTick, onMounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
-import {ElButton, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElPopover, ElSelect} from 'element-plus'
+import {ElButton, ElCheckbox, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElPopover, ElSelect} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
@@ -119,7 +119,7 @@ import {startsWith} from "@/js/string.js"
 import {parseBlobJson} from "@/js/url.js"
 import {InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
-import {loadData, saveData, removeData} from "@/js/data.js"
+import {loadData, removeData, saveData} from "@/js/data.js"
 
 const itemType = [
   {
@@ -170,10 +170,25 @@ const columns = 24
 let grid
 // 锁定状态
 const isLock = ref(true)
+const enableMove = ref(false)
+watch(enableMove, b => {
+  if (b) {
+    lock()
+    enabledMove()
+  } else {
+    disabledMove()
+  }
+})
+watch(isLock, b => {
+  if (!b) {
+    disabledMove()
+  }
+})
 // 全局样式
 let globeStyle = ref(`.grid-stack {
   min-height: 300px;
 }`)
+// 仅查看模式
 let viewMode = ref(false)
 
 // 初始化GridStack
@@ -246,6 +261,7 @@ onMounted(async () => {
   }
 
   lock()
+  disabledMove()
 
   // 监听拖拽和调整大小事件
   grid.on('dragstop resizestop', (event, el) => {
@@ -270,18 +286,26 @@ function saveLayout() {
 
 // 锁定布局
 function lock() {
-  grid.disable()
-  grid.enableMove(false)
-  grid.enableResize(false)
   isLock.value = true
+}
+
+// 开启移动
+function enabledMove() {
+  grid.enableMove(true)
+  grid.enableResize(true)
+  enableMove.value = true
 }
 
 // 解锁布局
 function unlock() {
-  grid.enable()
-  grid.enableMove(true)
-  grid.enableResize(true)
   isLock.value = false
+}
+
+// 关闭移动
+function disabledMove() {
+  grid.enableMove(false)
+  grid.enableResize(false)
+  enableMove.value = false
 }
 
 // 添加空白格子
@@ -571,6 +595,20 @@ function handleFileDrop(e) {
 
 /* 菜单样式结束 */
 
+/* 开关样式开始 */
+.el-checkbox {
+  background-color: white;
+  margin-right: unset !important;
+  --el-checkbox-checked-text-color: #ff7d00 !important;
+  --el-checkbox-checked-bg-color: #ff7d00 !important;
+
+  .el-checkbox__inner {
+    border: unset !important;
+  }
+}
+
+/* 开关样式结束 */
+
 /* 选择器样式 */
 .el-select.addItemSelect {
   width: 160px;
@@ -641,6 +679,7 @@ function handleFileDrop(e) {
 .deleteIcon:hover {
   transform: rotate(90deg);
 }
+
 /* 删除图标样式结束 */
 
 /* 表单样式开始 */
@@ -667,18 +706,22 @@ function handleFileDrop(e) {
 .el-dialog {
   height: calc(80% - 2px);
   max-height: 80%;
+
   .el-dialog__body {
     height: calc(100% - 110px);
     /* 对其中的第一个子组件设置高度为100% */
+
     > *:first-child {
       height: 100% !important;
       overflow: auto;
     }
   }
+
   .el-textarea__inner, .el-textarea {
     height: 100% !important;
   }
 }
+
 /* 全局样式弹窗样式结束 */
 
 /* 配置加载器弹窗样式开始 */

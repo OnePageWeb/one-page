@@ -31,10 +31,10 @@ function editStyle() {
     >
       <template #reference>
         <el-tooltip
-            class="deleteItem"
-            effect="light"
-            content="删除组件"
-            placement="bottom-start"
+          class="deleteItem"
+          effect="light"
+          content="删除组件"
+          placement="bottom-start"
         >
           <el-icon class="deleteItem">
             <Close/>
@@ -44,10 +44,10 @@ function editStyle() {
     </el-popconfirm>
 
     <el-tooltip
-        class="editStyle"
-        effect="light"
-        content="编辑组件样式"
-        placement="bottom-start"
+      class="editStyle"
+      effect="light"
+      content="编辑组件样式"
+      placement="bottom-start"
     >
       <el-icon class="editStyle" @click="editStyle">
         <Picture/>
@@ -55,10 +55,11 @@ function editStyle() {
     </el-tooltip>
 
     <el-tooltip
-        class="dragHandle"
-        effect="light"
-        content="拖动组件"
-        placement="bottom-start"
+      v-if="false"
+      class="dragHandle"
+      effect="light"
+      content="拖动组件"
+      placement="bottom-start"
     >
       <el-icon class="dragHandle">
         <Coordinate/>
