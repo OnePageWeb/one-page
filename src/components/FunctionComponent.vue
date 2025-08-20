@@ -56,6 +56,7 @@ watch(enableEdit, (newValue) => {
 
 // 执行方法
 let iframe
+
 // 监听 iframe 的消息
 function listener(event) {
   // 验证消息来源（重要！）
@@ -157,94 +158,94 @@ defineExpose({
     height: 0;
     opacity: 0;
   }
-}
 
-.textContainer {
-  opacity: 1;
-  height: calc(100% - 40px);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: auto;
-  scrollbar-width: none;
-
-  * {
+  .textContainer {
+    opacity: 1;
+    height: calc(100% - 40px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
     scrollbar-width: none;
+
+    * {
+      scrollbar-width: none;
+    }
+
+    .resultOnFocus {
+      width: 0;
+      display: none;
+      opacity: 0;
+    }
+
+    .inputOnFocus {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+    }
   }
 
-  .resultOnFocus {
+  .inputOnFocus :deep(.el-textarea__inner) {
+    padding: 8px !important;
+  }
+
+  :deep(.el-text) {
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+  }
+
+  .input {
     width: 0;
-    display: none;
+    height: 100%;
     opacity: 0;
   }
 
-  .inputOnFocus {
+  :deep(textarea) {
+    resize: none;
+  }
+
+  .input :deep(.el-textarea__inner) {
     width: 100%;
     height: 100%;
     opacity: 1;
-  }
-}
-
-.inputOnFocus :deep(.el-textarea__inner) {
-  padding: 8px !important;
-}
-
-:deep(.el-text) {
-  width: 100%;
-  height: 100%;
-  font-size: 18px;
-}
-
-.input {
-  width: 0;
-  height: 100%;
-  opacity: 0;
-}
-
-:deep(textarea) {
-  resize: none;
-}
-
-.input :deep(.el-textarea__inner) {
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  min-width: unset !important;
-  min-height: unset !important;
-  padding: 0;
-  border-radius: 0;
-  color: #3a3a3a;
-  font-weight: bold;
-  background: repeating-linear-gradient(
-      -45deg,
-      rgba(240, 240, 240, 0.9),
-      rgba(240, 240, 240, 0.9) 40px,
-      rgba(255, 255, 255, 0.9) 40px,
-      rgba(255, 255, 255, 0.9) 80px
-  );
-}
-
-.params {
-  width: 100%;
-  height: 40px;
-  opacity: 1;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-
-  .paramItem {
-    padding: 4px 12px;
-    border-radius: 4px;
-    color: #f1f1f1;
+    min-width: unset !important;
+    min-height: unset !important;
+    padding: 0;
+    border-radius: 0;
+    color: #3a3a3a;
     font-weight: bold;
-    background-color: #64b1ff;
-    cursor: pointer;
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(240, 240, 240, 0.9),
+        rgba(240, 240, 240, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 80px
+    );
   }
 
-  .positive {
-    background-color: #aaaaaa;
+  .params {
+    width: 100%;
+    height: 40px;
+    opacity: 1;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    .paramItem {
+      padding: 4px 12px;
+      border-radius: 4px;
+      color: #f1f1f1;
+      font-weight: bold;
+      background-color: #64b1ff;
+      cursor: pointer;
+    }
+
+    .positive {
+      background-color: #aaaaaa;
+    }
   }
 }
 </style>

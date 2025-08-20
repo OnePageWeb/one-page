@@ -35,6 +35,7 @@ function edit() {
     })
   }
 }
+
 function onMouseLeave() {
   const inputElement = input?.value.$el
   // 获取第一个子元素
@@ -73,7 +74,7 @@ defineExpose({
 
 <template>
   <div
-      class="textContent"
+      class="htmlContent"
       @dblclick="edit"
       @mouseenter="onFocus = true"
       @mouseleave="onMouseLeave"
@@ -86,19 +87,19 @@ defineExpose({
         @load="updateIframeContent"
     ></iframe>
     <el-input
-      v-model="content"
-      ref="input"
-      :class="['input', onFocus && enableEdit ? 'inputOnFocus' : '']"
-      :rows="2"
-      type="textarea"
-      placeholder="输入内容"
-      @blur="updateIframeContent"
+        v-model="content"
+        ref="input"
+        :class="['input', onFocus && enableEdit ? 'inputOnFocus' : '']"
+        :rows="2"
+        type="textarea"
+        placeholder="输入内容"
+        @blur="updateIframeContent"
     />
   </div>
 </template>
 
 <style scoped>
-.textContent {
+.htmlContent {
   height: 100%;
   width: 100%;
   display: flex;
@@ -108,55 +109,55 @@ defineExpose({
   .resultOnFocus {
     width: 40%;
   }
+
   .inputOnFocus {
     width: 60%;
     height: 100%;
     opacity: 1;
   }
-}
 
-.inputOnFocus :deep(.el-textarea__inner) {
-  padding: 8px !important;
-}
+  .inputOnFocus :deep(.el-textarea__inner) {
+    padding: 8px !important;
+  }
 
-.result {
-  width: 100%;
-  height: 100%;
-}
+  .result {
+    width: 100%;
+    height: 100%;
+  }
 
-:deep(.el-text) {
-  width: 100%;
-  height: 100%;
-  font-size: 18px;
-}
+  :deep(.el-text) {
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+  }
 
-.input {
-  width: 0;
-  height: 100%;
-  opacity: 0;
-}
+  .input {
+    width: 0;
+    height: 100%;
+    opacity: 0;
+  }
 
-:deep(textarea) {
-  resize: none;
-}
+  :deep(textarea) {
+    resize: none;
+  }
 
-.input :deep(.el-textarea__inner) {
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  min-width: unset !important;
-  min-height: unset !important;
-  padding: 0;
-  border-radius: 0;
-  color: #3a3a3a;
-  font-weight: bold;
-  background: repeating-linear-gradient(
-      -45deg,
-      rgba(240, 240, 240, 0.9),
-      rgba(240, 240, 240, 0.9) 40px,
-      rgba(255, 255, 255, 0.9) 40px,
-      rgba(255, 255, 255, 0.9) 80px
-  );
+  .input :deep(.el-textarea__inner) {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    min-width: unset !important;
+    min-height: unset !important;
+    padding: 0;
+    border-radius: 0;
+    color: #3a3a3a;
+    font-weight: bold;
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(240, 240, 240, 0.9),
+        rgba(240, 240, 240, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 80px
+    );
+  }
 }
-
 </style>

@@ -97,6 +97,7 @@ defineExpose({
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
   .hide {
     height: 0;
 
@@ -108,31 +109,31 @@ defineExpose({
   .editing {
     height: 40px;
   }
-}
 
-.urlEdit {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  .urlEdit {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 
-  :deep(.el-input-group__append, .el-input-group__prepend) {
-    padding: 0 !important;
+    :deep(.el-input-group__append, .el-input-group__prepend) {
+      padding: 0 !important;
+    }
+
+    :deep(.el-input-group__append button.el-button) {
+      padding: 0 30px !important;
+      cursor: pointer;
+    }
   }
 
-  :deep(.el-input-group__append button.el-button) {
-    padding: 0 30px !important;
-    cursor: pointer;
+  .iframeContainer {
+    height: 100%;
+    width: 100%;
   }
-}
 
-.iframeContainer {
-  height: 100%;
-  width: 100%;
-}
+  .iframe {
+    border: none;
+  }
 
-.iframe {
-  border: none;
 }
-
 </style>

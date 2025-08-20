@@ -20,7 +20,7 @@ function editStyle() {
 </script>
 
 <template>
-  <div v-show="enableEdit" class="container">
+  <div v-show="enableEdit" class="operatorContainer">
     <el-popconfirm
       class="deleteItem"
       title="确定删除此组件"
@@ -62,14 +62,14 @@ function editStyle() {
 </template>
 
 <style scoped>
-.container {
+.operatorContainer {
   height: 100%;
   width: 100%;
   opacity: 0.4;
   pointer-events: none;
 }
 
-.container:hover {
+.operatorContainer:hover {
   opacity: 1;
 }
 

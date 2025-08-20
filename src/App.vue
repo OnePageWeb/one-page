@@ -2,40 +2,40 @@
   <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
     <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
       <el-popover
-        class="box-item"
-        v-for="item in itemType"
-        :title="item.label"
-        :content="item.desc"
-        width="300"
-        placement="right-start"
+          class="box-item"
+          v-for="item in itemType"
+          :title="item.label"
+          :content="item.desc"
+          width="300"
+          placement="right-start"
       >
         <template #reference>
           <el-option
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
           />
         </template>
       </el-popover>
     </el-select>
     <el-checkbox v-model="enableMove" label="开启移动" border/>
     <el-checkbox v-model="enableEdit" label="开启编辑" border/>
-    <el-button @click="editGlobeStyle" class="btn">全局样式</el-button>
+    <el-button @click="editGlobalStyle" class="btn">全局样式</el-button>
     <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
   </div>
   <div ref="gridEl" class="grid-stack"></div>
 
   <!-- 全局样式弹窗 -->
-  <el-dialog title="全局样式" v-model="isEditGlobeStyle" width="50%" class="globeStyleDialog commonDialog">
+  <el-dialog title="全局样式" v-model="isEditGlobalStyle" width="50%" class="globeStyleDialog commonDialog">
     <el-input
-      v-model="globeStyle"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入全局样式"
+        v-model="globalStyle"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入全局样式"
     />
     <template #footer>
-      <el-button type="primary" @click="refreshStyle">刷新</el-button>
+      <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
     </template>
   </el-dialog>
 
@@ -50,26 +50,28 @@
       </div>
     </template>
     <el-input
-      v-model="configData"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入配置URL或拖拽JSON文件到此处"
-      @dragover.prevent
-      @drop.prevent="handleFileDrop"
+        v-model="configData"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入配置URL或拖拽JSON文件到此处"
+        @dragover.prevent
+        @drop.prevent="handleFileDrop"
     />
 
     <!-- 配置提示弹窗 -->
     <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%">
-      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
-        可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
+      <div>
+        <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
+          可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
+        </div>
+        <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
+        </div>
+        <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
+            href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+        </div>
+        <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
       </div>
-      <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
-      </div>
-      <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-        href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
-      </div>
-      <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="configLoaderTipVisible = false">关闭</el-button>
@@ -78,18 +80,39 @@
     </el-dialog>
     <template #footer>
       <el-button type="primary" @click="downloadConfig">下载</el-button>
-      <el-button type="primary" @click="loadConfig">加载</el-button>
+      <el-popconfirm
+          title="确定加载以上配置，这会覆盖本地的所有配置？"
+          placement="top-start"
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          @confirm="loadConfig()"
+      >
+        <template #reference>
+          <el-button type="primary">加载</el-button>
+        </template>
+      </el-popconfirm>
+      <el-popconfirm
+          title="确定清空并重新加载页面？"
+          placement="top-start"
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          @confirm="clearConfig(true)"
+      >
+        <template #reference>
+          <el-button type="danger">清空</el-button>
+        </template>
+      </el-popconfirm>
     </template>
   </el-dialog>
 
   <!-- 组件样式弹窗 -->
   <el-dialog title="组件样式" v-model="isEditComponentStyle" width="50%" class="globeStyleDialog commonDialog">
     <el-input
-      v-model="componentStyle"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入样式"
+        v-model="componentStyle"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -97,14 +120,25 @@
   </el-dialog>
 
   <edge-mouse-move
-    @onLeftEdge="() => showMenu = !showMenu && !viewMode"
+      @onLeftEdge="() => showMenu = !showMenu && !viewMode"
   />
 </template>
 
 <script setup>
 import {createApp, h, nextTick, onMounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
-import {ElButton, ElCheckbox, ElDialog, ElIcon, ElInput, ElMessage, ElOption, ElPopover, ElSelect} from 'element-plus'
+import {
+  ElButton,
+  ElCheckbox,
+  ElDialog,
+  ElIcon,
+  ElInput,
+  ElMessage,
+  ElOption,
+  ElPopconfirm,
+  ElPopover,
+  ElSelect
+} from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
@@ -117,7 +151,7 @@ import evalComponent from "./components/EvalComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {parseBlobJson} from "@/js/url.js"
-import {InfoFilled} from "@element-plus/icons-vue"
+import {Close, InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
 import {loadData, removeData, saveData} from "@/js/data.js"
 
@@ -185,7 +219,7 @@ watch(enableEdit, b => {
   }
 })
 // 全局样式
-let globeStyle = ref(`.grid-stack {
+let globalStyle = ref(`.grid-stack {
   height: 100% !important;
 }
 body {
@@ -249,6 +283,7 @@ onMounted(async () => {
       // 恢复组件样式
       const componentStyle = loadData(componentId + '-style')
       if (componentStyle) {
+        loadComponentStyle(componentId, componentStyle)
         document.getElementById(componentId + '-container').style.cssText = componentStyle
       }
     }
@@ -259,10 +294,10 @@ onMounted(async () => {
   }
 
   // 恢复样式
-  const style = loadData('globeStyle')
+  const style = loadData('globalStyle')
   if (style) {
-    globeStyle.value = style
-    refreshStyle()
+    globalStyle.value = style
+    refreshGlobalStyle()
   }
 
   disabledEdit()
@@ -394,37 +429,57 @@ let componentStyle = ref('')
 function editStyle(id) {
   curComponentId.value = id.value
   // 获取组件样式
-  componentStyle.value = document.getElementById(id.value + '-container').style.cssText
+  componentStyle.value = loadData(id.value + '-style')
   isEditComponentStyle.value = true
+}
+
+function loadStyle(id, styleContent) {
+  // 先删除旧的样式
+  const oldStyle = document.getElementById(id)
+  if (oldStyle) {
+    document.head.removeChild(oldStyle)
+  }
+  const style = document.createElement('style')
+  style.id = id
+  style.innerHTML = styleContent
+  document.head.appendChild(style)
+}
+
+function loadComponentStyle(id, styleContent) {
+  // 先删除旧的样式
+  const oldStyle = document.getElementById(id + '-style')
+  if (oldStyle) {
+    document.head.removeChild(oldStyle)
+  }
+  const style = document.createElement('style')
+  style.id = id + '-style'
+  style.innerHTML = `[id='${id}'] {
+    ${styleContent}
+  }`
+  document.head.appendChild(style)
 }
 
 function refreshComponentStyle(id) {
   const idValue = id.value || curComponentId.value
-  document.getElementById(idValue + '-container').style.cssText = componentStyle.value
+  loadComponentStyle(idValue, componentStyle.value)
   // 保存组件样式
   saveData(idValue + '-style', componentStyle.value)
   isEditComponentStyle.value = false
 }
 
-// 编辑全局样式
-let isEditGlobeStyle = ref(false)
 
-function editGlobeStyle() {
-  isEditGlobeStyle.value = true
+// 编辑全局样式
+let isEditGlobalStyle = ref(false)
+
+function editGlobalStyle() {
+  isEditGlobalStyle.value = true
 }
 
-function refreshStyle() {
-  // 先删除旧的样式
-  const oldStyle = document.getElementById('globeStyle')
-  if (oldStyle) {
-    document.head.removeChild(oldStyle)
-  }
-  const style = document.createElement('style')
-  style.id = 'globeStyle'
-  style.innerHTML = globeStyle.value
-  document.head.appendChild(style)
+function refreshGlobalStyle() {
+  loadStyle('globalStyle', globalStyle.value)
   // 保存全局样式
-  saveData('globeStyle', globeStyle.value)
+  saveData('globalStyle', globalStyle.value)
+  isEditGlobalStyle.value = false
 }
 
 let configData = ref('')
@@ -442,7 +497,7 @@ function openLoadConfig() {
 function generateConfig() {
   // 汇总所有配置为一个json
   let config = {
-    globeStyle: globeStyle.value,
+    globalStyle: globalStyle.value,
     layout: JSON.parse(loadData('layout')),
     components: []
   }
@@ -467,9 +522,9 @@ function generateConfig() {
 }
 
 // 清除旧配置
-function clearConfig() {
+function clearConfig(reload = false) {
   removeData('layout')
-  removeData('globeStyle')
+  removeData('globalStyle')
   const nodes = grid.engine.nodes; // 获取所有格子节点数据
   const ids = nodes.map(node => node.el.id)
   for (let id of ids) {
@@ -477,6 +532,10 @@ function clearConfig() {
     removeData(id)
     // 删除组件样式
     removeData(id + '-style')
+  }
+  // 刷新页面
+  if (reload) {
+    window.location.reload()
   }
 }
 
@@ -504,14 +563,14 @@ async function loadConfig(reload = true) {
     return
   }
   // 校验配置
-  if (!config.globeStyle || !config.layout || !config.components) {
+  if (!config.globalStyle || !config.layout || !config.components) {
     ElMessage.error('配置文件格式错误')
     return
   }
   // 清除旧配置
   clearConfig()
   // 加载全局样式
-  saveData('globeStyle', config.globeStyle)
+  saveData('globalStyle', config.globalStyle)
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
   // 加载组件
@@ -576,10 +635,17 @@ function handleFileDrop(e) {
 
 /* 菜单样式开始 */
 .menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100% - 20px);
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 0 10px;
+  z-index: 1;
+  background-color: rgba(236, 236, 236, 0.35);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 
   .el-button + .el-button {
     margin-left: 0;
@@ -588,10 +654,13 @@ function handleFileDrop(e) {
 
 .menu-show {
   height: 80px;
+  opacity: 1;
 }
 
 .menu-hide {
   height: 0;
+  opacity: 0;
+  border-bottom: unset;
 
   * {
     margin-top: -80px;
@@ -628,11 +697,11 @@ function handleFileDrop(e) {
 
 .grid-stack-item.ui-resizable-autohide {
   background: repeating-linear-gradient(
-    45deg,
-    rgba(150, 150, 150, 0.1),
-    rgba(150, 150, 150, 0.1) 40px,
-    rgba(255, 255, 255, 0.1) 40px,
-    rgba(255, 255, 255, 0.1) 80px
+      45deg,
+      rgba(150, 150, 150, 0.1),
+      rgba(150, 150, 150, 0.1) 40px,
+      rgba(255, 255, 255, 0.1) 40px,
+      rgba(255, 255, 255, 0.1) 80px
   );
 }
 

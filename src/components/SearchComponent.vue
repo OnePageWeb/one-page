@@ -66,11 +66,11 @@ function cancelEdit() {
 function saveEdit() {
   // 去除空格，并去除无效项
   tempSearchEngineList.value = tempSearchEngineList.value
-    .map(item => ({
-      name: item.name.trim(),
-      url: item.url.trim(),
-    }))
-    .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
+      .map(item => ({
+        name: item.name.trim(),
+        url: item.url.trim(),
+      }))
+      .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
   // 映射到Map
   searchEngineMap.value = tempSearchEngineList.value.reduce((prev, cur) => {
     prev[cur.name] = cur
@@ -132,28 +132,28 @@ defineExpose({
 </script>
 
 <template>
-  <div class="container">
+  <div class="searchContainer">
     <div class="searchContent">
       <el-select
-        v-model="nowSearchEngine"
-        placeholder="搜索引擎"
-        class="searchEngine"
-        @change="save"
+          v-model="nowSearchEngine"
+          placeholder="搜索引擎"
+          class="searchEngine"
+          @change="save"
       >
         <el-option
-          v-for="item in searchEngineList"
-          :key="item.name"
-          :label="item.name"
-          :value="item.name"
+            v-for="item in searchEngineList"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name"
         />
       </el-select>
       <el-input
-        v-model="searchContent"
-        class="input"
-        :rows="2"
-        placeholder="输入搜索内容"
-        @keydown.enter="search"
-        clearable
+          v-model="searchContent"
+          class="input"
+          :rows="2"
+          placeholder="输入搜索内容"
+          @keydown.enter="search"
+          clearable
       >
         <template #prepend>
           <el-icon class="editIcon" :class="{'hide': !isEditing}" @click="editSearchEngine">
@@ -165,10 +165,10 @@ defineExpose({
 
     <!-- 编辑搜索引擎弹窗 -->
     <el-dialog
-      class="commonDialog"
-      v-model="dialogVisible"
-      title="编辑搜索引擎"
-      width="60%"
+        class="commonDialog"
+        v-model="dialogVisible"
+        title="编辑搜索引擎"
+        width="60%"
     >
       <el-form ref="formRef" label-width="100px" class="searchForm">
         <div class="appendContainer">
@@ -213,141 +213,142 @@ defineExpose({
 </template>
 
 <style>
-.container {
+.searchContainer {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
-}
 
-.searchContent {
-  height: 50%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-
-  .el-select {
-    width: 20% !important;
-    min-width: 100px;
-    max-width: 160px;
-  }
-
-  .el-select__wrapper {
-    height: 100%;
-    border-radius: 48px 0 0 48px !important;
-    box-shadow: unset !important;
-    background-color: #000000 !important;
-    padding: 0 8px !important;
-    min-height: unset !important;
-  }
-
-  .el-input__inner {
-    font-weight: bold;
-  }
-
-  .el-select__selected-item {
-    color: white !important;
-    font-weight: bolder;
-    font-size: large;
-  }
-
-  .el-select__placeholder {
-    display: flex !important;
-    justify-content: space-around;
-  }
-
-  .input {
-    height: 100%;
+  .searchContent {
+    height: 50%;
     width: 100%;
-    font-size: 18px;
-    border-radius: 0 48px 48px 0 !important;
-
-    &:hover {
-      width: 140%;
-    }
-
-    .el-input__wrapper {
-      width: 100%;
-      height: 100%;
-      border-radius: 0 48px 48px 0 !important;
-      box-shadow: unset !important;
-      padding: 0 11px;
-    }
-  }
-
-  .el-input-group__prepend {
-    box-shadow: unset !important;
-    cursor: pointer;
-    padding: unset !important;
-    border-radius: unset !important;
-  }
-
-  .el-icon.editIcon {
-    height: 100% !important;
-    width: 100% !important;
-    padding: 0 20px;
-  }
-
-  .el-icon.editIcon.hide {
-    height: 100% !important;
-    width: 0 !important;
-    padding: 0;
-  }
-}
-
-.searchEngine {
-  height: 100%;
-  width: 200px;
-  border-radius: 48px 0 0 48px !important;
-}
-
-.searchForm {
-
-  .appendContainer {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px dashed #aaaaaa;
-
-    .prefix {
-      width: 45%;
-    }
-
-    .suffix {
-      width: 45%;
-    }
-
-    .el-form-item__label {
-      border-left: 8px solid #1bc3b3;
-    }
-  }
-
-  .searchItem {
     display: flex;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #aaaaaa;
-    /* 最后一个不添加 */
 
-    &:last-child {
-      padding-bottom: 0;
-      border-bottom: unset;
+    .el-select {
+      width: 20% !important;
+      min-width: 100px;
+      max-width: 160px;
     }
 
-    /* 第一个不添加 */
-
-    &:first-child {
-      padding-top: 0;
+    .el-select__wrapper {
+      height: 100%;
+      border-radius: 48px 0 0 48px !important;
+      box-shadow: unset !important;
+      background-color: #000000 !important;
+      padding: 0 8px !important;
+      min-height: unset !important;
     }
 
-    .searchName {
-      display: block !important;
-      width: 160px !important;
+    .el-input__inner {
+      font-weight: bold;
     }
 
-    .searchUrl {
-      display: block !important;
-      width: calc(100% - 180px) !important;
+    .el-select__selected-item {
+      color: white !important;
+      font-weight: bolder;
+      font-size: large;
     }
+
+    .el-select__placeholder {
+      display: flex !important;
+      justify-content: space-around;
+    }
+
+    .input {
+      height: 100%;
+      width: 100%;
+      font-size: 18px;
+      border-radius: 0 48px 48px 0 !important;
+
+      &:hover {
+        width: 140%;
+      }
+
+      .el-input__wrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 0 48px 48px 0 !important;
+        box-shadow: unset !important;
+        padding: 0 11px;
+      }
+    }
+
+    .el-input-group__prepend {
+      box-shadow: unset !important;
+      cursor: pointer;
+      padding: unset !important;
+      border-radius: unset !important;
+    }
+
+    .el-icon.editIcon {
+      height: 100% !important;
+      width: 100% !important;
+      padding: 0 20px;
+    }
+
+    .el-icon.editIcon.hide {
+      height: 100% !important;
+      width: 0 !important;
+      padding: 0;
+    }
+  }
+
+  .searchEngine {
+    height: 100%;
+    width: 200px;
+    border-radius: 48px 0 0 48px !important;
+  }
+
+  .searchForm {
+
+    .appendContainer {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #aaaaaa;
+
+      .prefix {
+        width: 45%;
+      }
+
+      .suffix {
+        width: 45%;
+      }
+
+      .el-form-item__label {
+        border-left: 8px solid #1bc3b3;
+      }
+    }
+
+    .searchItem {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #aaaaaa;
+      /* 最后一个不添加 */
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: unset;
+      }
+
+      /* 第一个不添加 */
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      .searchName {
+        display: block !important;
+        width: 160px !important;
+      }
+
+      .searchUrl {
+        display: block !important;
+        width: calc(100% - 180px) !important;
+      }
+    }
+
   }
 
 }

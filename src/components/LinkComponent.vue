@@ -67,7 +67,7 @@ const curLink = ref({})
 
 function openModal(link) {
   modalVisible.value = true
-  curLink.value = { ...link }
+  curLink.value = {...link}
   if (fastMode.value) {
     ElMessage({
       message: '快速模式已开启，鼠标移出弹窗即可关闭',
@@ -77,6 +77,7 @@ function openModal(link) {
 }
 
 const linkIframe = ref(null)
+
 function onIframeLoad() {
   const iframe = linkIframe.value
   if (!iframe) return
@@ -168,16 +169,16 @@ defineExpose({
 </script>
 
 <template>
-  <div class="content">
+  <div class="linkContent">
     <div
-      v-for="(link, index) in links"
-      class="linkContainer"
-      @click="open(link)"
+        v-for="(link, index) in links"
+        class="linkContainer"
+        @click="open(link)"
     >
       <div
-        class="linkItem"
-        draggable="true"
-        @dragend="openModal(link)"
+          class="linkItem"
+          draggable="true"
+          @dragend="openModal(link)"
       >
         <img :src="link.img" alt="图标"/>
         <el-text tag="b">{{ link.name }}</el-text>
@@ -192,43 +193,41 @@ defineExpose({
 
     <!-- 临时弹窗 -->
     <el-dialog
-      class="urlWebDialog"
-      v-model="modalVisible"
-      ref="urlWebDialog"
-      width="80%"
-      :show-close="false"
-      @mouseleave="fastModeCheck"
+        class="urlWebDialog"
+        v-model="modalVisible"
+        ref="urlWebDialog"
+        width="80%"
+        :show-close="false"
+        :append-to-body="true"
+        @mouseleave="fastModeCheck"
     >
       <template #header>
         <div class="urlWebHeader">
-          {{ curLink.name }}
+          <span style="margin-left: 8px;font-weight: bold">{{ curLink.name }}</span>
           <div class="urlWebOperator">
-            <el-icon :class="fastMode ? 'fastModeFlag' : ''" @click="fastMode = !fastMode">
-              <LocationFilled />
-            </el-icon>
-            <el-icon @click="modalVisible = false">
-              <CircleCloseFilled/>
-            </el-icon>
+            <div :class="fastMode ? 'fastModeFlag' : ''" @click="fastMode = !fastMode">{{ fastMode ? '快速模式' : '普通模式' }}</div>
+            <div @click="modalVisible = false">关闭</div>
           </div>
         </div>
       </template>
       <iframe
-        class="linkIframe"
-        ref="linkIframe"
-        :src="curLink.url"
-        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-        frameborder="0"
-        allowfullscreen
-        @load="onIframeLoad"
+          class="linkIframe"
+          ref="linkIframe"
+          :src="curLink.url"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+          frameborder="0"
+          allowfullscreen
+          @load="onIframeLoad"
       ></iframe>
     </el-dialog>
 
     <!-- 编辑搜索引擎弹窗 -->
     <el-dialog
-      class="commonDialog"
-      v-model="dialogVisible"
-      title="编辑快速链接"
-      width="60%"
+        class="commonDialog"
+        v-model="dialogVisible"
+        title="编辑快速链接"
+        width="60%"
+        :append-to-body="true"
     >
       <div class="linkEditContainer">
         <el-form ref="formRef" class="linkForm">
@@ -269,143 +268,144 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
-.content {
+<style>
+.linkContent {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 40px;
-}
 
-.linkContainer {
-  position: relative;
-  cursor: pointer;
-  padding: 10px;
-  height: calc(100% - 30px);
-}
-
-.linkContainer:hover {
-  scale: 1.1;
-  border-radius: 20px;
-  box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.linkContainer, .linkItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.linkItem {
-  height: 100%;
-  user-select: none;
-
-  img {
-    height: 40%;
-    margin-bottom: 8px;
-  }
-}
-
-.editContainer {
-  height: 40px;
-  width: 40px;
-  position: absolute;
-  pointer-events: auto;
-  background-color: rgba(182, 182, 182, 0.5);
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-radius: 40px;
-  right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  :deep(path) {
-    fill: #737373;
-  }
-}
-
-.linkForm .linkEditItem {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 0;
-  border-bottom: 1px dashed #aaaaaa;
-  /* 最后一个不添加 */
-
-  &:last-child {
-    padding-bottom: 0;
-    border-bottom: unset;
+  .linkContainer {
+    position: relative;
+    cursor: pointer;
+    padding: 10px;
+    height: calc(100% - 30px);
   }
 
-  /* 第一个不添加 */
-
-  &:first-child {
-    padding-top: 0;
+  .linkContainer:hover {
+    scale: 1.1;
+    border-radius: 20px;
+    box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
-  .linkName {
-    display: block !important;
-    width: 160px !important;
-  }
-
-  .linkUrl {
-    display: block !important;
-    width: calc(100% - 380px) !important;
-  }
-
-  .linkImg {
-    display: block !important;
-    width: 200px !important;
-  }
-}
-
-:deep(.urlWebDialog) {
-  height: calc(80% - 4px);
-  width: 80%;
-  --el-dialog-padding-primary: 0;
-
-  .el-dialog__header {
-    border-bottom: 3px solid #f1f1f1;
-    margin-bottom: 0;
-  }
-
-  .urlWebHeader {
+  .linkContainer, .linkItem {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
   }
 
-  .urlWebOperator {
+  .linkItem {
+    height: 100%;
+    user-select: none;
+
+    img {
+      height: 40%;
+      margin-bottom: 8px;
+    }
+  }
+
+  .linkContent .editContainer {
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    pointer-events: auto;
+    background-color: rgba(182, 182, 182, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 40px;
+    right: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 0 4px;
+    cursor: pointer;
 
-    /* 对其中的每一个子元素都添加cursor: pointer; */
-
-    * {
-      cursor: pointer;
-      padding: 0 16px;
-    }
-
-    .fastModeFlag {
-      color: #ff0000;
+    :deep(path) {
+      fill: #737373;
     }
   }
 
-  .linkIframe {
-    height: 100%;
-    width: 100%;
+  .linkForm .linkEditItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #aaaaaa;
+    /* 最后一个不添加 */
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: unset;
+    }
+
+    /* 第一个不添加 */
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    .linkName {
+      display: block !important;
+      width: 160px !important;
+    }
+
+    .linkUrl {
+      display: block !important;
+      width: calc(100% - 380px) !important;
+    }
+
+    .linkImg {
+      display: block !important;
+      width: 200px !important;
+    }
   }
 
-  .el-dialog__body {
-    height: calc(100% - 24px) !important;
+  .urlWebDialog {
+    height: calc(80% - 4px);
+    width: 80%;
+    --el-dialog-padding-primary: 0;
+
+    .el-dialog__header {
+      border-bottom: 3px solid #f1f1f1;
+      margin-bottom: 0;
+    }
+
+    .urlWebHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .urlWebOperator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 4px;
+
+      /* 对其中的每一个子元素都添加cursor: pointer; */
+
+      * {
+        cursor: pointer;
+        padding: 0 16px;
+      }
+
+      .fastModeFlag {
+        color: #3ff1ff;
+      }
+    }
+
+    .linkIframe {
+      height: 100%;
+      width: 100%;
+    }
+
+    .el-dialog__body {
+      height: calc(100% - 24px) !important;
+    }
   }
+
 }
 </style>
