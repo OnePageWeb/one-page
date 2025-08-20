@@ -186,7 +186,12 @@ watch(enableEdit, b => {
 })
 // 全局样式
 let globeStyle = ref(`.grid-stack {
-  min-height: 300px;
+  height: 100% !important;
+}
+body {
+  background: url(https://api.xsot.cn/bing?jump=true)  center/cover;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }`)
 // 仅查看模式
 let viewMode = ref(false)
@@ -617,6 +622,8 @@ function handleFileDrop(e) {
 /* 栅格容器样式 */
 .grid-stack {
   min-height: 300px;
+  height: 100% !important;
+  backdrop-filter: blur(10px);
 }
 
 .grid-stack-item.ui-resizable-autohide {

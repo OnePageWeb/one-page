@@ -19,11 +19,13 @@ const input = ref(null)
 const webIframe = ref(null)
 const updateIframeContent = () => {
   if (!webIframe.value) return
-  const iframeDoc = webIframe.value.contentDocument || webIframe.value.contentWindow.document
-  iframeDoc.open()
-  iframeDoc.write(content.value)
-  iframeDoc.close()
-  onFocus.value = false
+  nextTick(() => {
+    const iframeDoc = webIframe.value.contentDocument || webIframe.value.contentWindow.document
+    iframeDoc.open()
+    iframeDoc.write(content.value)
+    iframeDoc.close()
+    onFocus.value = false
+  })
 }
 
 function edit() {

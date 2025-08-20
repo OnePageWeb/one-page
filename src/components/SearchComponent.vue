@@ -101,7 +101,6 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
-  console.log('enableEdit', enableEdit.value)
   isEditing.value = enableEdit.value
 })
 
