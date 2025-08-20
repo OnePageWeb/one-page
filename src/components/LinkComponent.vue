@@ -1,7 +1,7 @@
 <script setup>
-import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElText} from "element-plus"
-import {onMounted, ref, toRefs, watch} from "vue"
-import {Close, Operation, Plus} from "@element-plus/icons-vue"
+import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElMessage, ElText} from "element-plus"
+import {onMounted, reactive, ref, toRefs, watch} from "vue"
+import {CircleCloseFilled, Close, Flag, LocationFilled, Operation, Plus} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js";
 
 const defaultLinks = [
@@ -22,15 +22,15 @@ const props = defineProps({
 const {id, enableEdit} = toRefs(props)
 
 // 默认文本内容
-let links = ref([])
-let isEditing = ref(false)
+const links = ref([])
+const isEditing = ref(false)
 
 watch(enableEdit, (newValue) => {
   isEditing.value = newValue
 })
 
-let dialogVisible = ref(false)
-let tempLinks = ref([])
+const dialogVisible = ref(false)
+const tempLinks = ref([])
 
 function edit() {
   isEditing.value = true
@@ -56,17 +56,66 @@ function saveEdit() {
 }
 
 // 打开窗口
-function open(url) {
-  window.open(url, '_blank')
+function open(link) {
+  window.open(link.url, '_blank')
 }
 
 // 打开弹窗
-let modalVisible = ref(false)
-let curLink = ref({})
+const modalVisible = ref(false)
+const fastMode = ref(true)
+const curLink = ref({})
 
 function openModal(link) {
   modalVisible.value = true
-  curLink.value = link
+  curLink.value = { ...link }
+  if (fastMode.value) {
+    ElMessage({
+      message: '快速模式已开启，鼠标移出弹窗即可关闭',
+      type: 'success'
+    })
+  }
+}
+
+const linkIframe = ref(null)
+function onIframeLoad() {
+  const iframe = linkIframe.value
+  if (!iframe) return
+
+  try {
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+
+    // 阻止所有链接在新窗口打开
+    const links = iframeDoc.querySelectorAll('a')
+    links.forEach(link => {
+      link.target = '_self' // 强制在当前iframe内打开
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        // 在这里处理导航逻辑
+      })
+    })
+  } catch (error) {
+    console.warn('无法访问iframe内容:', error)
+  }
+}
+
+watch(fastMode, b => {
+  if (b) {
+    ElMessage({
+      message: '快速模式已开启，鼠标移出弹窗即可关闭',
+      type: 'success'
+    })
+  } else {
+    ElMessage({
+      message: '快速模式已关闭，点击弹窗外区域即可关闭',
+      type: 'info'
+    })
+  }
+})
+
+function fastModeCheck() {
+  if (fastMode.value) {
+    modalVisible.value = false
+  }
 }
 
 function save() {
@@ -123,9 +172,13 @@ defineExpose({
     <div
       v-for="(link, index) in links"
       class="linkContainer"
-      @click="open(link.url)"
+      @click="open(link)"
     >
-      <div class="linkItem">
+      <div
+        class="linkItem"
+        draggable="true"
+        @dragend="openModal(link)"
+      >
         <img :src="link.img" alt="图标"/>
         <el-text tag="b">{{ link.name }}</el-text>
       </div>
@@ -137,8 +190,42 @@ defineExpose({
       </el-icon>
     </div>
 
+    <!-- 临时弹窗 -->
+    <el-dialog
+      class="urlWebDialog"
+      v-model="modalVisible"
+      ref="urlWebDialog"
+      width="80%"
+      :show-close="false"
+      @mouseleave="fastModeCheck"
+    >
+      <template #header>
+        <div class="urlWebHeader">
+          {{ curLink.name }}
+          <div class="urlWebOperator">
+            <el-icon :class="fastMode ? 'fastModeFlag' : ''" @click="fastMode = !fastMode">
+              <LocationFilled />
+            </el-icon>
+            <el-icon @click="modalVisible = false">
+              <CircleCloseFilled/>
+            </el-icon>
+          </div>
+        </div>
+      </template>
+      <iframe
+        class="linkIframe"
+        ref="linkIframe"
+        :src="curLink.url"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+        frameborder="0"
+        allowfullscreen
+        @load="onIframeLoad"
+      ></iframe>
+    </el-dialog>
+
     <!-- 编辑搜索引擎弹窗 -->
     <el-dialog
+      class="commonDialog"
       v-model="dialogVisible"
       title="编辑快速链接"
       width="60%"
@@ -215,6 +302,7 @@ defineExpose({
 
 .linkItem {
   height: 100%;
+  user-select: none;
 
   img {
     height: 40%;
@@ -273,6 +361,51 @@ defineExpose({
   .linkImg {
     display: block !important;
     width: 200px !important;
+  }
+}
+
+:deep(.urlWebDialog) {
+  height: calc(80% - 4px);
+  width: 80%;
+  --el-dialog-padding-primary: 0;
+
+  .el-dialog__header {
+    border-bottom: 3px solid #f1f1f1;
+    margin-bottom: 0;
+  }
+
+  .urlWebHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .urlWebOperator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 4px;
+
+    /* 对其中的每一个子元素都添加cursor: pointer; */
+
+    * {
+      cursor: pointer;
+      padding: 0 16px;
+    }
+
+    .fastModeFlag {
+      color: #ff0000;
+    }
+  }
+
+  .linkIframe {
+    height: 100%;
+    width: 100%;
+  }
+
+  .el-dialog__body {
+    height: calc(100% - 24px) !important;
   }
 }
 </style>

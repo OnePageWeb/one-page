@@ -26,7 +26,7 @@
   <div ref="gridEl" class="grid-stack"></div>
 
   <!-- 全局样式弹窗 -->
-  <el-dialog title="全局样式" v-model="isEditGlobeStyle" width="50%" class="globeStyleDialog">
+  <el-dialog title="全局样式" v-model="isEditGlobeStyle" width="50%" class="globeStyleDialog commonDialog">
     <el-input
       v-model="globeStyle"
       class="globeStyleInput"
@@ -40,7 +40,7 @@
   </el-dialog>
 
   <!-- 配置加载弹窗 -->
-  <el-dialog title="加载配置" v-model="configLoaderVisible" width="50%" class="globeStyleDialog">
+  <el-dialog title="加载配置" v-model="configLoaderVisible" width="50%" class="globeStyleDialog commonDialog">
     <template #header="{ close, titleId, titleClass }">
       <div class="configLoaderHeader">
         <div :id="titleId" :class="titleClass">加载配置</div>
@@ -60,7 +60,7 @@
     />
 
     <!-- 配置提示弹窗 -->
-    <el-dialog v-model="configLoaderTipVisible" title="Tips" width="50%" draggable>
+    <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%">
       <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
         可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
       </div>
@@ -83,7 +83,7 @@
   </el-dialog>
 
   <!-- 组件样式弹窗 -->
-  <el-dialog title="组件样式" v-model="isEditComponentStyle" width="50%" class="globeStyleDialog">
+  <el-dialog title="组件样式" v-model="isEditComponentStyle" width="50%" class="globeStyleDialog commonDialog">
     <el-input
       v-model="componentStyle"
       class="globeStyleInput"
@@ -703,7 +703,7 @@ function handleFileDrop(e) {
 /* 表单样式结束 */
 
 /* 全局样式弹窗样式开始 */
-.el-dialog {
+.commonDialog {
   height: calc(80% - 2px);
   max-height: 80%;
 

@@ -30,18 +30,9 @@ function editStyle() {
       @confirm="deleteItem"
     >
       <template #reference>
-        <div>
-          <el-tooltip
-            class="deleteItem"
-            effect="light"
-            content="删除组件"
-            placement="bottom-start"
-          >
-            <el-icon class="deleteItem">
-              <Close/>
-            </el-icon>
-          </el-tooltip>
-        </div>
+        <el-icon class="deleteItem">
+          <Close/>
+        </el-icon>
       </template>
     </el-popconfirm>
 

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, defineEmits} from "vue"
+import {onMounted, ref, defineEmits, onUnmounted} from "vue"
 import {debounce, throttle} from 'lodash-es'
 
 const edgeThreshold = ref(10)
@@ -15,6 +15,12 @@ const emit = defineEmits(['onLeftEdge', 'onRightEdge', 'onTopEdge', 'onBottomEdg
 
 onMounted(() => {
   window.addEventListener('mousemove', detectEdge)
+  window.addEventListener('touchmove', detectEdge)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', detectEdge)
+  window.removeEventListener('touchmove', detectEdge)
 })
 
 function detectEdge(event) {

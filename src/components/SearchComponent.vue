@@ -166,6 +166,7 @@ defineExpose({
 
     <!-- 编辑搜索引擎弹窗 -->
     <el-dialog
+      class="commonDialog"
       v-model="dialogVisible"
       title="编辑搜索引擎"
       width="60%"
