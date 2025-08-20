@@ -17,16 +17,16 @@ const defaultLinks = [
 
 const props = defineProps({
   id: String,
-  isLock: Object
+  enableEdit: Object
 })
-const {id, isLock} = toRefs(props)
+const {id, enableEdit} = toRefs(props)
 
 // 默认文本内容
 let links = ref([])
 let isEditing = ref(false)
 
-watch(isLock, (newValue) => {
-  isEditing.value = !newValue
+watch(enableEdit, (newValue) => {
+  isEditing.value = newValue
 })
 
 let dialogVisible = ref(false)
@@ -80,7 +80,7 @@ watch(isEditing, (newValue) => {
 })
 onMounted(() => {
   load()
-  isEditing.value = !isLock.value
+  isEditing.value = enableEdit.value
 })
 
 function load(data) {
@@ -131,7 +131,7 @@ defineExpose({
       </div>
     </div>
 
-    <div v-show="!isLock" class="editContainer" @click.stop="edit">
+    <div v-show="enableEdit" class="editContainer" @click.stop="edit">
       <el-icon>
         <Operation/>
       </el-icon>

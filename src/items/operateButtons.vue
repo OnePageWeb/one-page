@@ -6,9 +6,9 @@ import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 const emit = defineEmits(['onDelete', 'onStyleEdit'])
 const props = defineProps({
   id: String,
-  isLock: Object
+  enableEdit: Object
 })
-const {id, isLock} = toRefs(props)
+const {id, enableEdit} = toRefs(props)
 
 function deleteItem() {
   setTimeout(() => emit('onDelete', id), 300)
@@ -20,7 +20,7 @@ function editStyle() {
 </script>
 
 <template>
-  <div v-show="!isLock" class="container">
+  <div v-show="enableEdit" class="container">
     <el-popconfirm
       class="deleteItem"
       title="确定删除此组件"
@@ -30,16 +30,18 @@ function editStyle() {
       @confirm="deleteItem"
     >
       <template #reference>
-        <el-tooltip
-          class="deleteItem"
-          effect="light"
-          content="删除组件"
-          placement="bottom-start"
-        >
-          <el-icon class="deleteItem">
-            <Close/>
-          </el-icon>
-        </el-tooltip>
+        <div>
+          <el-tooltip
+            class="deleteItem"
+            effect="light"
+            content="删除组件"
+            placement="bottom-start"
+          >
+            <el-icon class="deleteItem">
+              <Close/>
+            </el-icon>
+          </el-tooltip>
+        </div>
       </template>
     </el-popconfirm>
 

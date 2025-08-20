@@ -6,9 +6,9 @@ import {loadData, saveData} from "@/js/data.js";
 const props = defineProps({
   id: String,
   text: String,
-  isLock: Object
+  enableEdit: Object
 })
-const {text, isLock} = toRefs(props)
+const {text, enableEdit} = toRefs(props)
 
 // 默认文本内容
 let content = ref(text.value)
@@ -27,7 +27,7 @@ const updateIframeContent = () => {
 }
 
 function edit() {
-  if (!isLock.value) {
+  if (enableEdit.value) {
     nextTick(() => {
       input.value.focus()
     })
@@ -46,8 +46,8 @@ function save() {
   saveData(props.id, JSON.stringify({text: content.value}))
 }
 
-watch(isLock, (newValue) => {
-  if (newValue) {
+watch(enableEdit, (newValue) => {
+  if (!newValue) {
     save()
   }
 })
@@ -78,7 +78,7 @@ defineExpose({
   >
     <iframe
         ref="webIframe"
-        :class="['result', onFocus && !isLock ? 'resultOnFocus' : '']"
+        :class="['result', onFocus && enableEdit ? 'resultOnFocus' : '']"
         sandbox="allow-scripts allow-same-origin"
         frameborder="0"
         @load="updateIframeContent"
@@ -86,7 +86,7 @@ defineExpose({
     <el-input
       v-model="content"
       ref="input"
-      :class="['input', onFocus && !isLock ? 'inputOnFocus' : '']"
+      :class="['input', onFocus && enableEdit ? 'inputOnFocus' : '']"
       :rows="2"
       type="textarea"
       placeholder="输入内容"

@@ -19,7 +19,7 @@
       </el-popover>
     </el-select>
     <el-checkbox v-model="enableMove" label="开启移动" border/>
-    <el-checkbox v-model="isLock" label="锁定编辑" border/>
+    <el-checkbox v-model="enableEdit" label="开启编辑" border/>
     <el-button @click="editGlobeStyle" class="btn">全局样式</el-button>
     <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
   </div>
@@ -169,18 +169,18 @@ const columns = 24
 // GridStack实例
 let grid
 // 锁定状态
-const isLock = ref(true)
+const enableEdit = ref(false)
 const enableMove = ref(false)
 watch(enableMove, b => {
   if (b) {
-    lock()
+    disabledEdit()
     enabledMove()
   } else {
     disabledMove()
   }
 })
-watch(isLock, b => {
-  if (!b) {
+watch(enableEdit, b => {
+  if (b) {
     disabledMove()
   }
 })
@@ -218,7 +218,7 @@ onMounted(async () => {
     if (await loadConfig(false)) {
       ElMessage.success('配置加载完成，编辑模式已关闭')
       viewMode.value = true
-      lock()
+      enabledEdit()
     }
   }
   // 是否开启函数格子
@@ -260,7 +260,7 @@ onMounted(async () => {
     refreshStyle()
   }
 
-  lock()
+  disabledEdit()
   disabledMove()
 
   // 监听拖拽和调整大小事件
@@ -285,8 +285,8 @@ function saveLayout() {
 }
 
 // 锁定布局
-function lock() {
-  isLock.value = true
+function enabledEdit() {
+  enableEdit.value = true
 }
 
 // 开启移动
@@ -297,8 +297,8 @@ function enabledMove() {
 }
 
 // 解锁布局
-function unlock() {
-  isLock.value = false
+function disabledEdit() {
+  enableEdit.value = false
 }
 
 // 关闭移动
@@ -315,7 +315,7 @@ function createItemComponent(componentItem) {
       componentItem: componentItem,
       operateButtons: operateButtons
     },
-    props: ['id', 'isLock'],
+    props: ['id', 'enableEdit'],
     render() {
       return h('div', {
         id: this.id + '-container',
@@ -329,13 +329,13 @@ function createItemComponent(componentItem) {
           ref: 'componentItem',
           style: {position: 'absolute'},
           id: this.id,
-          isLock: isLock
+          enableEdit: enableEdit
         }),
         h(operateButtons, {
           ref: 'operateButtons',
           style: {position: 'absolute'},
           id: this.id,
-          isLock: isLock,
+          enableEdit: enableEdit,
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
         }),
@@ -360,7 +360,7 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
     ElMessage.error(`未找到对应的组件 - ${type}`)
     return
   }
-  const app = createApp(createItemComponent(component), {id: itemEl.id, isLock: isLock})
+  const app = createApp(createItemComponent(component), {id: itemEl.id, enableEdit: enableEdit})
   app.mount(itemEl)
   itemEl.element = app
   // 添加到GridStack

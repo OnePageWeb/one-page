@@ -6,9 +6,9 @@ import {loadData, saveData} from "@/js/data.js";
 const props = defineProps({
   id: String,
   text: String,
-  isLock: Object
+  enableEdit: Object
 })
-const {text, isLock} = toRefs(props)
+const {text, enableEdit} = toRefs(props)
 
 // 是否自动执行
 let autoExecute = ref(false)
@@ -21,7 +21,7 @@ const input = ref(null)
 let onFocus = ref(false)
 
 function dbclick() {
-  if (!isLock.value) {
+  if (enableEdit.value) {
     nextTick(() => {
       input.value.focus()
     })
@@ -48,8 +48,8 @@ function save() {
   }))
 }
 
-watch(isLock, (newValue) => {
-  if (newValue) {
+watch(enableEdit, (newValue) => {
+  if (!newValue) {
     save()
   }
 })
@@ -125,11 +125,11 @@ defineExpose({
         @mouseleave="onMouseLeave"
     >
       <iframe id="sandbox" sandbox="allow-scripts" style="display: none;"></iframe>
-      <el-text :class="['result', (onFocus && !isLock) ? 'resultOnFocus' : '']" v-html="functionResult"/>
+      <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
       <el-input
           v-model="functionContent"
           ref="input"
-          :class="['input', (onFocus && !isLock) ? 'inputOnFocus' : '']"
+          :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
           :rows="2"
           type="textarea"
           placeholder="输入方法内容"
@@ -137,7 +137,7 @@ defineExpose({
           @keydown.ctrl.enter="safeExecute"
       />
     </div>
-    <div :class="['params', isLock ? 'hide' : '']">
+    <div :class="['params', !enableEdit ? 'hide' : '']">
       <div :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">载入时运行</div>
       <div :class="['paramItem']" @click="safeExecute">运行</div>
     </div>

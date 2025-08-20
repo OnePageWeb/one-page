@@ -7,9 +7,9 @@ import {loadData, saveData} from "@/js/data.js";
 const props = defineProps({
   id: String,
   text: String,
-  isLock: Object
+  enableEdit: Object
 })
-const {text, isLock} = toRefs(props)
+const {text, enableEdit} = toRefs(props)
 
 // 默认搜索引擎
 const defaultSearchEngine = [
@@ -40,8 +40,8 @@ function search() {
   window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', '_blank')
 }
 
-watch(isLock, (newValue) => {
-  isEditing.value = !newValue
+watch(enableEdit, (newValue) => {
+  isEditing.value = newValue
 })
 
 // 前后置
@@ -101,7 +101,8 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
-  isEditing.value = !isLock.value
+  console.log('enableEdit', enableEdit.value)
+  isEditing.value = enableEdit.value
 })
 
 function load(data) {

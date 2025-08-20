@@ -7,16 +7,16 @@ import {loadData, saveData} from "@/js/data.js";
 const props = defineProps({
   id: String,
   defaultUrl: String,
-  isLock: Object
+  enableEdit: Object
 })
-const {defaultUrl, isLock} = toRefs(props)
+const {defaultUrl, enableEdit} = toRefs(props)
 
 // 默认文本内容
 let url = ref(defaultUrl.value || '')
 let isEditing = ref(false)
 
-watch(isLock, (newValue) => {
-  isEditing.value = !newValue
+watch(enableEdit, (newValue) => {
+  isEditing.value = newValue
 })
 
 // iframe
@@ -46,7 +46,7 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
-  isEditing.value = !isLock.value
+  isEditing.value = enableEdit.value
   setTimeout(() => {
     loadIframe()
   }, 1000)
