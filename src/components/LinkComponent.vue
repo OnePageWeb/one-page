@@ -362,50 +362,51 @@ defineExpose({
     }
   }
 
-  .urlWebDialog {
-    height: calc(80% - 4px);
-    width: 80%;
-    --el-dialog-padding-primary: 0;
 
-    .el-dialog__header {
-      border-bottom: 3px solid #f1f1f1;
-      margin-bottom: 0;
+}
+
+.urlWebDialog {
+  height: calc(80% - 4px);
+  width: 80%;
+  --el-dialog-padding-primary: 0;
+
+  .el-dialog__header {
+    border-bottom: 3px solid #f1f1f1;
+    margin-bottom: 0;
+  }
+
+  .urlWebHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .urlWebOperator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 4px;
+
+    /* 对其中的每一个子元素都添加cursor: pointer; */
+
+    * {
+      cursor: pointer;
+      padding: 0 16px;
     }
 
-    .urlWebHeader {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .urlWebOperator {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 0 4px;
-
-      /* 对其中的每一个子元素都添加cursor: pointer; */
-
-      * {
-        cursor: pointer;
-        padding: 0 16px;
-      }
-
-      .fastModeFlag {
-        color: #3ff1ff;
-      }
-    }
-
-    .linkIframe {
-      height: 100%;
-      width: 100%;
-    }
-
-    .el-dialog__body {
-      height: calc(100% - 24px) !important;
+    .fastModeFlag {
+      color: #3ff1ff;
     }
   }
 
+  .linkIframe {
+    height: 100%;
+    width: 100%;
+  }
+
+  .el-dialog__body {
+    height: calc(100% - 24px) !important;
+  }
 }
 </style>
