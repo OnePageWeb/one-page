@@ -1,7 +1,7 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
 import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
-import {loadData, saveData} from "@/js/data.js";
+import {loadData, saveData} from "@/js/data.js"
 
 const props = defineProps({
   id: String,

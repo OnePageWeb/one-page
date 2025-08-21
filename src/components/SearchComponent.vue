@@ -2,7 +2,7 @@
 import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElOption, ElSelect} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
 import {Close, Plus, Tools} from "@element-plus/icons-vue";
-import {loadData, saveData} from "@/js/data.js";
+import {loadData, saveData} from "@/js/data.js"
 
 const props = defineProps({
   id: String,

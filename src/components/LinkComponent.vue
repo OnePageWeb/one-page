@@ -2,7 +2,7 @@
 import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElMessage, ElText} from "element-plus"
 import {onMounted, reactive, ref, toRefs, watch} from "vue"
 import {CircleCloseFilled, Close, Flag, LocationFilled, Operation, Plus} from "@element-plus/icons-vue"
-import {loadData, saveData} from "@/js/data.js";
+import {loadData, saveData} from "@/js/data.js"
 
 const defaultLinks = [
   {

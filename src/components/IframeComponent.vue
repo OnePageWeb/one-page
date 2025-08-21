@@ -2,7 +2,7 @@
 import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {ElButton, ElIcon, ElInput} from "element-plus";
 import {ChromeFilled, Search} from "@element-plus/icons-vue";
-import {loadData, saveData} from "@/js/data.js";
+import {loadData, saveData} from "@/js/data.js"
 
 const props = defineProps({
   id: String,

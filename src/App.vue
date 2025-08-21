@@ -142,7 +142,7 @@
     </el-dialog>
 
     <el-dialog
-        v-model="componentDialogVisible"
+        v-model="zoomInDialogVisible"
         class="zoomInDialog"
         width="85%"
         align-center
@@ -176,6 +176,7 @@ import {
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import textComponent from './components/TextComponent.vue'
+import noteComponent from "./components/NoteComponent.vue"
 import searchComponent from './components/SearchComponent.vue'
 import iframeComponent from './components/IframeComponent.vue'
 import htmlComponent from "./components/HtmlComponent.vue"
@@ -195,6 +196,12 @@ const itemType = [
     label: '文本格子',
     desc: '用于显示文本内容的格子，允许html标签',
     component: textComponent
+  },
+  {
+    value: 'note',
+    label: '便签格子',
+    desc: '用于显示Markdown内容的格子',
+    component: noteComponent
   },
   {
     value: 'search',
@@ -337,6 +344,8 @@ onMounted(async () => {
   })
 })
 
+const elementMap = {}
+
 // 保存布局
 function saveLayout() {
   const nodes = grid.engine.nodes; // 获取所有格子节点数据
@@ -384,6 +393,11 @@ function createItemComponent(type, componentItem) {
       operateButtons: operateButtons
     },
     props: ['id', 'enableEdit', 'enableMove'],
+    methods: {
+      load(data) {
+        this.$refs.componentItem.load(data)
+      }
+    },
     render() {
       return h('div', {
         id: this.id + '-container',
@@ -427,7 +441,7 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
   itemEl.setAttribute('gs-x', x)
   itemEl.setAttribute('gs-y', y)
   // 挂载Vue组件到格子
-  let component = itemType.find(item => item.value === type)?.component
+  const component = itemType.find(item => item.value === type)?.component
   if (!component) {
     ElMessage.error(`未找到对应的组件 - ${type}`)
     return
@@ -437,7 +451,8 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
     enableEdit: enableEdit,
     enableMove: enableMove
   })
-  app.mount(itemEl)
+  elementMap[id] = app.mount(itemEl)
+
   itemEl.element = app
   // 添加到GridStack
   grid.makeWidget(itemEl)
@@ -504,7 +519,8 @@ function refreshComponentStyle(id) {
 }
 
 // 放大组件
-const componentDialogVisible = ref(false)
+const zoomInId = ref(null)
+const zoomInDialogVisible = ref(false)
 
 function createZoomIn(id, componentItem) {
   return defineComponent({
@@ -527,8 +543,9 @@ function zoomIn(id, type) {
     ElMessage.error('未找到对应的组件')
     return
   }
+  zoomInId.value = id.value
   // find.component是组件的vue对象
-  componentDialogVisible.value = true
+  zoomInDialogVisible.value = true
   nextTick(() => {
     const elementById = document.getElementById('zoomInElement')
     if (elementById) {
@@ -545,6 +562,16 @@ function zoomIn(id, type) {
     }
   })
 }
+
+// 当窗口关闭时，尝试刷新数据
+watch(zoomInDialogVisible, v => {
+  if (!v && enableEdit) {
+    const element = elementMap[zoomInId.value]
+    if (element) {
+      element.load()
+    }
+  }
+})
 
 // 编辑全局样式
 let isEditGlobalStyle = ref(false)
@@ -707,6 +734,10 @@ function handleFileDrop(e) {
 </script>
 
 <style>
+html {
+  scrollbar-width: none;
+}
+
 * {
   transition: all 0.3s ease-in-out;
 }

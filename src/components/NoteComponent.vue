@@ -1,28 +1,62 @@
 <script setup>
 import {ElInput, ElText} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
+import MarkdownIt from 'markdown-it'
+import markdownItTaskLists from 'markdown-it-task-lists'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-tsx'
+import 'prismjs/components/prism-css'
+import 'prismjs/components/prism-scss'
+import 'prismjs/components/prism-less'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-bash'
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-csharp'
 
 const props = defineProps({
   id: String,
   text: String,
   enableEdit: Object
 })
-const {text, enableEdit} = toRefs(props)
+const {text} = toRefs(props)
 
 // 默认文本内容
-const content = ref(text.value)
+const content = ref(text?.value || '')
 const onFocus = ref(false)
+const md = new MarkdownIt({
+  html: true,
+  breaks: true,
+  linkify: true,
+  highlight: (str, lang) => {
+    if (lang && Prism.languages[lang]) {
+      try {
+        return Prism.highlight(str, Prism.languages[lang], lang);
+      } catch (error) {
+        console.warn('Prism highlight error:', error);
+      }
+    }
+    // 未知语言或没有指定语言时
+    return Prism.highlight(str, Prism.languages.text, 'text');
+  }
+}).use(markdownItTaskLists)
+const renderedContent = computed(() => {
+  return md.render(content.value);
+})
 
 const input = ref(null)
+const isEditing = ref(false)
 
 function edit() {
-  if (!enableEdit.value) {
-    onFocus.value = true
-    nextTick(() => {
-      input.value.focus()
-    })
-  }
+  isEditing.value = true
+  onFocus.value = true
+  nextTick(() => {
+    input.value.focus()
+  })
 }
 
 function onMouseLeave() {
@@ -32,6 +66,7 @@ function onMouseLeave() {
   if (firstChild !== document.activeElement) {
     onFocus.value = false
   }
+  isEditing.value = false
 }
 
 function save() {
@@ -56,16 +91,16 @@ defineExpose({
 
 <template>
   <div
-      class="textContent"
+      class="noteContent"
       @dblclick="edit"
       @mouseenter="onFocus = true"
       @mouseleave="onMouseLeave"
   >
-    <div :class="['result', onFocus && enableEdit ? 'resultOnFocus' : '']" v-html="content"/>
+    <div :class="['result', onFocus && isEditing ? 'resultOnFocus' : '']" v-html="renderedContent"/>
     <el-input
         v-model="content"
         ref="input"
-        :class="['input', onFocus && enableEdit ? 'inputOnFocus' : '']"
+        :class="['input', onFocus && isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
         placeholder="输入内容"
@@ -76,7 +111,7 @@ defineExpose({
 </template>
 
 <style>
-.textContent {
+.noteContent {
   height: 100%;
   width: 100%;
   display: flex;
@@ -84,11 +119,12 @@ defineExpose({
   justify-content: center;
 
   .result {
-    width: 100%;
+    width: calc(100% - 16px);
     font-size: 18px;
-    height: 100%;
-    overflow: auto;
+    height: calc(100% - 16px);
+    overflow-y: auto;
     scrollbar-width: none;
+    padding: 8px;
   }
 
   :deep(.el-text) {
@@ -123,7 +159,7 @@ defineExpose({
   }
 
   .resultOnFocus {
-    width: 40%;
+    width: calc(40% - 16px);
   }
 
   .inputOnFocus {
