@@ -101,48 +101,60 @@ function onMouseLeave() {
   display: flex;
   flex-direction: row-reverse;
   gap: 8px;
-  background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(4px);
-}
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(150, 150, 150, 0.1),
+    rgba(150, 150, 150, 0.1) 40px,
+    rgba(255, 255, 255, 0.1) 40px,
+    rgba(255, 255, 255, 0.1) 80px
+  );
+  transition: opacity 0.5s ease-in-out;
+  animation: bgChange 1s infinite alternate;
 
-.deleteItem, .editStyle, .dragHandle {
-  top: 0;
-  cursor: pointer;
-  width: 20px;
-  pointer-events: auto;
-}
+  .deleteItem, .editStyle, .dragHandle {
+    top: 0;
+    cursor: pointer;
+    width: 20px;
+    pointer-events: auto;
+    color: white;
+  }
 
-.deleteItem {
+  .deleteItem {
+    svg {
+      background-color: #ff5050;
+    }
+  }
 
-  :deep(path) {
-    fill: #ffc9c9;
+  .el-icon svg {
+    height: unset !important;
+    width: unset !important;
+    border-radius: 48px;
+    padding: 4px;
+  }
+
+  .editStyle {
+    svg {
+      background-color: #46a9df;
+    }
+  }
+
+  .dragHandle {
+    cursor: move;
+
+    svg {
+      background-color: #1d9333;
+    }
   }
 }
 
-.el-icon svg {
-  height: unset !important;
-  width: unset !important;
-  border-radius: 48px;
-  background-color: #ff5050;
-  padding: 4px;
-}
-
-.editStyle {
-  :deep(path) {
-    fill: #ffc9c9;
+@keyframes bgChange {
+  0% {
+    background: rgba(255, 255, 255, 0.5);
   }
-}
-
-.dragHandle {
-  cursor: move;
-
-  svg {
-    background-color: #1d9333;
+  100% {
+    background: rgba(211, 211, 211, 0.5);
   }
-
-  :deep(path) {
-    fill: #ffffff;
-  }
-
 }
 </style>

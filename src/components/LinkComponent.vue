@@ -200,13 +200,17 @@ defineExpose({
         :show-close="false"
         :append-to-body="true"
         @mouseleave="fastModeCheck"
+        align-center
     >
       <template #header>
         <div class="urlWebHeader">
           <span style="margin-left: 8px;font-weight: bold">{{ curLink.name }}</span>
           <div class="urlWebOperator">
-            <div :class="fastMode ? 'fastModeFlag' : ''" @click="fastMode = !fastMode">{{ fastMode ? '快速模式' : '普通模式' }}</div>
-            <div @click="modalVisible = false">关闭</div>
+            <div :class="fastMode ? 'fastModeFlag' : 'commonModeFlag'" @click="fastMode = !fastMode">{{ fastMode ? '快速模式' : '普通模式' }}</div>
+            <div
+              style="color: white;background-color: #f34636"
+              @click="modalVisible = false"
+            >×</div>
           </div>
         </div>
       </template>
@@ -228,6 +232,7 @@ defineExpose({
         title="编辑快速链接"
         width="60%"
         :append-to-body="true"
+        align-center
     >
       <div class="linkEditContainer">
         <el-form ref="formRef" class="linkForm">
@@ -322,9 +327,15 @@ defineExpose({
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transform: rotate(-180deg);
 
-    :deep(path) {
-      fill: #737373;
+    &:hover {
+      /* 旋转 */
+      transform: rotate(0deg);
+    }
+
+    .el-icon {
+      color: #e3e3e3;
     }
   }
 
@@ -377,30 +388,38 @@ defineExpose({
   .el-dialog__header {
     border-bottom: 3px solid #f1f1f1;
     margin-bottom: 0;
+    border-radius: 0 !important;
   }
 
   .urlWebHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #ffffff;
   }
 
   .urlWebOperator {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
     gap: 8px;
-    padding: 0 4px;
 
     /* 对其中的每一个子元素都添加cursor: pointer; */
 
     * {
       cursor: pointer;
-      padding: 0 16px;
+      padding: 0 8px 2px 8px;
+    }
+
+    .commonModeFlag {
+      color: #4b4b4b;
+      background-color: #d5d5d5;
     }
 
     .fastModeFlag {
-      color: #3ff1ff;
+      color: white;
+      background-color: #2ac0cf;
     }
   }
 

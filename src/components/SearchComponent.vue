@@ -167,8 +167,9 @@ defineExpose({
         v-model="dialogVisible"
         title="编辑搜索引擎"
         width="60%"
+        align-center
     >
-      <el-form ref="formRef" label-width="100px" class="searchForm">
+      <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">
         <div class="appendContainer">
           <el-form-item label="前置内容" prop="prefix" class="prefix">
             <el-input v-model="prefix" placeholder="在链接前的内容，通常是空"/>
@@ -315,6 +316,10 @@ defineExpose({
 
       .el-form-item__label {
         border-left: 8px solid #1bc3b3;
+      }
+
+      .el-form-item {
+        flex-direction: column;
       }
     }
 

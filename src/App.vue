@@ -1,19 +1,22 @@
 <template>
-  <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
+  <div
+    :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
+    @mouseleave="showMenu = false"
+  >
     <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
       <el-popover
-          class="box-item"
-          v-for="item in itemType"
-          :title="item.label"
-          :content="item.desc"
-          width="300"
-          placement="right-start"
+        class="box-item"
+        v-for="item in itemType"
+        :title="item.label"
+        :content="item.desc"
+        width="300"
+        placement="right-start"
       >
         <template #reference>
           <el-option
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           />
         </template>
       </el-popover>
@@ -26,13 +29,19 @@
   <div ref="gridEl" class="grid-stack"></div>
 
   <!-- 全局样式弹窗 -->
-  <el-dialog title="全局样式" v-model="isEditGlobalStyle" width="50%" class="globeStyleDialog commonDialog">
+  <el-dialog
+    title="全局样式"
+    v-model="isEditGlobalStyle"
+    width="50%"
+    class="globeStyleDialog commonDialog"
+    align-center
+  >
     <el-input
-        v-model="globalStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入全局样式"
+      v-model="globalStyle"
+      class="globeStyleInput"
+      type="textarea"
+      resize="none"
+      placeholder="请输入全局样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
@@ -40,7 +49,13 @@
   </el-dialog>
 
   <!-- 配置加载弹窗 -->
-  <el-dialog title="加载配置" v-model="configLoaderVisible" width="50%" class="globeStyleDialog commonDialog">
+  <el-dialog
+    title="加载配置"
+    v-model="configLoaderVisible"
+    width="50%"
+    class="globeStyleDialog commonDialog"
+    align-center
+  >
     <template #header="{ close, titleId, titleClass }">
       <div class="configLoaderHeader">
         <div :id="titleId" :class="titleClass">加载配置</div>
@@ -50,17 +65,17 @@
       </div>
     </template>
     <el-input
-        v-model="configData"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入配置URL或拖拽JSON文件到此处"
-        @dragover.prevent
-        @drop.prevent="handleFileDrop"
+      v-model="configData"
+      class="globeStyleInput"
+      type="textarea"
+      resize="none"
+      placeholder="请输入配置URL或拖拽JSON文件到此处"
+      @dragover.prevent
+      @drop.prevent="handleFileDrop"
     />
 
     <!-- 配置提示弹窗 -->
-    <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%">
+    <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
       <div>
         <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
           可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
@@ -68,7 +83,7 @@
         <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
         </div>
         <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-            href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+          href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
         </div>
         <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
       </div>
@@ -81,22 +96,22 @@
     <template #footer>
       <el-button type="primary" @click="downloadConfig">下载</el-button>
       <el-popconfirm
-          title="确定加载以上配置，这会覆盖本地的所有配置？"
-          placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          @confirm="loadConfig()"
+        title="确定加载以上配置，这会覆盖本地的所有配置？"
+        placement="top-start"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        @confirm="loadConfig()"
       >
         <template #reference>
           <el-button type="primary">加载</el-button>
         </template>
       </el-popconfirm>
       <el-popconfirm
-          title="确定清空并重新加载页面？"
-          placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          @confirm="clearConfig(true)"
+        title="确定清空并重新加载页面？"
+        placement="top-start"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        @confirm="clearConfig(true)"
       >
         <template #reference>
           <el-button type="danger">清空</el-button>
@@ -106,13 +121,19 @@
   </el-dialog>
 
   <!-- 组件样式弹窗 -->
-  <el-dialog title="组件样式" v-model="isEditComponentStyle" width="50%" class="globeStyleDialog commonDialog">
+  <el-dialog
+    title="组件样式"
+    v-model="isEditComponentStyle"
+    width="50%"
+    class="globeStyleDialog commonDialog"
+    align-center
+  >
     <el-input
-        v-model="componentStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入样式"
+      v-model="componentStyle"
+      class="globeStyleInput"
+      type="textarea"
+      resize="none"
+      placeholder="请输入样式"
     />
     <template #footer>
       <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -120,7 +141,7 @@
   </el-dialog>
 
   <edge-mouse-move
-      @onLeftEdge="() => showMenu = !showMenu && !viewMode"
+    @onLeftEdge="() => showMenu = !showMenu && !viewMode"
   />
 </template>
 
@@ -151,7 +172,7 @@ import evalComponent from "./components/EvalComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {parseBlobJson} from "@/js/url.js"
-import {Close, InfoFilled} from "@element-plus/icons-vue"
+import {InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
 import {loadData, removeData, saveData} from "@/js/data.js"
 
@@ -640,7 +661,7 @@ function handleFileDrop(e) {
   gap: 10px;
   padding: 0 10px;
   z-index: 1;
-  background-color: rgba(236, 236, 236, 0.5);
+  background-color: rgba(138, 138, 138, 0.5);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 
@@ -694,11 +715,11 @@ function handleFileDrop(e) {
 
 .grid-stack-item.ui-resizable-autohide {
   background: repeating-linear-gradient(
-      45deg,
-      rgba(150, 150, 150, 0.1),
-      rgba(150, 150, 150, 0.1) 40px,
-      rgba(255, 255, 255, 0.1) 40px,
-      rgba(255, 255, 255, 0.1) 80px
+    45deg,
+    rgba(150, 150, 150, 0.1),
+    rgba(150, 150, 150, 0.1) 40px,
+    rgba(255, 255, 255, 0.1) 40px,
+    rgba(255, 255, 255, 0.1) 80px
   );
 }
 
@@ -721,14 +742,6 @@ textarea {
   cursor: pointer;
 }
 
-/* 弹窗样式开始 */
-.el-dialog__header {
-  border-bottom: 3px solid #e1e1e1;
-  margin-bottom: 24px;
-}
-
-/* 弹窗样式结束 */
-
 /* 删除图标样式开始 */
 .deleteIcon {
   cursor: pointer;
@@ -739,6 +752,7 @@ textarea {
   padding: 8px !important;
   margin: 8px 8px 8px 16px;
   background-color: #ffb6b6 !important;
+  border: 2px solid #ffffff;
 
   .el-form-item__content {
     width: 20px !important;
@@ -754,7 +768,8 @@ textarea {
 }
 
 .deleteIcon:hover {
-  transform: rotate(90deg);
+  transform: rotate(180deg);
+  border: 2px solid #ff8600;
 }
 
 /* 删除图标样式结束 */
@@ -773,8 +788,8 @@ textarea {
 }
 
 .el-form-item {
-  background-color: aliceblue;
   padding: 8px;
+  margin-bottom: 0 !important;
 }
 
 /* 表单样式结束 */
@@ -783,15 +798,50 @@ textarea {
 .commonDialog {
   height: calc(80% - 2px);
   max-height: 80%;
+  --el-dialog-padding-primary: 0 !important;
+  --el-dialog-border-radius: 12px !important;
+
+  .el-dialog__header {
+    padding: 12px 16px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: #39c7da;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+
+    .el-dialog__title {
+      color: white !important;
+      font-weight: bold;
+    }
+
+    .el-dialog__headerbtn {
+      top: unset !important;
+    }
+
+    .el-dialog__headerbtn .el-dialog__close {
+      color: white !important;
+      font-size: 24px !important;
+    }
+  }
 
   .el-dialog__body {
-    height: calc(100% - 110px);
+    height: calc(100% - 128px);
+    padding: 16px;
     /* 对其中的第一个子组件设置高度为100% */
 
     > *:first-child {
       height: 100% !important;
       overflow: auto;
     }
+  }
+
+  .el-dialog__footer {
+    padding: 8px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px rgba(154, 154, 154, 0.5);
   }
 
   .el-textarea__inner, .el-textarea {
