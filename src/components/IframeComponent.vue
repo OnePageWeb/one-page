@@ -83,7 +83,7 @@ defineExpose({
         </template>
       </el-input>
     </div>
-    <div class="iframeContainer">
+    <div :class="['iframeContainer', isEditing ? 'iframeOnEdit' : '']">
       <iframe :src="iframeUrl" :class="['iframe']" border="none" width="100%" height="100%"></iframe>
     </div>
   </div>
@@ -107,7 +107,7 @@ defineExpose({
   }
 
   .editing {
-    height: 40px;
+    height: 32px;
   }
 
   .urlEdit {
@@ -129,6 +129,10 @@ defineExpose({
   .iframeContainer {
     height: 100%;
     width: 100%;
+  }
+
+  .iframeOnEdit {
+    height: calc(100% - 32px);
   }
 
   .iframe {

@@ -218,7 +218,7 @@ const itemType = [
 let showMenu = ref(false)
 
 // 格子高度
-let itemHeight = 50
+let itemHeight = 25
 // 总列数
 const columns = 24
 // GridStack实例
@@ -234,7 +234,7 @@ watch(enableMove, b => {
   }
 })
 // 全局样式
-let globalStyle = ref(`.grid-stack {
+const globalStyle = ref(`.grid-stack {
   height: 100% !important;
 }
 body {
@@ -243,7 +243,7 @@ body {
   -webkit-backdrop-filter: blur(4px);
 }`)
 // 仅查看模式
-let viewMode = ref(false)
+const viewMode = ref(false)
 
 // 初始化GridStack
 onMounted(async () => {
@@ -304,16 +304,16 @@ onMounted(async () => {
     }
   } else {
     // 添加初始格子
-    addItem('link', 6, 10, 11, 2)
-    addItem('search', 6, 8, 11, 2)
+    addItem('link', 6, 12, 11, 4)
+    addItem('search', 6, 8, 11, 4)
   }
 
   // 恢复样式
   const style = loadData('globalStyle')
-  if (style) {
+  if (style !== null) {
     globalStyle.value = style
-    refreshGlobalStyle()
   }
+  refreshGlobalStyle()
 
   disabledEdit()
   disabledMove()
@@ -540,8 +540,6 @@ function generateConfig() {
 
 // 清除旧配置
 function clearConfig(reload = false) {
-  removeData('layout')
-  removeData('globalStyle')
   const nodes = grid.engine.nodes; // 获取所有格子节点数据
   const ids = nodes.map(node => node.el.id)
   for (let id of ids) {
@@ -550,6 +548,8 @@ function clearConfig(reload = false) {
     // 删除组件样式
     removeData(id + '-style')
   }
+  removeData('layout')
+  removeData('globalStyle')
   // 刷新页面
   if (reload) {
     window.location.reload()
