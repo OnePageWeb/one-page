@@ -30,9 +30,10 @@ const defaultSearchEngine = [
 // 搜索引擎列表
 let searchEngineMap = ref({})
 let searchEngineList = ref([])
+// 当前搜索引擎
 let nowSearchEngine = ref('')
+// 搜索内容
 let searchContent = ref(text.value)
-let isEditing = ref(false)
 
 // 搜索
 function search() {
@@ -40,13 +41,11 @@ function search() {
   window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', '_blank')
 }
 
-watch(enableEdit, (newValue) => {
-  isEditing.value = newValue
-})
-
 // 前后置
 const prefix = ref('')
 const suffix = ref('')
+// 打开方式
+const openMode = ref('')
 
 // 编辑搜索引擎
 const dialogVisible = ref(false)
@@ -93,7 +92,7 @@ function save() {
   }))
 }
 
-watch(isEditing, (newValue) => {
+watch(enableEdit, (newValue) => {
   if (!newValue) {
     save()
   }
@@ -101,7 +100,6 @@ watch(isEditing, (newValue) => {
 
 onMounted(() => {
   load()
-  isEditing.value = enableEdit.value
 })
 
 function load(data) {
@@ -156,7 +154,7 @@ defineExpose({
           clearable
       >
         <template #prepend>
-          <el-icon class="editIcon" :class="{'hide': !isEditing}" @click="editSearchEngine">
+          <el-icon class="editIcon" :class="{'hide': !enableEdit}" @click="editSearchEngine">
             <Tools/>
           </el-icon>
         </template>

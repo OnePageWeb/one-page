@@ -11,13 +11,14 @@ const props = defineProps({
 const {text, enableEdit} = toRefs(props)
 
 // 默认文本内容
-let content = ref(text.value)
-let onFocus = ref(false)
+const content = ref(text.value)
+const onFocus = ref(false)
 
 const input = ref(null)
 
 function edit() {
   if (!enableEdit.value) {
+    onFocus.value = true
     nextTick(() => {
       input.value.focus()
     })
@@ -79,27 +80,13 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
+<style>
 .textContent {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .resultOnFocus {
-    width: 40%;
-  }
-
-  .inputOnFocus {
-    width: 60%;
-    height: 100%;
-    opacity: 1;
-  }
-
-  .inputOnFocus :deep(.el-textarea__inner) {
-    padding: 8px !important;
-  }
 
   .result {
     width: 100%;
@@ -118,11 +105,7 @@ defineExpose({
     opacity: 0;
   }
 
-  :deep(textarea) {
-    resize: none;
-  }
-
-  .input :deep(.el-textarea__inner) {
+  .input .el-textarea__inner {
     width: 100%;
     height: 100%;
     opacity: 1;
@@ -141,5 +124,18 @@ defineExpose({
     );
   }
 
+  .resultOnFocus {
+    width: 40%;
+  }
+
+  .inputOnFocus {
+    width: 60%;
+    height: 100%;
+    opacity: 1;
+  }
+
+  .inputOnFocus .el-textarea__inner {
+    padding: 8px !important;
+  }
 }
 </style>

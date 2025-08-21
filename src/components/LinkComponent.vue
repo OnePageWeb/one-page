@@ -221,7 +221,7 @@ defineExpose({
       ></iframe>
     </el-dialog>
 
-    <!-- 编辑搜索引擎弹窗 -->
+    <!-- 编辑快速链接弹窗 -->
     <el-dialog
         class="commonDialog"
         v-model="dialogVisible"
@@ -308,7 +308,7 @@ defineExpose({
     }
   }
 
-  .linkContent .editContainer {
+  .editContainer {
     height: 40px;
     width: 40px;
     position: absolute;
@@ -327,42 +327,45 @@ defineExpose({
     }
   }
 
-  .linkForm .linkEditItem {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #aaaaaa;
-    /* 最后一个不添加 */
+}
 
-    &:last-child {
-      padding-bottom: 0;
-      border-bottom: unset;
-    }
+.linkEditContainer {
+  .linkForm {
+    .linkEditItem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #aaaaaa;
+      /* 最后一个不添加 */
 
-    /* 第一个不添加 */
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: unset;
+      }
 
-    &:first-child {
-      padding-top: 0;
-    }
+      /* 第一个不添加 */
 
-    .linkName {
-      display: block !important;
-      width: 160px !important;
-    }
+      &:first-child {
+        padding-top: 0;
+      }
 
-    .linkUrl {
-      display: block !important;
-      width: calc(100% - 380px) !important;
-    }
+      .linkName {
+        display: block !important;
+        width: 160px !important;
+      }
 
-    .linkImg {
-      display: block !important;
-      width: 200px !important;
+      .linkUrl {
+        display: block !important;
+        width: calc(100% - 380px) !important;
+      }
+
+      .linkImg {
+        display: block !important;
+        width: 200px !important;
+      }
     }
   }
-
-
 }
 
 .urlWebDialog {

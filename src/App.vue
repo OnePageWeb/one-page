@@ -207,14 +207,8 @@ const enableEdit = ref(false)
 const enableMove = ref(false)
 watch(enableMove, b => {
   if (b) {
-    disabledEdit()
     enabledMove()
   } else {
-    disabledMove()
-  }
-})
-watch(enableEdit, b => {
-  if (b) {
     disabledMove()
   }
 })
@@ -365,19 +359,21 @@ function createItemComponent(componentItem) {
           position: 'relative'
         }
       }, [
-        h(componentItem, {
-          ref: 'componentItem',
-          style: {position: 'absolute'},
-          id: this.id,
-          enableEdit: enableEdit
-        }),
         h(operateButtons, {
           ref: 'operateButtons',
           style: {position: 'absolute'},
           id: this.id,
           enableEdit: enableEdit,
+          enableMove: enableMove,
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
+        }),
+        h(componentItem, {
+          ref: 'componentItem',
+          style: {position: 'absolute'},
+          id: this.id,
+          enableEdit: enableEdit,
+          enableMove: enableMove
         }),
       ]);
     }
@@ -400,7 +396,7 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
     ElMessage.error(`未找到对应的组件 - ${type}`)
     return
   }
-  const app = createApp(createItemComponent(component), {id: itemEl.id, enableEdit: enableEdit})
+  const app = createApp(createItemComponent(component), {id: itemEl.id, enableEdit: enableEdit, enableMove: enableMove})
   app.mount(itemEl)
   itemEl.element = app
   // 添加到GridStack
@@ -644,7 +640,8 @@ function handleFileDrop(e) {
   gap: 10px;
   padding: 0 10px;
   z-index: 1;
-  background-color: rgba(236, 236, 236, 0.35);
+  background-color: rgba(236, 236, 236, 0.5);
+  backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 
   .el-button + .el-button {
@@ -709,6 +706,10 @@ function handleFileDrop(e) {
 .grid-stack-item {
   padding: 10px;
   margin: 1px;
+}
+
+textarea {
+  resize: none !important;
 }
 
 .btn {

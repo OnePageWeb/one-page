@@ -186,10 +186,6 @@ defineExpose({
     }
   }
 
-  .inputOnFocus :deep(.el-textarea__inner) {
-    padding: 8px !important;
-  }
-
   :deep(.el-text) {
     width: 100%;
     height: 100%;
@@ -200,10 +196,6 @@ defineExpose({
     width: 0;
     height: 100%;
     opacity: 0;
-  }
-
-  :deep(textarea) {
-    resize: none;
   }
 
   .input :deep(.el-textarea__inner) {
@@ -223,6 +215,10 @@ defineExpose({
         rgba(255, 255, 255, 0.9) 40px,
         rgba(255, 255, 255, 0.9) 80px
     );
+  }
+
+  .inputOnFocus :deep(.el-textarea__inner) {
+    padding: 8px !important;
   }
 
   .params {

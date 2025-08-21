@@ -106,20 +106,6 @@ defineExpose({
   align-items: center;
   justify-content: center;
 
-  .resultOnFocus {
-    width: 40%;
-  }
-
-  .inputOnFocus {
-    width: 60%;
-    height: 100%;
-    opacity: 1;
-  }
-
-  .inputOnFocus :deep(.el-textarea__inner) {
-    padding: 8px !important;
-  }
-
   .result {
     width: 100%;
     height: 100%;
@@ -135,10 +121,6 @@ defineExpose({
     width: 0;
     height: 100%;
     opacity: 0;
-  }
-
-  :deep(textarea) {
-    resize: none;
   }
 
   .input :deep(.el-textarea__inner) {
@@ -159,5 +141,20 @@ defineExpose({
         rgba(255, 255, 255, 0.9) 80px
     );
   }
+
+  .resultOnFocus {
+    width: 40%;
+  }
+
+  .inputOnFocus {
+    width: 60%;
+    height: 100%;
+    opacity: 1;
+  }
+
+  .inputOnFocus :deep(.el-textarea__inner) {
+    padding: 8px !important;
+  }
+
 }
 </style>

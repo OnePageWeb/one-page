@@ -1,14 +1,15 @@
 <script setup>
-import {defineEmits, toRefs} from 'vue'
+import {defineEmits, ref, toRefs} from 'vue'
 import {Close, Coordinate, Picture} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
 const emit = defineEmits(['onDelete', 'onStyleEdit'])
 const props = defineProps({
   id: String,
-  enableEdit: Object
+  enableEdit: Object,
+  enableMove: Object,
 })
-const {id, enableEdit} = toRefs(props)
+const {id, enableEdit, enableMove} = toRefs(props)
 
 function deleteItem() {
   setTimeout(() => emit('onDelete', id), 300)
@@ -17,11 +18,39 @@ function deleteItem() {
 function editStyle() {
   emit('onStyleEdit', id)
 }
+
+const operatorContainer = ref(null)
+
+let timer = null
+function onMouseEnter() {
+  // 重新计时
+  if (timer) {
+    clearTimeout(timer)
+  }
+  operatorContainer.value.style.opacity = 1
+}
+
+function onMouseLeave() {
+  // 重新计时
+  if (timer) {
+    clearTimeout(timer)
+  }
+  timer = setTimeout(() => {
+    operatorContainer.value.style.opacity = 0
+  }, 800)
+}
 </script>
 
 <template>
-  <div v-show="enableEdit" class="operatorContainer">
+  <div
+    v-show="enableEdit || enableMove"
+    ref="operatorContainer"
+    class="operatorContainer"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <el-popconfirm
+      v-if="enableEdit"
       class="deleteItem"
       title="确定删除此组件"
       placement="top-start"
@@ -37,6 +66,7 @@ function editStyle() {
     </el-popconfirm>
 
     <el-tooltip
+      v-if="enableEdit"
       class="editStyle"
       effect="light"
       content="编辑组件样式"
@@ -48,10 +78,10 @@ function editStyle() {
     </el-tooltip>
 
     <el-tooltip
-      v-if="false"
+      v-if="enableMove"
       class="dragHandle"
       effect="light"
-      content="拖动组件"
+      content="拖动组件，按住组件边框也可以进行拖动"
       placement="bottom-start"
     >
       <el-icon class="dragHandle">
@@ -63,18 +93,19 @@ function editStyle() {
 
 <style scoped>
 .operatorContainer {
-  height: 100%;
-  width: 100%;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.operatorContainer:hover {
-  opacity: 1;
+  height: calc(100% + 28px);
+  width: calc(100% + 16px);
+  opacity: 0;
+  top: -20px;
+  left: -8px;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
 }
 
 .deleteItem, .editStyle, .dragHandle {
-  position: absolute;
   top: 0;
   cursor: pointer;
   width: 20px;
@@ -82,7 +113,6 @@ function editStyle() {
 }
 
 .deleteItem {
-  right: 0;
 
   :deep(path) {
     fill: #ffc9c9;
@@ -98,15 +128,12 @@ function editStyle() {
 }
 
 .editStyle {
-  right: 24px;
-
   :deep(path) {
     fill: #ffc9c9;
   }
 }
 
 .dragHandle {
-  right: 48px;
   cursor: move;
 
   svg {
