@@ -1,15 +1,16 @@
 <script setup>
 import {defineEmits, ref, toRefs} from 'vue'
-import {Close, Coordinate, Picture} from "@element-plus/icons-vue"
+import {Close, Coordinate, Picture, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
-const emit = defineEmits(['onDelete', 'onStyleEdit'])
+const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn'])
 const props = defineProps({
   id: String,
+  type: String,
   enableEdit: Object,
   enableMove: Object,
 })
-const {id, enableEdit, enableMove} = toRefs(props)
+const {id, type, enableEdit, enableMove} = toRefs(props)
 
 function deleteItem() {
   setTimeout(() => emit('onDelete', id), 300)
@@ -17,6 +18,10 @@ function deleteItem() {
 
 function editStyle() {
   emit('onStyleEdit', id)
+}
+
+function zoomIn() {
+  emit('zoomIn', id, type)
 }
 
 const operatorContainer = ref(null)
@@ -43,7 +48,6 @@ function onMouseLeave() {
 
 <template>
   <div
-    v-show="enableEdit || enableMove"
     ref="operatorContainer"
     class="operatorContainer"
     @mouseenter="onMouseEnter"
@@ -74,6 +78,17 @@ function onMouseLeave() {
     >
       <el-icon class="editStyle" @click="editStyle">
         <Picture/>
+      </el-icon>
+    </el-tooltip>
+
+    <el-tooltip
+        class="zoomIn"
+        effect="light"
+        content="放大组件"
+        placement="bottom-start"
+    >
+      <el-icon class="zoomIn" @click="zoomIn">
+        <ZoomIn />
       </el-icon>
     </el-tooltip>
 
@@ -113,12 +128,16 @@ function onMouseLeave() {
   transition: opacity 0.5s ease-in-out;
   animation: bgChange 1s infinite alternate;
 
-  .deleteItem, .editStyle, .dragHandle {
+  .deleteItem, .editStyle, .dragHandle, .zoomIn {
     top: 0;
     cursor: pointer;
     width: 20px;
     pointer-events: auto;
     color: white;
+
+    &:hover {
+      scale: 1.5;
+    }
   }
 
   .deleteItem {
@@ -132,6 +151,14 @@ function onMouseLeave() {
     width: unset !important;
     border-radius: 48px;
     padding: 4px;
+  }
+
+  .zoomIn {
+    cursor: zoom-in;
+
+    svg {
+      background-color: #42c87a;
+    }
   }
 
   .editStyle {

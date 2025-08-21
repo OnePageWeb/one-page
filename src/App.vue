@@ -1,152 +1,165 @@
 <template>
-  <div
-    :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
-    @mouseleave="showMenu = false"
-  >
-    <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
-      <el-popover
-        class="box-item"
-        v-for="item in itemType"
-        :title="item.label"
-        :content="item.desc"
-        width="300"
-        placement="right-start"
-      >
-        <template #reference>
-          <el-option
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </template>
-      </el-popover>
-    </el-select>
-    <el-checkbox v-model="enableMove" label="开启移动" border/>
-    <el-checkbox v-model="enableEdit" label="开启编辑" border/>
-    <el-button @click="editGlobalStyle" class="btn">全局样式</el-button>
-    <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
-  </div>
-  <div ref="gridEl" class="grid-stack"></div>
+  <div style="height: 100%; width: 100%">
+    <div
+        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
+        @mouseleave="showMenu = false"
+    >
+      <el-select class="addItemSelect" placeholder="添加格子" @change="addItem">
+        <el-popover
+            class="box-item"
+            v-for="item in itemType"
+            :title="item.label"
+            :content="item.desc"
+            width="300"
+            placement="right-start"
+        >
+          <template #reference>
+            <el-option
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+          </template>
+        </el-popover>
+      </el-select>
+      <el-checkbox v-model="enableMove" label="开启移动" border/>
+      <el-checkbox v-model="enableEdit" label="开启编辑" border/>
+      <el-button @click="editGlobalStyle" class="btn">全局样式</el-button>
+      <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
+    </div>
+    <div ref="gridEl" class="grid-stack"></div>
 
-  <!-- 全局样式弹窗 -->
-  <el-dialog
-    title="全局样式"
-    v-model="isEditGlobalStyle"
-    width="50%"
-    class="globeStyleDialog commonDialog"
-    align-center
-  >
-    <el-input
-      v-model="globalStyle"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入全局样式"
-    />
-    <template #footer>
-      <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
-    </template>
-  </el-dialog>
-
-  <!-- 配置加载弹窗 -->
-  <el-dialog
-    title="加载配置"
-    v-model="configLoaderVisible"
-    width="50%"
-    class="globeStyleDialog commonDialog"
-    align-center
-  >
-    <template #header="{ close, titleId, titleClass }">
-      <div class="configLoaderHeader">
-        <div :id="titleId" :class="titleClass">加载配置</div>
-        <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true">
-          <InfoFilled/>
-        </el-icon>
-      </div>
-    </template>
-    <el-input
-      v-model="configData"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入配置URL或拖拽JSON文件到此处"
-      @dragover.prevent
-      @drop.prevent="handleFileDrop"
-    />
-
-    <!-- 配置提示弹窗 -->
-    <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
-      <div>
-        <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
-          可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
-        </div>
-        <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
-        </div>
-        <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-          href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
-        </div>
-        <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
-      </div>
+    <!-- 全局样式弹窗 -->
+    <el-dialog
+        title="全局样式"
+        v-model="isEditGlobalStyle"
+        width="50%"
+        class="globeStyleDialog commonDialog"
+        align-center
+    >
+      <el-input
+          v-model="globalStyle"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入全局样式"
+      />
       <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="configLoaderTipVisible = false">关闭</el-button>
-        </div>
+        <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
       </template>
     </el-dialog>
-    <template #footer>
-      <el-button type="primary" @click="downloadConfig">下载</el-button>
-      <el-popconfirm
-        title="确定加载以上配置，这会覆盖本地的所有配置？"
-        placement="top-start"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        @confirm="loadConfig()"
-      >
-        <template #reference>
-          <el-button type="primary">加载</el-button>
-        </template>
-      </el-popconfirm>
-      <el-popconfirm
-        title="确定清空并重新加载页面？"
-        placement="top-start"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        @confirm="clearConfig(true)"
-      >
-        <template #reference>
-          <el-button type="danger">清空</el-button>
-        </template>
-      </el-popconfirm>
-    </template>
-  </el-dialog>
 
-  <!-- 组件样式弹窗 -->
-  <el-dialog
-    title="组件样式"
-    v-model="isEditComponentStyle"
-    width="50%"
-    class="globeStyleDialog commonDialog"
-    align-center
-  >
-    <el-input
-      v-model="componentStyle"
-      class="globeStyleInput"
-      type="textarea"
-      resize="none"
-      placeholder="请输入样式"
+    <!-- 配置加载弹窗 -->
+    <el-dialog
+        title="加载配置"
+        v-model="configLoaderVisible"
+        width="50%"
+        class="globeStyleDialog commonDialog"
+        align-center
+    >
+      <template #header="{ close, titleId, titleClass }">
+        <div class="configLoaderHeader">
+          <div :id="titleId" :class="titleClass">加载配置</div>
+          <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true">
+            <InfoFilled/>
+          </el-icon>
+        </div>
+      </template>
+      <el-input
+          v-model="configData"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入配置URL或拖拽JSON文件到此处"
+          @dragover.prevent
+          @drop.prevent="handleFileDrop"
+      />
+
+      <!-- 配置提示弹窗 -->
+      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
+        <div>
+          <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
+            可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
+          </div>
+          <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
+          </div>
+          <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
+              href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+          </div>
+          <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="configLoaderTipVisible = false">关闭</el-button>
+          </div>
+        </template>
+      </el-dialog>
+      <template #footer>
+        <el-button type="primary" @click="downloadConfig">下载</el-button>
+        <el-popconfirm
+            title="确定加载以上配置，这会覆盖本地的所有配置？"
+            placement="top-start"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            @confirm="loadConfig()"
+        >
+          <template #reference>
+            <el-button type="primary">加载</el-button>
+          </template>
+        </el-popconfirm>
+        <el-popconfirm
+            title="确定清空并重新加载页面？"
+            placement="top-start"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            @confirm="clearConfig(true)"
+        >
+          <template #reference>
+            <el-button type="danger">清空</el-button>
+          </template>
+        </el-popconfirm>
+      </template>
+    </el-dialog>
+
+    <!-- 组件样式弹窗 -->
+    <el-dialog
+        title="组件样式"
+        v-model="isEditComponentStyle"
+        width="50%"
+        class="globeStyleDialog commonDialog"
+        align-center
+    >
+      <el-input
+          v-model="componentStyle"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入样式"
+      />
+      <template #footer>
+        <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+        v-model="componentDialogVisible"
+        class="zoomInDialog"
+        width="85%"
+        align-center
+        :show-close="false"
+    >
+      <div id="zoomInElement" class="zoomInElement"></div>
+    </el-dialog>
+
+    <edge-mouse-move
+        @onLeftEdge="() => showMenu = !showMenu && !viewMode"
     />
-    <template #footer>
-      <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
-    </template>
-  </el-dialog>
 
-  <edge-mouse-move
-    @onLeftEdge="() => showMenu = !showMenu && !viewMode"
-  />
+  </div>
 </template>
 
 <script setup>
-import {createApp, h, nextTick, onMounted, ref, watch} from 'vue'
+import {createApp, defineComponent, h, nextTick, onMounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
 import {
   ElButton,
@@ -364,13 +377,13 @@ function disabledMove() {
 }
 
 // 添加空白格子
-function createItemComponent(componentItem) {
+function createItemComponent(type, componentItem) {
   return {
     components: {
       componentItem: componentItem,
       operateButtons: operateButtons
     },
-    props: ['id', 'enableEdit'],
+    props: ['id', 'enableEdit', 'enableMove'],
     render() {
       return h('div', {
         id: this.id + '-container',
@@ -384,10 +397,12 @@ function createItemComponent(componentItem) {
           ref: 'operateButtons',
           style: {position: 'absolute'},
           id: this.id,
+          type: type,
           enableEdit: enableEdit,
           enableMove: enableMove,
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
+          onZoomIn: zoomIn,
         }),
         h(componentItem, {
           ref: 'componentItem',
@@ -417,7 +432,11 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
     ElMessage.error(`未找到对应的组件 - ${type}`)
     return
   }
-  const app = createApp(createItemComponent(component), {id: itemEl.id, enableEdit: enableEdit, enableMove: enableMove})
+  const app = createApp(createItemComponent(type, component), {
+    id: itemEl.id,
+    enableEdit: enableEdit,
+    enableMove: enableMove
+  })
   app.mount(itemEl)
   itemEl.element = app
   // 添加到GridStack
@@ -484,6 +503,48 @@ function refreshComponentStyle(id) {
   isEditComponentStyle.value = false
 }
 
+// 放大组件
+const componentDialogVisible = ref(false)
+
+function createZoomIn(id, componentItem) {
+  return defineComponent({
+    props: ['enableEdit', 'enableMove'], // 移除id prop
+    setup(props) {
+      return () => h(componentItem, {
+        ref: 'componentItem',
+        style: {position: 'absolute'},
+        id: id.value + '-container', // 直接使用id.value
+        enableEdit: props.enableEdit,
+        enableMove: props.enableMove,
+      })
+    }
+  })
+}
+
+function zoomIn(id, type) {
+  const find = itemType.find(item => item.value === type.value)
+  if (!find) {
+    ElMessage.error('未找到对应的组件')
+    return
+  }
+  // find.component是组件的vue对象
+  componentDialogVisible.value = true
+  nextTick(() => {
+    const elementById = document.getElementById('zoomInElement')
+    if (elementById) {
+      elementById.innerHTML = ''
+      const app = createApp(createZoomIn(id.value, find.component), {
+        id: id.value,
+        enableEdit: enableEdit,
+        enableMove: enableMove
+      })
+      app.mount(elementById)
+      if (elementById.firstElementChild) {
+        elementById.firstElementChild.id = id.value
+      }
+    }
+  })
+}
 
 // 编辑全局样式
 let isEditGlobalStyle = ref(false)
@@ -715,11 +776,11 @@ function handleFileDrop(e) {
 
 .grid-stack-item.ui-resizable-autohide {
   background: repeating-linear-gradient(
-    45deg,
-    rgba(150, 150, 150, 0.1),
-    rgba(150, 150, 150, 0.1) 40px,
-    rgba(255, 255, 255, 0.1) 40px,
-    rgba(255, 255, 255, 0.1) 80px
+      45deg,
+      rgba(150, 150, 150, 0.1),
+      rgba(150, 150, 150, 0.1) 40px,
+      rgba(255, 255, 255, 0.1) 40px,
+      rgba(255, 255, 255, 0.1) 80px
   );
 }
 
@@ -793,6 +854,30 @@ textarea {
 }
 
 /* 表单样式结束 */
+
+/* 组件弹窗样式开始 */
+.zoomInDialog {
+  height: 85%;
+  max-height: 85%;
+  --el-dialog-padding-primary: 0 !important;
+  --el-dialog-border-radius: 12px !important;
+  --el-dialog-bg-color: rgba(220, 220, 220, 0.8) !important;
+  backdrop-filter: blur(10px);
+
+  .el-dialog__body {
+    height: 100%;
+  }
+}
+
+.zoomInElement {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 组件弹窗样式结束 */
 
 /* 全局样式弹窗样式开始 */
 .commonDialog {

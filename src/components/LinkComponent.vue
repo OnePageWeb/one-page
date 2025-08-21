@@ -283,6 +283,15 @@ defineExpose({
   overflow: auto;
   scrollbar-width: none;
 
+  /* 第一个和左后一个子元素增加margin */
+  .linkContainer:first-child {
+    margin-left: 12px;
+  }
+
+  .linkContainer:last-child {
+    margin-right: 12px;
+  }
+
   .linkContainer {
     position: relative;
     cursor: pointer;
