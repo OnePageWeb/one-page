@@ -385,7 +385,7 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
   itemEl.type = type // 自定义类型
-  itemEl.id = id || v4()
+  itemEl.id = id || v4().replace('-', '')
   itemEl.setAttribute('gs-w', w)
   itemEl.setAttribute('gs-h', h)
   itemEl.setAttribute('gs-x', x)

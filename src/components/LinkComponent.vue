@@ -274,8 +274,9 @@ defineExpose({
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 40px;
+  gap: 20px;
+  overflow: auto;
+  scrollbar-width: none;
 
   .linkContainer {
     position: relative;
@@ -284,8 +285,8 @@ defineExpose({
     height: calc(100% - 30px);
   }
 
-  .linkContainer:hover {
-    scale: 1.1;
+  .linkItem:hover {
+    padding: 4px 8px;
     border-radius: 20px;
     box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
     background-color: rgba(255, 255, 255, 0.1);
@@ -371,7 +372,7 @@ defineExpose({
 .urlWebDialog {
   height: calc(80% - 4px);
   width: 80%;
-  --el-dialog-padding-primary: 0;
+  --el-dialog-padding-primary: 0 !important;
 
   .el-dialog__header {
     border-bottom: 3px solid #f1f1f1;
