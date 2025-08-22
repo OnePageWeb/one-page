@@ -13,11 +13,6 @@ const {defaultUrl, enableEdit} = toRefs(props)
 
 // 默认文本内容
 let url = ref(defaultUrl.value || '')
-let isEditing = ref(false)
-
-watch(enableEdit, (newValue) => {
-  isEditing.value = newValue
-})
 
 // iframe
 let changeTime = ref(Date.now())
@@ -38,15 +33,8 @@ function save() {
   saveData(props.id, JSON.stringify({url: url.value}))
 }
 
-watch(isEditing, (newValue) => {
-  if (!newValue) {
-    save()
-  }
-})
-
 onMounted(() => {
   load()
-  isEditing.value = enableEdit.value
   setTimeout(() => {
     loadIframe()
   }, 1000)
@@ -67,7 +55,7 @@ defineExpose({
 
 <template>
   <div class="iframeContent">
-    <div :class="['urlEdit', isEditing ? 'editing' : 'hide']">
+    <div :class="['urlEdit', enableEdit ? 'editing' : 'hide']">
       <el-input v-model="url" placeholder="请输入网址" clearable @blur="saveEdit">
         <template #prepend>
           <el-icon>
@@ -83,7 +71,7 @@ defineExpose({
         </template>
       </el-input>
     </div>
-    <div :class="['iframeContainer', isEditing ? 'iframeOnEdit' : '']">
+    <div :class="['iframeContainer', enableEdit ? 'iframeOnEdit' : '']">
       <iframe :src="iframeUrl" :class="['iframe']" border="none" width="100%" height="100%"></iframe>
     </div>
   </div>

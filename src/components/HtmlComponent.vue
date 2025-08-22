@@ -49,12 +49,6 @@ function save() {
   saveData(props.id, JSON.stringify({text: content.value}))
 }
 
-watch(enableEdit, (newValue) => {
-  if (!newValue) {
-    save()
-  }
-})
-
 onMounted(() => {
   load()
 })
@@ -94,6 +88,7 @@ defineExpose({
         type="textarea"
         placeholder="输入内容"
         @blur="updateIframeContent"
+        @change="save"
     />
   </div>
 </template>

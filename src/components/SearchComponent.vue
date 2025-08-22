@@ -28,28 +28,38 @@ const defaultSearchEngine = [
 ]
 
 // 搜索引擎列表
-let searchEngineMap = ref({})
-let searchEngineList = ref([])
+let searchEngineMap = {}
+const searchEngineList = ref([])
 // 当前搜索引擎
-let nowSearchEngine = ref('')
+const nowSearchEngine = ref('')
 // 搜索内容
-let searchContent = ref(text.value)
+const searchContent = ref(text.value)
 
 // 搜索
 function search() {
-  const searchUrl = searchEngineMap.value[nowSearchEngine.value].url
+  const searchUrl = searchEngineMap[nowSearchEngine.value].url
   window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', '_blank')
 }
 
 // 前后置
 const prefix = ref('')
 const suffix = ref('')
-// 打开方式
-const openMode = ref('')
 
 // 编辑搜索引擎
 const dialogVisible = ref(false)
-let tempSearchEngineList = ref([])
+const tempSearchEngineList = ref([])
+
+watch(dialogVisible, b => {
+  if (!b) {
+    // 重新加载
+    const save = loadData(props.id)
+    if (save) {
+      const parse = JSON.parse(save)
+      prefix.value = parse.prefix
+      suffix.value = parse.suffix
+    }
+  }
+})
 
 function editSearchEngine() {
   dialogVisible.value = true
@@ -71,7 +81,7 @@ function saveEdit() {
       }))
       .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
   // 映射到Map
-  searchEngineMap.value = tempSearchEngineList.value.reduce((prev, cur) => {
+  searchEngineMap = tempSearchEngineList.value.reduce((prev, cur) => {
     prev[cur.name] = cur
     return prev
   }, {})
@@ -85,18 +95,12 @@ function deleteSearch(index) {
 
 function save() {
   saveData(props.id, JSON.stringify({
-    searchEngineMap: searchEngineMap.value,
+    searchEngineMap: searchEngineMap,
     nowSearchEngine: nowSearchEngine.value,
     prefix: prefix.value,
     suffix: suffix.value
   }))
 }
-
-watch(enableEdit, (newValue) => {
-  if (!newValue) {
-    save()
-  }
-})
 
 onMounted(() => {
   load()
@@ -106,14 +110,14 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
-    searchEngineMap.value = parse.searchEngineMap
+    searchEngineMap = parse.searchEngineMap
     nowSearchEngine.value = parse.nowSearchEngine
     prefix.value = parse.prefix
     suffix.value = parse.suffix
   }
-  if (!searchEngineMap.value || Object.keys(searchEngineMap.value).length === 0) {
+  if (!searchEngineMap || Object.keys(searchEngineMap).length === 0) {
     // 将默认搜索引擎转换为Map，key是name，value是自身
-    searchEngineMap.value = defaultSearchEngine.reduce((prev, cur) => {
+    searchEngineMap = defaultSearchEngine.reduce((prev, cur) => {
       prev[cur.name] = cur
       return prev
     }, {})
@@ -121,7 +125,7 @@ function load(data) {
   if (!nowSearchEngine.value) {
     nowSearchEngine.value = defaultSearchEngine[0].name
   }
-  searchEngineList.value = Object.values(searchEngineMap.value)
+  searchEngineList.value = Object.values(searchEngineMap)
 }
 
 defineExpose({
@@ -168,6 +172,7 @@ defineExpose({
         title="编辑搜索引擎"
         width="60%"
         align-center
+        destroy-on-close
     >
       <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">
         <div class="appendContainer">

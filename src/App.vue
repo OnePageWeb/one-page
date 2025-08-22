@@ -254,14 +254,7 @@ watch(enableMove, b => {
   }
 })
 // 全局样式
-const globalStyle = ref(`.grid-stack {
-  height: 100% !important;
-}
-body {
-  background: url(https://api.xsot.cn/bing?jump=true)  center/cover;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}`)
+const globalStyle = ref('')
 // 仅查看模式
 const viewMode = ref(false)
 
@@ -323,9 +316,8 @@ onMounted(async () => {
       }
     }
   } else {
-    // 添加初始格子
-    addItem('link', 6, 12, 11, 4)
-    addItem('search', 6, 8, 11, 4)
+    configData.value = await loadJsonData()
+    await loadConfig(true)
   }
 
   // 恢复样式
@@ -343,6 +335,19 @@ onMounted(async () => {
     saveLayout()
   })
 })
+
+const loadJsonData = async () => {
+  try {
+    // 使用绝对路径指向 public 文件夹
+    const response = await fetch('/first-config.json')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return await response.json()
+  } catch (err) {
+    console.error('加载JSON失败:', err)
+  }
+}
 
 const elementMap = {}
 
@@ -388,29 +393,26 @@ function disabledMove() {
 // 添加空白格子
 function createItemComponent(type, componentItem) {
   return {
-    components: {
-      componentItem: componentItem,
-      operateButtons: operateButtons
-    },
     props: ['id', 'enableEdit', 'enableMove'],
-    methods: {
-      load(data) {
-        this.$refs.componentItem.load(data)
-      }
-    },
-    render() {
-      return h('div', {
-        id: this.id + '-container',
+    setup(props, { expose }) {
+      const componentItemRef = ref(null)
+      // 暴露方法给父组件
+      expose({
+        load(data) {
+          componentItemRef.value.load(data)
+        }
+      })
+      return () => h('div', {
+        id: props.id + '-container',
         style: {
           height: '100%',
           width: '100%',
           position: 'relative'
-        }
+        },
       }, [
         h(operateButtons, {
-          ref: 'operateButtons',
-          style: {position: 'absolute'},
-          id: this.id,
+          style: {position: 'absolute',},
+          id: props.id,
           type: type,
           enableEdit: enableEdit,
           enableMove: enableMove,
@@ -419,13 +421,13 @@ function createItemComponent(type, componentItem) {
           onZoomIn: zoomIn,
         }),
         h(componentItem, {
-          ref: 'componentItem',
+          ref: componentItemRef,
           style: {position: 'absolute'},
-          id: this.id,
-          enableEdit: enableEdit,
-          enableMove: enableMove
+          id: props.id,
+          enableEdit: props.enableEdit,
+          enableMove: props.enableMove
         }),
-      ]);
+      ])
     }
   }
 }
@@ -651,17 +653,20 @@ async function loadConfig(reload = true) {
     return
   }
   // 解析json
-  let config
-  try {
-    if (startsWith(configData.value, 'http')) {
-      // 从网络加载
-      config = await parseBlobJson(configData.value)
-    } else {
-      config = JSON.parse(configData.value)
+  let config = configData.value
+  configData.value = ''
+  if (typeof config === 'string') {
+    try {
+      if (startsWith(config, 'http')) {
+        // 从网络加载
+        config = await parseBlobJson(config)
+      } else {
+        config = JSON.parse(config)
+      }
+    } catch (error) {
+      ElMessage.error('配置文件无法加载', error)
+      return
     }
-  } catch (error) {
-    ElMessage.error('配置文件无法加载')
-    return
   }
   if (!config || typeof config !== 'object') {
     ElMessage.error('配置文件格式错误')

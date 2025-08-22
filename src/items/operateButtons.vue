@@ -44,6 +44,11 @@ function onMouseLeave() {
     operatorContainer.value.style.opacity = 0
   }, 800)
 }
+
+defineExpose({
+  onMouseEnter,
+  onMouseLeave
+})
 </script>
 
 <template>

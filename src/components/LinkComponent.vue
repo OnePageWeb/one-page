@@ -23,24 +23,17 @@ const {id, enableEdit} = toRefs(props)
 
 // 默认文本内容
 const links = ref([])
-const isEditing = ref(false)
-
-watch(enableEdit, (newValue) => {
-  isEditing.value = newValue
-})
 
 const dialogVisible = ref(false)
 const tempLinks = ref([])
 
 function edit() {
-  isEditing.value = true
   dialogVisible.value = true
   tempLinks.value.length = 0
   tempLinks.value = [...links.value]
 }
 
 function cancelEdit() {
-  isEditing.value = false
   dialogVisible.value = false
 }
 
@@ -51,7 +44,6 @@ function deleteLink(index) {
 function saveEdit() {
   links.value = [...tempLinks.value]
   dialogVisible.value = false
-  isEditing.value = false
   refreshIcon()
 }
 
@@ -123,14 +115,8 @@ function save() {
   saveData(props.id, JSON.stringify({links: links.value}))
 }
 
-watch(isEditing, (newValue) => {
-  if (!newValue) {
-    save()
-  }
-})
 onMounted(() => {
   load()
-  isEditing.value = enableEdit.value
 })
 
 function load(data) {

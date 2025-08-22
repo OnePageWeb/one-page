@@ -48,12 +48,6 @@ function save() {
   }))
 }
 
-watch(enableEdit, (newValue) => {
-  if (!newValue) {
-    save()
-  }
-})
-
 // 执行方法
 let iframe
 
@@ -136,6 +130,7 @@ defineExpose({
           placeholder="输入方法内容"
           @blur="save"
           @keydown.ctrl.enter="safeExecute"
+          @change="save"
       />
     </div>
     <div :class="['params', !enableEdit ? 'hide' : '']">
