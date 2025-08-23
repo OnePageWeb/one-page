@@ -1,5 +1,5 @@
 <script setup>
-import {ElInput, ElText} from "element-plus"
+import {ElIcon, ElInput, ElText, ElTooltip} from "element-plus"
 import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import MarkdownIt from 'markdown-it'
@@ -17,6 +17,7 @@ import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-csharp'
+import {Picture, Upload} from "@element-plus/icons-vue";
 
 const props = defineProps({
   id: String,
@@ -57,6 +58,21 @@ function edit() {
   nextTick(() => {
     input.value.focus()
   })
+}
+
+function openNewWindow() {
+  // 定义窗口特性
+  const features = 'width=600,height=400,left=100,top=100,resizable=yes'
+  // 尝试打开新窗口
+  const newWindow = window.open('', '_blank', features)
+  if (!newWindow) {
+    alert('弹出窗口被阻止了！请允许此站点的弹出窗口。')
+    return
+  }
+  // 向新窗口写入内容
+  newWindow.document.write(renderedContent.value)
+  // 结束文档写入
+  newWindow.document.close()
 }
 
 function onMouseLeave() {
@@ -107,6 +123,18 @@ defineExpose({
         @blur="onFocus = false"
         @change="save"
     />
+    <div :class="['operatorContainer', { 'operatorContainerHide': !onFocus, 'operatorContainerOnFocus': onFocus }]">
+      <el-tooltip
+          v-if="onFocus"
+          effect="light"
+          content="弹出窗口显示"
+          placement="top"
+      >
+        <el-icon @click="openNewWindow">
+          <Upload />
+        </el-icon>
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -170,6 +198,30 @@ defineExpose({
 
   .inputOnFocus .el-textarea__inner {
     padding: 8px !important;
+  }
+
+  .operatorContainer {
+    width: calc(100% - 16px);
+    position: absolute;
+    bottom: 0;
+    opacity: 1;
+    margin: 4px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+
+    .el-icon {
+      cursor: pointer;
+    }
+  }
+
+  .operatorContainerHide {
+    width: 0;
+    padding: 0;
+    opacity: 0;
   }
 }
 </style>
