@@ -208,7 +208,9 @@ defineExpose({
 <style>
 .linkContent {
   height: 100%;
-  width: 100%;
+  max-height: 200px;
+  margin: 0 8px;
+  width: calc(100% - 16px);
   display: flex;
   align-items: center;
   gap: 20px;

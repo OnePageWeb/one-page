@@ -258,6 +258,37 @@ const globalStyle = ref('')
 // 仅查看模式
 const viewMode = ref(false)
 
+function reloadWithoutParams(paramsToRemove) {
+  try {
+    // 创建URL对象
+    const url = new URL(window.location.href);
+
+    // 处理要移除的参数（支持字符串或数组）
+    const paramsToRemoveArray = Array.isArray(paramsToRemove)
+        ? paramsToRemove
+        : [paramsToRemove];
+
+    // 移除指定参数
+    paramsToRemoveArray.forEach(param => {
+      if (url.searchParams.has(param)) {
+        url.searchParams.delete(param);
+      }
+    });
+
+    // 构建新URL
+    const newUrl = url.toString();
+
+    // 只有当URL确实发生变化时才重新加载
+    if (newUrl !== window.location.href) {
+      window.location.href = newUrl;
+    }
+  } catch (error) {
+    console.error('Error processing URL:', error);
+    // 出错时执行普通重新加载
+    window.location.reload();
+  }
+}
+
 // 初始化GridStack
 onMounted(async () => {
   // 初始化GridStack
@@ -283,9 +314,7 @@ onMounted(async () => {
     ElMessage.info('正在加载配置...')
     configData.value = configUrl
     if (await loadConfig(false)) {
-      ElMessage.success('配置加载完成，编辑模式已关闭')
-      viewMode.value = true
-      enabledEdit()
+      reloadWithoutParams('config')
     }
   }
   // 是否开启函数格子
@@ -891,6 +920,7 @@ textarea {
 
   .el-dialog__body {
     height: 100%;
+    color: #272727;
   }
 }
 

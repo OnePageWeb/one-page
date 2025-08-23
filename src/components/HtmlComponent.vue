@@ -75,7 +75,7 @@ defineExpose({
   >
     <iframe
         ref="webIframe"
-        :class="['result', onFocus && enableEdit ? 'resultOnFocus' : '']"
+        :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']"
         sandbox="allow-scripts allow-same-origin"
         frameborder="0"
         @load="updateIframeContent"
@@ -83,7 +83,7 @@ defineExpose({
     <el-input
         v-model="content"
         ref="input"
-        :class="['input', onFocus && enableEdit ? 'inputOnFocus' : '']"
+        :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
         placeholder="输入内容"

@@ -133,13 +133,6 @@ defineExpose({
   gap: 8px;
   backdrop-filter: blur(4px);
   border-radius: 8px;
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(150, 150, 150, 0.1),
-    rgba(150, 150, 150, 0.1) 40px,
-    rgba(255, 255, 255, 0.1) 40px,
-    rgba(255, 255, 255, 0.1) 80px
-  );
   transition: opacity 0.5s ease-in-out;
   animation: bgChange 1s infinite alternate;
 
@@ -193,10 +186,10 @@ defineExpose({
 
 @keyframes bgChange {
   0% {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
   }
   100% {
-    background: rgba(211, 211, 211, 0.5);
+    background: rgba(211, 211, 211, 0.1);
   }
 }
 </style>

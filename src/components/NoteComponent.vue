@@ -17,15 +17,16 @@ import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-csharp'
-import {Picture, Upload} from "@element-plus/icons-vue";
+import {Picture, Upload, Edit} from "@element-plus/icons-vue";
 
 const props = defineProps({
   id: String,
   text: String,
   enableEdit: Object
 })
-const {text} = toRefs(props)
+const {text, enableEdit} = toRefs(props)
 
+const isEditing = ref(false)
 // 默认文本内容
 const content = ref(text?.value || '')
 const onFocus = ref(false)
@@ -50,19 +51,26 @@ const renderedContent = computed(() => {
 })
 
 const input = ref(null)
-const isEditing = ref(false)
 
 function edit() {
-  isEditing.value = true
   onFocus.value = true
   nextTick(() => {
     input.value.focus()
   })
+  isEditing.value = true
 }
 
 function openNewWindow() {
+  // 将open的窗口居中，长宽都是80%
+  const screenWidth = window.screen.width
+  const screenHeight = window.screen.height
+  const windowWidth = screenWidth * 0.4
+  const windowHeight = screenHeight * 0.6
+  const windowLeft = (screenWidth - windowWidth) / 2
+  const windowTop = (screenHeight - windowHeight) / 2
   // 定义窗口特性
-  const features = 'width=600,height=400,left=100,top=100,resizable=yes'
+  const features = `width=${windowWidth},height=${windowHeight},left=${windowLeft},top=${windowTop},` +
+      'menubar=no,toolbar=no,location=no,status=no,resizable=yes';
   // 尝试打开新窗口
   const newWindow = window.open('', '_blank', features)
   if (!newWindow) {
@@ -83,7 +91,6 @@ function onMouseLeave() {
   if (firstChild !== document.activeElement) {
     onFocus.value = false
   }
-  isEditing.value = false
 }
 
 function save() {
@@ -113,20 +120,28 @@ defineExpose({
       @mouseenter="onFocus = true"
       @mouseleave="onMouseLeave"
   >
-    <div :class="['result', onFocus && isEditing ? 'resultOnFocus' : '']" v-html="renderedContent"/>
+    <div :class="['result', onFocus && enableEdit || isEditing ? 'resultOnFocus' : '']" v-html="renderedContent"/>
     <el-input
         v-model="content"
         ref="input"
-        :class="['input', onFocus && isEditing ? 'inputOnFocus' : '']"
+        :class="['input', onFocus && enableEdit || isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
         placeholder="输入内容"
-        @blur="onFocus = false"
+        @blur="onFocus = false; isEditing = false"
         @change="save"
     />
     <div :class="['operatorContainer', { 'operatorContainerHide': !onFocus, 'operatorContainerOnFocus': onFocus }]">
       <el-tooltip
-          v-if="onFocus"
+          effect="light"
+          content="开启编辑"
+          placement="top"
+      >
+        <el-icon @click="edit">
+          <Edit />
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
           effect="light"
           content="弹出窗口显示"
           placement="top"
@@ -150,10 +165,21 @@ defineExpose({
   .result {
     width: calc(100% - 16px);
     font-size: 18px;
-    height: calc(100% - 16px);
+    height: calc(100% - 24px);
     overflow-y: auto;
     scrollbar-width: none;
     padding: 8px;
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(240, 240, 240, 0.5),
+        rgba(240, 240, 240, 0.5) 40px,
+        rgba(255, 255, 255, 0.5) 40px,
+        rgba(255, 255, 255, 0.5) 80px
+    );
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border: 4px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
   :deep(.el-text) {
@@ -166,6 +192,7 @@ defineExpose({
     width: 0;
     height: 100%;
     opacity: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
   .input .el-textarea__inner {
@@ -175,9 +202,9 @@ defineExpose({
     min-width: unset !important;
     min-height: unset !important;
     padding: 0;
-    border-radius: 0;
     color: #3a3a3a;
     font-weight: bold;
+    border-color: unset;
     background: repeating-linear-gradient(
         -45deg,
         rgba(240, 240, 240, 0.9),
@@ -185,16 +212,26 @@ defineExpose({
         rgba(255, 255, 255, 0.9) 40px,
         rgba(255, 255, 255, 0.9) 80px
     );
+    &:focus {
+      box-shadow: unset !important;
+      --el-input-focus-border-color: unset !important;
+      border-radius: 0 4px 4px 0;
+    }
   }
 
   .resultOnFocus {
     width: calc(40% - 16px);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .inputOnFocus {
-    width: 60%;
-    height: 100%;
+    width: calc(60% - 8px);
+    height: calc(100% - 8px);
     opacity: 1;
+    border: 4px solid rgba(255, 255, 255, 0.4);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
   }
 
   .inputOnFocus .el-textarea__inner {
@@ -202,14 +239,15 @@ defineExpose({
   }
 
   .operatorContainer {
-    width: calc(100% - 16px);
+    width: calc(100% - 32px);
     position: absolute;
-    bottom: 0;
+    bottom: 4px;
+    left: 4px;
     opacity: 1;
     margin: 4px;
     padding: 8px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     background-color: white;
     border-radius: 8px;
