@@ -23,3 +23,28 @@ export async function parseBlobJson(blobUrl) {
         }
     }
 }
+
+// 获取完整的URL路径
+const getFullUrl = (path) => {
+    // 确保路径以斜杠开头
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`
+    // 合并 base URL 和路径
+    return `${import.meta.env.BASE_URL}${normalizedPath}`.replace(/\/\//g, '/')
+}
+
+// 封装fetch函数
+export const fetchWithBase = async (path, options = {}) => {
+    const fullUrl = getFullUrl(path)
+    console.log('Fetching from:', fullUrl) // 调试信息
+
+    try {
+        const response = await fetch(fullUrl, options)
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        return await response.json()
+    } catch (error) {
+        console.error('Fetch error:', error)
+        throw new Error(`Failed to fetch ${path}: ${error.message}`)
+    }
+}

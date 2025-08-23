@@ -185,7 +185,7 @@ import functionComponent from './components/FunctionComponent.vue'
 import evalComponent from "./components/EvalComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
-import {parseBlobJson} from "@/js/url.js"
+import {fetchWithBase, parseBlobJson} from "@/js/url.js"
 import {InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
 import {loadData, removeData, saveData} from "@/js/data.js"
@@ -339,11 +339,7 @@ onMounted(async () => {
 const loadJsonData = async () => {
   try {
     // 使用绝对路径指向 public 文件夹
-    const response = await fetch('/first-config.json')
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    return await response.json()
+    return await fetchWithBase('/first-config.json')
   } catch (err) {
     console.error('加载JSON失败:', err)
   }
@@ -394,7 +390,7 @@ function disabledMove() {
 function createItemComponent(type, componentItem) {
   return {
     props: ['id', 'enableEdit', 'enableMove'],
-    setup(props, { expose }) {
+    setup(props, {expose}) {
       const componentItemRef = ref(null)
       // 暴露方法给父组件
       expose({
