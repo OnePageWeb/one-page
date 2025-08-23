@@ -49,66 +49,46 @@ function saveEdit() {
 
 // 打开窗口
 function open(link) {
+  if (curWindow[link.name] && !curWindow[link.name].closed) {
+    curWindow[link.name].focus()
+    return
+  }
   window.open(link.url, '_blank')
 }
 
 // 打开弹窗
-const modalVisible = ref(false)
-const fastMode = ref(true)
-const curLink = ref({})
-
-function openModal(link) {
-  modalVisible.value = true
-  curLink.value = {...link}
-  if (fastMode.value) {
-    ElMessage({
-      message: '快速模式已开启，鼠标移出弹窗即可关闭',
-      type: 'success'
-    })
+const curWindow = {}
+const curOpenedWindow = ref([])
+function openNewWindow(link) {
+  const cur = curWindow[link.name]
+  if (cur && !cur.closed) {
+    cur.focus()
+    return
   }
-}
+  // 将open的窗口居中，长宽都是80%
+  const screenWidth = window.screen.width
+  const screenHeight = window.screen.height
+  const windowWidth = screenWidth * 0.8
+  const windowHeight = screenHeight * 0.8
+  const windowLeft = (screenWidth - windowWidth) / 2
+  const windowTop = (screenHeight - windowHeight) / 2
+  // 定义窗口特性
+  const features = `width=${windowWidth},height=${windowHeight},left=${windowLeft},top=${windowTop},resizable=yes`
+  // 尝试打开新窗口
+  const newWindow = window.open(link.url, '_blank', features)
+  curWindow[link.name] = newWindow
+  curOpenedWindow.value.push(link.name)
+  // 监听窗口关闭事件
+  const closeListener = setInterval(() => {
+    if (newWindow.closed) {
+      clearTimeout(closeListener)
+      // 清空窗口引用
+      delete curWindow[link.name]
+      // 从数组中移除
+      curOpenedWindow.value = curOpenedWindow.value.filter(name => name !== link.name)
+    }
+  }, 1000)
 
-const linkIframe = ref(null)
-
-function onIframeLoad() {
-  const iframe = linkIframe.value
-  if (!iframe) return
-
-  try {
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
-
-    // 阻止所有链接在新窗口打开
-    const links = iframeDoc.querySelectorAll('a')
-    links.forEach(link => {
-      link.target = '_self' // 强制在当前iframe内打开
-      link.addEventListener('click', (e) => {
-        e.preventDefault()
-        // 在这里处理导航逻辑
-      })
-    })
-  } catch (error) {
-    console.warn('无法访问iframe内容:', error)
-  }
-}
-
-watch(fastMode, b => {
-  if (b) {
-    ElMessage({
-      message: '快速模式已开启，鼠标移出弹窗即可关闭',
-      type: 'success'
-    })
-  } else {
-    ElMessage({
-      message: '快速模式已关闭，点击弹窗外区域即可关闭',
-      type: 'info'
-    })
-  }
-})
-
-function fastModeCheck() {
-  if (fastMode.value) {
-    modalVisible.value = false
-  }
 }
 
 function save() {
@@ -162,9 +142,9 @@ defineExpose({
         @click="open(link)"
     >
       <div
-          class="linkItem"
+          :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
           draggable="true"
-          @dragend="openModal(link)"
+          @dragend="openNewWindow(link)"
       >
         <img :src="link.img" alt="图标"/>
         <el-text tag="b">{{ link.name }}</el-text>
@@ -176,40 +156,6 @@ defineExpose({
         <Operation/>
       </el-icon>
     </div>
-
-    <!-- 临时弹窗 -->
-    <el-dialog
-        class="urlWebDialog"
-        v-model="modalVisible"
-        ref="urlWebDialog"
-        width="80%"
-        :show-close="false"
-        :append-to-body="true"
-        @mouseleave="fastModeCheck"
-        align-center
-    >
-      <template #header>
-        <div class="urlWebHeader">
-          <span style="margin-left: 8px;font-weight: bold">{{ curLink.name }}</span>
-          <div class="urlWebOperator">
-            <div :class="fastMode ? 'fastModeFlag' : 'commonModeFlag'" @click="fastMode = !fastMode">{{ fastMode ? '快速模式' : '普通模式' }}</div>
-            <div
-              style="color: white;background-color: #f34636"
-              @click="modalVisible = false"
-            >×</div>
-          </div>
-        </div>
-      </template>
-      <iframe
-          class="linkIframe"
-          ref="linkIframe"
-          :src="curLink.url"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-          frameborder="0"
-          allowfullscreen
-          @load="onIframeLoad"
-      ></iframe>
-    </el-dialog>
 
     <!-- 编辑快速链接弹窗 -->
     <el-dialog
@@ -309,6 +255,22 @@ defineExpose({
     }
   }
 
+  .hasWindow {
+    padding: 4px 8px;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(150, 150, 150, 0.3),
+        rgba(150, 150, 150, 0.3) 40px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.1) 80px
+    );
+    background-size: 200%;
+    border-radius: 8px;
+    &:hover {
+      animation: gradientScroll 1s ease-in-out infinite;
+    }
+  }
+
   .editContainer {
     height: 40px;
     width: 40px;
@@ -333,7 +295,19 @@ defineExpose({
       color: #e3e3e3;
     }
   }
+}
 
+/* 背景滚动动画 */
+@keyframes gradientScroll {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 
 .linkEditContainer {
@@ -372,59 +346,6 @@ defineExpose({
         width: 200px !important;
       }
     }
-  }
-}
-
-.urlWebDialog {
-  height: calc(80% - 4px);
-  width: 80%;
-  --el-dialog-padding-primary: 0 !important;
-
-  .el-dialog__header {
-    border-bottom: 3px solid #f1f1f1;
-    margin-bottom: 0;
-    border-radius: 0 !important;
-  }
-
-  .urlWebHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #ffffff;
-  }
-
-  .urlWebOperator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    gap: 8px;
-
-    /* 对其中的每一个子元素都添加cursor: pointer; */
-
-    * {
-      cursor: pointer;
-      padding: 0 8px 2px 8px;
-    }
-
-    .commonModeFlag {
-      color: #4b4b4b;
-      background-color: #d5d5d5;
-    }
-
-    .fastModeFlag {
-      color: white;
-      background-color: #2ac0cf;
-    }
-  }
-
-  .linkIframe {
-    height: 100%;
-    width: 100%;
-  }
-
-  .el-dialog__body {
-    height: calc(100% - 24px) !important;
   }
 }
 </style>

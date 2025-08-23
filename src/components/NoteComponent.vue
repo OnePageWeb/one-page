@@ -69,6 +69,7 @@ function openNewWindow() {
     alert('弹出窗口被阻止了！请允许此站点的弹出窗口。')
     return
   }
+  setTimeout(() => { newWindow.document.title = "便签"; }, 100);
   // 向新窗口写入内容
   newWindow.document.write(renderedContent.value)
   // 结束文档写入

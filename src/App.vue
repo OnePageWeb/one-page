@@ -807,13 +807,6 @@ html {
 }
 
 .grid-stack-item.ui-resizable-autohide {
-  background: repeating-linear-gradient(
-      45deg,
-      rgba(150, 150, 150, 0.1),
-      rgba(150, 150, 150, 0.1) 40px,
-      rgba(255, 255, 255, 0.1) 40px,
-      rgba(255, 255, 255, 0.1) 80px
-  );
 }
 
 /* 格子样式 */

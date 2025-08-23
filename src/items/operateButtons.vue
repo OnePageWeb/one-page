@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits, ref, toRefs} from 'vue'
+import {defineEmits, ref, toRefs, watch} from 'vue'
 import {Close, Coordinate, Picture, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
@@ -26,6 +26,13 @@ function zoomIn() {
 
 const operatorContainer = ref(null)
 
+watch(enableMove, b => {
+  if (b) {
+    operatorContainer.value.style.opacity = 1
+  } else {
+    operatorContainer.value.style.opacity = 0
+  }
+})
 let timer = null
 function onMouseEnter() {
   // 重新计时
@@ -36,13 +43,16 @@ function onMouseEnter() {
 }
 
 function onMouseLeave() {
+  if (enableMove.value) {
+    return
+  }
   // 重新计时
   if (timer) {
     clearTimeout(timer)
   }
   timer = setTimeout(() => {
     operatorContainer.value.style.opacity = 0
-  }, 800)
+  }, 500)
 }
 
 defineExpose({
