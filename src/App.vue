@@ -240,7 +240,7 @@ let showMenu = ref(false)
 // 格子高度
 let itemHeight = 25
 // 总列数
-const columns = 24
+const columns = 48
 // GridStack实例
 let grid
 // 锁定状态
@@ -289,8 +289,16 @@ function reloadWithoutParams(paramsToRemove) {
   }
 }
 
+// 获取窗口高度
+let windowHeight = window.innerHeight
+
 // 初始化GridStack
 onMounted(async () => {
+  windowHeight = window.innerHeight
+
+  // 按照窗口宽度计算格子高度
+  itemHeight = Math.floor(windowHeight / columns) * 2
+
   // 初始化GridStack
   grid = GridStack.init({
     // 每个格子的高度（px）
@@ -341,7 +349,6 @@ onMounted(async () => {
       const componentStyle = loadData(componentId + '-style')
       if (componentStyle) {
         loadComponentStyle(componentId, componentStyle)
-        document.getElementById(componentId + '-container').style.cssText = componentStyle
       }
     }
   } else {
@@ -528,6 +535,9 @@ function loadComponentStyle(id, styleContent) {
   const oldStyle = document.getElementById(id + '-style')
   if (oldStyle) {
     document.head.removeChild(oldStyle)
+  }
+  if (!styleContent || styleContent.trim().length === 0) {
+    return
   }
   const style = document.createElement('style')
   style.id = id + '-style'
