@@ -54,7 +54,7 @@ let iframe
 // 监听 iframe 的消息
 function listener(event) {
   // 验证消息来源（重要！）
-  if (event.source !== iframe.contentWindow) return
+  if (!iframe || event.source !== iframe.contentWindow) return
   functionResult.value = event.data.data
   save()
 }

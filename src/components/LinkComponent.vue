@@ -299,19 +299,6 @@ defineExpose({
   }
 }
 
-/* 背景滚动动画 */
-@keyframes gradientScroll {
-  0% {
-    background-position: 0 0;
-  }
-  50% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: 0 0;
-  }
-}
-
 .linkEditContainer {
   .linkForm {
     .linkEditItem {

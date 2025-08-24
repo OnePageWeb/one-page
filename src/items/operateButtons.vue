@@ -1,9 +1,9 @@
 <script setup>
 import {defineEmits, ref, toRefs, watch} from 'vue'
-import {Close, Coordinate, Picture, ZoomIn} from "@element-plus/icons-vue"
+import {Close, Coordinate, Download, Picture, Upload, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
-const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn'])
+const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent'])
 const props = defineProps({
   id: String,
   type: String,
@@ -22,6 +22,10 @@ function editStyle() {
 
 function zoomIn() {
   emit('zoomIn', id, type)
+}
+
+function exportComponent() {
+  emit('exportComponent', id, type)
 }
 
 const operatorContainer = ref(null)
@@ -86,7 +90,6 @@ defineExpose({
 
     <el-tooltip
       v-if="enableEdit"
-      class="editStyle"
       effect="light"
       content="编辑组件样式"
       placement="bottom-start"
@@ -97,7 +100,6 @@ defineExpose({
     </el-tooltip>
 
     <el-tooltip
-        class="zoomIn"
         effect="light"
         content="放大组件"
         placement="bottom-start"
@@ -108,8 +110,17 @@ defineExpose({
     </el-tooltip>
 
     <el-tooltip
+        effect="light"
+        content="到处组件数据"
+        placement="bottom-start"
+    >
+      <el-icon class="exportComponent" @click="exportComponent">
+        <Download />
+      </el-icon>
+    </el-tooltip>
+
+    <el-tooltip
       v-if="enableMove"
-      class="dragHandle"
       effect="light"
       content="拖动组件，按住组件边框也可以进行拖动"
       placement="bottom-start"
@@ -136,7 +147,7 @@ defineExpose({
   transition: opacity 0.5s ease-in-out;
   animation: bgChange 1s infinite alternate;
 
-  .deleteItem, .editStyle, .dragHandle, .zoomIn {
+  .deleteItem, .editStyle, .dragHandle, .zoomIn, .exportComponent {
     top: 0;
     cursor: pointer;
     width: 20px;
@@ -166,6 +177,12 @@ defineExpose({
 
     svg {
       background-color: #42c87a;
+    }
+  }
+
+  .exportComponent {
+    svg {
+      background-color: #4671df;
     }
   }
 
