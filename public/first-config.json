@@ -2,77 +2,63 @@
   "globalStyle": ".grid-stack {\n  background-color: unset;\n}\nbody {\n    background: url(https://api.xsot.cn/bing?jump=true);\n    backdrop-filter: blur(10px);\n   -webkit-backdrop-filter: blur(10px);\n}\n.linkItem .el-text {\n    color: #efefef;\n}",
   "layout": [
     {
-      "type": "note",
-      "id": "624bd3b3b9c0-41de-91d3-27f0b49a99c5",
-      "x": 19,
-      "y": 2,
-      "w": 4,
-      "h": 14
-    },
-    {
       "type": "html",
       "id": "b6b6183c-3abd-49fd-a043-5211d3e89b73",
-      "x": 8,
-      "y": 3,
-      "w": 8,
-      "h": 4
+      "x": 17,
+      "y": 4,
+      "w": 17,
+      "h": 3
     },
     {
       "type": "text",
       "id": "327b3179-b2c3-4299-95a7-5fcd73710cfd",
-      "x": 8,
+      "x": 21,
       "y": 7,
       "w": 8,
-      "h": 3
+      "h": 2
     },
     {
       "type": "search",
       "id": "f0ebf0cd-68a4-4e02-b24a-749284514e53",
-      "x": 6,
-      "y": 10,
-      "w": 12,
-      "h": 5
+      "x": 12,
+      "y": 9,
+      "w": 27,
+      "h": 3
     },
     {
       "type": "text",
       "id": "f1429f51-5ecd-45e7-8b1c-0c8240302c35",
-      "x": 10,
-      "y": 15,
+      "x": 23,
+      "y": 12,
       "w": 4,
       "h": 2
     },
     {
       "type": "link",
       "id": "e7a9413f-370b-4a33-9bfb-05c354b24899",
-      "x": 8,
-      "y": 17,
-      "w": 8,
-      "h": 4
+      "x": 19,
+      "y": 14,
+      "w": 12,
+      "h": 2
     },
     {
       "type": "text",
       "id": "15c243d7-760c-4405-85fc-e09307c58dfc",
-      "x": 10,
-      "y": 21,
+      "x": 23,
+      "y": 16,
       "w": 4,
       "h": 2
     },
     {
       "type": "link",
       "id": "7d9485dc-23f9-4add-8f3f-bc0d0476d306",
-      "x": 8,
-      "y": 23,
-      "w": 8,
-      "h": 4
+      "x": 19,
+      "y": 18,
+      "w": 12,
+      "h": 2
     }
   ],
   "components": [
-    {
-      "id": "624bd3b3b9c0-41de-91d3-27f0b49a99c5",
-      "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"## 便签格子\\n\\n双击开启编辑\\n\\n[仓库地址](https://github.com/Verlif/one)\"}",
-      "type": "note"
-    },
     {
       "id": "b6b6183c-3abd-49fd-a043-5211d3e89b73",
       "style": "height: 100%; width: 100%; position: relative;",
@@ -94,7 +80,7 @@
     {
       "id": "f1429f51-5ecd-45e7-8b1c-0c8240302c35",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">这些 网站</span></div>\"}",
+      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">这些网站</span></div>\"}",
       "type": "text"
     },
     {
@@ -106,7 +92,7 @@
     {
       "id": "15c243d7-760c-4405-85fc-e09307c58dfc",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">常用 AI</span></div>\"}",
+      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">常用AI</span></div>\"}",
       "type": "text"
     },
     {
