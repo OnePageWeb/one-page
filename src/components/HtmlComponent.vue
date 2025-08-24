@@ -1,6 +1,6 @@
 <script setup>
-import {ElInput, ElText} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {ElInput} from "element-plus"
+import {nextTick, onMounted, ref, toRefs} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 
 const props = defineProps({
@@ -19,13 +19,8 @@ const input = ref(null)
 const webIframe = ref(null)
 const updateIframeContent = () => {
   if (!webIframe.value) return
-  nextTick(() => {
-    const iframeDoc = webIframe.value.contentDocument || webIframe.value.contentWindow.document
-    iframeDoc.open()
-    iframeDoc.write(content.value)
-    iframeDoc.close()
-    onFocus.value = false
-  })
+  const blob = new Blob([content.value], { type: 'text/html' })
+  webIframe.value.src = URL.createObjectURL(blob)
 }
 
 function edit() {
@@ -78,7 +73,6 @@ defineExpose({
         :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']"
         sandbox="allow-scripts allow-same-origin"
         frameborder="0"
-        @load="updateIframeContent"
     ></iframe>
     <el-input
         v-model="content"

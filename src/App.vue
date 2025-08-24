@@ -5,7 +5,7 @@
         @mouseleave="showMenu = false"
     >
       <el-button @click="readyComponent.open()" class="btn">添加格子</el-button>
-      <el-select class="addItemSelect" placeholder="添加格子" @change="addItemWithEdit">
+      <el-select class="addItemSelect" placeholder="添加自定义格子" @change="addItemWithEdit">
         <el-popover
             class="box-item"
             v-for="item in itemType"

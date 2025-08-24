@@ -111,7 +111,7 @@ defineExpose({
 
     <el-tooltip
         effect="light"
-        content="到处组件数据"
+        content="导出组件数据"
         placement="bottom-start"
     >
       <el-icon class="exportComponent" @click="exportComponent">

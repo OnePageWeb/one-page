@@ -1,11 +1,10 @@
 <script setup>
 import {ElDialog, ElButton, ElMessage, ElInput} from "element-plus"
-import {computed, defineEmits, ref, toRefs} from "vue"
+import {computed, defineEmits, onMounted, ref, toRefs} from "vue"
 
 const emit = defineEmits(['addComponent'])
 
 const dialogVisible = ref(false)
-
 
 defineExpose({
   open() {
@@ -13,7 +12,38 @@ defineExpose({
   }
 })
 
-function addComponent() {
+const components = ref({})
+const loadConfigFiles = async () => {
+  const files = import.meta.glob('/public/configs/components/*.json')
+
+  for (const path in files) {
+    try {
+      const file = await files[path]()
+      components.value[file.name] = { desc: file.desc, path }
+    } catch (error) {
+      console.error('加载文件失败:', path, error)
+    }
+  }
+}
+
+onMounted(() => {
+  loadConfigFiles()
+})
+
+function addComponent(name) {
+  if (name) {
+    const component = components.value[name]
+    if (!component) {
+      ElMessage.error('组件不存在')
+      return
+    }
+    // 加载path对应的组件
+    import(component.path).then((module) => {
+      emit('addComponent', module.default)
+      dialogVisible.value = false
+    })
+    return
+  }
   if (!configData.value) {
     ElMessage.error('请输入配置数据')
     return
@@ -50,7 +80,11 @@ function handleFileDrop(e) {
     >
       <div>
         <div class="readyComponents">
-
+          <div v-for="name of Object.keys(components)" class="componentItem">
+            <div class="componentName">{{ name }}</div>
+            <div class="componentDesc">{{ components[name].desc }}</div>
+            <el-button class="addComponent" type="primary" @click="addComponent(name)">添加</el-button>
+          </div>
         </div>
 
         <div class="addComponentContainer">
@@ -78,6 +112,37 @@ function handleFileDrop(e) {
     height: 70%;
   }
 
+  .componentItem {
+    display: flex;
+    justify-content: space-between;;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(150, 150, 150, 0.3),
+        rgba(150, 150, 150, 0.3) 40px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.1) 80px
+    );
+    background-size: 200%;
+    &:hover {
+      animation: hoverComponent 2s ease-in-out infinite;
+    }
+  }
+
+  .componentName {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .componentDesc {
+    font-size: 14px;
+    color: #666;
+  }
+
   .addComponentContainer {
     height: calc(30% - 8px);
     margin-top: 8px;
@@ -95,7 +160,19 @@ function handleFileDrop(e) {
   }
 
   .el-dialog__body {
-    height: calc(100% - 80px);
+    height: calc(100% - 80px) !important;
+  }
+}
+
+@keyframes hoverComponent {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 10% 0;
+  }
+  100% {
+    background-position: 0 0;
   }
 }
 </style>
