@@ -36,6 +36,7 @@
       <el-button @click="editGlobalStyle" class="btn">全局样式</el-button>
       <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
     </div>
+    <crosshair-background v-if="enableMove"></crosshair-background>
     <div style="height: 100%;width: 100%;overflow: auto;scrollbar-width: none">
       <div ref="gridEl" class="grid-stack"></div>
     </div>
@@ -206,6 +207,7 @@ import {InfoFilled} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
 import {exportData, loadData, removeData, saveData} from "@/js/data.js"
 import ReadyComponent from "@/items/readyComponent.vue";
+import CrosshairBackground from "@/items/crosshairBackground.vue";
 
 const itemType = [
   {

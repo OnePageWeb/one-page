@@ -3,16 +3,16 @@
   "layout": [
     {
       "type": "html",
-      "id": "b6b6183c-3abd-49fd-a043-5211d3e89b73",
-      "x": 17,
-      "y": 4,
-      "w": 17,
-      "h": 3
+      "id": "2b8a46b83480-47b9-80ae-e8882101775e",
+      "x": 19,
+      "y": 3,
+      "w": 10,
+      "h": 4
     },
     {
       "type": "text",
       "id": "327b3179-b2c3-4299-95a7-5fcd73710cfd",
-      "x": 21,
+      "x": 20,
       "y": 7,
       "w": 8,
       "h": 2
@@ -20,7 +20,7 @@
     {
       "type": "search",
       "id": "f0ebf0cd-68a4-4e02-b24a-749284514e53",
-      "x": 12,
+      "x": 10,
       "y": 9,
       "w": 27,
       "h": 3
@@ -28,7 +28,7 @@
     {
       "type": "text",
       "id": "f1429f51-5ecd-45e7-8b1c-0c8240302c35",
-      "x": 23,
+      "x": 22,
       "y": 12,
       "w": 4,
       "h": 2
@@ -36,7 +36,7 @@
     {
       "type": "link",
       "id": "e7a9413f-370b-4a33-9bfb-05c354b24899",
-      "x": 19,
+      "x": 18,
       "y": 14,
       "w": 12,
       "h": 2
@@ -44,7 +44,7 @@
     {
       "type": "text",
       "id": "15c243d7-760c-4405-85fc-e09307c58dfc",
-      "x": 23,
+      "x": 22,
       "y": 16,
       "w": 4,
       "h": 2
@@ -52,7 +52,7 @@
     {
       "type": "link",
       "id": "7d9485dc-23f9-4add-8f3f-bc0d0476d306",
-      "x": 19,
+      "x": 18,
       "y": 18,
       "w": 12,
       "h": 2
@@ -60,9 +60,9 @@
   ],
   "components": [
     {
-      "id": "b6b6183c-3abd-49fd-a043-5211d3e89b73",
+      "id": "2b8a46b83480-47b9-80ae-e8882101775e",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"<!DOCTYPE html>\\n<html lang=\\\"zh-CN\\\">\\n<head>\\n    <meta charset=\\\"UTF-8\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\\n    <title>实时时钟</title>\\n    <style>\\n        body {\\n            margin: 0;\\n            padding: 0;\\n            height: 100vh;\\n            display: flex;\\n            justify-content: center;\\n            align-items: center;\\n            font-family: Arial, sans-serif;\\n        }\\n        \\n        #clock {\\n            font-size: 5rem;\\n            color: #fff;\\n        }\\n    </style>\\n</head>\\n<body>\\n    <div id=\\\"clock\\\"></div>\\n\\n    <script>\\n        function updateTime() {\\n            const now = new Date();\\n            const hours = String(now.getHours()).padStart(2, '0');\\n            const minutes = String(now.getMinutes()).padStart(2, '0');\\n            const seconds = String(now.getSeconds()).padStart(2, '0');\\n            \\n            document.getElementById('clock').textContent = \\n                `${hours}:${minutes}:${seconds}`;\\n        }\\n        \\n        // 初始更新时间\\n        updateTime();\\n        \\n        // 每秒更新一次\\n        setInterval(updateTime, 1000);\\n    </script>\\n</body>\\n</html>\"}",
+      "data": "{\"text\":\"<!DOCTYPE html>\\n<html lang=\\\"zh-CN\\\">\\n<head>\\n    <meta charset=\\\"UTF-8\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\\n    <title>自适应动态时钟</title>\\n    <style>\\n        * {\\n            margin: 0;\\n            padding: 0;\\n            box-sizing: border-box;\\n        }\\n        \\n        body {\\n            display: flex;\\n            justify-content: center;\\n            align-items: center;\\n            min-height: 100vh;\\n            font-family: 'Arial', sans-serif;\\n            overflow: hidden;\\n        }\\n        \\n        .clock-container {\\n            text-align: center;\\n            padding: 20px;\\n            transition: transform 0.3s ease;\\n        }\\n        \\n        .clock-container:hover {\\n            transform: scale(1.2);\\n        }\\n        \\n        .clock {\\n            font-size: 20vw;\\n            font-weight: bold;\\n            color: #212529;\\n            transition: font-size 0.3s ease;\\n            margin-bottom: 8px;\\n            letter-spacing: -2px;\\n        }\\n        \\n        .date {\\n            font-size: 5vw;\\n            color: #495057;\\n            margin-top: 8px;\\n        }\\n        \\n        /* 小屏幕调整 */\\n        @media (max-width: 768px) {\\n            .clock {\\n                letter-spacing: -1px;\\n            }\\n            \\n            .date {\\n                font-size: 6vw;\\n            }\\n            \\n            .clock-container {\\n                padding: 10px 20px;\\n            }\\n        }\\n    </style>\\n</head>\\n<body>\\n    <div class=\\\"clock-container\\\">\\n        <div id=\\\"clock\\\" class=\\\"clock\\\">00:00:00</div>\\n        <div id=\\\"date\\\" class=\\\"date\\\">0000年00月00日 星期X</div>\\n    </div>\\n\\n    <script>\\n        const clockElement = document.getElementById('clock');\\n        const dateElement = document.getElementById('date');\\n        \\n        // 星期映射\\n        const weekDays = ['日', '一', '二', '三', '四', '五', '六'];\\n        \\n        // 更新时间函数\\n        function updateTime() {\\n            const now = new Date();\\n            \\n            // 获取时间组成部分\\n            const hours = String(now.getHours()).padStart(2, '0');\\n            const minutes = String(now.getMinutes()).padStart(2, '0');\\n            const seconds = String(now.getSeconds()).padStart(2, '0');\\n            \\n            // 获取日期组成部分\\n            const year = now.getFullYear();\\n            const month = String(now.getMonth() + 1).padStart(2, '0');\\n            const day = String(now.getDate()).padStart(2, '0');\\n            const weekDay = weekDays[now.getDay()];\\n            \\n            // 更新时间显示\\n            clockElement.textContent = `${hours}:${minutes}:${seconds}`;\\n            \\n            // 更新日期显示\\n            dateElement.textContent = `${year}年${month}月${day}日 星期${weekDay}`;\\n            \\n            // 使用requestAnimationFrame实现更平滑的动画并减少误差\\n            requestAnimationFrame(updateTime);\\n        }\\n        \\n        // 初始启动\\n        updateTime();\\n    </script>\\n</body>\\n</html>\"}",
       "type": "html"
     },
     {

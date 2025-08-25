@@ -20,7 +20,7 @@ const loadConfigFiles = async () => {
   for (const path in files) {
     try {
       const file = await files[path]()
-      components.value[file.name] = { desc: file.desc, path }
+      components.value[file.name] = { desc: file.desc, path: path.replace('/public', '') }
     } catch (error) {
       console.error('加载文件失败:', path, error)
     }
