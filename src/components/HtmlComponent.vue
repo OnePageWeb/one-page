@@ -1,7 +1,8 @@
 <script setup>
-import {ElInput} from "element-plus"
+import {ElIcon, ElInput, ElTooltip, ElSwitch} from "element-plus"
 import {nextTick, onMounted, ref, toRefs} from "vue"
 import {loadData, saveData} from "@/js/data.js"
+import {Edit} from "@element-plus/icons-vue";
 
 const props = defineProps({
   id: String,
@@ -21,10 +22,12 @@ const updateIframeContent = () => {
   if (!webIframe.value) return
   const blob = new Blob([content.value], { type: 'text/html' })
   webIframe.value.src = URL.createObjectURL(blob)
+  onFocus.value = false
 }
 
 function edit() {
   if (enableEdit.value) {
+    onFocus.value = true
     nextTick(() => {
       input.value.focus()
     })
@@ -34,10 +37,12 @@ function edit() {
 function onMouseLeave() {
   const inputElement = input?.value.$el
   // 获取第一个子元素
-  const firstChild = inputElement?.firstElementChild
-  if (firstChild !== document.activeElement) {
-    onFocus.value = false
-  }
+  nextTick(() => {
+    const firstChild = inputElement?.firstElementChild
+    if (firstChild !== document.activeElement) {
+      onFocus.value = false
+    }
+  })
 }
 
 function save() {
@@ -65,7 +70,6 @@ defineExpose({
   <div
       class="htmlContent"
       @dblclick="edit"
-      @mouseenter="onFocus = true"
       @mouseleave="onMouseLeave"
   >
     <iframe
@@ -84,6 +88,19 @@ defineExpose({
         @blur="updateIframeContent"
         @change="save"
     />
+
+    <div
+      :class="['operatorContainer', enableEdit ? 'operatorContainerOnFocus' : '']">
+      <el-tooltip
+        effect="light"
+        content="开启编辑"
+        placement="top"
+      >
+        <el-icon @click="edit">
+          <Edit />
+        </el-icon>
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -145,5 +162,30 @@ defineExpose({
     padding: 8px !important;
   }
 
+  .operatorContainer {
+    width: 0;
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    opacity: 0;
+    margin: 4px;
+    padding: 8px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+
+    .el-icon {
+      cursor: pointer;
+    }
+  }
+
+  &:hover {
+    .operatorContainerOnFocus {
+      width: calc(100% - 32px);
+      opacity: 1;
+    }
+  }
 }
 </style>

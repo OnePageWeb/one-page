@@ -35,7 +35,6 @@ const getFullUrl = (path) => {
 // 封装fetch函数
 export const fetchWithBase = async (path, options = {}) => {
     const fullUrl = getFullUrl(path)
-    console.log('Fetching from:', fullUrl) // 调试信息
 
     try {
         const response = await fetch(fullUrl, options)

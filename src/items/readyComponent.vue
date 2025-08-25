@@ -1,6 +1,7 @@
 <script setup>
 import {ElDialog, ElButton, ElMessage, ElInput} from "element-plus"
 import {computed, defineEmits, onMounted, ref, toRefs} from "vue"
+import {fetchWithBase} from "@/js/url.js";
 
 const emit = defineEmits(['addComponent'])
 
@@ -30,7 +31,7 @@ onMounted(() => {
   loadConfigFiles()
 })
 
-function addComponent(name) {
+async function addComponent(name) {
   if (name) {
     const component = components.value[name]
     if (!component) {
@@ -38,10 +39,9 @@ function addComponent(name) {
       return
     }
     // 加载path对应的组件
-    import(component.path).then((module) => {
-      emit('addComponent', module.default)
-      dialogVisible.value = false
-    })
+    const config = await fetchWithBase(component.path)
+    emit('addComponent', config)
+    dialogVisible.value = false
     return
   }
   if (!configData.value) {
