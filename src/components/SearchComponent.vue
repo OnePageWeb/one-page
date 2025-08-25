@@ -225,6 +225,7 @@ defineExpose({
 
   .searchContent {
     height: 50%;
+    max-height: 240px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -237,7 +238,7 @@ defineExpose({
 
     .el-select__wrapper {
       height: 100%;
-      border-radius: 48px 0 0 48px !important;
+      border-radius: 120px 0 0 120px !important;
       box-shadow: unset !important;
       background-color: #000000 !important;
       padding: 0 8px !important;
@@ -263,7 +264,7 @@ defineExpose({
       height: 100%;
       width: 100%;
       font-size: 18px;
-      border-radius: 0 48px 48px 0 !important;
+      border-radius: 0 120px 120px 0 !important;
 
       &:hover {
         width: 140%;
@@ -272,7 +273,7 @@ defineExpose({
       .el-input__wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 0 48px 48px 0 !important;
+        border-radius: 0 120px 120px 0 !important;
         box-shadow: unset !important;
         padding: 0 11px;
       }

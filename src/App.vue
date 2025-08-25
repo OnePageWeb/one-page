@@ -155,7 +155,7 @@
     <el-dialog
         v-model="zoomInDialogVisible"
         class="zoomInDialog"
-        width="85%"
+        width="95%"
         align-center
         :show-close="false"
     >
@@ -985,25 +985,29 @@ textarea {
 
 /* 组件弹窗样式开始 */
 .zoomInDialog {
-  height: 85%;
-  max-height: 85%;
+  height: 95%;
+  max-height: 95%;
   --el-dialog-padding-primary: 0 !important;
-  --el-dialog-border-radius: 12px !important;
-  --el-dialog-bg-color: rgba(220, 220, 220, 0.8) !important;
+  --el-dialog-border-radius: 0 !important;
+  --el-dialog-bg-color: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(10px);
 
   .el-dialog__body {
     height: 100%;
     color: #272727;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 .zoomInElement {
-  height: 100%;
-  width: 100%;
+  height: 90%;
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
 }
 
 /* 组件弹窗样式结束 */

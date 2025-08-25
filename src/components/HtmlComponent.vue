@@ -90,7 +90,7 @@ defineExpose({
     />
 
     <div
-      :class="['operatorContainer', enableEdit ? 'operatorContainerOnFocus' : '']">
+      :class="['operatorContainer', enableEdit && !onFocus ? 'operatorContainerOnFocus' : '']">
       <el-tooltip
         effect="light"
         content="开启编辑"
