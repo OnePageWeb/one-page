@@ -183,7 +183,7 @@ import {
   ElCheckbox,
   ElDialog,
   ElIcon,
-  ElInput,
+  ElInput, ElLoading,
   ElMessage,
   ElOption,
   ElPopconfirm,
@@ -482,6 +482,7 @@ function createItemComponent(type, componentItem) {
           onOnStyleEdit: editStyle,
           onZoomIn: zoomIn,
           onExportComponent: exportComponent,
+          onCopy: copy,
         }),
         h(componentItem, {
           ref: componentItemRef,
@@ -540,10 +541,16 @@ function addComponent(data) {
     // 加载组件数据
     const element = elementMap[id]
     if (element) {
-      element.load(data.config)
-      element.save()
-      // 加载组件样式
-      loadComponentStyle(id, data.style)
+      if (data.config) {
+        element.load(data.config)
+        element.save()
+      }
+      if (data.style) {
+        // 加载组件样式
+        loadComponentStyle(id, data.style)
+        // 保存组件样式
+        saveData(id + '-style', data.style)
+      }
     } else {
       ElMessage.error(`未找到对应的组件 - ${data.type}`)
     }
@@ -665,9 +672,14 @@ watch(zoomInDialogVisible, v => {
   }
 })
 
-// 导出组件
-function exportComponent(id, type) {
-  const idValue = id.value;
+// 复制
+function copy(id, type) {
+  const componentData = exportComponentData(id, type)
+  addComponent(componentData)
+}
+
+function exportComponentData(id, type) {
+  const idValue = id.value
   const componentData = {}
   // 组件配置
   const componentConfig = loadData(idValue)
@@ -680,7 +692,13 @@ function exportComponent(id, type) {
     componentData.style = componentStyle
   }
   componentData.type = type.value
-  exportData(componentData, idValue + '.json')
+  return componentData
+}
+
+// 导出组件
+function exportComponent(id, type) {
+  const componentData = exportComponentData(id, type)
+  exportData(componentData, id.value + '.json')
 }
 
 const readyComponent = ref(null)
@@ -766,6 +784,11 @@ async function loadConfig(reload = true) {
   let config = configData.value
   configData.value = ''
   if (typeof config === 'string') {
+    const loading = ElLoading.service({
+      lock: true,
+      text: 'Loading...',
+      background: 'rgba(0, 0, 0, 0.7)',
+    })
     try {
       if (startsWith(config, 'http')) {
         // 从网络加载
@@ -776,6 +799,10 @@ async function loadConfig(reload = true) {
     } catch (error) {
       ElMessage.error('配置文件无法加载', error)
       return
+    } finally {
+      setTimeout(() => {
+        loading.close()
+      }, 500)
     }
   }
   if (!config || typeof config !== 'object') {

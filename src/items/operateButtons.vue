@@ -1,9 +1,9 @@
 <script setup>
 import {defineEmits, ref, toRefs, watch} from 'vue'
-import {Close, Coordinate, Download, Picture, Upload, ZoomIn} from "@element-plus/icons-vue"
+import {Close, Coordinate, CopyDocument, Download, FullScreen, Picture, Upload, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
-const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent'])
+const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy'])
 const props = defineProps({
   id: String,
   type: String,
@@ -18,6 +18,10 @@ function deleteItem() {
 
 function editStyle() {
   emit('onStyleEdit', id)
+}
+
+function copy() {
+  emit('copy', id, type)
 }
 
 function zoomIn() {
@@ -111,6 +115,16 @@ defineExpose({
 
     <el-tooltip
         effect="light"
+        content="复制"
+        placement="bottom-start"
+    >
+      <el-icon class="copy" @click="copy">
+        <CopyDocument />
+      </el-icon>
+    </el-tooltip>
+
+    <el-tooltip
+        effect="light"
         content="导出组件数据"
         placement="bottom-start"
     >
@@ -147,7 +161,7 @@ defineExpose({
   transition: opacity 0.5s ease-in-out;
   animation: bgChange 1s infinite alternate;
 
-  .deleteItem, .editStyle, .dragHandle, .zoomIn, .exportComponent {
+  .deleteItem, .editStyle, .dragHandle, .zoomIn, .exportComponent, .copy {
     top: 0;
     cursor: pointer;
     width: 20px;
@@ -155,7 +169,7 @@ defineExpose({
     color: white;
 
     &:hover {
-      scale: 1.5;
+      scale: 1.6;
     }
   }
 
@@ -177,6 +191,12 @@ defineExpose({
 
     svg {
       background-color: #42c87a;
+    }
+  }
+
+  .copy {
+    svg {
+      background-color: #dfa946;
     }
   }
 

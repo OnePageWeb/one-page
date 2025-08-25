@@ -1,7 +1,7 @@
 <script setup>
-import {ElDialog, ElButton, ElMessage, ElInput} from "element-plus"
+import {ElDialog, ElButton, ElMessage, ElInput, ElLoading} from "element-plus"
 import {computed, defineEmits, onMounted, ref, toRefs} from "vue"
-import {fetchWithBase} from "@/js/url.js";
+import {fetchWithBase} from "@/js/url.js"
 
 const emit = defineEmits(['addComponent'])
 
@@ -17,10 +17,11 @@ const components = ref({})
 const loadConfigFiles = async () => {
   const files = import.meta.glob('/public/configs/components/*.json')
 
+  const prefix = process.env.NODE_ENV === 'production' ? '' : '/public'
   for (const path in files) {
     try {
       const file = await files[path]()
-      components.value[file.name] = { desc: file.desc, path: path.replace('/public', '') }
+      components.value[file.name] = { desc: file.desc, path: path.replace('/public', prefix) }
     } catch (error) {
       console.error('加载文件失败:', path, error)
     }
@@ -32,24 +33,35 @@ onMounted(() => {
 })
 
 async function addComponent(name) {
-  if (name) {
-    const component = components.value[name]
-    if (!component) {
-      ElMessage.error('组件不存在')
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  try {
+    if (name) {
+      const component = components.value[name]
+      if (!component) {
+        ElMessage.error('组件不存在')
+        return
+      }
+      // 加载path对应的组件
+      const config = await fetchWithBase(component.path)
+      emit('addComponent', config)
+      dialogVisible.value = false
       return
     }
-    // 加载path对应的组件
-    const config = await fetchWithBase(component.path)
-    emit('addComponent', config)
+    if (!configData.value) {
+      ElMessage.error('请输入配置数据')
+      return
+    }
+    emit('addComponent', JSON.parse(configData.value))
     dialogVisible.value = false
-    return
+  } finally {
+    setTimeout(() => {
+      loading.close()
+    }, 500)
   }
-  if (!configData.value) {
-    ElMessage.error('请输入配置数据')
-    return
-  }
-  emit('addComponent', JSON.parse(configData.value))
-  dialogVisible.value = false
 }
 
 const configData = ref('')
@@ -120,28 +132,45 @@ function handleFileDrop(e) {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 8px;
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(150, 150, 150, 0.3),
-        rgba(150, 150, 150, 0.3) 40px,
-        rgba(255, 255, 255, 0.1) 40px,
-        rgba(255, 255, 255, 0.1) 80px
-    );
+    background: rgba(150, 150, 150, 0.3);
     background-size: 200%;
+
+    * {
+      transition: all 0.5s ease-in-out;
+    }
+
+    .componentName {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .componentDesc {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .addComponent {
+      opacity: 0;
+    }
+
     &:hover {
-      animation: hoverComponent 2s ease-in-out infinite;
+      background: white;
+
+      .componentName {
+        font-size: 18px;
+      }
+
+      .componentDesc {
+        font-size: 16px;
+        color: #454545;
+      }
+
+      .addComponent {
+        opacity: 1;
+      }
     }
   }
 
-  .componentName {
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  .componentDesc {
-    font-size: 14px;
-    color: #666;
-  }
 
   .addComponentContainer {
     height: calc(30% - 8px);
@@ -161,18 +190,6 @@ function handleFileDrop(e) {
 
   .el-dialog__body {
     height: calc(100% - 80px) !important;
-  }
-}
-
-@keyframes hoverComponent {
-  0% {
-    background-position: 0 0;
-  }
-  50% {
-    background-position: 10% 0;
-  }
-  100% {
-    background-position: 0 0;
   }
 }
 </style>
