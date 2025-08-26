@@ -296,6 +296,8 @@ defineExpose({
     &:hover {
       /* 旋转 */
       transform: rotate(0deg);
+      scale: 1.2;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
     }
 
     .el-icon {

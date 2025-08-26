@@ -1,6 +1,6 @@
 <script setup>
-import {defineEmits, ref, toRefs, watch} from 'vue'
-import {Close, Coordinate, CopyDocument, Download, Picture, ZoomIn} from "@element-plus/icons-vue"
+import {defineEmits, ref, toRefs} from 'vue'
+import {Close, CopyDocument, Download, Picture, Rank, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
 const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy'])
@@ -38,18 +38,18 @@ const operatorContainer = ref(null)
 
 <template>
   <div
-    v-show="enableEdit || enableMove || ctrl"
-    ref="operatorContainer"
-    :class="['operatorContainer', {'visible': enableEdit || enableMove || ctrl}]"
+      v-show="enableEdit || enableMove || ctrl"
+      ref="operatorContainer"
+      :class="['operatorContainer', {'visible': enableEdit || enableMove || ctrl}]"
   >
     <el-popconfirm
-      v-if="enableEdit || ctrl"
-      class="deleteItem"
-      title="确定删除此组件"
-      placement="top-start"
-      confirm-button-text="确定"
-      cancel-button-text="取消"
-      @confirm="deleteItem"
+        v-if="enableEdit || ctrl"
+        class="deleteItem"
+        title="确定删除此组件"
+        placement="top-start"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        @confirm="deleteItem"
     >
       <template #reference>
         <el-icon class="deleteItem">
@@ -59,10 +59,10 @@ const operatorContainer = ref(null)
     </el-popconfirm>
 
     <el-tooltip
-      v-if="enableEdit || ctrl"
-      effect="light"
-      content="编辑组件样式"
-      placement="bottom-start"
+        v-if="enableEdit || ctrl"
+        effect="light"
+        content="编辑此组件样式"
+        placement="bottom-start"
     >
       <el-icon class="editStyle" @click="editStyle">
         <Picture/>
@@ -70,9 +70,9 @@ const operatorContainer = ref(null)
     </el-tooltip>
 
     <el-tooltip
-      effect="light"
-      content="放大组件"
-      placement="bottom-start"
+        effect="light"
+        content="放大此组件"
+        placement="bottom-start"
     >
       <el-icon class="zoomIn" @click="zoomIn">
         <ZoomIn/>
@@ -80,10 +80,10 @@ const operatorContainer = ref(null)
     </el-tooltip>
 
     <el-tooltip
-      v-if="enableMove || ctrl"
-      effect="light"
-      content="复制"
-      placement="bottom-start"
+        v-if="enableMove || ctrl"
+        effect="light"
+        content="复制此组件"
+        placement="bottom-start"
     >
       <el-icon class="copy" @click="copy">
         <CopyDocument/>
@@ -91,10 +91,10 @@ const operatorContainer = ref(null)
     </el-tooltip>
 
     <el-tooltip
-      v-if="enableEdit || ctrl"
-      effect="light"
-      content="导出组件数据"
-      placement="bottom-start"
+        v-if="enableEdit || ctrl"
+        effect="light"
+        content="导出此组件数据"
+        placement="bottom-start"
     >
       <el-icon class="exportComponent" @click="exportComponent">
         <Download/>
@@ -102,13 +102,13 @@ const operatorContainer = ref(null)
     </el-tooltip>
 
     <el-tooltip
-      v-if="enableMove || ctrl"
-      effect="light"
-      content="拖动组件，按住组件边框也可以进行拖动"
-      placement="bottom-start"
+        v-if="enableMove || ctrl"
+        effect="light"
+        content="拖动组件，按住组件边框也可以进行拖动"
+        placement="bottom-start"
     >
       <el-icon class="dragHandle">
-        <Coordinate/>
+        <Rank/>
       </el-icon>
     </el-tooltip>
   </div>

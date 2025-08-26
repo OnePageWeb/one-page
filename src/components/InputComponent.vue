@@ -1,7 +1,8 @@
 <script setup>
-import {ElInput, ElText} from "element-plus"
-import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
+import {ElIcon, ElInput, ElText} from "element-plus"
+import {nextTick, onMounted, onUnmounted, ref, toRefs} from "vue"
 import {loadData, saveData} from "@/js/data.js"
+import {SortDown} from "@element-plus/icons-vue";
 
 const props = defineProps({
   id: String,
@@ -13,17 +14,18 @@ const {id, text, enableEdit} = toRefs(props)
 // 是否自动执行
 const autoExecute = ref(false)
 // 方法内容
-const functionContent = ref(text.value)
+const functionText = ref(text.value)
+const inputText = ref('')
 // 方法结果
 const functionResult = ref('')
 
-const input = ref(null)
-let onFocus = ref(false)
+const functionRef = ref(null)
+const onFocus = ref(false)
 
 function dbclick() {
   if (enableEdit.value) {
     nextTick(() => {
-      input.value.focus()
+      functionRef.value.focus()
     })
   } else {
     safeExecute()
@@ -31,7 +33,7 @@ function dbclick() {
 }
 
 function onMouseLeave() {
-  const inputElement = input?.value.$el
+  const inputElement = functionRef?.value.$el
   // 获取第一个子元素
   const firstChild = inputElement?.firstElementChild
   if (firstChild !== document.activeElement) {
@@ -42,7 +44,7 @@ function onMouseLeave() {
 function save() {
   onFocus.value = false
   saveData(props.id, JSON.stringify({
-    content: functionContent.value,
+    content: functionText.value,
     result: functionResult.value,
     autoExecute: autoExecute.value
   }))
@@ -74,7 +76,8 @@ async function safeExecute() {
   const blob = new Blob([`
     <script>
       try {
-        const result = eval(${JSON.stringify(functionContent.value)})
+        const input = ${JSON.stringify(inputText.value)}
+        const result = eval(${JSON.stringify(functionText.value)})
         window.parent.postMessage({
           type: 'result',
           data: result,
@@ -101,7 +104,7 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
-    functionContent.value = parse.content
+    functionText.value = parse.content
     functionResult.value = parse.result
     autoExecute.value = parse.autoExecute
   }
@@ -116,35 +119,43 @@ defineExpose({
 </script>
 
 <template>
-  <div class="functionContent" @dblclick="dbclick">
+  <div class="inputContent" @dblclick="dbclick">
     <div
         class="textContainer"
         @mouseenter="onFocus = true"
         @mouseleave="onMouseLeave"
     >
       <iframe :id="'sandbox' + id" sandbox="allow-scripts" style="display: none;"></iframe>
-      <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
+      <div class="ioContainer">
+        <el-input
+            v-model="inputText"
+            ref="input"
+            type="textarea"
+            placeholder="输入参数，按下ctrl + enter即可执行方法"
+            :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
+            @keydown.ctrl.enter="safeExecute"
+        />
+        <el-icon @click="safeExecute">
+          <SortDown/>
+        </el-icon>
+        <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
+      </div>
       <el-input
-          v-model="functionContent"
-          ref="input"
-          :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
+          v-model="functionText"
+          ref="functionRef"
+          :class="['function', (onFocus && enableEdit) ? 'functionOnFocus' : '']"
           :rows="2"
           type="textarea"
-          placeholder="输入方法内容"
+          placeholder="输入方法内容，可以使用input变量来获取输入值"
           @blur="save"
-          @keydown.ctrl.enter="safeExecute"
           @change="save"
       />
-    </div>
-    <div :class="['params', !enableEdit ? 'hide' : '']">
-      <div :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">载入时运行</div>
-      <div :class="['paramItem']" @click="safeExecute">运行</div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.functionContent {
+<style>
+.inputContent {
   height: 100%;
   width: 100%;
   display: flex;
@@ -159,7 +170,7 @@ defineExpose({
 
   .textContainer {
     opacity: 1;
-    height: calc(100% - 40px);
+    height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
@@ -171,13 +182,49 @@ defineExpose({
       scrollbar-width: none;
     }
 
-    .resultOnFocus {
-      width: 0;
-      display: none;
-      opacity: 0;
+    .ioContainer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      width: 100%;
     }
 
-    .inputOnFocus {
+    .input {
+      .el-textarea__inner {
+        height: 100%;
+      }
+    }
+
+    .input, .result {
+      width: calc(100% - 16px);
+      height: calc(50% - 16px);
+      padding: 4px;
+      border-radius: 8px;
+      background-color: white;
+    }
+
+    .el-icon {
+      background-color: #eda63f;
+      border-radius: 18px;
+      padding: 4px;
+      color: white;
+      margin: 1px;
+      border: 2px solid white;
+      cursor: pointer;
+      z-index: 1;
+
+      &:hover {
+        scale: 1.4;
+      }
+    }
+
+    .result {
+      overflow: auto;
+    }
+
+    .functionOnFocus {
       width: 100%;
       height: 100%;
       opacity: 1;
@@ -190,56 +237,34 @@ defineExpose({
     font-size: 18px;
   }
 
-  .input {
+  .function {
     width: 0;
     height: 100%;
     opacity: 0;
-  }
 
-  .input :deep(.el-textarea__inner) {
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-    min-width: unset !important;
-    min-height: unset !important;
-    padding: 0;
-    border-radius: 0;
-    color: #3a3a3a;
-    font-weight: bold;
-    background: repeating-linear-gradient(
-        -45deg,
-        rgba(240, 240, 240, 0.9),
-        rgba(240, 240, 240, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 80px
-    );
-  }
-
-  .inputOnFocus :deep(.el-textarea__inner) {
-    padding: 8px !important;
-  }
-
-  .params {
-    width: 100%;
-    height: 40px;
-    opacity: 1;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-
-    .paramItem {
-      padding: 4px 12px;
-      border-radius: 4px;
-      color: #f1f1f1;
+    .el-textarea__inner {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      min-width: unset !important;
+      min-height: unset !important;
+      padding: 0;
+      border-radius: 8px;
+      color: #3a3a3a;
       font-weight: bold;
-      background-color: #64b1ff;
-      cursor: pointer;
-    }
-
-    .positive {
-      background-color: #aaaaaa;
+      background: repeating-linear-gradient(
+          -45deg,
+          rgba(240, 240, 240, 0.9),
+          rgba(240, 240, 240, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 80px
+      );
     }
   }
+
+  .functionOnFocus .el-textarea__inner {
+    padding: 4px 6px;
+  }
+
 }
 </style>

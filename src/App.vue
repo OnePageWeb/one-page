@@ -1,26 +1,26 @@
 <template>
   <div style="height: 100%; width: 100%">
     <div
-      :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
-      @mouseleave="showMenu = false"
+        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
+        @mouseleave="showMenu = false"
     >
       <el-text class="menuTitle" truncated>新增格子</el-text>
       <el-button @click="readyComponent.open()" class="btn" type="primary" :icon="CirclePlus" plain>添加格子</el-button>
       <el-select class="addItemSelect" placeholder="添加自定义格子" @change="addItemWithEdit">
         <el-popover
-          class="box-item"
-          v-for="item in itemType"
-          :title="item.label"
-          :content="item.desc"
-          width="300"
-          placement="right-start"
+            class="box-item"
+            v-for="item in itemType"
+            :title="item.label"
+            :content="item.desc"
+            width="300"
+            placement="right-start"
         >
           <template #reference>
             <div>
               <el-option
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
                 <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                      width="20" height="20">
@@ -48,18 +48,18 @@
 
     <!-- 全局样式弹窗 -->
     <el-dialog
-      title="全局样式"
-      v-model="isEditGlobalStyle"
-      width="50%"
-      class="globeStyleDialog commonDialog"
-      align-center
+        title="全局样式"
+        v-model="isEditGlobalStyle"
+        width="50%"
+        class="globeStyleDialog commonDialog"
+        align-center
     >
       <el-input
-        v-model="globalStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入全局样式"
+          v-model="globalStyle"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入全局样式"
       />
       <template #footer>
         <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
@@ -68,11 +68,11 @@
 
     <!-- 配置加载弹窗 -->
     <el-dialog
-      title="加载配置"
-      v-model="configLoaderVisible"
-      width="50%"
-      class="globeStyleDialog commonDialog"
-      align-center
+        title="加载配置"
+        v-model="configLoaderVisible"
+        width="50%"
+        class="globeStyleDialog commonDialog"
+        align-center
     >
       <template #header="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
@@ -83,13 +83,13 @@
         </div>
       </template>
       <el-input
-        v-model="configData"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入配置URL或拖拽JSON文件到此处"
-        @dragover.prevent
-        @drop.prevent="handleFileDrop"
+          v-model="configData"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入配置URL或拖拽JSON文件到此处"
+          @dragover.prevent
+          @drop.prevent="handleFileDrop"
       />
 
       <!-- 配置提示弹窗 -->
@@ -101,7 +101,7 @@
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
           </div>
           <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-            href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+              href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
           </div>
           <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
         </div>
@@ -114,22 +114,22 @@
       <template #footer>
         <el-button type="primary" @click="downloadConfig">下载</el-button>
         <el-popconfirm
-          title="确定加载以上配置，这会覆盖本地的所有配置？"
-          placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          @confirm="loadConfig()"
+            title="确定加载以上配置，这会覆盖本地的所有配置？"
+            placement="top-start"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            @confirm="loadConfig()"
         >
           <template #reference>
             <el-button type="primary">加载</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
-          title="确定清空并重新加载页面？"
-          placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          @confirm="clearConfig(true)"
+            title="确定清空并重新加载页面？"
+            placement="top-start"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            @confirm="clearConfig(true)"
         >
           <template #reference>
             <el-button type="danger">清空</el-button>
@@ -140,18 +140,18 @@
 
     <!-- 组件样式弹窗 -->
     <el-dialog
-      title="组件样式"
-      v-model="isEditComponentStyle"
-      width="50%"
-      class="globeStyleDialog commonDialog"
-      align-center
+        title="组件样式"
+        v-model="isEditComponentStyle"
+        width="50%"
+        class="globeStyleDialog commonDialog"
+        align-center
     >
       <el-input
-        v-model="componentStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入样式"
+          v-model="componentStyle"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入样式"
       />
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -159,26 +159,26 @@
     </el-dialog>
 
     <el-dialog
-      v-model="zoomInDialogVisible"
-      class="zoomInDialog"
-      width="95%"
-      align-center
-      :show-close="false"
+        v-model="zoomInDialogVisible"
+        class="zoomInDialog"
+        width="95%"
+        align-center
+        :show-close="false"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
 
     <readyComponent
-      ref="readyComponent"
-      @addComponent="addComponent"
+        ref="readyComponent"
+        @addComponent="addComponent"
     />
 
     <edge-mouse-move
-      @onLeftEdge="() => showMenu = !showMenu && !viewMode"
+        @onLeftEdge="() => showMenu = !showMenu && !viewMode"
     />
 
     <workspaceHolder
-      ref="workspaceHolder"
+        ref="workspaceHolder"
     />
   </div>
 </template>
@@ -208,12 +208,13 @@ import htmlComponent from "./components/HtmlComponent.vue"
 import linkComponent from './components/LinkComponent.vue'
 import functionComponent from './components/FunctionComponent.vue'
 import evalComponent from "./components/EvalComponent.vue"
+import inputComponent from "@/components/InputComponent.vue"
+import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson} from "@/js/url.js"
 import {CirclePlus, Edit, InfoFilled, Monitor, Picture} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
-import ReadyComponent from "@/items/readyComponent.vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -221,8 +222,8 @@ import {
   removeData,
   saveData,
 } from "@/js/data.js"
-import {initWorkspace} from "@/js/workspcae.js";
-import CrosshairBackground from "@/items/crosshairBackground.vue";
+import {initWorkspace} from "@/js/workspcae.js"
+import CrosshairBackground from "@/items/crosshairBackground.vue"
 
 const itemType = [
   {
@@ -268,6 +269,13 @@ const itemType = [
     component: linkComponent
   },
   {
+    value: 'input',
+    label: '输入转换',
+    desc: '用于计算输入的转换格子，自定义处理函数，并得到结果',
+    svgPath: 'M717.822935 178.434674L556.709162 18.535823a63.536967 63.536967 0 0 0-89.579314 0l-161.114773 159.899851a37.49562 37.49562 0 0 0 0 53.298616 38.071583 38.071583 0 0 0 53.746589 0l114.277746-113.317807v626.799213c0 20.538696 16.956924 37.17564 37.879595 37.17564 20.923672 0 37.879596-16.636944 37.879596-37.111644V118.352487l114.340742 113.253811a38.071583 38.071583 0 0 0 53.747588 0 37.49562 37.49562 0 0 0 0-53.23562zM511.920005 1023.935004c-187.540096-2.36785-359.149202-104.040396-448.791512-265.794128a501.324178 501.324178 0 0 1 16.443956-514.441345 38.327567 38.327567 0 0 1 52.46667-11.581265c17.660879 11.325281 22.779554 34.551807 11.518268 52.019698-115.812649 179.28662-80.301903 414.752673 83.372708 553.471867a442.137935 442.137935 0 0 0 569.723836 0c163.67461-138.719195 199.12236-374.185248 83.372708-553.471867a37.559616 37.559616 0 0 1 11.773253-52.019698 38.391563 38.391563 0 0 1 52.467669 11.581265 504.842954 504.842954 0 0 1 79.533952 272.192722c1.151927 278.976292-227.787541 506.250865-511.881508 508.106747z',
+    component: inputComponent
+  },
+  {
     value: 'function',
     label: '计算函数',
     desc: '用于执行计算函数的格子，可以在格子中输出计算结果。使用模式下双击格子即可运行',
@@ -295,6 +303,7 @@ watch(enableMove, b => {
     disabledMove()
   }
 })
+
 function keyListener(event) {
   if (event.key === 'Control' || event.key === 'Meta') {
     ctrl.value = event.type === 'keydown'
@@ -320,8 +329,8 @@ function reloadWithoutParams(paramsToRemove) {
 
     // 处理要移除的参数（支持字符串或数组）
     const paramsToRemoveArray = Array.isArray(paramsToRemove)
-      ? paramsToRemove
-      : [paramsToRemove];
+        ? paramsToRemove
+        : [paramsToRemove];
 
     // 移除指定参数
     paramsToRemoveArray.forEach(param => {
@@ -545,7 +554,7 @@ const addItemWithEdit = (type) => {
   return id
 }
 
-const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
+const addItem = (type, x, y, w = '4', h = '4', id) => {
   // 创建格子DOM
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
@@ -553,8 +562,8 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
   itemEl.id = id || v4().replace('-', '')
   itemEl.setAttribute('gs-w', w)
   itemEl.setAttribute('gs-h', h)
-  itemEl.setAttribute('gs-x', x)
-  itemEl.setAttribute('gs-y', y)
+  if (x) itemEl.setAttribute('gs-x', x)
+  if (y) itemEl.setAttribute('gs-y', y)
   // 挂载Vue组件到格子
   const component = itemType.find(item => item.value === type)?.component
   if (!component) {
@@ -902,6 +911,7 @@ function handleFileDrop(e) {
 
 // 打开工作区弹窗
 const workspaceHolder = ref(null)
+
 function openWorkspaceHolder() {
   workspaceHolder.value.open()
 }
