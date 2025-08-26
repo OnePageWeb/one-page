@@ -45,6 +45,7 @@ function saveEdit() {
   links.value = [...tempLinks.value]
   dialogVisible.value = false
   refreshIcon()
+  save()
 }
 
 // 打开窗口
@@ -213,7 +214,7 @@ defineExpose({
   width: calc(100% - 16px);
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 4px;
   overflow: auto;
   scrollbar-width: none;
 
@@ -234,7 +235,6 @@ defineExpose({
   }
 
   .linkItem:hover {
-    padding: 4px 8px;
     border-radius: 20px;
     box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
     background-color: rgba(255, 255, 255, 0.1);
@@ -249,6 +249,7 @@ defineExpose({
 
   .linkItem {
     height: 100%;
+    padding: 4px 16px;
     user-select: none;
 
     img {
@@ -258,7 +259,7 @@ defineExpose({
   }
 
   .hasWindow {
-    padding: 4px 8px;
+    padding: 4px 16px;
     background: repeating-linear-gradient(
         45deg,
         rgba(150, 150, 150, 0.3),

@@ -9,7 +9,7 @@ const props = defineProps({
   type: String,
   enableEdit: Object,
   enableMove: Object,
-  ctrl: Boolean
+  ctrl: Object
 })
 const {id, type, enableEdit, enableMove, ctrl} = toRefs(props)
 

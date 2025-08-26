@@ -42,7 +42,7 @@
       <el-button @click="openWorkspaceHolder" class="btn" :icon="Monitor" plain>工作区设定</el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
-    <div style="height: 100%;width: 100%;overflow: auto;scrollbar-width: none">
+    <div style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
       <div ref="gridEl" class="grid-stack"></div>
     </div>
 
@@ -784,7 +784,7 @@ function generateConfig() {
   const ids = nodes.map(node => node.el.id)
   for (let id of ids) {
     // 组件样式
-    const componentStyle = document.getElementById(id + '-container').style.cssText
+    const componentStyle = loadData(id + '-style')
     // 组件数据
     const componentData = loadData(id)
     // 组件类型
@@ -1000,6 +1000,7 @@ body {
 .grid-stack {
   min-height: 300px;
   height: 100% !important;
+  overflow-x: hidden;
 }
 
 .grid-stack-item.ui-resizable-autohide {
@@ -1139,6 +1140,7 @@ textarea {
   .el-dialog__body {
     height: calc(100% - 128px);
     padding: 16px;
+    overflow-x: hidden;
     /* 对其中的第一个子组件设置高度为100% */
 
     > *:first-child {
