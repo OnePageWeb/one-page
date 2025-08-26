@@ -1,13 +1,15 @@
+import {getWorkspacePrefix} from "@/js/workspcae.js"
+
 export function saveData(key, data) {
-    window.localStorage.setItem(key, data)
+    window.localStorage.setItem(getWorkspacePrefix() + key, data)
 }
 
 export function loadData(key) {
-    return window.localStorage.getItem(key)
+    return window.localStorage.getItem(getWorkspacePrefix() + key)
 }
 
 export function removeData(key) {
-    return window.localStorage.removeItem(key)
+    return window.localStorage.removeItem(getWorkspacePrefix() + key)
 }
 
 export function clearData() {
