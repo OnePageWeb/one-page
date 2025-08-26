@@ -24,6 +24,18 @@ const defaultSearchEngine = [
   {
     name: 'Baidu',
     url: 'https://www.baidu.com/s?wd={query}'
+  },
+  {
+    name: 'BiliBili',
+    url: 'https://www.bilibili.com/search?keyword={query}'
+  },
+  {
+    name: 'Yahoo',
+    url: 'https://search.yahoo.com/search?p={query}'
+  },
+  {
+    name: 'DuckDuckGo',
+    url: 'https://duckduckgo.com/?q={query}'
   }
 ]
 

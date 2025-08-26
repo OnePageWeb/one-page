@@ -1,0 +1,6 @@
+{
+  "name": "编程网站快速链接",
+  "desc": "常用的一些编程网站的链接",
+  "config": "{\"links\":[{\"name\":\"StackOverflow\",\"url\":\"https://stackoverflow.co/\",\"img\":\"https://stackoverflow.co/favicon.ico\"},{\"name\":\"Github\",\"url\":\"https://github.com/\",\"img\":\"https://github.com/favicon.ico\"},{\"name\":\"菜鸟教程\",\"url\":\"https://www.runoob.com/\",\"img\":\"https://www.runoob.com/favicon.ico\"},{\"name\":\"LeetCode\",\"url\":\"https://leetcode.cn/\",\"img\":\"https://leetcode.cn/favicon.ico\"},{\"name\":\"DrawIO\",\"url\":\"https://draw.io\",\"img\":\"https://draw.io/favicon.ico\"}]}",
+  "type": "link"
+}

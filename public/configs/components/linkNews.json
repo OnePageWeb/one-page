@@ -1,0 +1,6 @@
+{
+  "name": "新闻网站快速链接",
+  "desc": "常用的一些新闻网站的链接",
+  "config": "{\"links\":[{\"name\":\"知乎\",\"url\":\"https://www.zhihu.com/\",\"img\":\"https://www.zhihu.com/favicon.ico\"},{\"name\":\"新浪\",\"url\":\"https://www.sina.com.cn/\",\"img\":\"https://www.sina.com.cn/favicon.ico\"},{\"name\":\"新浪微博\",\"url\":\"https://weibo.com/\",\"img\":\"https://h5.sinaimg.cn/upload/1005/891/2024/01/04/weibologo.png\"},{\"name\":\"百度贴吧\",\"url\":\"https://tieba.baidu.com/\",\"img\":\"https://tieba.baidu.com/favicon.ico\"},{\"name\":\"抖音\",\"url\":\"https://www.douyin.com/\",\"img\":\"https://www.douyin.com/favicon.ico\"},{\"name\":\"小红书\",\"url\":\"https://www.xiaohongshu.com/\",\"img\":\"https://www.xiaohongshu.com/favicon.ico\"},{\"name\":\"今日头条\",\"url\":\"https://www.toutiao.com/\",\"img\":\"https://www.toutiao.com/favicon.ico\"}]}",
+  "type": "link"
+}

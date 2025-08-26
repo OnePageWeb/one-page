@@ -148,7 +148,7 @@ defineExpose({
           @dragend="openNewWindow(link)"
       >
         <img :src="link.img" alt="图标"/>
-        <el-text tag="b">{{ link.name }}</el-text>
+        <el-text tag="span">{{ link.name }}</el-text>
       </div>
     </div>
 
@@ -255,6 +255,10 @@ defineExpose({
     img {
       height: 40%;
       margin-bottom: 8px;
+    }
+
+    span {
+      white-space: nowrap;
     }
   }
 
