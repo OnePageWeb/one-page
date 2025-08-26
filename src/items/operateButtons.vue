@@ -1,6 +1,6 @@
 <script setup>
 import {defineEmits, ref, toRefs, watch} from 'vue'
-import {Close, Coordinate, CopyDocument, Download, FullScreen, Picture, Upload, ZoomIn} from "@element-plus/icons-vue"
+import {Close, Coordinate, CopyDocument, Download, Picture, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
 const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy'])
@@ -9,8 +9,9 @@ const props = defineProps({
   type: String,
   enableEdit: Object,
   enableMove: Object,
+  ctrl: Boolean
 })
-const {id, type, enableEdit, enableMove} = toRefs(props)
+const {id, type, enableEdit, enableMove, ctrl} = toRefs(props)
 
 function deleteItem() {
   setTimeout(() => emit('onDelete', id), 300)
@@ -33,51 +34,16 @@ function exportComponent() {
 }
 
 const operatorContainer = ref(null)
-
-watch(enableMove, b => {
-  if (b) {
-    operatorContainer.value.style.opacity = 1
-  } else {
-    operatorContainer.value.style.opacity = 0
-  }
-})
-let timer = null
-function onMouseEnter() {
-  // 重新计时
-  if (timer) {
-    clearTimeout(timer)
-  }
-  operatorContainer.value.style.opacity = 1
-}
-
-function onMouseLeave() {
-  if (enableMove.value) {
-    return
-  }
-  // 重新计时
-  if (timer) {
-    clearTimeout(timer)
-  }
-  timer = setTimeout(() => {
-    operatorContainer.value.style.opacity = 0
-  }, 500)
-}
-
-defineExpose({
-  onMouseEnter,
-  onMouseLeave
-})
 </script>
 
 <template>
   <div
+    v-show="enableEdit || enableMove || ctrl"
     ref="operatorContainer"
-    class="operatorContainer"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
+    :class="['operatorContainer', {'visible': enableEdit || enableMove || ctrl}]"
   >
     <el-popconfirm
-      v-if="enableEdit"
+      v-if="enableEdit || ctrl"
       class="deleteItem"
       title="确定删除此组件"
       placement="top-start"
@@ -93,7 +59,7 @@ defineExpose({
     </el-popconfirm>
 
     <el-tooltip
-      v-if="enableEdit"
+      v-if="enableEdit || ctrl"
       effect="light"
       content="编辑组件样式"
       placement="bottom-start"
@@ -104,37 +70,39 @@ defineExpose({
     </el-tooltip>
 
     <el-tooltip
-        effect="light"
-        content="放大组件"
-        placement="bottom-start"
+      effect="light"
+      content="放大组件"
+      placement="bottom-start"
     >
       <el-icon class="zoomIn" @click="zoomIn">
-        <ZoomIn />
+        <ZoomIn/>
       </el-icon>
     </el-tooltip>
 
     <el-tooltip
-        effect="light"
-        content="复制"
-        placement="bottom-start"
+      v-if="enableMove || ctrl"
+      effect="light"
+      content="复制"
+      placement="bottom-start"
     >
       <el-icon class="copy" @click="copy">
-        <CopyDocument />
+        <CopyDocument/>
       </el-icon>
     </el-tooltip>
 
     <el-tooltip
-        effect="light"
-        content="导出组件数据"
-        placement="bottom-start"
+      v-if="enableEdit || ctrl"
+      effect="light"
+      content="导出组件数据"
+      placement="bottom-start"
     >
       <el-icon class="exportComponent" @click="exportComponent">
-        <Download />
+        <Download/>
       </el-icon>
     </el-tooltip>
 
     <el-tooltip
-      v-if="enableMove"
+      v-if="enableMove || ctrl"
       effect="light"
       content="拖动组件，按住组件边框也可以进行拖动"
       placement="bottom-start"
@@ -158,7 +126,7 @@ defineExpose({
   gap: 8px;
   backdrop-filter: blur(4px);
   border-radius: 8px;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 1s ease-in-out;
   animation: bgChange 1s infinite alternate;
 
   .deleteItem, .editStyle, .dragHandle, .zoomIn, .exportComponent, .copy {
@@ -219,6 +187,10 @@ defineExpose({
       background-color: #1d9333;
     }
   }
+}
+
+.visible {
+  opacity: 1;
 }
 
 @keyframes bgChange {

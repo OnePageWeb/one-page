@@ -1,7 +1,8 @@
 <script setup>
 import {onMounted, ref} from "vue"
 import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/js/workspcae.js"
-import {ElButton, ElDialog, ElInput, ElTag, ElPopconfirm, ElMessage} from "element-plus"
+import {ElButton, ElDialog, ElInput, ElTag, ElPopconfirm, ElMessage, ElPopover, ElIcon} from "element-plus"
+import {InfoFilled} from "@element-plus/icons-vue";
 
 const dialogVisible = ref(false)
 defineExpose({
@@ -75,12 +76,29 @@ function deleteItem(workspace) {
 <template>
   <!-- 组件样式弹窗 -->
   <el-dialog
-    title="工作区设定"
     v-model="dialogVisible"
     width="50%"
     class="workspaceDialog commonDialog"
     align-center
   >
+    <template #header>
+      <div style="display: flex;align-items: center;color: white;">
+        <span style="font-size: 18px;font-weight: bolder">工作区</span>
+        <el-popover
+          class="box-item"
+          :title="`当前工作区：${nowWorkspace}`"
+          width="350"
+          content="工作区表示了当前正在使用的工作环境，不同的工作区可以拥有不同的配置和数据。"
+          placement="top-start"
+        >
+          <template #reference>
+            <el-icon style="margin-left: 8px;cursor: pointer;">
+              <InfoFilled/>
+            </el-icon>
+          </template>
+        </el-popover>
+      </div>
+    </template>
     <div>
       <!-- 工作区列表 -->
       <el-popconfirm

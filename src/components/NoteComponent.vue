@@ -169,6 +169,7 @@ defineExpose({
     overflow-y: auto;
     scrollbar-width: none;
     padding: 8px;
+    color: #3c3c3c;
     background: repeating-linear-gradient(
         -45deg,
         rgba(240, 240, 240, 0.5),
@@ -202,7 +203,8 @@ defineExpose({
     min-width: unset !important;
     min-height: unset !important;
     padding: 0;
-    color: #3a3a3a;
+    color: #5c5c5c;
+    font-size: 18px;
     font-weight: bold;
     border-color: unset;
     background: repeating-linear-gradient(

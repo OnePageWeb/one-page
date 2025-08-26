@@ -4,7 +4,8 @@
       :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
       @mouseleave="showMenu = false"
     >
-      <el-button @click="readyComponent.open()" class="btn" type="primary">添加格子</el-button>
+      <el-text class="menuTitle" truncated>新增格子</el-text>
+      <el-button @click="readyComponent.open()" class="btn" type="primary" :icon="CirclePlus" plain>添加格子</el-button>
       <el-select class="addItemSelect" placeholder="添加自定义格子" @change="addItemWithEdit">
         <el-popover
           class="box-item"
@@ -31,11 +32,14 @@
           </template>
         </el-popover>
       </el-select>
+      <el-text class="menuTitle" truncated>布局编辑</el-text>
       <el-checkbox v-model="enableMove" label="开启移动" border/>
       <el-checkbox v-model="enableEdit" label="开启编辑" border/>
-      <el-button @click="editGlobalStyle" class="btn">全局样式</el-button>
-      <el-button @click="openLoadConfig" class="btn">加载配置</el-button>
-      <el-button @click="openWorkspaceHolder" class="btn">工作区设定</el-button>
+      <el-text class="menuTitle" truncated>样式</el-text>
+      <el-button @click="editGlobalStyle" class="btn" :icon="Picture" plain>全局样式</el-button>
+      <el-text class="menuTitle" truncated>配置切换</el-text>
+      <el-button @click="openLoadConfig" class="btn" :icon="Edit" plain>加载配置</el-button>
+      <el-button @click="openWorkspaceHolder" class="btn" :icon="Monitor" plain>工作区设定</el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
     <div style="height: 100%;width: 100%;overflow: auto;scrollbar-width: none">
@@ -180,7 +184,7 @@
 </template>
 
 <script setup>
-import {createApp, defineComponent, h, nextTick, onMounted, ref, watch} from 'vue'
+import {createApp, defineComponent, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
 import {
   ElButton,
@@ -192,7 +196,7 @@ import {
   ElOption,
   ElPopconfirm,
   ElPopover,
-  ElSelect
+  ElSelect, ElText
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -207,7 +211,7 @@ import evalComponent from "./components/EvalComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson} from "@/js/url.js"
-import {InfoFilled} from "@element-plus/icons-vue"
+import {CirclePlus, Edit, InfoFilled, Monitor, Picture} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
 import ReadyComponent from "@/items/readyComponent.vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
@@ -283,6 +287,7 @@ let grid
 // 锁定状态
 const enableEdit = ref(false)
 const enableMove = ref(false)
+const ctrl = ref(false)
 watch(enableMove, b => {
   if (b) {
     enabledMove()
@@ -290,6 +295,19 @@ watch(enableMove, b => {
     disabledMove()
   }
 })
+function keyListener(event) {
+  if (event.key === 'Control' || event.key === 'Meta') {
+    ctrl.value = event.type === 'keydown'
+    if (ctrl.value) {
+      enabledMove()
+      enabledEdit()
+    } else {
+      disabledMove()
+      disabledEdit()
+    }
+  }
+}
+
 // 全局样式
 const globalStyle = ref('')
 // 仅查看模式
@@ -410,6 +428,16 @@ onMounted(async () => {
   grid.on('dragstop resizestop', (event, el) => {
     saveLayout()
   })
+
+  // 监听按键
+  window.addEventListener('keydown', keyListener)
+  window.addEventListener('keyup', keyListener)
+})
+
+// 注销按键监听
+onUnmounted(() => {
+  window.removeEventListener('keydown', keyListener)
+  window.removeEventListener('keyup', keyListener)
 })
 
 const loadJsonData = async () => {
@@ -465,7 +493,7 @@ function disabledMove() {
 // 添加空白格子
 function createItemComponent(type, componentItem) {
   return {
-    props: ['id', 'enableEdit', 'enableMove'],
+    props: ['id', 'enableEdit', 'enableMove', 'ctrl'],
     setup(props, {expose}) {
       const componentItemRef = ref(null)
       // 暴露方法给父组件
@@ -491,6 +519,7 @@ function createItemComponent(type, componentItem) {
           type: type,
           enableEdit: enableEdit,
           enableMove: enableMove,
+          ctrl: props.ctrl,
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
           onZoomIn: zoomIn,
@@ -535,7 +564,8 @@ const addItem = (type, x = '1', y = '1', w = '4', h = '4', id) => {
   const app = createApp(createItemComponent(type, component), {
     id: itemEl.id,
     enableEdit: enableEdit,
-    enableMove: enableMove
+    enableMove: enableMove,
+    ctrl: ctrl
   })
   elementMap[itemEl.id] = app.mount(itemEl)
 
@@ -898,17 +928,29 @@ body {
   width: calc(100% - 20px);
   display: flex;
   align-items: center;
+  overflow: auto;
+  scrollbar-width: none;
   gap: 10px;
   padding: 0 10px;
   z-index: 1;
   background-color: rgba(138, 138, 138, 0.5);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
   .el-button + .el-button {
     margin-left: 0;
   }
 
+  .menuTitle {
+    color: #ececec;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 36px;
+    border-right: 4px solid orange;
+    padding: 0 7px 3px 0;
+    min-width: 30px;
+  }
 }
 
 .el-select-dropdown__item {
@@ -943,7 +985,7 @@ body {
   --el-checkbox-checked-bg-color: #ff7d00 !important;
 
   .el-checkbox__inner {
-    border: unset !important;
+    border: 1px dashed #ff7d00 !important;
   }
 }
 

@@ -92,10 +92,13 @@ function handleFileDrop(e) {
     >
       <div>
         <div class="readyComponents">
-          <div v-for="name of Object.keys(components)" class="componentItem">
+          <div
+            v-for="name of Object.keys(components)"
+            class="componentItem"
+            @click="addComponent(name)"
+          >
             <div class="componentName">{{ name }}</div>
             <div class="componentDesc">{{ components[name].desc }}</div>
-            <el-button class="addComponent" type="primary" @click="addComponent(name)">添加</el-button>
           </div>
         </div>
 
@@ -129,11 +132,13 @@ function handleFileDrop(e) {
     justify-content: space-between;;
     align-items: center;
     padding: 8px;
+    float: left;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-bottom: 8px;
-    background: rgba(150, 150, 150, 0.3);
+    margin: 8px;
+    background: white;
     background-size: 200%;
+    cursor: pointer;
 
     * {
       transition: all 0.5s ease-in-out;
@@ -147,26 +152,18 @@ function handleFileDrop(e) {
     .componentDesc {
       font-size: 14px;
       color: #666;
-    }
-
-    .addComponent {
-      opacity: 0;
+      margin-left: 8px;
     }
 
     &:hover {
-      background: white;
-
-      .componentName {
-        font-size: 18px;
-      }
+      color: white;
+      background: #404040;
+      border: 1px solid #454545;
 
       .componentDesc {
-        font-size: 16px;
-        color: #454545;
-      }
-
-      .addComponent {
-        opacity: 1;
+        font-size: 14px;
+        color: #c6c6c6;
+        margin-left: 8px;
       }
     }
   }
