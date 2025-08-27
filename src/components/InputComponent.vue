@@ -1,8 +1,8 @@
 <script setup>
-import {ElIcon, ElInput, ElText} from "element-plus"
-import {nextTick, onMounted, onUnmounted, ref, toRefs} from "vue"
+import {ElIcon, ElInput, ElMessage, ElText, ElPopover} from "element-plus"
+import {onMounted, onUnmounted, ref, toRefs} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {SortDown} from "@element-plus/icons-vue";
+import {CloseBold, CopyDocument, SortDown} from "@element-plus/icons-vue"
 
 const props = defineProps({
   id: String,
@@ -11,8 +11,6 @@ const props = defineProps({
 })
 const {id, text, enableEdit} = toRefs(props)
 
-// 是否自动执行
-const autoExecute = ref(false)
 // 方法内容
 const functionText = ref(text.value || `'input : ' + input`)
 const inputText = ref('')
@@ -35,8 +33,6 @@ function save() {
   onFocus.value = false
   saveData(props.id, JSON.stringify({
     content: functionText.value,
-    result: functionResult.value,
-    autoExecute: autoExecute.value
   }))
 }
 
@@ -60,30 +56,29 @@ onUnmounted(() => {
 })
 
 async function safeExecute() {
-  if (!iframe) {
-    iframe = document.getElementById('sandbox' + id.value)
+  function executeCode() {
+    const input = inputText.value
+    // input当成入参
+    // 方法内容中使用input变量
+    return eval(`(function (input) {
+      ${functionText.value}
+    })(input)`)
   }
-  const blob = new Blob([`
-    <script>
-      try {
-        const input = ${JSON.stringify(inputText.value)}
-        const result = eval(${JSON.stringify(functionText.value)})
-        window.parent.postMessage({
-          type: 'result',
-          data: result,
-          success: true
-        }, '*')
-      } catch (error) {
-        window.parent.postMessage({
-          type: 'error',
-          error: error.message,
-          success: false
-        }, '*')
-      }
-    <\/script>
-  `], {type: 'text/html'})
-  iframe.src = URL.createObjectURL(blob)
+
+  try {
+    functionResult.value = executeCode()
+    console.log(functionResult.value)
+  } catch (e) {
+    functionResult.value = `错误: ${e}`
+  }
   save()
+}
+
+function copyResult() {
+  if (functionResult.value) {
+    navigator.clipboard.writeText(functionResult.value)
+    ElMessage.success('复制成功')
+  }
 }
 
 onMounted(() => {
@@ -95,11 +90,6 @@ function load(data) {
   if (save) {
     const parse = JSON.parse(save)
     functionText.value = parse.content
-    functionResult.value = parse.result
-    autoExecute.value = parse.autoExecute
-  }
-  if (autoExecute.value) {
-    safeExecute()
   }
 }
 
@@ -111,34 +101,68 @@ defineExpose({
 <template>
   <div class="inputContent">
     <div
-        class="textContainer"
-        @mouseenter="onFocus = true"
-        @mouseleave="onMouseLeave"
+      class="textContainer"
+      @mouseenter="onFocus = true"
+      @mouseleave="onMouseLeave"
     >
       <iframe :id="'sandbox' + id" sandbox="allow-scripts" style="display: none;"></iframe>
       <div class="ioContainer">
         <el-input
-            v-model="inputText"
-            ref="input"
-            type="textarea"
-            placeholder="输入参数，按下ctrl + enter即可执行方法"
-            :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
-            @keydown.ctrl.enter="safeExecute"
+          v-model="inputText"
+          ref="input"
+          type="textarea"
+          placeholder="输入参数，按下ctrl + enter即可执行方法"
+          :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
+          @keydown.ctrl.enter="safeExecute"
         />
         <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
-        <el-icon @click="safeExecute">
-          <SortDown/>
-        </el-icon>
+
+        <el-popover
+          class="box-item"
+          title="执行"
+          content="执行方法，在下方得到结果"
+          placement="top-end"
+        >
+          <template #reference>
+            <el-icon class="executeIcon" @click="safeExecute">
+              <SortDown/>
+            </el-icon>
+          </template>
+        </el-popover>
+        <el-popover
+          class="box-item"
+          title="复制"
+          content="复制方法结果到剪切板"
+          placement="top-end"
+        >
+          <template #reference>
+            <el-icon class="copyIcon" @click="copyResult">
+              <CopyDocument/>
+            </el-icon>
+          </template>
+        </el-popover>
+        <el-popover
+          class="box-item"
+          title="清除结果"
+          content="清除方法执行结果"
+          placement="top-end"
+        >
+          <template #reference>
+            <el-icon class="clearIcon" @click="functionResult = ''">
+              <CloseBold />
+            </el-icon>
+          </template>
+        </el-popover>
       </div>
       <el-input
-          v-model="functionText"
-          ref="functionRef"
-          :class="['function', (onFocus && enableEdit) ? 'functionOnFocus' : '']"
-          :rows="2"
-          type="textarea"
-          placeholder="输入方法内容，可以使用input变量来获取输入值"
-          @blur="save"
-          @change="save"
+        v-model="functionText"
+        ref="functionRef"
+        :class="['function', (onFocus && enableEdit) ? 'functionOnFocus' : '']"
+        :rows="2"
+        type="textarea"
+        placeholder="输入方法内容，可以使用input变量来获取输入值"
+        @blur="save"
+        @change="save"
       />
     </div>
   </div>
@@ -189,29 +213,46 @@ defineExpose({
 
     .input, .result {
       width: calc(100% - 16px);
-      height: calc(50% - 10px);
-      padding: 4px;
+      height: calc(50% - 18px);
       border-radius: 8px;
+      padding: 8px;
       background-color: white;
     }
 
-    .el-icon {
-      background-color: #eda63f;
+    .executeIcon, .copyIcon, .clearIcon {
       border-radius: 18px;
       padding: 4px;
       color: white;
       margin: 1px;
-      opacity: 0.3;
+      opacity: 0.4;
       border: 2px solid white;
       cursor: pointer;
       z-index: 1;
       position: absolute;
-      top: calc(50% - 14px);
 
       &:hover {
         scale: 1.4;
         opacity: 1;
       }
+    }
+
+    .executeIcon {
+      top: calc(50% - 14px);
+      background-color: #eda63f;
+    }
+
+    .copyIcon {
+      bottom: 0;
+      right: 0;
+      opacity: 0.1;
+      background-color: #3f94ed;
+    }
+
+    .clearIcon {
+      bottom: 0;
+      right: 28px;
+      opacity: 0.1;
+      background-color: #ff5858;
     }
 
     .result {
@@ -247,11 +288,11 @@ defineExpose({
       color: #3a3a3a;
       font-weight: bold;
       background: repeating-linear-gradient(
-          -45deg,
-          rgba(240, 240, 240, 0.9),
-          rgba(240, 240, 240, 0.9) 40px,
-          rgba(255, 255, 255, 0.9) 40px,
-          rgba(255, 255, 255, 0.9) 80px
+        -45deg,
+        rgba(240, 240, 240, 0.9),
+        rgba(240, 240, 240, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 80px
       );
     }
   }
