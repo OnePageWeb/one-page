@@ -1,7 +1,7 @@
 <script setup>
-import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElMessage, ElText} from "element-plus"
-import {onMounted, reactive, ref, toRefs, watch} from "vue"
-import {CircleCloseFilled, Close, Flag, LocationFilled, Operation, Plus} from "@element-plus/icons-vue"
+import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText} from "element-plus"
+import {onMounted, ref, toRefs} from "vue"
+import {Close, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 
 const defaultLinks = [
@@ -21,8 +21,14 @@ const props = defineProps({
 })
 const {id, enableEdit} = toRefs(props)
 
-// 默认文本内容
+// 链接列表
 const links = ref([])
+const isHorizontal = ref(true)
+
+function changeDirection() {
+  isHorizontal.value = !isHorizontal.value
+  save()
+}
 
 const dialogVisible = ref(false)
 const tempLinks = ref([])
@@ -60,6 +66,7 @@ function open(link) {
 // 打开弹窗
 const curWindow = {}
 const curOpenedWindow = ref([])
+
 function openNewWindow(link) {
   const cur = curWindow[link.name]
   if (cur && !cur.closed) {
@@ -88,12 +95,12 @@ function openNewWindow(link) {
       // 从数组中移除
       curOpenedWindow.value = curOpenedWindow.value.filter(name => name !== link.name)
     }
-  }, 1000)
+  }, 800)
 
 }
 
 function save() {
-  saveData(props.id, JSON.stringify({links: links.value}))
+  saveData(props.id, JSON.stringify({links: links.value, isHorizontal: isHorizontal.value}))
 }
 
 onMounted(() => {
@@ -103,8 +110,10 @@ onMounted(() => {
 function load(data) {
   links.value.length = 0
   const save = data || loadData(props.id)
-  if (save) {
-    links.value = JSON.parse(save).links
+  const parse = JSON.parse(save)
+  if (parse) {
+    links.value = parse.links
+    isHorizontal.value = parse.isHorizontal === undefined ? true : parse.isHorizontal
   } else {
     links.value.push(...defaultLinks)
   }
@@ -136,7 +145,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="linkContent">
+  <div :class="['linkContent', {'vertical': !isHorizontal}]">
     <div
         v-for="(link, index) in links"
         class="linkContainer"
@@ -147,7 +156,15 @@ defineExpose({
           draggable="true"
           @dragend="openNewWindow(link)"
       >
-        <img :src="link.img" alt="图标"/>
+        <el-image :src="link.img" alt="图标">
+          <template #error>
+            <div class="image-slot">
+              <el-icon>
+                <Picture/>
+              </el-icon>
+            </div>
+          </template>
+        </el-image>
         <el-text tag="span">{{ link.name }}</el-text>
       </div>
     </div>
@@ -160,7 +177,7 @@ defineExpose({
 
     <!-- 编辑快速链接弹窗 -->
     <el-dialog
-        class="commonDialog"
+        class="linkEditDialog commonDialog"
         v-model="dialogVisible"
         title="编辑快速链接"
         width="60%"
@@ -191,6 +208,18 @@ defineExpose({
       </div>
       <template #footer>
         <div class="dialog-footer">
+          <el-popover
+              class="box-item"
+              :title="isHorizontal ? '水平滚动' : '垂直滚动'"
+              content="切换滚动方向，作用于组件不足以显示所有链接时"
+              placement="top-end"
+          >
+            <template #reference>
+              <el-icon class="directionIcon" @click="changeDirection">
+                <Switch :style="{transform: isHorizontal ? 'rotate(0deg)' : 'rotate(270deg)'}"/>
+              </el-icon>
+            </template>
+          </el-popover>
           <el-button type="primary" @click="() => tempLinks.push({name: '', url: '', img: ''})">
             <el-icon>
               <Plus/>
@@ -217,8 +246,10 @@ defineExpose({
   gap: 4px;
   overflow: auto;
   scrollbar-width: none;
+  flex-wrap: nowrap;
 
   /* 第一个和左后一个子元素增加margin */
+
   .linkContainer:first-child {
     margin-left: 12px;
   }
@@ -230,7 +261,7 @@ defineExpose({
   .linkContainer {
     position: relative;
     cursor: pointer;
-    padding: 10px;
+    padding: 2px;
     height: calc(100% - 30px);
   }
 
@@ -248,11 +279,12 @@ defineExpose({
   }
 
   .linkItem {
-    height: 100%;
+    height: calc(100% - 8px);
     padding: 4px 16px;
     user-select: none;
+    margin: 2px;
 
-    img {
+    .el-image {
       height: 40%;
       margin-bottom: 8px;
     }
@@ -273,6 +305,7 @@ defineExpose({
     );
     background-size: 200%;
     border-radius: 8px;
+
     &:hover {
       animation: gradientScroll 1s ease-in-out infinite;
     }
@@ -302,6 +335,47 @@ defineExpose({
 
     .el-icon {
       color: #e3e3e3;
+    }
+  }
+
+}
+
+.vertical {
+  flex-wrap: wrap;
+
+  /* 第一个和左后一个子元素增加margin */
+
+  .linkContainer:first-child {
+    margin-left: 0;
+  }
+
+  .linkContainer:last-child {
+    margin-right: 0;
+  }
+}
+
+.linkEditDialog {
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    /* 方向图标 */
+
+    .directionIcon {
+      padding: 4px;
+      background: #fba240;
+      border-radius: 16px;
+      color: white;
+      margin-right: 16px;
+      cursor: pointer;
+      font-size: large;
+
+      &:hover {
+        scale: 1.2;
+        /* 旋转 */
+        transform: rotate(180deg);
+      }
     }
   }
 }

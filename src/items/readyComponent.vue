@@ -60,7 +60,7 @@ async function addComponent(name) {
   } finally {
     setTimeout(() => {
       loading.close()
-    }, 500)
+    }, 200)
   }
 }
 
