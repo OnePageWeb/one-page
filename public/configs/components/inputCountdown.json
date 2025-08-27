@@ -1,0 +1,7 @@
+{
+  "name": "倒计时",
+  "desc": "简单的倒计时功能，输入总秒数，摁下CTRL+ENTER即可开始计时",
+  "config": "{\"name\":\"倒计时\",\"content\":\"const end = parseInt(input);\\nfor(let i = 0; i < end; i++) {\\n  setTimeout(() => {\\n    setResult(end - i);\\n  }, i * 1000);\\n};\\n  setTimeout(() => {\\n    setResult('结束');\\n  }, end * 1000);\"}",
+  "style": ".result {\n  display: flex;\n  align-items: center;\n  flex-direction: column;\n  justify-content: center;\n  font-size: 24px;\n  font-weight: bold;\n}",
+  "type": "input"
+}

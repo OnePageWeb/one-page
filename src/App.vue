@@ -1024,6 +1024,7 @@ body {
   min-height: 300px;
   height: 100% !important;
   overflow-x: hidden;
+  scrollbar-width: none;
 }
 
 .grid-stack-item.ui-resizable-autohide {
