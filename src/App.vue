@@ -305,7 +305,7 @@ watch(enableMove, b => {
 })
 
 function keyListener(event) {
-  if (event.key === 'Control' || event.key === 'Meta') {
+  if (event.key === 'Alt') {
     ctrl.value = event.type === 'keydown'
     if (ctrl.value) {
       enabledMove()
@@ -314,6 +314,7 @@ function keyListener(event) {
       disabledMove()
       disabledEdit()
     }
+    event.preventDefault()
   }
 }
 

@@ -14,23 +14,13 @@ const {id, text, enableEdit} = toRefs(props)
 // 是否自动执行
 const autoExecute = ref(false)
 // 方法内容
-const functionText = ref(text.value)
+const functionText = ref(text.value || `'input : ' + input`)
 const inputText = ref('')
 // 方法结果
 const functionResult = ref('')
 
 const functionRef = ref(null)
 const onFocus = ref(false)
-
-function dbclick() {
-  if (enableEdit.value) {
-    nextTick(() => {
-      functionRef.value.focus()
-    })
-  } else {
-    safeExecute()
-  }
-}
 
 function onMouseLeave() {
   const inputElement = functionRef?.value.$el
@@ -119,7 +109,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="inputContent" @dblclick="dbclick">
+  <div class="inputContent">
     <div
         class="textContainer"
         @mouseenter="onFocus = true"
@@ -135,10 +125,10 @@ defineExpose({
             :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
             @keydown.ctrl.enter="safeExecute"
         />
+        <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
         <el-icon @click="safeExecute">
           <SortDown/>
         </el-icon>
-        <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
       </div>
       <el-input
           v-model="functionText"
@@ -199,7 +189,7 @@ defineExpose({
 
     .input, .result {
       width: calc(100% - 16px);
-      height: calc(50% - 16px);
+      height: calc(50% - 10px);
       padding: 4px;
       border-radius: 8px;
       background-color: white;
@@ -211,12 +201,16 @@ defineExpose({
       padding: 4px;
       color: white;
       margin: 1px;
+      opacity: 0.3;
       border: 2px solid white;
       cursor: pointer;
       z-index: 1;
+      position: absolute;
+      top: calc(50% - 14px);
 
       &:hover {
         scale: 1.4;
+        opacity: 1;
       }
     }
 
