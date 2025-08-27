@@ -112,7 +112,7 @@ function handleFileDrop(e) {
               @drop.prevent="handleFileDrop"
               @keydown.enter.ctrl="addComponent"
           />
-          <el-button class="addComponent" type="primary" @click="addComponent">添加</el-button>
+          <el-button class="addComponent" type="primary" @click="addComponent(null)">添加</el-button>
         </div>
       </div>
     </el-dialog>

@@ -2,7 +2,8 @@
 import {onMounted, ref} from "vue"
 import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/js/workspcae.js"
 import {ElButton, ElDialog, ElInput, ElTag, ElPopconfirm, ElMessage, ElPopover, ElIcon} from "element-plus"
-import {InfoFilled} from "@element-plus/icons-vue";
+import {InfoFilled} from "@element-plus/icons-vue"
+import {reloadWithoutParams} from "@/js/url.js"
 
 const dialogVisible = ref(false)
 defineExpose({
@@ -40,17 +41,10 @@ function switchWorkspace(workspace) {
     })
     return
   }
-  if (workspaceList.value.includes(workspace)) {
-    ElMessage({
-      message: '工作区已存在',
-      type: 'warning'
-    })
-    return
-  }
   // 切换工作区
   setWorkspace(workspace)
   // 刷新页面
-  window.location.reload()
+  reloadWithoutParams('workspace')
 }
 
 // 删除工作区
@@ -64,7 +58,7 @@ function deleteItem(workspace) {
   deleteWorkspace(workspace)
   if (nowWorkspace.value === workspace) {
     // 刷新页面
-    window.location.reload()
+    reloadWithoutParams('workspace')
   } else {
     workspaceList.value.length = 0
     workspaceList.value.push(...listWorkspace())

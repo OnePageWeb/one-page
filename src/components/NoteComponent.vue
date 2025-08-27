@@ -245,7 +245,7 @@ defineExpose({
     position: absolute;
     bottom: 4px;
     left: 4px;
-    opacity: 1;
+    opacity: 0.4;
     margin: 4px;
     padding: 8px;
     display: flex;

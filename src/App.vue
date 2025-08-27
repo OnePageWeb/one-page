@@ -213,7 +213,7 @@ import inputComponent from "@/components/InputComponent.vue"
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
-import {fetchWithBase, parseBlobJson} from "@/js/url.js"
+import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
 import {CirclePlus, Edit, InfoFilled, Monitor, Picture} from "@element-plus/icons-vue"
 import edgeMouseMove from './items/edgeMouseMove.vue'
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
@@ -223,7 +223,7 @@ import {
   removeData,
   saveData,
 } from "@/js/data.js"
-import {initWorkspace} from "@/js/workspcae.js"
+import {initWorkspace, setWorkspace} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 
 const itemType = [
@@ -324,44 +324,13 @@ const globalStyle = ref('')
 // 仅查看模式
 const viewMode = ref(false)
 
-function reloadWithoutParams(paramsToRemove) {
-  try {
-    // 创建URL对象
-    const url = new URL(window.location.href);
-
-    // 处理要移除的参数（支持字符串或数组）
-    const paramsToRemoveArray = Array.isArray(paramsToRemove)
-        ? paramsToRemove
-        : [paramsToRemove];
-
-    // 移除指定参数
-    paramsToRemoveArray.forEach(param => {
-      if (url.searchParams.has(param)) {
-        url.searchParams.delete(param);
-      }
-    });
-
-    // 构建新URL
-    const newUrl = url.toString();
-
-    // 只有当URL确实发生变化时才重新加载
-    if (newUrl !== window.location.href) {
-      window.location.href = newUrl;
-    }
-  } catch (error) {
-    console.error('Error processing URL:', error);
-    // 出错时执行普通重新加载
-    window.location.reload();
-  }
-}
-
 // 获取窗口高度
 let windowHeight = window.innerHeight
 
 // 初始化GridStack
 onMounted(async () => {
   windowHeight = window.innerHeight
-  // 选择默认工作区
+  // 初始化工作区
   initWorkspace()
 
   // 按照窗口宽度计算格子高度
@@ -385,6 +354,12 @@ onMounted(async () => {
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
+  // 设定打开的工作区
+  const workspace = urlParams.get('workspace')
+  if (workspace) {
+    setWorkspace(workspace)
+  }
+  // 初始化配置
   const configUrl = urlParams.get('config')
   if (configUrl) {
     ElMessage.info('正在加载配置...')

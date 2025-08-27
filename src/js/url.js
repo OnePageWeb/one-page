@@ -47,3 +47,36 @@ export const fetchWithBase = async (path, options = {}) => {
         throw new Error(`Failed to fetch ${path}: ${error.message}`)
     }
 }
+
+export function reloadWithoutParams(paramsToRemove) {
+    try {
+        // 创建URL对象
+        const url = new URL(window.location.href)
+
+        // 处理要移除的参数（支持字符串或数组）
+        const paramsToRemoveArray = Array.isArray(paramsToRemove)
+            ? paramsToRemove
+            : [paramsToRemove]
+
+        // 移除指定参数
+        paramsToRemoveArray.forEach(param => {
+            if (url.searchParams.has(param)) {
+                url.searchParams.delete(param);
+            }
+        })
+
+        // 构建新URL
+        const newUrl = url.toString()
+
+        // 只有当URL确实发生变化时才重新加载
+        if (newUrl !== window.location.href) {
+            window.location.href = newUrl
+        } else {
+            window.location.reload()
+        }
+    } catch (error) {
+        console.error('Error processing URL:', error)
+        // 出错时执行普通重新加载
+        window.location.reload()
+    }
+}

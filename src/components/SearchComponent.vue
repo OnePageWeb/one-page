@@ -52,6 +52,30 @@ function search() {
   const searchUrl = searchEngineMap[nowSearchEngine.value].url
   window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', '_blank')
 }
+// 上一个搜索引擎
+function previousSearchEngine() {
+  const index = searchEngineList.value.map(item => item.name).indexOf(nowSearchEngine.value)
+  // 切换搜索引擎
+  if (index - 1 < 0) {
+    nowSearchEngine.value = searchEngineList.value[searchEngineList.value.length - 1].name
+  } else {
+    nowSearchEngine.value = searchEngineList.value[index - 1].name
+  }
+}
+// 下一个搜索引擎
+function nextSearchEngine(event) {
+  if (event.shiftKey) {
+    previousSearchEngine()
+    return
+  }
+  const index = searchEngineList.value.map(item => item.name).indexOf(nowSearchEngine.value)
+  // 切换搜索引擎
+  if (index + 1 >= searchEngineList.value.length) {
+    nowSearchEngine.value = searchEngineList.value[0].name
+  } else {
+    nowSearchEngine.value = searchEngineList.value[index + 1].name
+  }
+}
 
 // 前后置
 const prefix = ref('')
@@ -164,9 +188,9 @@ defineExpose({
       <el-input
           v-model="searchContent"
           class="input"
-          :rows="2"
           placeholder="输入搜索内容"
           @keydown.enter="search"
+          @keydown.tab.prevent="nextSearchEngine"
           clearable
       >
         <template #prepend>

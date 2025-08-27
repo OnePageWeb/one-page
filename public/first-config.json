@@ -68,9 +68,9 @@
     {
       "type": "text",
       "id": "b9a2b49f971f-4136-ad80-32e6e09a3685",
-      "x": 45,
+      "x": 44,
       "y": 20,
-      "w": 3,
+      "w": 4,
       "h": 1
     },
     {
@@ -86,12 +86,12 @@
     {
       "id": "cf4c965843be-4662-b199-d14e172d3e3f",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"### 提示\\n\\n#### 操作栏\\n\\n鼠标在窗口左侧贴边纵向滑动即可开启操作栏\\n\\n#### 快捷编辑\\n\\n按住 `CTRL` 即可快速进入编辑模式\\n\\n#### 链接快切\\n\\n1. 鼠标拖拽 __快速链接__ 中的图标，在任意位置释放即可开启单独窗口。\\n2. 点击开启了快切的图标可将窗口拉出。\\n\\n#### 分享模式\\n\\n在地址栏中跟随参数 `?config={configPath}` 即可在进入页面时加载远端配置文件\"}",
+      "data": "{\"text\":\"### 提示\\n\\n#### 操作栏\\n\\n鼠标在窗口左侧贴边纵向滑动即可开启操作栏\\n\\n#### 快捷编辑\\n\\n按住 `ALT` 即可快速进入编辑模式\\n\\n#### 链接快切\\n\\n1. 鼠标拖拽 __快速链接__ 中的图标，在任意位置释放即可开启单独窗口。\\n2. 点击开启了快切的图标可将窗口拉出。\\n\\n#### 搜索引擎切换\\n\\n在搜索框中按下 `TAB` 或是 `SHIFT + TAB`来切换搜索引擎\"}",
       "type": "note"
     },
     {
       "id": "abb00c3f9e55-49c5-8771-e56743f9ddad",
-      "style": ".typing {\n  color: white;\n  font-size: 36px;\n  font-weight: blod;\n}",
+      "style": ".typing {\n  color: white;\n  font-size: 42px;\n  font-weight: blod;\n}",
       "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display: flex;justify-content: center;align-items: center;\\\">\\n<span class=\\\"typing\\\">一页 · ONE</span>\\n</div>\"}",
       "type": "text"
     },
@@ -133,14 +133,14 @@
     },
     {
       "id": "b9a2b49f971f-4136-ad80-32e6e09a3685",
-      "style": ".container {\n  display: flex;\n  align-items: center;\n}\n\n.text {\n  padding: 8px 16px;\n  height: 20px;\n  line-height: 20px;\n  font-weight: bold;\n  font-size: 24px;\n  color: white;\n}",
+      "style": ".container {\n  display: flex;\n  align-items: center;\n  justify-content: flex-end;\n}\n\n.text {\n  padding: 8px 16px;\n  height: 20px;\n  line-height: 20px;\n  font-weight: bold;\n  font-size: 24px;\n  color: white;\n}",
       "data": "{\"text\":\"<div class=\\\"container\\\"><span class=\\\"text\\\">特别链接</span></div>\"}",
       "type": "text"
     },
     {
       "id": "346a34d0a273-4b29-9db6-4b36e9ab8ce9",
       "style": ".linkContent {\n  background: linear-gradient(45deg, #73d1c080 0%, #fbc2eb80 100%);\n  border-radius: 20px;\n}",
-      "data": "{\"links\":[{\"name\":\"项目地址\",\"url\":\"https://github.com/Verlif/one\",\"img\":\"https://blog.verlif.top/one/favicon.ico\"},{\"name\":\"Vite\",\"url\":\"https://cn.vitejs.dev/\",\"img\":\"https://cn.vitejs.dev/logo.svg\"},{\"name\":\"Vue\",\"url\":\"https://cn.vuejs.org/\",\"img\":\"https://play.vuejs.org/logo.svg\"},{\"name\":\"Gridstack\",\"url\":\"https://github.com/gridstack/gridstack.js/\",\"img\":\"https://github.com/favicon.ico\"}]}",
+      "data": "{\"links\":[{\"name\":\"项目地址\",\"url\":\"https://github.com/Verlif/one\",\"img\":\"https://blog.verlif.top/one/favicon.ico\"},{\"name\":\"Vite\",\"url\":\"https://cn.vitejs.dev/\",\"img\":\"https://cn.vitejs.dev/logo.svg\"},{\"name\":\"Vue\",\"url\":\"https://cn.vuejs.org/\",\"img\":\"https://play.vuejs.org/logo.svg\"},{\"name\":\"Gridstack\",\"url\":\"https://github.com/gridstack/gridstack.js/\",\"img\":\"https://github.com/favicon.ico\"},{\"name\":\"ElementPlus\",\"url\":\"https://element-plus.org/zh-CN/\",\"img\":\"https://element-plus.org/images/element-plus-logo.svg\"}],\"isHorizontal\":true}",
       "type": "link"
     }
   ]
