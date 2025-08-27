@@ -164,6 +164,7 @@
         width="95%"
         align-center
         :show-close="false"
+        @close="onZoomInClose"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
@@ -671,7 +672,8 @@ function refreshComponentStyle(id) {
 }
 
 // 放大组件
-const zoomInId = ref(null)
+let zoomInId = null
+let zoomApp = null
 const zoomInDialogVisible = ref(false)
 
 function createZoomIn(id, componentItem) {
@@ -695,19 +697,22 @@ function zoomIn(id, type) {
     ElMessage.error('未找到对应的组件')
     return
   }
-  zoomInId.value = id.value
+  zoomInId = id.value
   // find.component是组件的vue对象
   zoomInDialogVisible.value = true
   nextTick(() => {
     const elementById = document.getElementById('zoomInElement')
     if (elementById) {
       elementById.innerHTML = ''
-      const app = createApp(createZoomIn(id.value, find.component), {
+      if (zoomApp) {
+        zoomApp.unmount()
+      }
+      zoomApp = createApp(createZoomIn(id.value, find.component), {
         id: id.value,
         enableEdit: enableEdit,
         enableMove: enableMove
       })
-      app.mount(elementById)
+      zoomApp.mount(elementById)
       if (elementById.firstElementChild) {
         elementById.firstElementChild.id = id.value
       }
@@ -715,10 +720,17 @@ function zoomIn(id, type) {
   })
 }
 
+function onZoomInClose() {
+  if (zoomApp) {
+    zoomApp.unmount()
+    zoomApp = null
+  }
+}
+
 // 当窗口关闭时，尝试刷新数据
 watch(zoomInDialogVisible, v => {
   if (!v && enableEdit) {
-    const element = elementMap[zoomInId.value]
+    const element = elementMap[zoomInId]
     if (element) {
       element.load()
     }
