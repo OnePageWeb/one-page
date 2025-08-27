@@ -66,6 +66,7 @@ function previousSearchEngine() {
 function nextSearchEngine(event) {
   if (event.shiftKey) {
     previousSearchEngine()
+    save()
     return
   }
   const index = searchEngineList.value.map(item => item.name).indexOf(nowSearchEngine.value)
@@ -75,6 +76,7 @@ function nextSearchEngine(event) {
   } else {
     nowSearchEngine.value = searchEngineList.value[index + 1].name
   }
+  save()
 }
 
 // 前后置
