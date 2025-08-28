@@ -51,7 +51,7 @@
         title="加载配置"
         v-model="configLoaderVisible"
         width="50%"
-        class="globeStyleDialog commonDialog"
+        class="configDialog commonDialog"
         align-center
     >
       <template #header="{ close, titleId, titleClass }">
@@ -123,7 +123,7 @@
         title="组件样式"
         v-model="isEditComponentStyle"
         width="50%"
-        class="globeStyleDialog commonDialog"
+        class="configDialog commonDialog"
         align-center
     >
       <el-input
@@ -315,8 +315,6 @@ let windowHeight = window.innerHeight
 // 初始化GridStack
 onMounted(async () => {
   windowHeight = window.innerHeight
-  // 初始化工作区
-  initWorkspace()
 
   // 按照窗口宽度计算格子高度
   itemHeight = Math.floor(windowHeight / columns) * 2
@@ -740,7 +738,7 @@ function openLoadConfig() {
 function generateConfig() {
   // 汇总所有配置为一个json
   let config = {
-    globalStyle: globalStyle.value.fetchAllStyleConfig(),
+    globalStyle: globalStyle.value.generateStyleConfig(),
     layout: JSON.parse(loadData('layout')),
     components: []
   }
@@ -825,7 +823,7 @@ async function loadConfig(reload = true) {
   // 清除旧配置
   clearConfig()
   // 加载全局样式
-  globalStyle.value.loadStyle(config.globalStyle)
+  globalStyle.value.initStyleConfig(config.globalStyle)
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
   // 加载组件
@@ -1125,7 +1123,7 @@ textarea {
   }
 
   .el-textarea__inner, .el-textarea {
-    height: 100% !important;
+    height: 100%;
   }
 }
 
