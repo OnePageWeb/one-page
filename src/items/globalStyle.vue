@@ -101,6 +101,8 @@ function deleteItem(tag) {
   // 删除styleTags
   styleTags.value = styleTags.value.filter(item => item !== tag)
   removeData('globalStyle-tag-' + tag)
+  save()
+  deleteConfirm.value = false
 }
 
 function refreshGlobalStyle() {
@@ -205,6 +207,7 @@ defineExpose({
       width="50%"
       class="globeStyleDialog commonDialog"
       align-center
+      @close="refreshGlobalStyle"
   >
     <div style="position: relative;">
       <div class="tagContainer">
@@ -242,6 +245,9 @@ defineExpose({
           @change="saveTagStyle"
       />
     </div>
+    <template #footer>
+      <el-button type="primary" @click="loadSelectedStyle">应用</el-button>
+    </template>
 
     <el-dialog
         :title="selectedTagIndex > -1 ? '编辑样式' : '新增样式'"
@@ -322,6 +328,10 @@ defineExpose({
       width: 20px;
       height: 20px;
       display: block;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     .inactiveIcon {
@@ -329,6 +339,10 @@ defineExpose({
       width: 20px;
       height: 20px;
       display: block;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     .curTag {
@@ -341,10 +355,6 @@ defineExpose({
       width: 20px;
       color: white;
     }
-  }
-
-  .el-dialog__body {
-    height: calc(100% - 80px) !important;
   }
 
   .el-textarea {

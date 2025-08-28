@@ -317,7 +317,7 @@ onMounted(async () => {
   windowHeight = window.innerHeight
 
   // 按照窗口宽度计算格子高度
-  itemHeight = Math.floor(windowHeight / columns) * 2
+  itemHeight = Math.floor(windowHeight / columns)
 
   // 初始化GridStack
   grid = GridStack.init({
