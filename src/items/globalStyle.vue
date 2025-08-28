@@ -1,7 +1,8 @@
 <script setup>
-import {ElButton, ElDialog, ElInput, ElMessage, ElTag} from "element-plus"
+import {ElButton, ElDialog, ElInput, ElMessage, ElTag, ElIcon} from "element-plus"
 import {onMounted, ref} from "vue"
 import {loadData, removeData, saveData} from "@/js/data.js"
+import {CircleCheckFilled} from "@element-plus/icons-vue";
 
 const emit = defineEmits(['loadStyle'])
 const visible = ref(false)
@@ -39,8 +40,18 @@ function selectTag(tag) {
   if (selectTags.value.indexOf(tag) > -1) {
     // 已选择则取消选择
     selectTags.value = selectTags.value.filter(item => item !== tag)
+    ElMessage({
+      message: '已取消样式：' + tag,
+      type: 'warning'
+    })
+    console.log(selectTags.value)
   } else {
     selectTags.value.push(tag)
+    ElMessage({
+      message: '已激活样式：' + tag,
+      type: 'success'
+    })
+    console.log(selectTags.value)
   }
   loadSelectedStyle()
   save()
@@ -189,79 +200,72 @@ defineExpose({
 <template>
   <!-- 全局样式弹窗 -->
   <el-dialog
-    title="全局样式"
-    v-model="visible"
-    width="50%"
-    class="globeStyleDialog commonDialog"
-    align-center
+      title="全局样式"
+      v-model="visible"
+      width="50%"
+      class="globeStyleDialog commonDialog"
+      align-center
   >
     <div style="position: relative;">
       <div class="tagContainer">
         <el-tag
-          class="styleTag"
-          v-for="(tag, index) in styleTags"
-          :key="tag"
-          :type="selectTags.indexOf(tag) > -1 ? 'primary' : 'success'"
-          closable
-          @click="showTagStyle(index)"
-          @dblclick="selectTag(tag)"
-          @close="showDeleteConfirm(tag)"
+            v-for="(tag, index) in styleTags"
+            :class="['styleTag', selectTags.indexOf(tag) > -1 ? 'activeTag' : '', curTagName === tag ? 'curTag' : '']"
+            :key="tag"
+            closable
+            @click="showTagStyle(index)"
+            @close="showDeleteConfirm(tag)"
         >
-          {{ tag }}
+          <div style="display: flex; align-items: center;gap: 4px">
+            <el-icon :class="[selectTags.indexOf(tag) > -1 ? 'activeIcon' : 'inactiveIcon']" @click.prevent="selectTag(tag)">
+              <CircleCheckFilled/>
+            </el-icon>
+            {{ tag }}
+          </div>
         </el-tag>
 
         <el-tag
-          class="addTag"
-          type="warning"
-          @click="addTag"
+            class="addTag"
+            type="warning"
+            @click="addTag"
         >
           新增样式
         </el-tag>
       </div>
       <el-input
-        v-model="globalStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入全局样式"
-        :disabled="selectedTagIndex === -1"
+          v-model="globalStyle"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          :placeholder="selectedTagIndex > -1 ? `请编辑样式 - ${styleTags[selectedTagIndex]}` : '点击上方样式标签即可开启编辑'"
+          :disabled="selectedTagIndex === -1"
+          @change="saveTagStyle"
       />
-      <el-button
-        type="primary"
-        style="position: absolute;bottom: 16px;right: 8px;"
-        @click="saveTagStyle"
-        :disabled="selectedTagIndex === -1"
-      >
-        保存
-      </el-button>
     </div>
-    <template #footer>
-      <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
-    </template>
 
     <el-dialog
-      :title="selectedTagIndex > -1 ? '编辑样式' : '新增样式'"
-      v-model="tagNameDialogVisible"
-      @close="tagNameDialogVisible = false"
-      class="editTagDialog commonDialog"
-      width="400px"
-      align-center
+        :title="selectedTagIndex > -1 ? '编辑样式' : '新增样式'"
+        v-model="tagNameDialogVisible"
+        @close="tagNameDialogVisible = false"
+        class="editTagDialog commonDialog"
+        width="400px"
+        align-center
     >
       <el-input
-        v-model="curTagName"
-        :placeholder="selectedTagIndex > -1 ? '编辑样式名称' : '新增样式名称'"
-        @keydown.enter="editTagName"
+          v-model="curTagName"
+          :placeholder="selectedTagIndex > -1 ? '编辑样式名称' : '新增样式名称'"
+          @keydown.enter="editTagName"
       >
         <template #prepend>样式名称</template>
       </el-input>
     </el-dialog>
 
     <el-dialog
-      title="删除选中样式"
-      v-model="deleteConfirm"
-      width="400px"
-      class="deleteConfirm commonDialog"
-      align-center
+        title="删除选中样式"
+        v-model="deleteConfirm"
+        width="400px"
+        class="deleteConfirm commonDialog"
+        align-center
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
@@ -298,7 +302,49 @@ defineExpose({
       cursor: pointer;
       height: unset;
       user-select: none;
+      border: 2px solid #ffd89e;
     }
+
+    .styleTag {
+      color: #ffffff;
+      background-color: #939393;
+    }
+
+    .activeTag {
+      color: #ffffff;
+      background-color: #e6a246;
+      font-weight: bold;
+      box-shadow: 0 0 10px #e6a246;
+    }
+
+    .activeIcon {
+      color: #00805a;
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .inactiveIcon {
+      color: #555555;
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .curTag {
+      color: #ffffff;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    .el-tag__close {
+      height: 20px;
+      width: 20px;
+      color: white;
+    }
+  }
+
+  .el-dialog__body {
+    height: calc(100% - 80px) !important;
   }
 
   .el-textarea {
@@ -313,13 +359,24 @@ defineExpose({
     height: 140px;
 
     .el-dialog__body {
-      padding: 4px;
+      padding: 16px;
       height: calc(100% - 80px);
     }
   }
 
   .deleteConfirm {
     height: 200px;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    border-color: #e6a246;
+    scale: 1;
+  }
+  50% {
+    border-color: #ffffff;
+    scale: 0.95;
   }
 }
 </style>
