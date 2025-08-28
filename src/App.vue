@@ -46,26 +46,6 @@
       <div ref="gridEl" class="grid-stack"></div>
     </div>
 
-    <!-- 全局样式弹窗 -->
-    <el-dialog
-        title="全局样式"
-        v-model="isEditGlobalStyle"
-        width="50%"
-        class="globeStyleDialog commonDialog"
-        align-center
-    >
-      <el-input
-          v-model="globalStyle"
-          class="globeStyleInput"
-          type="textarea"
-          resize="none"
-          placeholder="请输入全局样式"
-      />
-      <template #footer>
-        <el-button type="primary" @click="refreshGlobalStyle">保存并刷新</el-button>
-      </template>
-    </el-dialog>
-
     <!-- 配置加载弹窗 -->
     <el-dialog
         title="加载配置"
@@ -178,6 +158,11 @@
         @onLeftEdge="() => showMenu = !showMenu && !viewMode"
     />
 
+    <globalStyle
+        ref="globalStyle"
+        @load-style="loadStyle"
+    />
+
     <workspaceHolder
         ref="workspaceHolder"
     />
@@ -225,6 +210,7 @@ import {
 } from "@/js/data.js"
 import {initWorkspace, setWorkspace} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
+import GlobalStyle from "@/items/globalStyle.vue"
 
 const itemType = [
   {
@@ -319,8 +305,7 @@ function keyListener(event) {
   }
 }
 
-// 全局样式
-const globalStyle = ref('')
+const globalStyle = ref(null)
 // 仅查看模式
 const viewMode = ref(false)
 
@@ -400,13 +385,6 @@ onMounted(async () => {
     await loadConfig(true)
   }
 
-  // 恢复样式
-  const style = loadData('globalStyle')
-  if (style !== null) {
-    globalStyle.value = style
-  }
-  refreshGlobalStyle()
-
   disabledEdit()
   disabledMove()
 
@@ -425,6 +403,10 @@ onUnmounted(() => {
   window.removeEventListener('keydown', keyListener)
   window.removeEventListener('keyup', keyListener)
 })
+
+function editGlobalStyle() {
+  globalStyle.value.open()
+}
 
 const loadJsonData = async () => {
   try {
@@ -743,20 +725,6 @@ function exportComponent(id, type) {
 
 const readyComponent = ref(null)
 
-// 编辑全局样式
-let isEditGlobalStyle = ref(false)
-
-function editGlobalStyle() {
-  isEditGlobalStyle.value = true
-}
-
-function refreshGlobalStyle() {
-  loadStyle('globalStyle', globalStyle.value)
-  // 保存全局样式
-  saveData('globalStyle', globalStyle.value)
-  isEditGlobalStyle.value = false
-}
-
 let configData = ref('')
 let configLoaderVisible = ref(false)
 let configLoaderTipVisible = ref(false)
@@ -772,7 +740,7 @@ function openLoadConfig() {
 function generateConfig() {
   // 汇总所有配置为一个json
   let config = {
-    globalStyle: globalStyle.value,
+    globalStyle: globalStyle.value.fetchAllStyleConfig(),
     layout: JSON.parse(loadData('layout')),
     components: []
   }
@@ -807,7 +775,7 @@ function clearConfig(reload = false) {
     removeData(id + '-style')
   }
   removeData('layout')
-  removeData('globalStyle')
+  globalStyle.value.clearStyle()
   // 刷新页面
   if (reload) {
     window.location.reload()
@@ -857,7 +825,7 @@ async function loadConfig(reload = true) {
   // 清除旧配置
   clearConfig()
   // 加载全局样式
-  saveData('globalStyle', config.globalStyle)
+  globalStyle.value.loadStyle(config.globalStyle)
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
   // 加载组件
