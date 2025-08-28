@@ -241,21 +241,34 @@ defineExpose({
   }
 
   .operatorContainer {
-    width: calc(100% - 32px);
     position: absolute;
     bottom: 4px;
     left: 4px;
     opacity: 0.4;
     margin: 4px;
-    padding: 8px;
+    padding: 2px;
     display: flex;
     justify-content: space-around;
     align-items: center;
     background-color: white;
     border-radius: 8px;
 
+    &:hover {
+      opacity: 0.8;
+      padding: 8px;
+      gap: 16px;
+
+      .el-icon {
+        scale: 1.0;
+      }
+    }
+
     .el-icon {
+      scale: 0.4;
       cursor: pointer;
+      &:hover {
+        scale: 1.4;
+      }
     }
   }
 

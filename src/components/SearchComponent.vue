@@ -301,11 +301,17 @@ defineExpose({
     .input {
       height: 100%;
       width: 100%;
-      font-size: 18px;
+      font-size: 20px;
+      caret-color: #8e8e8e;
       border-radius: 0 120px 120px 0 !important;
 
+      .el-input__inner::placeholder {
+        text-indent: 8px;
+      }
+
       &:hover {
-        width: 140%;
+        font-size: 20px;
+        line-height: 1;
       }
 
       .el-input__wrapper {

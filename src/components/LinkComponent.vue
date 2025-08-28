@@ -1,7 +1,7 @@
 <script setup>
 import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 
 const defaultLinks = [
@@ -23,10 +23,21 @@ const {id, enableEdit} = toRefs(props)
 
 // 链接列表
 const links = ref([])
-const isHorizontal = ref(true)
+const layoutDict = [
+  'horizontal',
+  'floating',
+  'vertical'
+]
+const layout = ref(0)
+const nameVisible = ref(true)
 
 function changeDirection() {
-  isHorizontal.value = !isHorizontal.value
+  layout.value = (layout.value + 1) % layoutDict.length
+  save()
+}
+
+function changeNameVisible() {
+  nameVisible.value = !nameVisible.value
   save()
 }
 
@@ -36,11 +47,12 @@ const tempLinks = ref([])
 function edit() {
   dialogVisible.value = true
   tempLinks.value.length = 0
-  tempLinks.value = [...links.value]
+  tempLinks.value = JSON.parse(JSON.stringify(links.value))
 }
 
 function cancelEdit() {
   dialogVisible.value = false
+  tempLinks.value.length = 0
 }
 
 function deleteLink(index) {
@@ -49,6 +61,7 @@ function deleteLink(index) {
 
 function saveEdit() {
   links.value = [...tempLinks.value]
+  tempLinks.value.length = 0
   dialogVisible.value = false
   refreshIcon()
   save()
@@ -100,7 +113,7 @@ function openNewWindow(link) {
 }
 
 function save() {
-  saveData(props.id, JSON.stringify({links: links.value, isHorizontal: isHorizontal.value}))
+  saveData(props.id, JSON.stringify({links: links.value, layout: layout.value, nameVisible: nameVisible.value}))
 }
 
 onMounted(() => {
@@ -113,7 +126,13 @@ function load(data) {
   const parse = JSON.parse(save)
   if (parse) {
     links.value = parse.links
-    isHorizontal.value = parse.isHorizontal === undefined ? true : parse.isHorizontal
+    const ly = parse.layout
+    if (ly === undefined || typeof ly !== "number") {
+      layout.value = 0
+    } else {
+      layout.value = ly
+    }
+    nameVisible.value = parse.nameVisible === undefined ? true : parse.nameVisible
   } else {
     links.value.push(...defaultLinks)
   }
@@ -145,7 +164,7 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="['linkContent', {'vertical': !isHorizontal}]">
+  <div :class="['linkContent', layoutDict[layout]]">
     <div
         v-for="(link, index) in links"
         class="linkContainer"
@@ -165,12 +184,12 @@ defineExpose({
             </div>
           </template>
         </el-image>
-        <el-text tag="span">{{ link.name }}</el-text>
+        <el-text v-if="nameVisible" tag="span">{{ link.name }}</el-text>
       </div>
     </div>
 
     <div v-show="enableEdit" class="editContainer" @click.stop="edit">
-      <el-icon>
+      <el-icon class="editIcon">
         <Operation/>
       </el-icon>
     </div>
@@ -209,14 +228,30 @@ defineExpose({
       <template #footer>
         <div class="dialog-footer">
           <el-popover
+            class="box-item"
+            :title="nameVisible ? '显示名称' : '隐藏名称'"
+            content="切换名称显示"
+            placement="top-end"
+          >
+            <template #reference>
+              <el-icon
+                class="nameVisibleIcon"
+                :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
+                @click="changeNameVisible"
+              >
+                <Finished/>
+              </el-icon>
+            </template>
+          </el-popover>
+          <el-popover
               class="box-item"
-              :title="isHorizontal ? '水平滚动' : '垂直滚动'"
+              :title="layout === 0 ? '水平布局' : (layout === 1 ? '浮动布局' : '垂直布局')"
               content="切换滚动方向，作用于组件不足以显示所有链接时"
               placement="top-end"
           >
             <template #reference>
               <el-icon class="directionIcon" @click="changeDirection">
-                <Switch :style="{transform: isHorizontal ? 'rotate(0deg)' : 'rotate(270deg)'}"/>
+                <Switch :style="{transform: `rotate(${layout * 45 + 180}deg)`}"/>
               </el-icon>
             </template>
           </el-popover>
@@ -238,9 +273,8 @@ defineExpose({
 <style>
 .linkContent {
   height: 100%;
-  max-height: 200px;
-  margin: 0 8px;
-  width: calc(100% - 16px);
+  width: 100%;
+  max-height: 240px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -248,27 +282,11 @@ defineExpose({
   scrollbar-width: none;
   flex-wrap: nowrap;
 
-  /* 第一个和左后一个子元素增加margin */
-
-  .linkContainer:first-child {
-    margin-left: 12px;
-  }
-
-  .linkContainer:last-child {
-    margin-right: 12px;
-  }
-
   .linkContainer {
     position: relative;
     cursor: pointer;
     padding: 2px;
-    height: calc(100% - 30px);
-  }
-
-  .linkItem:hover {
-    border-radius: 20px;
-    box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
-    background-color: rgba(255, 255, 255, 0.1);
+    height: calc(100% - 8px);
   }
 
   .linkContainer, .linkItem {
@@ -279,14 +297,24 @@ defineExpose({
   }
 
   .linkItem {
-    height: calc(100% - 8px);
-    padding: 4px 16px;
+    height: calc(100% - 16px);
+    padding: 8px 16px;
     user-select: none;
     margin: 2px;
 
+    &:hover {
+      border-radius: 20px;
+      box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
     .el-image {
-      height: 40%;
+      height: 60%;
       margin-bottom: 8px;
+
+      .el-image__error, .el-image__inner, .el-image__placeholder, .el-image__wrapper {
+        width: unset;
+      }
     }
 
     span {
@@ -313,11 +341,13 @@ defineExpose({
 
   .editContainer {
     height: 40px;
+    min-height: 40px;
     width: 40px;
-    position: absolute;
+    min-width: 40px;
+    position: sticky;
     pointer-events: auto;
-    background-color: rgba(182, 182, 182, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    background-color: rgba(234, 234, 234, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 40px;
     right: 8px;
     display: flex;
@@ -333,15 +363,65 @@ defineExpose({
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
     }
 
-    .el-icon {
-      color: #e3e3e3;
+    .editIcon {
+      color: #707070;
+
+      svg {
+        height: 20px;
+        width: 20px;
+      }
     }
   }
-
 }
 
 .vertical {
+  flex-direction: column;
+  width: 100%;
+
+  .linkContainer {
+    width: 100%;
+  }
+
+  /* 第一个和左后一个子元素增加margin */
+
+  .linkContainer:first-child {
+    margin-left: 0;
+  }
+
+  .linkContainer:last-child {
+    margin-right: 0;
+  }
+
+  .editContainer {
+    right: 0;
+    bottom: 8px;
+  }
+
+  .linkItem {
+    width: calc(100% - 24px);
+    padding: 8px 8px;
+
+    span {
+      width: 100%;
+      white-space: wrap;
+      display: block;
+      text-align: center
+    }
+  }
+
+  .el-image {
+    height: unset !important;
+    width: 80%;
+
+    .el-image__error, .el-image__inner, .el-image__placeholder, .el-image__wrapper {
+      width: 100% !important;
+    }
+  }
+}
+
+.floating {
   flex-wrap: wrap;
+  justify-content: center;
 
   /* 第一个和左后一个子元素增加margin */
 
@@ -361,8 +441,7 @@ defineExpose({
     align-items: center;
 
     /* 方向图标 */
-
-    .directionIcon {
+    .directionIcon, .nameVisibleIcon {
       padding: 4px;
       background: #fba240;
       border-radius: 16px;
@@ -375,6 +454,14 @@ defineExpose({
         scale: 1.2;
         /* 旋转 */
         transform: rotate(180deg);
+      }
+    }
+
+    .nameVisibleIcon {
+      &:hover {
+        scale: 1.2;
+        /* 旋转 */
+        transform: rotate(360deg) !important;
       }
     }
   }
