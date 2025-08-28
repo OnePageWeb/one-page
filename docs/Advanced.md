@@ -64,3 +64,13 @@ https://blog.verlif.top/one/?workspace=my-workspace
     ![clickAddComponent.png](./images/clickAddComponent.png)
 
 4. 完成
+
+### 初始化样式加载
+
+通过在地址栏参数中添加`style`来设定初始样式，例如：
+
+```
+https://blog.verlif.top/one/?style=style1,style2
+```
+
+这表示在页面载入时会自动启用`style1`和`style2`这两个样式标签（如何有的话）。

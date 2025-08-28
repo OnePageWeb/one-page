@@ -23,6 +23,16 @@ onMounted(() => {
   if (select) {
     selectTags.value = JSON.parse(select) || []
   }
+
+  // 从地址栏尝试获取config参数
+  const urlParams = new URLSearchParams(window.location.search)
+  const style = urlParams.get('style')
+  if (style) {
+    // selectTags的值为style列表，并且值需要在selectTags中存在
+    const validStyle = style.split(',').filter(item => styleTags.value.includes(item))
+    selectTags.value = [...validStyle]
+    save()
+  }
   loadSelectedStyle()
 })
 
@@ -144,7 +154,6 @@ function loadSelectedStyle() {
 
 // 加载样式，覆盖本地样式，styleConfig与fetchAllStyleConfig()的返回值一致
 function initStyleConfig(styleConfig) {
-  console.log('styleConfig', styleConfig)
   styleTags.value = styleConfig['globalStyle-tags'] || []
   // 加载选中的样式标签
   selectTags.value = styleConfig['globalStyle-selectTags'] || []
@@ -261,6 +270,7 @@ defineExpose({
           v-model="curTagName"
           :placeholder="selectedTagIndex > -1 ? '编辑样式名称' : '新增样式名称'"
           @keydown.enter="editTagName"
+          :autofocus="true"
       >
         <template #prepend>样式名称</template>
       </el-input>
