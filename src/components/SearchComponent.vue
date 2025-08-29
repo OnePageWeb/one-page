@@ -48,9 +48,13 @@ const nowSearchEngine = ref('')
 const searchContent = ref(text.value)
 
 // 搜索
-function search() {
+function search(event) {
+  let target = '_blank'
+  if (event.shiftKey) {
+    target = '_self'
+  }
   const searchUrl = searchEngineMap[nowSearchEngine.value].url
-  window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', '_blank')
+  window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', target)
 }
 // 上一个搜索引擎
 function previousSearchEngine() {
@@ -191,7 +195,7 @@ defineExpose({
           v-model="searchContent"
           class="input"
           placeholder="输入搜索内容"
-          @keydown.enter="search"
+          @keydown.enter.prevent.stop="search"
           @keydown.tab.prevent="nextSearchEngine"
           clearable
       >

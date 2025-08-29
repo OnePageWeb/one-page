@@ -42,7 +42,7 @@
       <el-button @click="openWorkspaceHolder" class="btn" :icon="Monitor" plain>工作区设定</el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
-    <div style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
+    <div ref="gridContainer" style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
       <div ref="gridEl" class="grid-stack"></div>
     </div>
 
@@ -291,7 +291,16 @@ watch(enableMove, b => {
   }
 })
 
+const gridEl = ref(null)
+
+let curClickEl = null
+function onClickGrid(event) {
+  curClickEl = event.target
+}
+
 function keyListener(event) {
+  // 仅在面板聚焦的情况下生效
+  if (curClickEl !== null && curClickEl !== gridEl.value) return
   if (event.key === 'Alt') {
     ctrl.value = event.type === 'keydown'
     if (ctrl.value) {
@@ -300,6 +309,13 @@ function keyListener(event) {
     } else {
       disabledMove()
       disabledEdit()
+    }
+    event.preventDefault()
+  } else if (event.ctrlKey && event.type === 'keydown') {
+    if (event.key === 'r') {
+      enableMove.value ? disabledMove() : enabledMove()
+    } else if (event.key === 'e') {
+      enableEdit.value ? disabledEdit() : enabledEdit()
     }
     event.preventDefault()
   }
@@ -394,12 +410,14 @@ onMounted(async () => {
   // 监听按键
   window.addEventListener('keydown', keyListener)
   window.addEventListener('keyup', keyListener)
+  window.addEventListener('mousedown', onClickGrid)
 })
 
 // 注销按键监听
 onUnmounted(() => {
   window.removeEventListener('keydown', keyListener)
   window.removeEventListener('keyup', keyListener)
+  window.removeEventListener('mousedown', onClickGrid)
 })
 
 function editGlobalStyle() {
