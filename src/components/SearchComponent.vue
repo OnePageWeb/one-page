@@ -189,7 +189,12 @@ defineExpose({
             :key="item.name"
             :label="item.name"
             :value="item.name"
-        />
+        >
+          <div v-html="item.name" />
+        </el-option>
+        <template #label="{ value }">
+          <div v-html="value" />
+        </template>
       </el-select>
       <el-input
           v-model="searchContent"

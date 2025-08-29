@@ -1,5 +1,16 @@
 <script setup>
-import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText} from "element-plus"
+import {
+  ElButton,
+  ElDialog,
+  ElForm,
+  ElFormItem,
+  ElIcon,
+  ElImage,
+  ElInput,
+  ElOption,
+  ElPopover,
+  ElText
+} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
 import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
@@ -184,7 +195,9 @@ defineExpose({
             </div>
           </template>
         </el-image>
-        <el-text v-if="nameVisible" tag="span">{{ link.name }}</el-text>
+        <el-text v-if="nameVisible" tag="span">
+          <div v-html="link.name" />
+        </el-text>
       </div>
     </div>
 
