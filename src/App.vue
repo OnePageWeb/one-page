@@ -164,8 +164,7 @@
     />
 
     <div
-        v-if="ctrlDown"
-        class="shortcutKeys"
+        :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
@@ -1200,6 +1199,7 @@ textarea {
   padding: 10px 40px 10px 10px;
   top: 0;
   left: 0;
+  opacity: 1;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   user-select: none;
@@ -1237,5 +1237,9 @@ textarea {
       color: #515151;
     }
   }
+}
+
+.transparent {
+  opacity: 0;
 }
 </style>

@@ -1,8 +1,8 @@
 {
   "globalStyle": {
     "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\nbody {\n  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);\n  background-size: 400% 400%;\n  animation: gradientBG 5s ease infinite;\n}\n.linkItem .el-text {\n    color: #efefef;\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
-    "globalStyle-tag-新的": null,
-    "globalStyle-tag-旧的": null,
+    "globalStyle-tag-新的": "null",
+    "globalStyle-tag-旧的": "null",
     "globalStyle-tags": [
       "默认",
       "新的",
@@ -73,7 +73,7 @@
       "type": "link",
       "id": "7d9485dc-23f9-4add-8f3f-bc0d0476d306",
       "x": 18,
-      "y": 29,
+      "y": 30,
       "w": 12,
       "h": 4
     },
@@ -98,7 +98,7 @@
     {
       "id": "cf4c965843be-4662-b199-d14e172d3e3f",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"### 提示\\n\\n#### 操作栏\\n\\n鼠标在窗口左侧贴边纵向滑动即可开启操作栏\\n\\n#### 快捷编辑\\n\\n按住 `ALT` 即可快速进入编辑模式\\n\\n#### 链接快切\\n\\n1. 鼠标拖拽 __快速链接__ 中的图标，在任意位置释放即可开启单独窗口。\\n2. 点击开启了快切的图标可将窗口拉出。\\n\\n#### 搜索引擎切换\\n\\n在搜索框中按下 `TAB` 或是 `SHIFT + TAB`来切换搜索引擎\"}",
+      "data": "{\"text\":\"### 提示\\n\\n#### 操作栏\\n\\n聚焦桌面时，按住`CTRL` + `D`即可开启操作栏\\n\\n#### 快捷编辑\\n\\n聚焦桌面时，按住 `ALT` 即可快速进入编辑模式\\n\\n#### 链接快切\\n\\n1. 鼠标拖拽 __快速链接__ 中的图标，在任意位置释放即可开启单独窗口。\\n2. 点击开启了快切的图标可将窗口拉出。\\n\\n#### 搜索引擎切换\\n\\n在搜索框中按下 `TAB` 或是 `SHIFT + TAB`来切换搜索引擎\"}",
       "type": "note"
     },
     {
