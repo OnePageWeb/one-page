@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; width: 100%">
+  <div style="height: 100%; width: 100%; position: relative;">
     <div
         :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
         @mouseleave="showMenu = false"
@@ -154,10 +154,6 @@
         @addComponent="addComponent"
     />
 
-    <edge-mouse-move
-        @onLeftEdge="() => showMenu = !showMenu && !viewMode"
-    />
-
     <globalStyle
         ref="globalStyle"
         @load-style="loadStyle"
@@ -166,6 +162,26 @@
     <workspaceHolder
         ref="workspaceHolder"
     />
+
+    <div
+        v-if="ctrlDown"
+        class="shortcutKeys"
+    >
+      <div class="shortcutKeysList">
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">R</div>
+          <div class="shortcutKeysItemDesc">移动模式</div>
+        </div>
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">E</div>
+          <div class="shortcutKeysItemDesc">编辑模式</div>
+        </div>
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">D</div>
+          <div class="shortcutKeysItemDesc">菜单栏</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -177,12 +193,14 @@ import {
   ElCheckbox,
   ElDialog,
   ElIcon,
-  ElInput, ElLoading,
+  ElInput,
+  ElLoading,
   ElMessage,
   ElOption,
   ElPopconfirm,
   ElPopover,
-  ElSelect, ElText
+  ElSelect,
+  ElText
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -200,15 +218,9 @@ import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
 import {CirclePlus, Edit, InfoFilled, Monitor, Picture} from "@element-plus/icons-vue"
-import edgeMouseMove from './items/edgeMouseMove.vue'
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
-import {
-  exportData,
-  loadData,
-  removeData,
-  saveData,
-} from "@/js/data.js"
-import {initWorkspace, setWorkspace} from "@/js/workspcae.js"
+import {exportData, loadData, removeData, saveData,} from "@/js/data.js"
+import {setWorkspace} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 
@@ -294,14 +306,18 @@ watch(enableMove, b => {
 const gridEl = ref(null)
 
 let curClickEl = null
+
 function onClickGrid(event) {
   curClickEl = event.target
 }
 
+const ctrlDown = ref(false)
+
 function keyListener(event) {
-  // 仅在面板聚焦的情况下生效
-  if (curClickEl !== null && curClickEl !== gridEl.value) return
+  console.log('event', event)
   if (event.key === 'Alt') {
+    // 仅在面板聚焦的情况下生效
+    if (curClickEl !== null && curClickEl !== gridEl.value) return
     ctrl.value = event.type === 'keydown'
     if (ctrl.value) {
       enabledMove()
@@ -312,12 +328,19 @@ function keyListener(event) {
     }
     event.preventDefault()
   } else if (event.ctrlKey && event.type === 'keydown') {
+    // 仅在面板聚焦的情况下生效
+    if (curClickEl !== null && curClickEl !== gridEl.value) return
+    ctrlDown.value = true
     if (event.key === 'r') {
       enableMove.value ? disabledMove() : enabledMove()
     } else if (event.key === 'e') {
       enableEdit.value ? disabledEdit() : enabledEdit()
+    } else if (event.key === 'd') {
+      showMenu.value = !showMenu.value
     }
     event.preventDefault()
+  } else {
+    ctrlDown.value = false
   }
 }
 
@@ -384,7 +407,7 @@ onMounted(async () => {
   if (layout) {
     const parse = JSON.parse(layout)
     for (let el of parse) {
-      const componentId = el.id;
+      const componentId = el.id
       // 添加格子
       addItem(el.type, el.x, el.y, el.w, el.h, componentId)
 
@@ -1165,6 +1188,54 @@ textarea {
   }
   100% {
     background-position: 0 0;
+  }
+}
+
+/* 快捷键样式 */
+.shortcutKeys {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(4px);
+  margin: 10px;
+  padding: 10px 40px 10px 10px;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .shortcutKeysList {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    flex-direction: column;
+  }
+
+  .shortcutKeysItem {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    justify-content: flex-start;
+    width: 100%;
+
+    .shortcutKeysItemTitle {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .shortcutKeysItemDesc {
+      font-size: 24px;
+      font-weight: bold;
+      color: #515151;
+    }
   }
 }
 </style>
