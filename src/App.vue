@@ -169,15 +169,18 @@
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">R</div>
+          <el-icon><Rank /></el-icon>
           <div class="shortcutKeysItemDesc">移动模式</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">E</div>
+          <el-icon><Edit /></el-icon>
           <div class="shortcutKeysItemDesc">编辑模式</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">D</div>
-          <div class="shortcutKeysItemDesc">菜单栏</div>
+          <el-icon><Operation /></el-icon>
+          <div class="shortcutKeysItemDesc">操作栏</div>
         </div>
       </div>
     </div>
@@ -216,7 +219,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
-import {CirclePlus, Edit, InfoFilled, Monitor, Picture} from "@element-plus/icons-vue"
+import {CirclePlus, Edit, InfoFilled, Monitor, Operation, Picture, Rank} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {exportData, loadData, removeData, saveData,} from "@/js/data.js"
 import {setWorkspace} from "@/js/workspcae.js"
@@ -1193,7 +1196,7 @@ textarea {
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4px);
   margin: 10px;
   padding: 10px 40px 10px 10px;
@@ -1222,19 +1225,24 @@ textarea {
     font-weight: bold;
     display: flex;
     align-items: baseline;
-    gap: 10px;
+    gap: 20px;
     justify-content: flex-start;
     width: 100%;
+
+    .el-icon {
+      color: #ffffff;
+    }
 
     .shortcutKeysItemTitle {
       font-size: 32px;
       font-weight: bold;
+      color: #ffffff;
     }
 
     .shortcutKeysItemDesc {
       font-size: 24px;
       font-weight: bold;
-      color: #515151;
+      color: #e3e3e3;
     }
   }
 }
