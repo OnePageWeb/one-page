@@ -17,7 +17,8 @@ import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-csharp'
-import {Picture, Upload, Edit} from "@element-plus/icons-vue";
+import {Picture, Upload, Edit} from "@element-plus/icons-vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const props = defineProps({
   id: String,
@@ -131,7 +132,7 @@ defineExpose({
         @blur="onFocus = false; isEditing = false"
         @change="save"
     />
-    <div :class="['operatorContainer', { 'operatorContainerHide': !onFocus, 'operatorContainerOnFocus': onFocus }]">
+    <component-operator :visible="onFocus">
       <el-tooltip
           effect="light"
           content="开启编辑"
@@ -150,7 +151,7 @@ defineExpose({
           <Upload />
         </el-icon>
       </el-tooltip>
-    </div>
+    </component-operator>
   </div>
 </template>
 
@@ -240,42 +241,5 @@ defineExpose({
     padding: 8px !important;
   }
 
-  .operatorContainer {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    opacity: 0.4;
-    margin: 4px;
-    padding: 2px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-
-    &:hover {
-      opacity: 0.8;
-      padding: 8px;
-      gap: 16px;
-
-      .el-icon {
-        scale: 1.0;
-      }
-    }
-
-    .el-icon {
-      scale: 0.4;
-      cursor: pointer;
-      &:hover {
-        scale: 1.4;
-      }
-    }
-  }
-
-  .operatorContainerHide {
-    width: 0;
-    padding: 0;
-    opacity: 0;
-  }
 }
 </style>

@@ -168,19 +168,32 @@
     >
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">R</div>
-          <el-icon><Rank /></el-icon>
+          <div class="shortcutKeysItemTitle">Q</div>
+          <el-icon>
+            <Rank/>
+          </el-icon>
           <div class="shortcutKeysItemDesc">移动模式</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">E</div>
-          <el-icon><Edit /></el-icon>
+          <el-icon>
+            <Edit/>
+          </el-icon>
           <div class="shortcutKeysItemDesc">编辑模式</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">D</div>
-          <el-icon><Operation /></el-icon>
+          <el-icon>
+            <Operation/>
+          </el-icon>
           <div class="shortcutKeysItemDesc">操作栏</div>
+        </div>
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">R</div>
+          <el-icon>
+            <Rank/>
+          </el-icon>
+          <div class="shortcutKeysItemDesc">重载页面</div>
         </div>
       </div>
     </div>
@@ -316,29 +329,16 @@ function onClickGrid(event) {
 const ctrlDown = ref(false)
 
 function keyListener(event) {
-  console.log('event', event)
-  if (event.key === 'Alt') {
-    // 仅在面板聚焦的情况下生效
-    if (curClickEl !== null && curClickEl !== gridEl.value) return
-    ctrl.value = event.type === 'keydown'
-    if (ctrl.value) {
-      enabledMove()
-      enabledEdit()
-    } else {
-      disabledMove()
-      disabledEdit()
-    }
-    event.preventDefault()
-  } else if (event.ctrlKey && event.type === 'keydown') {
-    // 仅在面板聚焦的情况下生效
-    if (curClickEl !== null && curClickEl !== gridEl.value) return
+  if (event.altKey && event.type === 'keydown') {
     ctrlDown.value = true
-    if (event.key === 'r') {
+    if (event.key === 'q') {
       enableMove.value ? disabledMove() : enabledMove()
     } else if (event.key === 'e') {
       enableEdit.value ? disabledEdit() : enabledEdit()
     } else if (event.key === 'd') {
       showMenu.value = !showMenu.value
+    } else if (event.key === 'r') {
+      window.location.reload()
     }
     event.preventDefault()
   } else {
@@ -1200,7 +1200,7 @@ textarea {
   backdrop-filter: blur(4px);
   margin: 10px;
   padding: 10px 40px 10px 10px;
-  top: 0;
+  bottom: 0;
   left: 0;
   opacity: 1;
   border-radius: 5px;
@@ -1236,6 +1236,7 @@ textarea {
     .shortcutKeysItemTitle {
       font-size: 32px;
       font-weight: bold;
+      width: 32px;
       color: #ffffff;
     }
 
@@ -1249,5 +1250,7 @@ textarea {
 
 .transparent {
   opacity: 0;
+  height: 0;
+  padding: 0;
 }
 </style>

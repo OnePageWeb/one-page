@@ -2,7 +2,8 @@
 import {ElIcon, ElInput, ElTooltip, ElSwitch} from "element-plus"
 import {nextTick, onMounted, ref, toRefs} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {Edit} from "@element-plus/icons-vue";
+import {Edit} from "@element-plus/icons-vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const props = defineProps({
   id: String,
@@ -57,7 +58,9 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     content.value = JSON.parse(save).text
-    updateIframeContent()
+    nextTick(() => {
+      updateIframeContent()
+    })
   }
 }
 
@@ -89,8 +92,9 @@ defineExpose({
         @change="save"
     />
 
-    <div
-      :class="['operatorContainer', enableEdit && !onFocus ? 'operatorContainerOnFocus' : 'operatorContainerHide']">
+    <component-operator
+      :visible="enableEdit && !onFocus"
+    >
       <el-tooltip
         effect="light"
         content="开启编辑"
@@ -100,7 +104,7 @@ defineExpose({
           <Edit />
         </el-icon>
       </el-tooltip>
-    </div>
+    </component-operator>
   </div>
 </template>
 
@@ -160,50 +164,6 @@ defineExpose({
 
   .inputOnFocus :deep(.el-textarea__inner) {
     padding: 8px !important;
-  }
-
-  .operatorContainer {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    opacity: 0;
-    margin: 4px;
-    padding: 2px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-
-    &:hover {
-      opacity: 0.8;
-      padding: 8px;
-      gap: 16px;
-
-      .el-icon {
-        scale: 1.0;
-      }
-    }
-
-    .el-icon {
-      scale: 0.4;
-      cursor: pointer;
-      &:hover {
-        scale: 1.4;
-      }
-    }
-  }
-
-  &:hover {
-    .operatorContainerOnFocus {
-      opacity: 0.4;
-    }
-  }
-
-  .operatorContainerHide {
-    width: 0;
-    padding: 0;
-    opacity: 0;
   }
 }
 </style>
