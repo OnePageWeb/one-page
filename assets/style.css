@@ -102,7 +102,7 @@
         background-color: var(--el-color-primary);
         display: flex;
         align-items: center;
-        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
         .el-dialog__title {
             color: white;
@@ -134,7 +134,7 @@
     .el-dialog__footer {
         padding: 8px;
         background-color: rgb(255, 255, 255);
-        box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .el-textarea__inner, .el-textarea {
