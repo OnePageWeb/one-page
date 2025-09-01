@@ -15,18 +15,9 @@ const {text, enableEdit} = toRefs(props)
 
 // 默认文本内容
 const content = ref(text.value)
-const contentValue = ref('')
-
-const textContentRef = ref(null)
-
-// 检查鼠标是否离开元素，用于开启编辑
-const onAreaCheck = new OnAreaCheck(textContentRef)
-const onLeave = (e) => {
-  onAreaCheck.onMouseLeave(e, () => {isEditing.value = false})
-}
 
 const collapse = ref([])
-
+const contentValue = ref('')
 const calcContentValue = () => {
   let value = content.value
   for (let i = 0; i < paramItems.length; i++) {
@@ -40,8 +31,8 @@ const params = ref([])
 const paramItems = []
 
 function edit() {
-  if (enableEdit.value) {
-    isEditing.value = true
+  isEditing.value = !isEditing.value
+  if (isEditing.value) {
     calcParams()
     collapse.value.push("params")
   }
@@ -129,9 +120,7 @@ defineExpose({
 <template>
   <div
       class="textContent"
-      ref="textContentRef"
       @dblclick="edit"
-      @mouseleave="onLeave"
   >
     <div :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="contentValue"/>
     <div :class="['editContainer', isEditing ? 'editOnFocus' : '']">
@@ -149,7 +138,7 @@ defineExpose({
               >
                 <template #reference>
                   <el-icon class="header-icon">
-                    <info-filled />
+                    <info-filled/>
                   </el-icon>
                 </template>
               </el-popover>
@@ -184,12 +173,12 @@ defineExpose({
     </div>
     <component-operator :visible="enableEdit">
       <el-tooltip
-        effect="light"
-        content="开启编辑"
-        placement="bottom"
+          effect="light"
+          content="开启编辑"
+          placement="bottom"
       >
         <el-icon @click="edit">
-          <Edit />
+          <Edit/>
         </el-icon>
       </el-tooltip>
     </component-operator>

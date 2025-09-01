@@ -1,10 +1,9 @@
 <script setup>
-import {ElIcon, ElInput, ElMessage, ElPopover, ElText, ElTooltip} from "element-plus"
-import {onMounted, onUnmounted, ref, toRefs, watch} from "vue"
+import {ElIcon, ElInput, ElTooltip} from "element-plus"
+import {onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {CloseBold, CopyDocument, Edit, SortDown} from "@element-plus/icons-vue"
-import {OnAreaCheck} from "@/js/onAreaCheck.js"
-import ComponentOperator from "@/items/componentOperator.vue";
+import {Edit} from "@element-plus/icons-vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const props = defineProps({
   id: String,
@@ -24,19 +23,7 @@ watch(enableEdit, (newValue) => {
 })
 
 const edit = () => {
-  isEditing.value = true
-}
-
-const buttonContentRef = ref(null)
-const onFocus = ref(false)
-
-// 检查鼠标是否离开元素，用于开启编辑
-const onAreaCheck = new OnAreaCheck(buttonContentRef)
-const onLeave = (e) => {
-  onAreaCheck.onMouseLeave(e, () => {
-    isEditing.value = false
-    save()
-  })
+  isEditing.value = !isEditing.value
 }
 
 function save() {
@@ -52,7 +39,6 @@ async function execute() {
 
 onMounted(() => {
   load()
-  isEditing.value = enableEdit.value
 })
 
 function load(data) {
@@ -71,45 +57,41 @@ defineExpose({
 
 <template>
   <div class="buttonContent">
-    <div
-      class="textContainer"
-      ref="buttonContentRef"
-      @mouseleave="onLeave"
-    >
+    <div class="textContainer">
       <div class="buttonContainer">
         <div class="button" @click="execute" v-html="nameText"/>
       </div>
 
       <div
-        :class="['function', isEditing ? 'functionOnFocus' : '']">
+          :class="['function', isEditing ? 'functionOnFocus' : '']">
         <!-- 编辑框 -->
         <el-input
-          v-model="nameText"
-          class="functionName"
-          placeholder="方法名称"
-          @change="save"
+            v-model="nameText"
+            class="functionName"
+            placeholder="按钮名称（支持HTML标签）"
+            @change="save"
         >
           <template #prepend>按钮名称</template>
         </el-input>
         <el-input
-          v-model="functionText"
-          class="functionContent"
-          :rows="2"
-          type="textarea"
-          placeholder="输入方法内容，可以使用input变量来获取输入值，setResult(String)方法来设置结果"
-          @change="save"
+            v-model="functionText"
+            class="functionContent"
+            :rows="2"
+            type="textarea"
+            placeholder="输入按钮点击时触发的方法"
+            @change="save"
         />
       </div>
     </div>
 
     <component-operator :visible="enableEdit">
       <el-tooltip
-        effect="light"
-        content="开启编辑"
-        placement="bottom"
+          effect="light"
+          :content="isEditing ? '关闭编辑' : '开启编辑'"
+          placement="top"
       >
         <el-icon @click="edit">
-          <Edit />
+          <Edit/>
         </el-icon>
       </el-tooltip>
     </component-operator>
@@ -263,11 +245,11 @@ defineExpose({
       color: #3a3a3a;
       font-weight: bold;
       background: repeating-linear-gradient(
-        -45deg,
-        rgba(240, 240, 240, 0.9),
-        rgba(240, 240, 240, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 80px
+          -45deg,
+          rgba(240, 240, 240, 0.9),
+          rgba(240, 240, 240, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 80px
       );
     }
 
@@ -275,6 +257,18 @@ defineExpose({
       height: 32px;
       --el-border-radius-base: 0;
       --el-input-border: unset;
+
+      .el-input-group__prepend {
+        padding: 0 8px;
+        background-color: var(--el-color-primary);
+        color: white;
+        border: none;
+        box-shadow: unset;
+      }
+
+      .el-input__wrapper {
+        box-shadow: unset;
+      }
     }
 
     .functionContent {

@@ -1,6 +1,6 @@
 <script setup>
 import {ElIcon, ElInput, ElTooltip, ElSwitch} from "element-plus"
-import {nextTick, onMounted, ref, toRefs} from "vue"
+import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Edit} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
@@ -14,36 +14,80 @@ const {text, enableEdit} = toRefs(props)
 
 // 默认文本内容
 let content = ref(text.value)
-let onFocus = ref(false)
+let isEditing = ref(false)
+watch(enableEdit, (newVal) => {
+  if (!newVal) {
+    isEditing.value = false
+  }
+})
+
+const textContentRef = ref(null)
+const collapse = ref([])
+const contentValue = ref('')
+const calcContentValue = () => {
+  let value = content.value
+  for (let i = 0; i < paramItems.length; i++) {
+    value = value.replace(paramItems[i], params.value[i].value)
+  }
+  contentValue.value = value
+}
 
 const input = ref(null)
+const params = ref([])
+const paramItems = []
 
 const webIframe = ref(null)
 const updateIframeContent = () => {
   if (!webIframe.value) return
   const blob = new Blob([content.value], { type: 'text/html' })
   webIframe.value.src = URL.createObjectURL(blob)
-  onFocus.value = false
 }
 
 function edit() {
-  if (enableEdit.value) {
-    onFocus.value = true
-    nextTick(() => {
-      input.value.focus()
-    })
+  isEditing.value = !isEditing.value
+  if (isEditing.value) {
+    calcParams()
+    collapse.value.push("params")
   }
 }
 
-function onMouseLeave() {
-  const inputElement = input?.value.$el
-  // 获取第一个子元素
-  nextTick(() => {
-    const firstChild = inputElement?.firstElementChild
-    if (firstChild !== document.activeElement) {
-      onFocus.value = false
+function calcParams() {
+  const value = content.value
+  // 从value中提取参数，参数格式如下${}，并将每一个参数提取到一个列表中
+  const matches = value.match(/\${(.*?)}/g) || []
+  const tempParams = []
+  paramItems.length = 0
+  for (let param of matches) {
+    const paramContent = param.substring(2, param.length - 1)
+    if (paramContent.length > 0) {
+      const strings = paramContent.split('?', 2)
+      let name = ''
+      let desc = ''
+      const defaultVal = strings[1]
+      if (strings.length > 1) {
+        const defaultValStrings = strings[1].split(':', 2)
+        name = defaultValStrings[0]
+        if (defaultValStrings.length > 1) {
+          desc = defaultValStrings[1]
+        }
+      }
+      tempParams.push({
+        name,
+        desc,
+        value: defaultVal
+      })
+      paramItems.push(param)
     }
-  })
+  }
+  // 合并参数
+  for (let tempParam of tempParams) {
+    const param = params.value.find(item => item.name === tempParam.name)
+    if (param) {
+      tempParam.value = param.value
+    }
+  }
+  params.value = tempParams
+  calcContentValue()
 }
 
 function save() {
@@ -73,18 +117,17 @@ defineExpose({
   <div
       class="htmlContent"
       @dblclick="edit"
-      @mouseleave="onMouseLeave"
   >
     <iframe
         ref="webIframe"
-        :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']"
+        :class="['result', isEditing ? 'resultOnFocus' : '']"
         sandbox="allow-scripts allow-same-origin"
         frameborder="0"
     ></iframe>
     <el-input
         v-model="content"
         ref="input"
-        :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
+        :class="['input', isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
         placeholder="输入内容"
@@ -93,11 +136,11 @@ defineExpose({
     />
 
     <component-operator
-      :visible="enableEdit && !onFocus"
+      :visible="enableEdit"
     >
       <el-tooltip
         effect="light"
-        content="开启编辑"
+        :content="isEditing ? '关闭编辑' : '开启编辑'"
         placement="bottom"
       >
         <el-icon @click="edit">

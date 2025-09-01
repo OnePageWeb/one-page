@@ -41,6 +41,7 @@
                 rgba(255, 255, 255, 0.1) 80px
         );
         background-size: 200%;
+
         &:hover {
             animation: gradientScroll 1s ease-in-out infinite;
         }
@@ -88,6 +89,7 @@
     }
 
 }
+
 .commonDialog {
     height: calc(80% - 2px);
     max-height: 80%;

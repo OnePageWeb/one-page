@@ -232,8 +232,12 @@ defineExpose({
         </div>
         <template v-for="(item, index) in tempSearchEngineList">
           <div class="searchItem">
-            <el-form-item label="搜索引擎名称" prop="name" class="searchName">
-              <el-input v-model="item.name" placeholder="请输入搜索引擎名称"/>
+            <el-form-item prop="name" class="searchName">
+              <el-input v-model="item.name" placeholder="请输入搜索引擎名称">
+                <template #prepend>
+                  搜索名称
+                </template>
+              </el-input>
             </el-form-item>
             <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
               <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
@@ -401,13 +405,44 @@ defineExpose({
       }
 
       .searchName {
-        display: block !important;
-        width: 30% !important;
+        width: 24% !important;
+        height: 60px;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+
+        .el-input-group__prepend {
+          background-color: var(--el-color-primary);
+          color: white;
+          font-weight: bold;
+          font-size: 16px;
+          padding: 0 12px;
+        }
+
+        .el-form-item__label {
+          padding: 0;
+          margin: 0;
+          font-size: 18px;
+        }
+
+        .el-input__inner {
+          font-size: 24px;
+          font-weight: bold;
+        }
+
+        .el-form-item__content {
+          margin-left: 0 !important;
+          height: 100%;
+        }
+
+        .el-input {
+          height: 100%;
+        }
       }
 
       .searchUrl {
         display: block !important;
-        width: calc(70% - 20px) !important;
+        width: calc(76% - 20px) !important;
       }
     }
 

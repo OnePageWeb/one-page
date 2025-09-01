@@ -359,6 +359,7 @@ const viewMode = ref(false)
 
 // 初始化GridStack
 onMounted(async () => {
+  // 获取浏览器窗口高度
   const windowHeight = window.innerHeight
   // 按照窗口宽度计算格子高度
   itemHeight = Math.floor(windowHeight / columns)
@@ -463,6 +464,7 @@ const elementMap = {}
 // 保存布局
 function saveLayout() {
   const nodes = grid.engine.nodes; // 获取所有格子节点数据
+  console.log('nodes', nodes)
   const simplifiedLayout = nodes.map(node => ({
     type: node.el?.type,
     id: node.el?.id,
@@ -549,6 +551,8 @@ function createItemComponent(type, componentItem) {
 
 const addItemWithEdit = (type) => {
   const id = addItem(type)
+  // 保存布局
+  saveLayout()
   enabledEdit()
   enabledMove()
   return id
@@ -581,9 +585,6 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   itemEl.element = app
   // 添加到GridStack
   grid.makeWidget(itemEl)
-
-  // 保存布局
-  saveLayout()
   return itemEl.id
 }
 
@@ -1074,8 +1075,8 @@ textarea {
 .el-form-item__label {
   border-left: 8px solid #ffa217;
   padding-left: 8px !important;
-  height: 26px !important;
-  line-height: 26px !important;
+  height: 22px !important;
+  line-height: 22px !important;
   margin-bottom: 4px;
 }
 
