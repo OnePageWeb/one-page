@@ -15,26 +15,23 @@ const {id, text, enableEdit} = toRefs(props)
 
 const nameText = ref('')
 // 方法内容
-const functionText = ref(text.value || `'input : ' + input`)
-const inputText = ref('')
-// 方法结果
-const functionResult = ref('')
+const functionText = ref(text.value || `alert('Hello World!')`)
 const isEditing = ref(false)
-
-const edit = () => {
-  isEditing.value = true
-}
 watch(enableEdit, (newValue) => {
   if (!newValue) {
     isEditing.value = false
   }
 })
 
-const inputContentRef = ref(null)
+const edit = () => {
+  isEditing.value = true
+}
+
+const buttonContentRef = ref(null)
 const onFocus = ref(false)
 
 // 检查鼠标是否离开元素，用于开启编辑
-const onAreaCheck = new OnAreaCheck(inputContentRef)
+const onAreaCheck = new OnAreaCheck(buttonContentRef)
 const onLeave = (e) => {
   onAreaCheck.onMouseLeave(e, () => {
     isEditing.value = false
@@ -50,32 +47,7 @@ function save() {
 }
 
 async function execute() {
-  function executeCode() {
-    const input = inputText.value
-    const setResult = (result) => {
-      functionResult.value = result
-    }
-    // input当成入参
-    // 方法内容中使用input变量
-    return eval(`(function (input, setResult) {
-      ${functionText.value}
-    })(input, setResult)`)
-  }
-
-  try {
-    functionResult.value = executeCode()
-  } catch (e) {
-    console.log(e)
-    functionResult.value = `错误: ${e}`
-  }
-  save()
-}
-
-function copyResult() {
-  if (functionResult.value) {
-    navigator.clipboard.writeText(functionResult.value)
-    ElMessage.success('复制成功')
-  }
+  eval(functionText.value)
 }
 
 onMounted(() => {
@@ -98,59 +70,14 @@ defineExpose({
 </script>
 
 <template>
-  <div class="inputContent">
+  <div class="buttonContent">
     <div
       class="textContainer"
-      ref="inputContentRef"
+      ref="buttonContentRef"
       @mouseleave="onLeave"
     >
-      <div class="ioContainer">
-        <el-input
-          v-model="inputText"
-          ref="input"
-          type="textarea"
-          :placeholder="nameText || '输入参数，按下ctrl + enter即可执行方法'"
-          :class="['input', isEditing ? 'inputOnFocus' : '']"
-          @keydown.ctrl.enter="execute"
-        />
-        <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
-
-        <el-popover
-          class="box-item"
-          title="执行"
-          content="执行方法，在下方得到结果"
-          placement="top-end"
-        >
-          <template #reference>
-            <el-icon class="executeIcon" @click="execute">
-              <SortDown/>
-            </el-icon>
-          </template>
-        </el-popover>
-        <el-popover
-          class="box-item"
-          title="复制"
-          content="复制方法结果到剪切板"
-          placement="bottom-end"
-        >
-          <template #reference>
-            <el-icon class="copyIcon" @click="copyResult">
-              <CopyDocument/>
-            </el-icon>
-          </template>
-        </el-popover>
-        <el-popover
-          class="box-item"
-          title="清除结果"
-          content="清除方法执行结果"
-          placement="bottom-end"
-        >
-          <template #reference>
-            <el-icon class="clearIcon" @click="functionResult = ''">
-              <CloseBold/>
-            </el-icon>
-          </template>
-        </el-popover>
+      <div class="buttonContainer">
+        <div class="button" @click="execute" v-html="nameText"/>
       </div>
 
       <div
@@ -162,7 +89,7 @@ defineExpose({
           placeholder="方法名称"
           @change="save"
         >
-          <template #prepend>方法名称</template>
+          <template #prepend>按钮名称</template>
         </el-input>
         <el-input
           v-model="functionText"
@@ -190,7 +117,7 @@ defineExpose({
 </template>
 
 <style>
-.inputContent {
+.buttonContent {
   height: 100%;
   width: 100%;
   display: flex;
@@ -217,13 +144,23 @@ defineExpose({
       scrollbar-width: none;
     }
 
-    .ioContainer {
+    .buttonContainer {
       display: flex;
       align-items: center;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       height: 100%;
       width: 100%;
+
+      .button {
+        padding: 6px 12px;
+        border-radius: 8px;
+        background-color: #3f94ed;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+      }
     }
 
     .input {

@@ -238,7 +238,6 @@ defineExpose({
 
         <el-tag
             class="addTag"
-            type="warning"
             @click="addTag"
         >
           新增样式
@@ -304,9 +303,9 @@ defineExpose({
 .globeStyleDialog {
   .tagContainer {
     height: calc(20% - 36px);
-    border: 2px solid #ffd89e;
+    border: 2px solid var(--el-color-primary);
     margin: 4px 0;
-    background-color: #ffe8e8;
+    background-color: rgba(255, 255, 255, 0.6);
     border-radius: 4px;
     padding: 8px 12px;
     overflow: auto;
@@ -318,7 +317,11 @@ defineExpose({
       cursor: pointer;
       height: unset;
       user-select: none;
-      border: 2px solid #ffd89e;
+      border: 2px solid #ffffff;
+
+      &:hover {
+        animation: shake 1s linear infinite;
+      }
     }
 
     .styleTag {
@@ -328,13 +331,12 @@ defineExpose({
 
     .activeTag {
       color: #ffffff;
-      background-color: #e6a246;
+      background-color: var(--el-color-primary);
       font-weight: bold;
-      box-shadow: 0 0 10px #e6a246;
     }
 
     .activeIcon {
-      color: #00805a;
+      color: #ffffff;
       width: 20px;
       height: 20px;
       display: block;
@@ -357,7 +359,7 @@ defineExpose({
 
     .curTag {
       color: #ffffff;
-      animation: blink 2s ease-in-out infinite;
+      animation: upAndDown 0.5s linear infinite;
     }
 
     .el-tag__close {
@@ -389,14 +391,4 @@ defineExpose({
   }
 }
 
-@keyframes blink {
-  0%, 100% {
-    border-color: #e6a246;
-    scale: 1;
-  }
-  50% {
-    border-color: #ffffff;
-    scale: 0.95;
-  }
-}
 </style>

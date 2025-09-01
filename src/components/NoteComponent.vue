@@ -136,7 +136,7 @@ defineExpose({
       <el-tooltip
           effect="light"
           content="开启编辑"
-          placement="top"
+          placement="bottom"
       >
         <el-icon @click="edit">
           <Edit />
@@ -145,7 +145,7 @@ defineExpose({
       <el-tooltip
           effect="light"
           content="弹出窗口显示"
-          placement="top"
+          placement="bottom"
       >
         <el-icon @click="openNewWindow">
           <Upload />

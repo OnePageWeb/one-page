@@ -4,6 +4,7 @@ import {onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {InfoFilled, Edit} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
+import {OnAreaCheck} from "@/js/onAreaCheck.js";
 
 const props = defineProps({
   id: String,
@@ -15,7 +16,14 @@ const {text, enableEdit} = toRefs(props)
 // 默认文本内容
 const content = ref(text.value)
 const contentValue = ref('')
-const onFocus = ref(false)
+
+const textContentRef = ref(null)
+
+// 检查鼠标是否离开元素，用于开启编辑
+const onAreaCheck = new OnAreaCheck(textContentRef)
+const onLeave = (e) => {
+  onAreaCheck.onMouseLeave(e, () => {isEditing.value = false})
+}
 
 const collapse = ref([])
 
@@ -34,14 +42,12 @@ const paramItems = []
 function edit() {
   if (enableEdit.value) {
     isEditing.value = true
+    calcParams()
+    collapse.value.push("params")
   }
 }
 
 const isEditing = ref(false)
-
-function onMouseLeave() {
-  isEditing.value = false
-}
 
 function calcParams() {
   const value = content.value
@@ -83,7 +89,6 @@ function calcParams() {
 }
 
 function onInputBlur() {
-  onFocus.value = false
   calcParams()
   save()
 }
@@ -124,9 +129,9 @@ defineExpose({
 <template>
   <div
       class="textContent"
+      ref="textContentRef"
       @dblclick="edit"
-      @mouseenter="onFocus = true"
-      @mouseleave="onMouseLeave"
+      @mouseleave="onLeave"
   >
     <div :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="contentValue"/>
     <div :class="['editContainer', isEditing ? 'editOnFocus' : '']">
@@ -181,7 +186,7 @@ defineExpose({
       <el-tooltip
         effect="light"
         content="开启编辑"
-        placement="top"
+        placement="bottom"
       >
         <el-icon @click="edit">
           <Edit />
@@ -258,7 +263,7 @@ defineExpose({
       opacity: 1;
       min-width: unset !important;
       min-height: unset !important;
-      padding: 0;
+      padding: 4px 8px;
       border-radius: 0;
       color: #3a3a3a;
       font-weight: bold;

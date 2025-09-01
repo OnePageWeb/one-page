@@ -1,26 +1,33 @@
 <template>
   <div style="height: 100%; width: 100%; position: relative;">
     <div
-        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
-        @mouseleave="showMenu = false"
+      :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
     >
+      <el-tooltip
+        content="关闭操作栏"
+        placement="bottom-end"
+      >
+        <el-icon class="hideMenu" @click="showMenu = false">
+          <Top/>
+        </el-icon>
+      </el-tooltip>
       <el-text class="menuTitle" truncated>新增格子</el-text>
-      <el-button @click="readyComponent.open()" class="btn" type="primary" :icon="CirclePlus" plain>添加格子</el-button>
+      <el-button @click="readyComponent.open()" class="btn" :icon="CirclePlus" plain>添加格子</el-button>
       <el-select class="addItemSelect" placeholder="添加自定义格子" @change="addItemWithEdit">
         <el-popover
-            class="box-item"
-            v-for="item in itemType"
-            :title="item.label"
-            :content="item.desc"
-            width="300"
-            placement="right-start"
+          class="box-item"
+          v-for="item in itemType"
+          :title="item.label"
+          :content="item.desc"
+          width="300"
+          placement="right-start"
         >
           <template #reference>
             <div>
               <el-option
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
                 <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                      width="20" height="20">
@@ -48,11 +55,11 @@
 
     <!-- 配置加载弹窗 -->
     <el-dialog
-        title="加载配置"
-        v-model="configLoaderVisible"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
+      title="加载配置"
+      v-model="configLoaderVisible"
+      width="50%"
+      class="configDialog commonDialog"
+      align-center
     >
       <template #header="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
@@ -63,13 +70,13 @@
         </div>
       </template>
       <el-input
-          v-model="configData"
-          class="globeStyleInput"
-          type="textarea"
-          resize="none"
-          placeholder="请输入配置URL或拖拽JSON文件到此处"
-          @dragover.prevent
-          @drop.prevent="handleFileDrop"
+        v-model="configData"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入配置URL或拖拽JSON文件到此处"
+        @dragover.prevent
+        @drop.prevent="handleFileDrop"
       />
 
       <!-- 配置提示弹窗 -->
@@ -81,7 +88,7 @@
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
           </div>
           <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-              href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+            href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
           </div>
           <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
         </div>
@@ -94,22 +101,22 @@
       <template #footer>
         <el-button type="primary" @click="downloadConfig">下载</el-button>
         <el-popconfirm
-            title="确定加载以上配置，这会覆盖本地的所有配置？"
-            placement="top-start"
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            @confirm="loadConfig()"
+          title="确定加载以上配置，这会覆盖本地的所有配置？"
+          placement="top-start"
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          @confirm="loadConfig()"
         >
           <template #reference>
             <el-button type="primary">加载</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
-            title="确定清空并重新加载页面？"
-            placement="top-start"
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            @confirm="clearConfig(true)"
+          title="确定清空并重新加载页面？"
+          placement="top-start"
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          @confirm="clearConfig(true)"
         >
           <template #reference>
             <el-button type="danger">清空</el-button>
@@ -120,18 +127,18 @@
 
     <!-- 组件样式弹窗 -->
     <el-dialog
-        title="组件样式"
-        v-model="isEditComponentStyle"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
+      title="组件样式"
+      v-model="isEditComponentStyle"
+      width="50%"
+      class="configDialog commonDialog"
+      align-center
     >
       <el-input
-          v-model="componentStyle"
-          class="globeStyleInput"
-          type="textarea"
-          resize="none"
-          placeholder="请输入样式"
+        v-model="componentStyle"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        placeholder="请输入样式"
       />
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -139,32 +146,32 @@
     </el-dialog>
 
     <el-dialog
-        v-model="zoomInDialogVisible"
-        class="zoomInDialog"
-        width="95%"
-        align-center
-        :show-close="false"
-        @close="onZoomInClose"
+      v-model="zoomInDialogVisible"
+      class="zoomInDialog"
+      width="95%"
+      align-center
+      :show-close="false"
+      @close="onZoomInClose"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
 
     <readyComponent
-        ref="readyComponent"
-        @addComponent="addComponent"
+      ref="readyComponent"
+      @addComponent="addComponent"
     />
 
     <globalStyle
-        ref="globalStyle"
-        @load-style="loadStyle"
+      ref="globalStyle"
+      @load-style="loadStyle"
     />
 
     <workspaceHolder
-        ref="workspaceHolder"
+      ref="workspaceHolder"
     />
 
     <div
-        :class="['shortcutKeys', {'transparent': !ctrlDown}]"
+      :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
@@ -215,7 +222,8 @@ import {
   ElPopconfirm,
   ElPopover,
   ElSelect,
-  ElText
+  ElText,
+  ElTooltip
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -225,6 +233,7 @@ import searchComponent from './components/SearchComponent.vue'
 import iframeComponent from './components/IframeComponent.vue'
 import htmlComponent from "./components/HtmlComponent.vue"
 import linkComponent from './components/LinkComponent.vue'
+import buttonComponent from './components/ButtonComponent.vue'
 import functionComponent from './components/FunctionComponent.vue'
 import evalComponent from "./components/EvalComponent.vue"
 import inputComponent from "@/components/InputComponent.vue"
@@ -232,7 +241,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
-import {CirclePlus, Edit, InfoFilled, Monitor, Operation, Picture, Rank} from "@element-plus/icons-vue"
+import {CirclePlus, Edit, InfoFilled, Monitor, Operation, Picture, Rank, Top} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {exportData, loadData, removeData, saveData,} from "@/js/data.js"
 import {setWorkspace} from "@/js/workspcae.js"
@@ -283,6 +292,13 @@ const itemType = [
     component: linkComponent
   },
   {
+    value: 'button',
+    label: '按钮格子',
+    desc: '用于触发脚本的按钮',
+    svgPath: 'M337.408 512c0 23.04 4.608 45.568 13.312 67.072 8.704 20.992 21.504 40.448 37.888 56.832 16.384 16.384 35.328 29.184 56.832 37.888 20.992 8.704 44.032 13.312 67.072 13.312s45.568-4.608 67.072-13.312c20.992-8.704 40.448-21.504 56.832-37.888 16.384-16.384 29.184-35.328 37.888-56.832 8.704-20.992 13.312-44.032 13.312-67.072s-4.608-45.568-13.312-67.072c-8.704-20.992-21.504-40.448-37.888-56.832-16.384-16.384-35.328-29.184-56.832-37.888-20.992-8.704-44.032-13.312-67.072-13.312s-45.568 4.608-67.072 13.312c-20.992 8.704-40.448 21.504-56.832 37.888-16.384 16.384-29.184 35.328-37.888 56.832-8.704 21.504-13.312 44.032-13.312 67.072zM512 201.216c171.008 0 310.784 139.776 310.784 310.784 0 171.008-139.776 310.784-310.784 310.784-171.008 0-310.784-139.776-310.784-310.784 0-171.008 139.776-310.784 310.784-310.784m0-77.312c-213.504 0-388.096 174.592-388.096 388.096 0 213.504 174.592 388.096 388.096 388.096 213.504 0 388.096-174.592 388.096-388.096 0-213.504-174.592-388.096-388.096-388.096z',
+    component: buttonComponent
+  },
+  {
     value: 'input',
     label: '输入转换',
     desc: '用于计算输入的转换格子，自定义处理函数，并得到结果',
@@ -329,6 +345,7 @@ function onClickGrid(event) {
 const ctrlDown = ref(false)
 
 function keyListener(event) {
+  console.log(event)
   if (event.altKey && event.type === 'keydown') {
     ctrlDown.value = true
     if (event.key === 'q') {
@@ -350,13 +367,9 @@ const globalStyle = ref(null)
 // 仅查看模式
 const viewMode = ref(false)
 
-// 获取窗口高度
-let windowHeight = window.innerHeight
-
 // 初始化GridStack
 onMounted(async () => {
-  windowHeight = window.innerHeight
-
+  const windowHeight = window.innerHeight
   // 按照窗口宽度计算格子高度
   itemHeight = Math.floor(windowHeight / columns)
 
@@ -372,7 +385,6 @@ onMounted(async () => {
     minRow: 2,
     // 始终显示调整手柄
     alwaysShowResizeHandle: false,
-    // 4列
     column: columns,
   })
 
@@ -940,13 +952,21 @@ body {
   gap: 10px;
   padding: 0 10px;
   z-index: 1;
-  background-color: rgba(138, 138, 138, 0.5);
+  background-color: rgba(64, 158, 255, 0.3);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
-  .el-button + .el-button {
-    margin-left: 0;
+  .hideMenu {
+    cursor: pointer;
+    padding: 4px;
+    background: #ffffff;
+    border-radius: 24px;
+    color: orange;
+
+    &:hover {
+      animation: upAndDown 0.5s ease-in-out infinite;
+    }
   }
 
   .menuTitle {
@@ -983,20 +1003,6 @@ body {
 }
 
 /* 菜单样式结束 */
-
-/* 开关样式开始 */
-.el-checkbox {
-  background-color: white;
-  margin-right: unset !important;
-  --el-checkbox-checked-text-color: #ff7d00 !important;
-  --el-checkbox-checked-bg-color: #ff7d00 !important;
-
-  .el-checkbox__inner {
-    border: 1px dashed #ff7d00 !important;
-  }
-}
-
-/* 开关样式结束 */
 
 /* 选择器样式 */
 .el-select.addItemSelect {
@@ -1114,64 +1120,6 @@ textarea {
 
 /* 组件弹窗样式结束 */
 
-/* 全局样式弹窗样式开始 */
-.commonDialog {
-  height: calc(80% - 2px);
-  max-height: 80%;
-  --el-dialog-padding-primary: 0 !important;
-  --el-dialog-border-radius: 12px !important;
-
-  .el-dialog__header {
-    padding: 12px 16px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    background-color: #39c7da;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-
-    .el-dialog__title {
-      color: white !important;
-      font-weight: bold;
-    }
-
-    .el-dialog__headerbtn {
-      top: unset !important;
-    }
-
-    .el-dialog__headerbtn .el-dialog__close {
-      color: white !important;
-      font-size: 24px !important;
-    }
-  }
-
-  .el-dialog__body {
-    height: calc(100% - 128px);
-    padding: 16px;
-    overflow-x: hidden;
-    /* 对其中的第一个子组件设置高度为100% */
-
-    > *:first-child {
-      height: 100% !important;
-      overflow: auto;
-    }
-  }
-
-  .el-dialog__footer {
-    padding: 8px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 0 8px rgba(154, 154, 154, 0.5);
-  }
-
-  .el-textarea__inner, .el-textarea {
-    height: 100%;
-  }
-}
-
-/* 全局样式弹窗样式结束 */
-
 /* 配置加载器弹窗样式开始 */
 .configLoaderHeader {
   display: flex;
@@ -1179,19 +1127,6 @@ textarea {
 }
 
 /* 配置加载器弹窗样式结束 */
-
-/* 背景滚动动画 */
-@keyframes gradientScroll {
-  0% {
-    background-position: 0 0;
-  }
-  50% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: 0 0;
-  }
-}
 
 /* 快捷键样式 */
 .shortcutKeys {
@@ -1210,6 +1145,7 @@ textarea {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 
   .shortcutKeysList {
     font-size: 24px;
@@ -1252,5 +1188,11 @@ textarea {
   opacity: 0;
   height: 0;
   padding: 0;
+
+  * {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+  }
 }
 </style>

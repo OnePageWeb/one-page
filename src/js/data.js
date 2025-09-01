@@ -4,8 +4,16 @@ export function saveData(key, data) {
     window.localStorage.setItem(getWorkspacePrefix() + key, data)
 }
 
+export function saveDataDirect(key, data) {
+    window.localStorage.setItem(key, data)
+}
+
 export function loadData(key) {
     return window.localStorage.getItem(getWorkspacePrefix() + key)
+}
+
+export function loadDataDirect(key) {
+    return window.localStorage.getItem(key)
 }
 
 export function removeData(key) {

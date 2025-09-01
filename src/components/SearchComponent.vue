@@ -402,12 +402,12 @@ defineExpose({
 
       .searchName {
         display: block !important;
-        width: 160px !important;
+        width: 30% !important;
       }
 
       .searchUrl {
         display: block !important;
-        width: calc(100% - 180px) !important;
+        width: calc(70% - 20px) !important;
       }
     }
 

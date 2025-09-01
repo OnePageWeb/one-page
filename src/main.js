@@ -3,6 +3,7 @@ import App from './App.vue'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import {initWorkspace} from "@/js/workspcae.js"
+import '../assets/style.css'
 
 // 初始化工作区
 initWorkspace()
