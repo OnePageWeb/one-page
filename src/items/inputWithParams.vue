@@ -4,7 +4,8 @@ import {InfoFilled} from "@element-plus/icons-vue"
 import {ref, toRefs} from "vue"
 
 const props = defineProps({
-  initText: String
+  initText: String,
+  placeholder: String
 })
 const emit = defineEmits(['update'])
 
@@ -137,7 +138,7 @@ defineExpose({
         class="input"
         :rows="2"
         type="textarea"
-        placeholder="输入内容"
+        :placeholder="placeholder || '输入内容'"
         @blur="onInputBlur"
         @focus="onInputFocus"
         @change="update"

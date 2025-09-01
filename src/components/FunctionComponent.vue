@@ -1,9 +1,9 @@
 <script setup>
 import {ElIcon, ElInput, ElPopover, ElText} from "element-plus"
-import {onMounted, onUnmounted, ref, toRefs} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {OnAreaCheck} from "@/js/onAreaCheck.js"
-import {Finished, SwitchButton, VideoPlay} from "@element-plus/icons-vue";
+import {Finished, SwitchButton, VideoPlay, Edit, View} from "@element-plus/icons-vue"
+import InputWithParams from "@/items/inputWithParams.vue"
 
 const props = defineProps({
   id: String,
@@ -19,33 +19,31 @@ const functionContent = ref(text.value)
 // 方法结果
 const functionResult = ref('')
 
-const input = ref(null)
-let onFocus = ref(false)
+const isEditing = ref(false)
+watch(enableEdit, (newValue) => {
+  if (!newValue) {
+    isEditing.value = false
+  }
+})
 
 function dbclick() {
   if (!enableEdit.value) {
-    safeExecute()
+    execute()
   }
 }
 
 const functionRef = ref(null)
-// 检查鼠标是否离开元素，用于开启编辑
-const onAreaCheck = new OnAreaCheck(functionRef)
-const onOver = (e) => {
-  onAreaCheck.onMouseOver(e, () => {
-    onFocus.value = true
-  })
-}
-const onLeave = (e) => {
-  onAreaCheck.onMouseLeave(e, () => {
-    onFocus.value = false
-  })
+
+const inputWithParams = ref(null)
+
+function onInputUpdate(value) {
+  functionContent.value = value
+  save()
 }
 
 function save() {
-  onFocus.value = false
   saveData(props.id, JSON.stringify({
-    content: functionContent.value,
+    content: inputWithParams.value.save(),
     result: functionResult.value,
     autoExecute: autoExecute.value
   }))
@@ -56,9 +54,10 @@ let iframe
 
 // 监听 iframe 的消息
 function listener(event) {
-  // 验证消息来源（重要！）
+  console.log('收到消息:', event)
+  // 验证消息来源
   if (!iframe || event.source !== iframe.contentWindow) return
-  functionResult.value = event.data.data
+  functionResult.value = event.data?.data || event.data?.error
   save()
 }
 
@@ -70,41 +69,26 @@ onUnmounted(() => {
   window.removeEventListener('message', listener)
 })
 
-async function safeExecute() {
-  if (!iframe) {
-    iframe = document.getElementById('sandbox' + id.value)
+async function execute() {
+  isEditing.value = false
+  const setResult = (result) => {
+    nextTick(() => {
+      functionResult.value = result
+    })
   }
-  const blob = new Blob([`
-    <script>
-      const setResult = (result) => {
-        window.parent.postMessage({
-          type: 'result',
-          data: result,
-          success: true
-        }, '*')
-      }
-      try {
-        const result = eval(${JSON.stringify(functionContent.value)})
-        window.parent.postMessage({
-          type: 'result',
-          data: result,
-          success: true
-        }, '*')
-      } catch (error) {
-        window.parent.postMessage({
-          type: 'error',
-          error: error.message,
-          success: false
-        }, '*')
-      }
-    <\/script>
-  `], {type: 'text/html'})
-  iframe.src = URL.createObjectURL(blob)
-  save()
-}
+  function executeCode() {
+    return eval(`(function (setResult) {
+      ${functionContent.value}
+    })(setResult)`)
+  }
 
-function stopExecute() {
-  iframe.src = 'about:blank'
+  try {
+    functionResult.value = executeCode()
+  } catch (e) {
+    console.log(e)
+    functionResult.value = `错误: ${e}`
+  }
+  save()
 }
 
 onMounted(() => {
@@ -115,12 +99,16 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
-    functionContent.value = parse.content
     functionResult.value = parse.result
     autoExecute.value = parse.autoExecute
-  }
-  if (autoExecute.value) {
-    safeExecute()
+    nextTick(() => {
+      inputWithParams.value.load(parse.content)
+      if (autoExecute.value) {
+        execute()
+      }
+    })
+  } else if (autoExecute.value) {
+    execute()
   }
 }
 
@@ -131,32 +119,24 @@ defineExpose({
 
 <template>
   <div class="functionContent" ref="functionRef" @dblclick="dbclick">
-    <div
-      class="textContainer"
-      @mouseover="onOver"
-      @mouseleave="onLeave"
-    >
+    <div class="textContainer">
       <iframe :id="'sandbox' + id" sandbox="allow-scripts" style="display: none;"></iframe>
-      <el-text :class="['result', (onFocus && enableEdit) ? 'resultOnFocus' : '']" v-html="functionResult"/>
-      <el-input
-        v-model="functionContent"
-        ref="input"
-        :class="['input', (onFocus && enableEdit) ? 'inputOnFocus' : '']"
-        :rows="2"
-        type="textarea"
-        placeholder="输入方法内容"
-        @blur="save"
-        @keydown.ctrl.enter="safeExecute"
-        @change="save"
+      <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
+      <inputWithParams
+          ref="inputWithParams"
+          :class="['input', isEditing ? 'inputOnFocus' : '']"
+          :initText="functionContent"
+          placeholder="输入方法内容"
+          @update="onInputUpdate"
       />
     </div>
     <div :class="['params', !enableEdit ? 'hide' : '']">
       <el-popover
-        class="box-item"
-        :title="autoExecute ? '已开启载入时自动运行' : '已关闭自动运行'"
-        content="开启后，页面加载时会自动执行方法"
-        placement="bottom-end"
-        width="200"
+          class="box-item"
+          :title="autoExecute ? '已开启载入时自动运行' : '已关闭自动运行'"
+          content="开启后，页面加载时会自动执行方法"
+          placement="bottom-end"
+          width="200"
       >
         <template #reference>
           <el-icon :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">
@@ -165,28 +145,43 @@ defineExpose({
         </template>
       </el-popover>
       <el-popover
-        class="box-item"
-        title="执行"
-        content="执行方法，在下方得到结果"
-        placement="bottom-end"
-        width="200"
+          class="box-item"
+          title="执行"
+          content="执行方法，在下方得到结果"
+          placement="bottom-end"
+          width="200"
       >
         <template #reference>
-          <el-icon class="paramItem execute" @click="safeExecute">
+          <el-icon class="paramItem execute" @click="execute">
             <VideoPlay/>
           </el-icon>
         </template>
       </el-popover>
       <el-popover
-        class="box-item"
-        title="停止"
-        content="停止执行方法"
-        placement="bottom-end"
-        width="200"
+          v-if="!isEditing"
+          class="box-item"
+          title="编辑"
+          content="编辑方法内容"
+          placement="bottom-end"
+          width="200"
       >
         <template #reference>
-          <el-icon class="paramItem stop" @click="stopExecute">
-            <SwitchButton/>
+          <el-icon class="paramItem edit" @click="isEditing = true">
+            <Edit/>
+          </el-icon>
+        </template>
+      </el-popover>
+      <el-popover
+          v-else
+          class="box-item"
+          title="查看"
+          content="查看方法内容"
+          placement="bottom-end"
+          width="200"
+      >
+        <template #reference>
+          <el-icon class="paramItem edit" @click="isEditing = false">
+            <View/>
           </el-icon>
         </template>
       </el-popover>
@@ -262,11 +257,11 @@ defineExpose({
     color: #3a3a3a;
     font-weight: bold;
     background: repeating-linear-gradient(
-      -45deg,
-      rgba(240, 240, 240, 0.9),
-      rgba(240, 240, 240, 0.9) 40px,
-      rgba(255, 255, 255, 0.9) 40px,
-      rgba(255, 255, 255, 0.9) 80px
+        -45deg,
+        rgba(240, 240, 240, 0.9),
+        rgba(240, 240, 240, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 40px,
+        rgba(255, 255, 255, 0.9) 80px
     );
   }
 
@@ -301,12 +296,12 @@ defineExpose({
       }
     }
 
-    .stop {
-      background-color: #ff5858;
-    }
-
     .positive {
       background-color: #aaaaaa;
+    }
+
+    .edit {
+      background-color: #b58a08;
     }
   }
 }

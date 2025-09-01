@@ -2,7 +2,7 @@
 import {ElIcon, ElTooltip} from "element-plus"
 import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {Edit} from '@element-plus/icons-vue'
+import {Edit, View} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue";
 
@@ -18,10 +18,6 @@ const contentValue = ref('')
 function onInputUpdate(value) {
   contentValue.value = value
   save()
-}
-
-function edit() {
-  isEditing.value = !isEditing.value
 }
 
 const isEditing = ref(false)
@@ -70,11 +66,22 @@ defineExpose({
         @update="onInputUpdate"/>
     <component-operator :visible="enableEdit">
       <el-tooltip
+          v-if="isEditing"
+          effect="light"
+          content="关闭编辑"
+          placement="top"
+      >
+        <el-icon @click="isEditing = false">
+          <View/>
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
+          v-else
           effect="light"
           content="开启编辑"
-          placement="bottom"
+          placement="top"
       >
-        <el-icon @click="edit">
+        <el-icon @click="isEditing = true">
           <Edit/>
         </el-icon>
       </el-tooltip>

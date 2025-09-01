@@ -1,10 +1,9 @@
 <script setup>
 import {ElIcon, ElInput, ElMessage, ElPopover, ElText, ElTooltip} from "element-plus"
-import {onMounted, onUnmounted, ref, toRefs, watch} from "vue"
+import {onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {CloseBold, CopyDocument, Edit, SortDown} from "@element-plus/icons-vue"
-import {OnAreaCheck} from "@/js/onAreaCheck.js"
-import ComponentOperator from "@/items/componentOperator.vue";
+import {CloseBold, CopyDocument, Edit, SortDown, View} from "@element-plus/icons-vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const props = defineProps({
   id: String,
@@ -21,9 +20,6 @@ const inputText = ref('')
 const functionResult = ref('')
 const isEditing = ref(false)
 
-const edit = () => {
-  isEditing.value = true
-}
 watch(enableEdit, (newValue) => {
   if (!newValue) {
     isEditing.value = false
@@ -31,16 +27,6 @@ watch(enableEdit, (newValue) => {
 })
 
 const inputContentRef = ref(null)
-const onFocus = ref(false)
-
-// 检查鼠标是否离开元素，用于开启编辑
-const onAreaCheck = new OnAreaCheck(inputContentRef)
-const onLeave = (e) => {
-  onAreaCheck.onMouseLeave(e, () => {
-    isEditing.value = false
-    save()
-  })
-}
 
 function save() {
   saveData(props.id, JSON.stringify({
@@ -80,7 +66,6 @@ function copyResult() {
 
 onMounted(() => {
   load()
-  isEditing.value = enableEdit.value
 })
 
 function load(data) {
@@ -100,26 +85,25 @@ defineExpose({
 <template>
   <div class="inputContent">
     <div
-      class="textContainer"
-      ref="inputContentRef"
-      @mouseleave="onLeave"
+        class="textContainer"
+        ref="inputContentRef"
     >
       <div class="ioContainer">
         <el-input
-          v-model="inputText"
-          ref="input"
-          type="textarea"
-          :placeholder="nameText || '输入参数，按下ctrl + enter即可执行方法'"
-          :class="['input', isEditing ? 'inputOnFocus' : '']"
-          @keydown.ctrl.enter="execute"
+            v-model="inputText"
+            ref="input"
+            type="textarea"
+            :placeholder="nameText || '输入参数，按下ctrl + enter即可执行方法'"
+            :class="['input', isEditing ? 'inputOnFocus' : '']"
+            @keydown.ctrl.enter="execute"
         />
         <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
 
         <el-popover
-          class="box-item"
-          title="执行"
-          content="执行方法，在下方得到结果"
-          placement="top-end"
+            class="box-item"
+            title="执行"
+            content="执行方法，在下方得到结果"
+            placement="top-end"
         >
           <template #reference>
             <el-icon class="executeIcon" @click="execute">
@@ -128,10 +112,10 @@ defineExpose({
           </template>
         </el-popover>
         <el-popover
-          class="box-item"
-          title="复制"
-          content="复制方法结果到剪切板"
-          placement="bottom-end"
+            class="box-item"
+            title="复制"
+            content="复制方法结果到剪切板"
+            placement="bottom-end"
         >
           <template #reference>
             <el-icon class="copyIcon" @click="copyResult">
@@ -140,10 +124,10 @@ defineExpose({
           </template>
         </el-popover>
         <el-popover
-          class="box-item"
-          title="清除结果"
-          content="清除方法执行结果"
-          placement="bottom-end"
+            class="box-item"
+            title="清除结果"
+            content="清除方法执行结果"
+            placement="bottom-end"
         >
           <template #reference>
             <el-icon class="clearIcon" @click="functionResult = ''">
@@ -154,35 +138,46 @@ defineExpose({
       </div>
 
       <div
-        :class="['function', isEditing ? 'functionOnFocus' : '']">
+          :class="['function', isEditing ? 'functionOnFocus' : '']">
         <!-- 编辑框 -->
         <el-input
-          v-model="nameText"
-          class="functionName"
-          placeholder="方法名称"
-          @change="save"
+            v-model="nameText"
+            class="functionName"
+            placeholder="方法名称"
+            @change="save"
         >
           <template #prepend>方法名称</template>
         </el-input>
         <el-input
-          v-model="functionText"
-          class="functionContent"
-          :rows="2"
-          type="textarea"
-          placeholder="输入方法内容，可以使用input变量来获取输入值，setResult(String)方法来设置结果"
-          @change="save"
+            v-model="functionText"
+            class="functionContent"
+            :rows="2"
+            type="textarea"
+            placeholder="输入方法内容，可以使用input变量来获取输入值，setResult(String)方法来设置结果"
+            @change="save"
         />
       </div>
     </div>
 
     <component-operator :visible="enableEdit">
       <el-tooltip
-        effect="light"
-        content="开启编辑"
-        placement="bottom"
+          v-if="isEditing"
+          effect="light"
+          content="关闭编辑"
+          placement="top"
       >
-        <el-icon @click="edit">
-          <Edit />
+        <el-icon @click="isEditing = false">
+          <View/>
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
+          v-else
+          effect="light"
+          content="开启编辑"
+          placement="top"
+      >
+        <el-icon @click="isEditing = true">
+          <Edit/>
         </el-icon>
       </el-tooltip>
     </component-operator>
@@ -326,11 +321,11 @@ defineExpose({
       color: #3a3a3a;
       font-weight: bold;
       background: repeating-linear-gradient(
-        -45deg,
-        rgba(240, 240, 240, 0.9),
-        rgba(240, 240, 240, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 80px
+          -45deg,
+          rgba(240, 240, 240, 0.9),
+          rgba(240, 240, 240, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 80px
       );
     }
 

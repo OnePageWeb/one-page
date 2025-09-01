@@ -134,6 +134,7 @@ defineExpose({
     />
     <component-operator :visible="onFocus">
       <el-tooltip
+          v-if="(!onFocus || !enableEdit) && !isEditing"
           effect="light"
           content="开启编辑"
           placement="bottom"

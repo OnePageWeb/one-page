@@ -92,7 +92,7 @@
 
 .commonDialog {
     height: calc(80% - 2px);
-    max-height: 80%;
+    max-height: calc(80% - 2px);
     --el-dialog-padding-primary: 0;
     --el-dialog-border-radius: 0;
     --el-dialog-bg-color: rgb(255, 255, 255);
@@ -123,6 +123,7 @@
 
     .el-dialog__body {
         height: calc(100% - 128px);
+        max-height: calc(100% - 128px);
         padding: 16px;
         overflow-x: hidden;
         /* 对其中的第一个子组件设置高度为100% */

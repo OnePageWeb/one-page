@@ -1,11 +1,11 @@
 <template>
   <div style="height: 100%; width: 100%; position: relative;">
     <div
-      :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
+        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
     >
       <el-tooltip
-        content="关闭操作栏"
-        placement="right"
+          content="关闭操作栏"
+          placement="right"
       >
         <el-icon class="hideMenu" @click="showMenu = false">
           <Top/>
@@ -15,19 +15,19 @@
       <el-button @click="readyComponent.open()" class="btn" :icon="CirclePlus" plain>添加格子</el-button>
       <el-select class="addItemSelect" placeholder="添加自定义格子" @change="addItemWithEdit">
         <el-popover
-          class="box-item"
-          v-for="item in itemType"
-          :title="item.label"
-          :content="item.desc"
-          width="300"
-          placement="right-start"
+            class="box-item"
+            v-for="item in itemType"
+            :title="item.label"
+            :content="item.desc"
+            width="300"
+            placement="right-start"
         >
           <template #reference>
             <div>
               <el-option
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
                 <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
                 {{ item.label }}
@@ -52,11 +52,11 @@
 
     <!-- 配置加载弹窗 -->
     <el-dialog
-      title="加载配置"
-      v-model="configLoaderVisible"
-      width="50%"
-      class="configDialog commonDialog"
-      align-center
+        title="加载配置"
+        v-model="configLoaderVisible"
+        width="50%"
+        class="configDialog commonDialog"
+        align-center
     >
       <template #header="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
@@ -67,13 +67,13 @@
         </div>
       </template>
       <el-input
-        v-model="configData"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入配置URL或拖拽JSON文件到此处"
-        @dragover.prevent
-        @drop.prevent="handleFileDrop"
+          v-model="configData"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入配置URL或拖拽JSON文件到此处"
+          @dragover.prevent
+          @drop.prevent="handleFileDrop"
       />
 
       <!-- 配置提示弹窗 -->
@@ -85,7 +85,7 @@
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
           </div>
           <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-            href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+              href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
           </div>
           <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
         </div>
@@ -98,22 +98,22 @@
       <template #footer>
         <el-button type="primary" @click="downloadConfig">下载</el-button>
         <el-popconfirm
-          title="确定加载以上配置，这会覆盖本地的所有配置？"
-          placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          @confirm="loadConfig()"
+            title="确定加载以上配置，这会覆盖本地的所有配置？"
+            placement="top-start"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            @confirm="loadConfig()"
         >
           <template #reference>
             <el-button type="primary">加载</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
-          title="确定清空并重新加载页面？"
-          placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          @confirm="clearConfig(true)"
+            title="确定清空并重新加载页面？"
+            placement="top-start"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            @confirm="clearConfig(true)"
         >
           <template #reference>
             <el-button type="danger">清空</el-button>
@@ -124,18 +124,18 @@
 
     <!-- 组件样式弹窗 -->
     <el-dialog
-      title="组件样式"
-      v-model="isEditComponentStyle"
-      width="50%"
-      class="configDialog commonDialog"
-      align-center
+        title="组件样式"
+        v-model="isEditComponentStyle"
+        width="50%"
+        class="configDialog commonDialog"
+        align-center
     >
       <el-input
-        v-model="componentStyle"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        placeholder="请输入样式"
+          v-model="componentStyle"
+          class="globeStyleInput"
+          type="textarea"
+          resize="none"
+          placeholder="请输入样式"
       />
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
@@ -143,32 +143,32 @@
     </el-dialog>
 
     <el-dialog
-      v-model="zoomInDialogVisible"
-      class="zoomInDialog"
-      width="95%"
-      align-center
-      :show-close="false"
-      @close="onZoomInClose"
+        v-model="zoomInDialogVisible"
+        class="zoomInDialog"
+        width="95%"
+        align-center
+        :show-close="false"
+        @close="onZoomInClose"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
 
     <readyComponent
-      ref="readyComponent"
-      @addComponent="addComponent"
+        ref="readyComponent"
+        @addComponent="addComponent"
     />
 
     <globalStyle
-      ref="globalStyle"
-      @load-style="loadStyle"
+        ref="globalStyle"
+        @load-style="loadStyle"
     />
 
     <workspaceHolder
-      ref="workspaceHolder"
+        ref="workspaceHolder"
     />
 
     <div
-      :class="['shortcutKeys', {'transparent': !ctrlDown}]"
+        :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
@@ -232,7 +232,6 @@ import htmlComponent from "./components/HtmlComponent.vue"
 import linkComponent from './components/LinkComponent.vue'
 import buttonComponent from './components/ButtonComponent.vue'
 import functionComponent from './components/FunctionComponent.vue'
-import evalComponent from "./components/EvalComponent.vue"
 import inputComponent from "@/components/InputComponent.vue"
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
@@ -395,17 +394,6 @@ onMounted(async () => {
       reloadWithoutParams('config')
     }
   }
-  // 是否开启函数格子
-  const enableFunction = urlParams.get('enableFunction')
-  if (enableFunction) {
-    itemType.push({
-      value: 'eval',
-      label: '危险函数',
-      desc: '用于执行自定义函数的格子，支持自定义函数。使用模式下双击格子即可运行',
-      svgPath: 'M512 992C246.912 992 32 777.088 32 512 32 246.912 246.912 32 512 32c265.088 0 480 214.912 480 480 0 265.088-214.912 480-480 480zM480 256v352a32 32 0 0 0 64 0V256a32 32 0 0 0-64 0z m-16 528a48 48 0 1 0 96 0 48 48 0 0 0-96 0z',
-      component: evalComponent
-    })
-  }
 
   // 恢复布局
   const layout = loadData('layout')
@@ -558,9 +546,6 @@ const addItemWithEdit = (type) => {
 }
 
 const addItem = (type, x, y, w = '4', h = '4', id) => {
-  if (x === 0) {
-    console.log('type', type, x, y,  id)
-  }
   // 创建格子DOM
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'

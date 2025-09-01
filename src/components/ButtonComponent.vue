@@ -2,9 +2,9 @@
 import {ElIcon, ElInput, ElTooltip} from "element-plus"
 import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {Edit} from "@element-plus/icons-vue"
+import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
-import InputWithParams from "@/items/inputWithParams.vue";
+import InputWithParams from "@/items/inputWithParams.vue"
 
 const props = defineProps({
   id: String,
@@ -13,7 +13,7 @@ const props = defineProps({
 })
 const {id, text, enableEdit} = toRefs(props)
 
-const nameText = ref('')
+const nameText = ref('按下')
 // 方法内容
 const functionText = ref(text.value || `alert('Hello World!')`)
 const isEditing = ref(false)
@@ -23,11 +23,8 @@ watch(enableEdit, (newValue) => {
   }
 })
 
-const edit = () => {
-  isEditing.value = !isEditing.value
-}
-
 const inputWithParams = ref(null)
+
 function onInputUpdate(value) {
   functionText.value = value
   save()
@@ -85,17 +82,28 @@ defineExpose({
         <input-with-params
             ref="inputWithParams"
             class="inputWithParams"
-            @update="onInputUpdate" />
+            @update="onInputUpdate"/>
       </div>
     </div>
 
     <component-operator :visible="enableEdit">
       <el-tooltip
+          v-if="isEditing"
           effect="light"
-          :content="isEditing ? '关闭编辑' : '开启编辑'"
+          content="关闭编辑"
           placement="top"
       >
-        <el-icon @click="edit">
+        <el-icon @click="isEditing = false">
+          <View/>
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
+          v-else
+          effect="light"
+          content="开启编辑"
+          placement="top"
+      >
+        <el-icon @click="isEditing = true">
           <Edit/>
         </el-icon>
       </el-tooltip>

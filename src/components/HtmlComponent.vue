@@ -2,7 +2,7 @@
 import {ElIcon, ElInput, ElTooltip, ElSwitch} from "element-plus"
 import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {Edit} from "@element-plus/icons-vue"
+import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 
 const props = defineProps({
@@ -49,6 +49,10 @@ function edit() {
     calcParams()
     collapse.value.push("params")
   }
+}
+
+function view() {
+  isEditing.value = false
 }
 
 function calcParams() {
@@ -135,16 +139,25 @@ defineExpose({
         @change="save"
     />
 
-    <component-operator
-      :visible="enableEdit"
-    >
+    <component-operator :visible="enableEdit">
       <el-tooltip
-        effect="light"
-        :content="isEditing ? '关闭编辑' : '开启编辑'"
-        placement="bottom"
+          v-if="isEditing"
+          effect="light"
+          content="关闭编辑"
+          placement="top"
+      >
+        <el-icon @click="view">
+          <View/>
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
+          v-else
+          effect="light"
+          content="开启编辑"
+          placement="top"
       >
         <el-icon @click="edit">
-          <Edit />
+          <Edit/>
         </el-icon>
       </el-tooltip>
     </component-operator>
