@@ -1,10 +1,10 @@
 <script setup>
-import {ElCollapse, ElCollapseItem, ElInput, ElText, ElPopover, ElIcon, ElTooltip} from "element-plus"
-import {onMounted, ref, toRefs, watch} from "vue"
+import {ElIcon, ElTooltip} from "element-plus"
+import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {InfoFilled, Edit} from '@element-plus/icons-vue'
+import {Edit} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
-import {OnAreaCheck} from "@/js/onAreaCheck.js";
+import InputWithParams from "@/items/inputWithParams.vue";
 
 const props = defineProps({
   id: String,
@@ -13,83 +13,24 @@ const props = defineProps({
 })
 const {text, enableEdit} = toRefs(props)
 
-// 默认文本内容
-const content = ref(text.value)
-
-const collapse = ref([])
 const contentValue = ref('')
-const calcContentValue = () => {
-  let value = content.value
-  for (let i = 0; i < paramItems.length; i++) {
-    value = value.replace(paramItems[i], params.value[i].value)
-  }
-  contentValue.value = value
-}
 
-const input = ref(null)
-const params = ref([])
-const paramItems = []
+function onInputUpdate(value) {
+  contentValue.value = value
+  save()
+}
 
 function edit() {
   isEditing.value = !isEditing.value
-  if (isEditing.value) {
-    calcParams()
-    collapse.value.push("params")
-  }
 }
 
 const isEditing = ref(false)
 
-function calcParams() {
-  const value = content.value
-  // 从value中提取参数，参数格式如下${}，并将每一个参数提取到一个列表中
-  const matches = value.match(/\${(.*?)}/g) || []
-  const tempParams = []
-  paramItems.length = 0
-  for (let param of matches) {
-    const paramContent = param.substring(2, param.length - 1)
-    if (paramContent.length > 0) {
-      const strings = paramContent.split('?', 2)
-      let name = ''
-      let desc = ''
-      const defaultVal = strings[1]
-      if (strings.length > 1) {
-        const defaultValStrings = strings[1].split(':', 2)
-        name = defaultValStrings[0]
-        if (defaultValStrings.length > 1) {
-          desc = defaultValStrings[1]
-        }
-      }
-      tempParams.push({
-        name,
-        desc,
-        value: defaultVal
-      })
-      paramItems.push(param)
-    }
-  }
-  // 合并参数
-  for (let tempParam of tempParams) {
-    const param = params.value.find(item => item.name === tempParam.name)
-    if (param) {
-      tempParam.value = param.value
-    }
-  }
-  params.value = tempParams
-  calcContentValue()
-}
-
-function onInputBlur() {
-  calcParams()
-  save()
-}
-
-function onInputFocus() {
-  collapse.value = []
-}
+const inputWithParams = ref(null)
 
 function save() {
-  saveData(props.id, JSON.stringify({text: content.value, params: params.value}))
+  const data = inputWithParams.value.save()
+  saveData(props.id, JSON.stringify(data))
 }
 
 onMounted(() => {
@@ -106,9 +47,9 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
-    content.value = parse.text
-    params.value = parse.params || []
-    calcParams()
+    nextTick(() => {
+      inputWithParams.value.load(parse)
+    })
   }
 }
 
@@ -123,54 +64,10 @@ defineExpose({
       @dblclick="edit"
   >
     <div :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="contentValue"/>
-    <div :class="['editContainer', isEditing ? 'editOnFocus' : '']">
-      <el-collapse v-model="collapse" class="paramContainer" @change="calcParams">
-        <el-collapse-item name="params">
-          <template #title>
-            <div class="title-wrapper">
-              参数列表
-              <el-popover
-                  class="box-item"
-                  title="参数说明"
-                  content="在文本中使用 ${参数名:参数说明?参数默认值} 的格式来引用参数，参数说明与默认值都可以不填写，例如：${标题:标题内容}"
-                  placement="top-start"
-                  width="400"
-              >
-                <template #reference>
-                  <el-icon class="header-icon">
-                    <info-filled/>
-                  </el-icon>
-                </template>
-              </el-popover>
-            </div>
-          </template>
-          <el-input
-              class="paramInput"
-              v-model="param.value"
-              v-for="param in params"
-              :rows="1"
-              :placeholder="param.desc || ('请填写' + param.name)"
-              @change="save"
-              @blur="onInputBlur"
-          >
-            <template #prepend>
-              <div class="paramName">{{ param.name }}</div>
-            </template>
-          </el-input>
-        </el-collapse-item>
-      </el-collapse>
-      <el-input
-          v-model="content"
-          ref="input"
-          class="input"
-          :rows="2"
-          type="textarea"
-          placeholder="输入内容"
-          @blur="onInputBlur"
-          @focus="onInputFocus"
-          @change="save"
-      />
-    </div>
+    <input-with-params
+        ref="inputWithParams"
+        :class="['editContainer', isEditing ? 'editOnFocus' : '']"
+        @update="onInputUpdate"/>
     <component-operator :visible="enableEdit">
       <el-tooltip
           effect="light"
@@ -213,57 +110,6 @@ defineExpose({
     width: 0;
     height: 100%;
     opacity: 0;
-
-    .paramContainer {
-      width: 100%;
-      border-top: unset;
-      z-index: 1;
-      --el-collapse-header-height: 36px;
-      --el-border-radius-base: 0;
-
-      .el-collapse-icon-position-right .el-collapse-item__header {
-        padding: 0;
-      }
-
-      .el-collapse-item__header {
-        padding: 0 8px;
-        width: calc(100% - 16px);
-      }
-
-      .el-collapse-item__content {
-        padding: 0;
-      }
-
-      .el-collapse-item__wrap {
-        position: absolute;
-        border-bottom: unset;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      }
-    }
-
-    .input {
-      width: 100%;
-      height: calc(100% - 48px);
-    }
-
-    .input .el-textarea__inner {
-      width: 100%;
-      height: 100%;
-      opacity: 1;
-      min-width: unset !important;
-      min-height: unset !important;
-      padding: 4px 8px;
-      border-radius: 0;
-      color: #3a3a3a;
-      font-weight: bold;
-      background: repeating-linear-gradient(
-          -45deg,
-          rgba(240, 240, 240, 0.9),
-          rgba(240, 240, 240, 0.9) 40px,
-          rgba(255, 255, 255, 0.9) 40px,
-          rgba(255, 255, 255, 0.9) 80px
-      );
-    }
 
     .resultOnFocus {
       width: 40%;

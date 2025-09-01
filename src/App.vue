@@ -464,7 +464,6 @@ const elementMap = {}
 // 保存布局
 function saveLayout() {
   const nodes = grid.engine.nodes; // 获取所有格子节点数据
-  console.log('nodes', nodes)
   const simplifiedLayout = nodes.map(node => ({
     type: node.el?.type,
     id: node.el?.id,
@@ -559,6 +558,9 @@ const addItemWithEdit = (type) => {
 }
 
 const addItem = (type, x, y, w = '4', h = '4', id) => {
+  if (x === 0) {
+    console.log('type', type, x, y,  id)
+  }
   // 创建格子DOM
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
@@ -566,8 +568,8 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   itemEl.id = id || v4().replace('-', '')
   itemEl.setAttribute('gs-w', w)
   itemEl.setAttribute('gs-h', h)
-  if (x) itemEl.setAttribute('gs-x', x)
-  if (y) itemEl.setAttribute('gs-y', y)
+  if (x !== undefined) itemEl.setAttribute('gs-x', x)
+  if (y !== undefined) itemEl.setAttribute('gs-y', y)
   // 挂载Vue组件到格子
   const component = itemType.find(item => item.value === type)?.component
   if (!component) {
