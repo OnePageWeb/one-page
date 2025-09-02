@@ -1,5 +1,5 @@
 <script setup>
-import {ElIcon, ElInput, ElText, ElTooltip} from "element-plus"
+import {ElIcon, ElInput, ElMessage, ElText, ElTooltip} from "element-plus"
 import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import MarkdownIt from 'markdown-it'
@@ -17,7 +17,7 @@ import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-csharp'
-import {Picture, Upload, Edit} from "@element-plus/icons-vue"
+import {Picture, Upload, Edit, Download} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 
 const props = defineProps({
@@ -94,6 +94,35 @@ function onMouseLeave() {
   }
 }
 
+function exportNote() {
+  // 创建一个a标签
+  const a = document.createElement('a')
+  // 设置a标签的href属性为markdown文件的内容
+  a.href = 'data:text/markdown;charset=utf-8,' + encodeURIComponent(content.value)
+  // 设置a标签的download属性为文件名
+  a.download = 'note.md'
+  // 模拟点击a标签
+  a.click()
+  // 移除a标签
+  a.remove()
+}
+
+// 处理文件拖拽
+function handleFileDrop(e) {
+  e.preventDefault()
+  const file = e.dataTransfer.files[0]
+  // 检查文件名后缀是否是markdown文件
+  if (!file.name.toLocaleLowerCase().endsWith('.md')) {
+    ElMessage.error('请上传Markdown文件')
+    return
+  }
+  const reader = new FileReader()
+  reader.readAsText(file, 'utf-8')
+  reader.onload = () => {
+    content.value = reader.result
+  }
+}
+
 function save() {
   saveData(props.id, JSON.stringify({text: content.value}))
 }
@@ -117,6 +146,8 @@ defineExpose({
 <template>
   <div
       class="noteContent"
+      @dragover.prevent
+      @drop.prevent="handleFileDrop"
       @dblclick="edit"
       @mouseenter="onFocus = true"
       @mouseleave="onMouseLeave"
@@ -128,7 +159,7 @@ defineExpose({
         :class="['input', onFocus && enableEdit || isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
-        placeholder="输入内容"
+        placeholder="输入内容或将Markdown文件拖拽到此处"
         @blur="onFocus = false; isEditing = false"
         @change="save"
     />
@@ -150,6 +181,15 @@ defineExpose({
       >
         <el-icon @click="openNewWindow">
           <Upload />
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
+          effect="light"
+          content="导出便签文件"
+          placement="bottom"
+      >
+        <el-icon @click="exportNote">
+          <Download />
         </el-icon>
       </el-tooltip>
     </component-operator>

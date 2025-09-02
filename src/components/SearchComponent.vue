@@ -117,11 +117,12 @@ function cancelEdit() {
 function saveEdit() {
   // 去除空格，并去除无效项
   tempSearchEngineList.value = tempSearchEngineList.value
+      .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
       .map(item => ({
         name: item.name.trim(),
         url: item.url.trim(),
+        pd: item.pd?.trim(),
       }))
-      .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
   // 映射到Map
   searchEngineMap = tempSearchEngineList.value.reduce((prev, cur) => {
     prev[cur.name] = cur
@@ -199,7 +200,7 @@ defineExpose({
       <el-input
           v-model="searchContent"
           class="input"
-          placeholder="输入搜索内容"
+          :placeholder="searchEngineMap[nowSearchEngine]?.pd || '输入搜索内容'"
           @keydown.enter.prevent.stop="search"
           @keydown.tab.prevent="nextSearchEngine"
           clearable
@@ -241,6 +242,9 @@ defineExpose({
             </el-form-item>
             <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
               <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
+            </el-form-item>
+            <el-form-item label="搜索提示语" prop="pd" class="searchPlaceholder">
+              <el-input v-model="item.pd" placeholder="请输入搜索提示语"/>
             </el-form-item>
             <el-form-item class="deleteIcon" @click="deleteSearch(index)">
               <el-icon>
@@ -318,10 +322,6 @@ defineExpose({
       caret-color: #8e8e8e;
       border-radius: 0 120px 120px 0 !important;
 
-      .el-input__inner::placeholder {
-        text-indent: 8px;
-      }
-
       &:hover {
         font-size: 20px;
         line-height: 1;
@@ -330,9 +330,19 @@ defineExpose({
       .el-input__wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 0 120px 120px 0 !important;
-        box-shadow: unset !important;
-        padding: 0 11px;
+        border-radius: 0 120px 120px 0;
+        box-shadow: unset;
+        padding: 0;
+
+        input {
+          padding: 0 12px;
+          height: 100%;
+          border-radius: 0 120px 120px 0;
+
+          &:hover, &:focus {
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+          }
+        }
       }
     }
 
@@ -441,8 +451,13 @@ defineExpose({
       }
 
       .searchUrl {
-        display: block !important;
-        width: calc(76% - 20px) !important;
+        display: block;
+        width: calc(46% - 20px);
+      }
+
+      .searchPlaceholder {
+        display: block;
+        width: 30%;
       }
     }
 

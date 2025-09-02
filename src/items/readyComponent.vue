@@ -1,7 +1,8 @@
 <script setup>
-import {ElDialog, ElButton, ElMessage, ElInput, ElLoading} from "element-plus"
-import {computed, defineEmits, onMounted, ref, toRefs} from "vue"
+import {ElButton, ElDialog, ElIcon, ElInput, ElLoading, ElMessage, ElPopconfirm} from "element-plus"
+import {defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
+import {Close} from "@element-plus/icons-vue"
 
 const emit = defineEmits(['addComponent'])
 
@@ -9,6 +10,7 @@ const dialogVisible = ref(false)
 
 defineExpose({
   open() {
+    loadModuleComponents()
     dialogVisible.value = true
   }
 })
@@ -23,6 +25,18 @@ const loadConfigFiles = async () => {
       components.value[file.name] = { desc: file.desc, path: path.replace('/public', '') }
     } catch (error) {
       console.error('加载文件失败:', path, error)
+    }
+  }
+}
+
+const moduleComponents = ref({})
+const loadModuleComponents = async () => {
+  // 遍历localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key.startsWith('module-')) {
+      const module = JSON.parse(localStorage.getItem(key))
+      moduleComponents.value[module.name] = module
     }
   }
 }
@@ -63,6 +77,21 @@ async function addComponent(name) {
   }
 }
 
+async function addModuleComponent(name) {
+  const module = moduleComponents.value[name]
+  if (!module) {
+    ElMessage.error('组件不存在')
+    return
+  }
+  emit('addComponent', module)
+}
+
+function deleteItem(name) {
+  delete moduleComponents.value[name]
+  localStorage.removeItem('module-' + name)
+  ElMessage.success('删除成功')
+}
+
 const configData = ref('')
 // 处理文件拖拽
 function handleFileDrop(e) {
@@ -99,6 +128,32 @@ function handleFileDrop(e) {
             <div class="componentName">{{ name }}</div>
             <div class="componentDesc">{{ components[name].desc }}</div>
           </div>
+          <div class="componentAreaName">内置组件</div>
+        </div>
+        <div class="moduleComponents">
+          <div
+            v-for="name of Object.keys(moduleComponents)"
+            class="componentItem"
+            @click="addModuleComponent(name)"
+          >
+            <div class="componentName">{{ name }}</div>
+            <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
+            <el-popconfirm
+              class="deleteItem"
+              title="确定删除此组件"
+              placement="top-start"
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              @confirm="deleteItem(name)"
+            >
+              <template #reference>
+                <el-icon class="deleteItem" @click.prevent.stop>
+                  <Close/>
+                </el-icon>
+              </template>
+            </el-popconfirm>
+          </div>
+          <div class="componentAreaName">自定义组件</div>
         </div>
 
         <div class="addComponentContainer">
@@ -122,8 +177,30 @@ function handleFileDrop(e) {
 <style>
 .readyComponentDialog {
 
+  .readyComponents, .moduleComponents {
+    height: calc(35% - 1px);
+    overflow: auto;
+    position: relative;
+  }
+
+  .componentAreaName {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 5vw;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+    color: #dddddd;
+    user-select: none;
+  }
+
   .readyComponents {
-    height: 70%;
+    border-bottom: 2px dashed;
   }
 
   .componentItem {
@@ -152,6 +229,19 @@ function handleFileDrop(e) {
       font-size: 14px;
       color: #666;
       margin-left: 8px;
+    }
+
+    .deleteItem {
+      color: #ff4d4f;
+      font-size: 14px;
+      cursor: pointer;
+      margin-left: 8px;
+
+      &:hover {
+        color: white;
+        transform: rotate(180deg);
+        scale: 1.2;
+      }
     }
 
     &:hover {
@@ -186,6 +276,7 @@ function handleFileDrop(e) {
 
   .el-dialog__body {
     height: calc(100% - 80px) !important;
+    max-height: calc(100% - 80px) !important;
   }
 }
 </style>

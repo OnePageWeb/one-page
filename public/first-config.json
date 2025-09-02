@@ -1,12 +1,14 @@
 {
   "globalStyle": {
     "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\nbody {\n  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);\n  background-size: 400% 400%;\n  animation: gradientBG 5s ease infinite;\n}\n.linkItem .el-text {\n    color: #efefef;\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
-    "globalStyle-tag-新的": "null",
-    "globalStyle-tag-旧的": "null",
+    "globalStyle-tag-搜索栏暗色": "div.searchContainer > div.searchContent {\n\n  .el-input-group__prepend {\n    background-color: gray;\n  }\n\n  div.el-input__wrapper {\n    background-color: gray;\n\n    input {\n      color: #313131;\n\n      &::placeholder {\n        color: #313131;\n      }\n    }\n  }\n}",
+    "globalStyle-tag-black": ".commonDialog {\n  --el-dialog-bg-color: #575757;\n\n  .el-dialog__header {\n    background-color: #225b95;\n  }\n\n  .el-dialog__footer {\n    background-color: #373737;\n  }\n\n  .globeStyleInput {\n    .el-textarea__inner {\n      background-color: #4d4d4d;\n      color: #c6c6c7;\n    }\n  }\n}\n\n* {\n  --el-color-primary: #235e9b;\n  --el-color-primary-light-3: rgb(65 105 145);\n}\n\n.el-input__wrapper {\n  background-color: #2f2f2f;\n\n  .el-input__inner {\n    color: #c3c3c3;\n  }\n}\n\n.el-textarea__inner {\n  background-color: #2f2f2f;\n  color: white;\n}\n\n.el-form-item__label {\n    background-color: #2e2e2e;\n    color: #b2b2b2;\n}\n\n.deleteIcon {\n  background-color: #ad3838;\n}\n\n.readyComponentDialog {\n  .componentItem {\n    background: #cbcbcb;\n  }\n}\n\n.el-popper {\n  background: #c7c7c7;\n}\n\n.ioContainer {\n  .input, .result {\n    background-color: #c7c7c7 !important;\n  }\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
+    "globalStyle-tag-标签暗色": "div.noteContent {\n\n  div.result {\n    border: 4px solid rgb(0, 0, 0, 0.4);\n    color: #b9b9b9;\n    background: #535353;\n  }\n\n  .input .el-textarea__inner {\n    color: #b5b5b5;\n    background: #272727;\n  }\n}",
     "globalStyle-tags": [
       "默认",
-      "新的",
-      "旧的"
+      "搜索栏暗色",
+      "black",
+      "标签暗色"
     ],
     "globalStyle-selectTags": [
       "默认"
@@ -14,12 +16,36 @@
   },
   "layout": [
     {
+      "type": "button",
+      "id": "b566e1fd3db3-4369-8e14-94b7c46b2d7c",
+      "x": 43,
+      "y": 0,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "type": "button",
+      "id": "a8abb3addaf9-4b53-8222-ed1b5e5e7505",
+      "x": 46,
+      "y": 0,
+      "w": 2,
+      "h": 3
+    },
+    {
       "type": "note",
       "id": "cf4c965843be-4662-b199-d14e172d3e3f",
       "x": 1,
       "y": 1,
       "w": 7,
       "h": 22
+    },
+    {
+      "type": "button",
+      "id": "f1f0fcc3490a-42b6-8c9b-0a734e47fd30",
+      "x": 22,
+      "y": 9,
+      "w": 4,
+      "h": 3
     },
     {
       "type": "text",
@@ -73,7 +99,7 @@
       "type": "link",
       "id": "7d9485dc-23f9-4add-8f3f-bc0d0476d306",
       "x": 18,
-      "y": 30,
+      "y": 29,
       "w": 12,
       "h": 4
     },
@@ -96,15 +122,33 @@
   ],
   "components": [
     {
+      "id": "b566e1fd3db3-4369-8e14-94b7c46b2d7c",
+      "style": ".button {\n  background-color: unset !important;\n\n  &:hover {\n    animation: upAndDown 0.5s ease-in-out infinite;\n  }\n}",
+      "data": "{\"name\":\"切换到工作\",\"content\":{\"text\":\"function appendWorkspaceParam(workspaceValue) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('workspace', workspaceValue);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst name = '${工作区名称:这里填入工作区名称?工作}'\\nappendWorkspaceParam(name)\",\"params\":[{\"name\":\"工作区名称\",\"desc\":\"这里填入工作区名称\",\"value\":\"工作\"}]}}",
+      "type": "button"
+    },
+    {
+      "id": "a8abb3addaf9-4b53-8222-ed1b5e5e7505",
+      "style": ".button {\n  background-color: unset !important;\n\n  svg {\n    width: 60%;\n    fill: white;\n\n    &:hover {\n       transform: rotate(180deg);\n    }\n  }\n}\n",
+      "data": "{\"name\":\"<svg t=\\\"1756708969473\\\" class=\\\"icon\\\" viewBox=\\\"0 0 1024 1024\\\" version=\\\"1.1\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" p-id=\\\"5418\\\"><path d=\\\"M512 697.6c102.4 0 182.4-83.2 182.4-185.6 0-102.4-83.2-185.6-182.4-185.6-102.4 0-182.4 83.2-182.4 185.6C329.6 614.4 412.8 697.6 512 697.6L512 697.6zM512 646.4c-73.6 0-134.4-60.8-134.4-134.4 0-73.6 60.8-134.4 134.4-134.4 73.6 0 134.4 60.8 134.4 134.4C646.4 585.6 585.6 646.4 512 646.4L512 646.4z\\\" p-id=\\\"5419\\\"></path><path d=\\\"M249.015232 843.178592c35.2 28.8 73.6 51.2 112 67.2 41.6-38.4 96-60.8 150.4-60.8 57.6 0 108.8 22.4 150.4 60.8 41.6-16 80-38.4 112-67.2-12.8-54.4-3.2-112 22.4-163.2 28.8-48 73.6-86.4 128-102.4 3.2-22.4 6.4-44.8 6.4-67.2 0-22.4-3.2-44.8-6.4-67.2-54.4-16-99.2-54.4-128-102.4-28.8-48-35.2-108.8-22.4-163.2-35.2-28.8-73.6-51.2-112-67.2-41.6 38.4-92.8 60.8-150.4 60.8-54.4 0-108.8-22.4-150.4-60.8-41.6 16-80 38.4-112 67.2 12.8 54.4 3.2 112-22.4 163.2-28.8 48-73.6 86.4-128 102.4-3.2 22.4-6.4 44.8-6.4 67.2 0 22.4 3.2 44.8 6.4 67.2 54.4 16 99.2 54.4 128 102.4C252.215232 731.178592 261.815232 788.778592 249.015232 843.178592M361.015232 958.378592c-54.4-19.2-105.6-48-150.4-89.6-6.4-6.4-9.6-16-6.4-22.4 16-48 9.6-99.2-16-140.8-25.6-44.8-64-73.6-112-83.2-9.6-3.2-16-9.6-16-19.2-6.4-28.8-9.6-60.8-9.6-89.6 0-28.8 3.2-57.6 9.6-89.6 3.2-9.6 9.6-16 16-19.2 48-12.8 89.6-41.6 112-83.2 25.6-44.8 28.8-92.8 16-140.8-3.2-9.6 0-19.2 6.4-22.4 44.8-38.4 96-67.2 150.4-89.6 9.6-3.2 16 0 22.4 6.4 35.2 35.2 80 57.6 128 57.6 48 0 96-19.2 128-57.6 6.4-6.4 16-9.6 22.4-6.4 54.4 19.2 105.6 48 150.4 89.6 6.4 6.4 9.6 16 6.4 22.4-16 48-9.6 99.2 16 140.8 25.6 44.8 64 73.6 112 83.2 9.6 3.2 16 9.6 16 19.2 6.4 28.8 9.6 60.8 9.6 89.6 0 28.8-3.2 57.6-9.6 89.6-3.2 9.6-9.6 16-16 19.2-48 12.8-89.6 41.6-112 83.2-25.6 44.8-28.8 92.8-16 140.8 3.2 9.6 0 19.2-6.4 22.4-44.8 38.4-96 67.2-150.4 89.6-9.6 3.2-16 0-22.4-6.4-35.2-35.2-80-57.6-128-57.6-48 0-96 19.2-128 57.6-3.2 3.2-9.6 6.4-16 6.4C364.215232 958.378592 361.015232 958.378592 361.015232 958.378592z\\\" p-id=\\\"5420\\\"></path></svg>\",\"content\":{\"text\":\"const key = '${快捷按键值:小写字母?d}'\\n\\n// 创建键盘按下事件\\nconst keydownEvent = new KeyboardEvent('keydown', {\\n  key: key,\\n  keyCode: 'KeyD',\\n  altKey: true,\\n  code: key\\n});\\n\\n// 创建键盘释放事件\\nconst keyupEvent = new KeyboardEvent('keyup', {\\n  key: key,\\n  keyCode: 'KeyD',\\n  altKey: true,\\n  code: key\\n});\\n\\n// 向文档或特定元素触发事件\\nwindow.dispatchEvent(keydownEvent);\\n// 模拟按下后释放\\nsetTimeout(() => {\\n  window.dispatchEvent(keyupEvent);\\n}, 100);\",\"params\":[{\"name\":\"快捷按键值\",\"desc\":\"小写字母\",\"value\":\"d\"}]}}",
+      "type": "button"
+    },
+    {
       "id": "cf4c965843be-4662-b199-d14e172d3e3f",
       "style": "height: 100%; width: 100%; position: relative;",
       "data": "{\"text\":\"### 提示\\n\\n#### 操作栏\\n\\n按住`ALT` + `D`即可开启和关闭\\n\\n#### 快捷键\\n\\n按住`ALT`可在左下角显示快捷键\\n\\n#### 链接快切\\n\\n1. 鼠标拖拽 __快速链接__ 中的图标，在任意位置释放即可开启单独窗口。\\n2. 点击开启了快切的图标可将窗口拉出。\\n\\n#### 搜索引擎切换\\n\\n在搜索框中按下 `TAB` 或是 `SHIFT + TAB`来切换搜索引擎\\n\\n#### 快速便签\\n\\n便签组件即使在非编辑模式下，双击展示框同样可以进行编辑\"}",
       "type": "note"
     },
     {
+      "id": "f1f0fcc3490a-42b6-8c9b-0a734e47fd30",
+      "style": ".button {\n  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);\n  background-size: 400% 400%;\n  animation: gradientBG 5s ease infinite;\n  color: #ffffff7d;\n}",
+      "data": "{\"name\":\"切换样式\",\"content\":{\"text\":\"function appendWorkspaceParam(workspaceValue) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    const style= url.searchParams.get('style');\\n    if (style.includes('默认')) {\\n      // 设置或更新workspace参数\\n      url.searchParams.set('style', workspaceValue);\\n      // 跳转到新URL（刷新页面）\\n      window.location.href = url.toString();\\n    } else {\\n      // 设置或更新workspace参数\\n      url.searchParams.set('style', '默认');\\n      // 跳转到新URL（刷新页面）\\n      window.location.href = url.toString();\\n    }\\n}\\n\\nconst name = '${样式名称:这里填入要启用样式的名称，以英文逗号区隔?default}'\\nappendWorkspaceParam(name)\",\"params\":[{\"name\":\"样式名称\",\"desc\":\"这里填入要启用样式的名称，以英文逗号区隔\",\"value\":\"black,搜索栏暗色,标签暗色\"}]}}",
+      "type": "button"
+    },
+    {
       "id": "abb00c3f9e55-49c5-8771-e56743f9ddad",
       "style": ".typing {\n  color: white;\n  font-size: 42px;\n  font-weight: blod;\n}",
-      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display: flex;justify-content: center;align-items: center;\\\">\\n<span class=\\\"typing\\\">一页 · ONE</span>\\n</div>\"}",
+      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display: flex;justify-content: center;align-items: center;\\\">\\n<span class=\\\"typing\\\">一页 · ONE</span>\\n</div>\",\"params\":[]}",
       "type": "text"
     },
     {
@@ -116,7 +160,7 @@
     {
       "id": "f1429f51-5ecd-45e7-8b1c-0c8240302c35",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">这些网站</span></div>\"}",
+      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">这些网站</span></div>\",\"params\":[]}",
       "type": "text"
     },
     {
@@ -134,7 +178,7 @@
     {
       "id": "15c243d7-760c-4405-85fc-e09307c58dfc",
       "style": "height: 100%; width: 100%; position: relative;",
-      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">常用AI</span></div>\"}",
+      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display:flex;align-items: center;justify-content: center;font-weight:bold;/* border-radius: 12px;\\\"><span style=\\\"padding: 4px 16px;background: #ffffff;border-radius: 24px;\\\">常用AI</span></div>\",\"params\":[]}",
       "type": "text"
     },
     {
@@ -145,8 +189,8 @@
     },
     {
       "id": "b9a2b49f971f-4136-ad80-32e6e09a3685",
-      "style": ".container {\n  display: flex;\n  align-items: center;\n  justify-content: flex-end;\n}\n\n.text {\n  padding: 8px 16px;\n  height: 20px;\n  line-height: 20px;\n  font-weight: bold;\n  font-size: 24px;\n  color: white;\n}",
-      "data": "{\"text\":\"<div class=\\\"container\\\"><span class=\\\"text\\\">特别链接</span></div>\"}",
+      "style": ".container {\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: flex-end;\n}\n\n.text {\n  padding: 8px 16px;\n  height: 20px;\n  line-height: 20px;\n  font-weight: bold;\n  font-size: 24px;\n  color: white;\n}",
+      "data": "{\"text\":\"<div class=\\\"container\\\"><span class=\\\"text\\\">特别链接</span></div>\",\"params\":[]}",
       "type": "text"
     },
     {

@@ -167,6 +167,14 @@
         ref="workspaceHolder"
     />
 
+    <name-desc-dialog
+      ref="nameDescDialog"
+      title="新增组件到模板"
+      name-text="组件名称"
+      desc-text="组件描述"
+      @save="addModule"
+    />
+
     <div
         :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
@@ -239,10 +247,11 @@ import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
 import {CirclePlus, Edit, InfoFilled, Monitor, Operation, Picture, Rank, Top} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
-import {exportData, loadData, removeData, saveData,} from "@/js/data.js"
+import {exportData, loadData, removeData, saveData, saveDataDirect,} from "@/js/data.js"
 import {setWorkspace} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
+import NameDescDialog from "@/items/nameDescDialog.vue"
 
 const itemType = [
   {
@@ -511,6 +520,13 @@ function createItemComponent(type, componentItem) {
           position: 'relative'
         },
       }, [
+        h(componentItem, {
+          ref: componentItemRef,
+          style: {position: 'absolute'},
+          id: props.id,
+          enableEdit: props.enableEdit,
+          enableMove: props.enableMove
+        }),
         h(operateButtons, {
           style: {position: 'absolute',},
           id: props.id,
@@ -523,13 +539,7 @@ function createItemComponent(type, componentItem) {
           onZoomIn: zoomIn,
           onExportComponent: exportComponent,
           onCopy: copy,
-        }),
-        h(componentItem, {
-          ref: componentItemRef,
-          style: {position: 'absolute'},
-          id: props.id,
-          enableEdit: props.enableEdit,
-          enableMove: props.enableMove
+          onModule: addModuleConfirm,
         }),
       ])
     }
@@ -609,9 +619,9 @@ function deleteItem(id) {
 }
 
 // 编辑组件样式
-let curComponentId = ref('')
-let isEditComponentStyle = ref(false)
-let componentStyle = ref('')
+const curComponentId = ref('')
+const isEditComponentStyle = ref(false)
+const componentStyle = ref('')
 
 function editStyle(id) {
   curComponentId.value = id.value
@@ -711,17 +721,14 @@ function onZoomInClose() {
     zoomApp.unmount()
     zoomApp = null
   }
-}
-
-// 当窗口关闭时，尝试刷新数据
-watch(zoomInDialogVisible, v => {
-  if (!v && enableEdit) {
+  // 刷新组件数据
+  if (enableEdit) {
     const element = elementMap[zoomInId]
     if (element) {
       element.load()
     }
   }
-})
+}
 
 // 复制
 function copy(id, type) {
@@ -730,7 +737,7 @@ function copy(id, type) {
 }
 
 function exportComponentData(id, type) {
-  const idValue = id.value
+  const idValue = id.value || id
   const componentData = {}
   // 组件配置
   const componentConfig = loadData(idValue)
@@ -742,8 +749,32 @@ function exportComponentData(id, type) {
   if (componentStyle) {
     componentData.style = componentStyle
   }
-  componentData.type = type.value
+  componentData.type = type.value || type
   return componentData
+}
+
+const nameDescDialog = ref(null)
+let moduleId = null
+let moduleType = null
+function addModuleConfirm(id, type) {
+  moduleId = id.value
+  moduleType = type.value
+  nameDescDialog.value.open()
+}
+
+function addModule({name, desc}) {
+  if (!name) {
+    ElMessage.error('请输入名称')
+    return
+  }
+  const componentData = exportComponentData(moduleId, moduleType)
+  const moduleData = {
+    name, desc,
+    ...componentData
+  }
+  saveDataDirect('module-' + name, JSON.stringify(moduleData))
+  ElMessage.success('添加成功')
+  nameDescDialog.value.cancel()
 }
 
 // 导出组件
@@ -977,6 +1008,7 @@ body {
 .menu-show {
   height: 80px;
   opacity: 1;
+  z-index: 2;
 }
 
 .menu-hide {
@@ -1035,7 +1067,7 @@ textarea {
   border-radius: 20px;
   padding: 8px !important;
   margin: 8px 8px 8px 16px;
-  background-color: #ffb6b6 !important;
+  background-color: #ffb6b6;
   border: 2px solid #ffffff;
 
   .el-form-item__content {

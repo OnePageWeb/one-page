@@ -81,7 +81,7 @@ function update() {
 
 function load(data) {
   if (data) {
-    content.value ||= data.text
+    content.value = data.text || content.value
     params.value = data.params || []
     calcParams()
     update()

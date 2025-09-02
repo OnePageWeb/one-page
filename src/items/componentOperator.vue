@@ -34,7 +34,7 @@ const {visible} = toRefs(props)
     gap: 16px;
 
     .el-icon {
-      scale: 1.0;
+      scale: 1.4;
     }
   }
 
@@ -42,7 +42,7 @@ const {visible} = toRefs(props)
     scale: 0.4;
     cursor: pointer;
     &:hover {
-      scale: 1.4;
+      scale: 1.8;
     }
   }
 }
@@ -52,5 +52,6 @@ const {visible} = toRefs(props)
   padding: 0;
   opacity: 0;
   margin: 0;
+  display: none;
 }
 </style>
