@@ -148,7 +148,7 @@ function handleFileDrop(e) {
               @confirm="deleteItem(name)"
             >
               <template #reference>
-                <el-icon class="deleteItem">
+                <el-icon class="deleteItem" @click.prevent.stop>
                   <Close/>
                 </el-icon>
               </template>
@@ -197,6 +197,7 @@ function handleFileDrop(e) {
     justify-content: center;
     z-index: -1;
     color: #dddddd;
+    user-select: none;
   }
 
   .readyComponents {
