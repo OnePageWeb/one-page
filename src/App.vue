@@ -169,7 +169,7 @@
 
     <name-desc-dialog
       ref="nameDescDialog"
-      title="新增组件"
+      title="新增组件到模板"
       name-text="组件名称"
       desc-text="组件描述"
       @save="addModule"
@@ -520,6 +520,13 @@ function createItemComponent(type, componentItem) {
           position: 'relative'
         },
       }, [
+        h(componentItem, {
+          ref: componentItemRef,
+          style: {position: 'absolute'},
+          id: props.id,
+          enableEdit: props.enableEdit,
+          enableMove: props.enableMove
+        }),
         h(operateButtons, {
           style: {position: 'absolute',},
           id: props.id,
@@ -533,13 +540,6 @@ function createItemComponent(type, componentItem) {
           onExportComponent: exportComponent,
           onCopy: copy,
           onModule: addModuleConfirm,
-        }),
-        h(componentItem, {
-          ref: componentItemRef,
-          style: {position: 'absolute'},
-          id: props.id,
-          enableEdit: props.enableEdit,
-          enableMove: props.enableMove
         }),
       ])
     }
