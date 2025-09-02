@@ -5,13 +5,7 @@ import vue from '@vitejs/plugin-vue'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
     // 在回调函数中可以安全访问 mode
-    let base = mode === 'production' ? '/one/' : '/'
-
-    if (mode === 'dev') {
-        // 映射为标准的 development 环境
-        process.env.NODE_ENV = 'development'
-        base = '/'
-    }
+    let base = '/'
 
     return {
         plugins: [vue()],
