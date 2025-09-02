@@ -132,7 +132,6 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: auto;
     scrollbar-width: none;
 
     * {

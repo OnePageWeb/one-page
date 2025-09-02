@@ -711,17 +711,14 @@ function onZoomInClose() {
     zoomApp.unmount()
     zoomApp = null
   }
-}
-
-// 当窗口关闭时，尝试刷新数据
-watch(zoomInDialogVisible, v => {
-  if (!v && enableEdit) {
+  // 刷新组件数据
+  if (enableEdit) {
     const element = elementMap[zoomInId]
     if (element) {
       element.load()
     }
   }
-})
+}
 
 // 复制
 function copy(id, type) {
@@ -977,6 +974,7 @@ body {
 .menu-show {
   height: 80px;
   opacity: 1;
+  z-index: 2;
 }
 
 .menu-hide {
