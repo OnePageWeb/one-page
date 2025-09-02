@@ -129,6 +129,7 @@ function handleFileDrop(e) {
             <div class="componentName">{{ name }}</div>
             <div class="componentDesc">{{ components[name].desc }}</div>
           </div>
+          <div class="componentAreaName">内置组件</div>
         </div>
         <div class="moduleComponents">
           <div
@@ -153,6 +154,7 @@ function handleFileDrop(e) {
               </template>
             </el-popconfirm>
           </div>
+          <div class="componentAreaName">自定义组件</div>
         </div>
 
         <div class="addComponentContainer">
@@ -177,8 +179,28 @@ function handleFileDrop(e) {
 .readyComponentDialog {
 
   .readyComponents, .moduleComponents {
-    height: 35%;
+    height: calc(35% - 1px);
     overflow: auto;
+    position: relative;
+  }
+
+  .componentAreaName {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 5vw;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+    color: #dddddd;
+  }
+
+  .readyComponents {
+    border-bottom: 2px dashed;
   }
 
   .componentItem {

@@ -1067,7 +1067,7 @@ textarea {
   border-radius: 20px;
   padding: 8px !important;
   margin: 8px 8px 8px 16px;
-  background-color: #ffb6b6 !important;
+  background-color: #ffb6b6;
   border: 2px solid #ffffff;
 
   .el-form-item__content {

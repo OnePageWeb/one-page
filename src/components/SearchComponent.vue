@@ -318,10 +318,6 @@ defineExpose({
       caret-color: #8e8e8e;
       border-radius: 0 120px 120px 0 !important;
 
-      .el-input__inner::placeholder {
-        text-indent: 8px;
-      }
-
       &:hover {
         font-size: 20px;
         line-height: 1;
@@ -330,9 +326,19 @@ defineExpose({
       .el-input__wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 0 120px 120px 0 !important;
-        box-shadow: unset !important;
-        padding: 0 11px;
+        border-radius: 0 120px 120px 0;
+        box-shadow: unset;
+        padding: 0;
+
+        input {
+          padding: 0 12px;
+          height: 100%;
+          border-radius: 0 120px 120px 0;
+
+          &:hover, &:focus {
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+          }
+        }
       }
     }
 

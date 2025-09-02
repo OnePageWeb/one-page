@@ -54,14 +54,12 @@ function selectTag(tag) {
       message: '已取消样式：' + tag,
       type: 'warning'
     })
-    console.log(selectTags.value)
   } else {
     selectTags.value.push(tag)
     ElMessage({
       message: '已激活样式：' + tag,
       type: 'success'
     })
-    console.log(selectTags.value)
   }
   loadSelectedStyle()
   save()
@@ -201,6 +199,9 @@ function clearStyle() {
 // 开启全局样式弹窗
 function open() {
   visible.value = true
+  globalStyle.value = ''
+  selectedTagIndex.value = -1
+  curTagName.value = ''
 }
 
 defineExpose({
@@ -267,7 +268,7 @@ defineExpose({
     >
       <el-input
           v-model="curTagName"
-          :placeholder="selectedTagIndex > -1 ? '编辑样式名称' : '新增样式名称'"
+          :placeholder="(selectedTagIndex > -1 ? '编辑样式名称' : '新增样式名称') + '，按下Enter以新增'"
           @keydown.enter="editTagName"
           :autofocus="true"
       >
@@ -383,6 +384,7 @@ defineExpose({
     .el-dialog__body {
       padding: 16px;
       height: calc(100% - 80px);
+      max-height: calc(100% - 80px);
     }
   }
 

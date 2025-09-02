@@ -154,6 +154,9 @@ defineExpose({
         font-size: 18px;
         font-weight: bold;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
 
