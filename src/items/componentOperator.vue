@@ -52,5 +52,6 @@ const {visible} = toRefs(props)
   padding: 0;
   opacity: 0;
   margin: 0;
+  display: none;
 }
 </style>

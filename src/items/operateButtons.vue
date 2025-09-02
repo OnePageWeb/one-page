@@ -1,9 +1,9 @@
 <script setup>
 import {defineEmits, ref, toRefs} from 'vue'
-import {Close, CopyDocument, Download, Picture, Rank, ZoomIn} from "@element-plus/icons-vue"
+import {Close, Connection, CopyDocument, Download, Picture, Rank, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 
-const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy'])
+const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy', 'module'])
 const props = defineProps({
   id: String,
   type: String,
@@ -23,6 +23,10 @@ function editStyle() {
 
 function copy() {
   emit('copy', id, type)
+}
+
+function module() {
+  emit('module', id, type)
 }
 
 function zoomIn() {
@@ -91,6 +95,17 @@ const operatorContainer = ref(null)
     </el-tooltip>
 
     <el-tooltip
+      v-if="enableMove || ctrl"
+      effect="light"
+      content="模板"
+      placement="bottom-start"
+    >
+      <el-icon class="module" @click="module">
+        <Connection/>
+      </el-icon>
+    </el-tooltip>
+
+    <el-tooltip
         v-if="enableEdit || ctrl"
         effect="light"
         content="导出此组件数据"
@@ -129,7 +144,7 @@ const operatorContainer = ref(null)
   transition: opacity 1s ease-in-out;
   animation: bgChange 1s infinite alternate;
 
-  .deleteItem, .editStyle, .dragHandle, .zoomIn, .exportComponent, .copy {
+  .deleteItem, .editStyle, .dragHandle, .zoomIn, .exportComponent, .copy, .module {
     top: 0;
     cursor: pointer;
     width: 20px;
@@ -165,6 +180,12 @@ const operatorContainer = ref(null)
   .copy {
     svg {
       background-color: #dfa946;
+    }
+  }
+
+  .module {
+    svg {
+      background-color: #46a9df;
     }
   }
 

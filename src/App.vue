@@ -167,6 +167,14 @@
         ref="workspaceHolder"
     />
 
+    <name-desc-dialog
+      ref="nameDescDialog"
+      title="新增组件"
+      name-text="组件名称"
+      desc-text="组件描述"
+      @save="addModule"
+    />
+
     <div
         :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
@@ -239,10 +247,11 @@ import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
 import {CirclePlus, Edit, InfoFilled, Monitor, Operation, Picture, Rank, Top} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
-import {exportData, loadData, removeData, saveData,} from "@/js/data.js"
+import {exportData, loadData, removeData, saveData, saveDataDirect,} from "@/js/data.js"
 import {setWorkspace} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
+import NameDescDialog from "@/items/nameDescDialog.vue"
 
 const itemType = [
   {
@@ -523,6 +532,7 @@ function createItemComponent(type, componentItem) {
           onZoomIn: zoomIn,
           onExportComponent: exportComponent,
           onCopy: copy,
+          onModule: addModuleConfirm,
         }),
         h(componentItem, {
           ref: componentItemRef,
@@ -609,9 +619,9 @@ function deleteItem(id) {
 }
 
 // 编辑组件样式
-let curComponentId = ref('')
-let isEditComponentStyle = ref(false)
-let componentStyle = ref('')
+const curComponentId = ref('')
+const isEditComponentStyle = ref(false)
+const componentStyle = ref('')
 
 function editStyle(id) {
   curComponentId.value = id.value
@@ -727,7 +737,7 @@ function copy(id, type) {
 }
 
 function exportComponentData(id, type) {
-  const idValue = id.value
+  const idValue = id.value || id
   const componentData = {}
   // 组件配置
   const componentConfig = loadData(idValue)
@@ -739,8 +749,32 @@ function exportComponentData(id, type) {
   if (componentStyle) {
     componentData.style = componentStyle
   }
-  componentData.type = type.value
+  componentData.type = type.value || type
   return componentData
+}
+
+const nameDescDialog = ref(null)
+let moduleId = null
+let moduleType = null
+function addModuleConfirm(id, type) {
+  moduleId = id.value
+  moduleType = type.value
+  nameDescDialog.value.open()
+}
+
+function addModule({name, desc}) {
+  if (!name) {
+    ElMessage.error('请输入名称')
+    return
+  }
+  const componentData = exportComponentData(moduleId, moduleType)
+  const moduleData = {
+    name, desc,
+    ...componentData
+  }
+  saveDataDirect('module-' + name, JSON.stringify(moduleData))
+  ElMessage.success('添加成功')
+  nameDescDialog.value.cancel()
 }
 
 // 导出组件
