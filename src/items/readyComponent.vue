@@ -17,7 +17,7 @@ const components = ref({})
 const loadConfigFiles = async () => {
   const files = import.meta.glob('/public/configs/components/*.json')
 
-  const prefix = process.env.NODE_ENV === 'production' ? '' : '/public'
+  const prefix = import.meta.env.BASE_URL === '/one/' ? '' : '/public'
   for (const path in files) {
     try {
       const file = await files[path]()
