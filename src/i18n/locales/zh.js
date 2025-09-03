@@ -191,6 +191,7 @@ export default {
     iframeInput: '请输入网址',
     inputDataInput: '输入参数，按下ctrl + enter即可执行方法',
     inputFunctionInput: '输入方法内容，可以使用input变量来获取输入值，setResult(String)方法来设置结果',
+    componentFilter: '过滤组件名称',
   },
   text: {
     configTip1: '可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。',

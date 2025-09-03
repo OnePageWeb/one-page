@@ -191,6 +191,7 @@ export default {
     iframeInput: 'Please enter URL',
     inputDataInput: 'Enter parameters, press ctrl + enter to execute the method',
     inputFunctionInput: 'Enter method content, you can use input variable to get input value, setResult(String) method to set result',
+    componentFilter: 'Filter component name',
   },
   text: {
     configTip1: 'You can paste the configuration content into the input box, or drag the JSON file into the input box.',
@@ -208,7 +209,7 @@ export default {
   },
   lang: {
     title: 'Language',
-    zh: 'Chinese',
+    zh: '中文',
     en: 'English',
     switch: 'Switch Language',
   },

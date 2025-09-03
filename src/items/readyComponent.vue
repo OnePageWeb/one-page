@@ -1,8 +1,8 @@
 <script setup>
 import {ElButton, ElDialog, ElIcon, ElInput, ElLoading, ElMessage, ElPopconfirm} from "element-plus"
-import {defineEmits, onMounted, ref} from "vue"
+import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
-import {Close} from "@element-plus/icons-vue"
+import {Close, Search} from "@element-plus/icons-vue"
 import {useI18n} from "vue-i18n"
 const {t} = useI18n()
 
@@ -18,6 +18,9 @@ defineExpose({
 })
 
 const components = ref({})
+const filterComponents = computed(() => {
+  return filterComponentName(filterName.value, components.value)
+})
 const loadConfigFiles = async () => {
   const files = import.meta.glob('/public/configs/components/*.json')
 
@@ -32,7 +35,24 @@ const loadConfigFiles = async () => {
   }
 }
 
+const filterComponentName = (name, components) => {
+  if (!filterName.value) {
+    return components
+  }
+  const filter = filterName.value.toLowerCase()
+  const result = {}
+  for (const name in components) {
+    if (name.toLowerCase().includes(filter) || components[name].desc?.includes(filter)) {
+      result[name] = components[name]
+    }
+  }
+  return result
+}
+
 const moduleComponents = ref({})
+const filterModuleComponents = computed(() => {
+  return filterComponentName(filterName.value, moduleComponents.value)
+})
 const loadModuleComponents = async () => {
   // 遍历localStorage
   for (let i = 0; i < localStorage.length; i++) {
@@ -48,6 +68,7 @@ onMounted(() => {
   loadConfigFiles()
 })
 
+const filterName = ref('')
 async function addComponent(name) {
   const loading = ElLoading.service({
     lock: true,
@@ -122,9 +143,21 @@ function handleFileDrop(e) {
       align-center
     >
       <div>
+        <el-input
+          v-model="filterName"
+          class="filterName"
+          resize="none"
+          :placeholder="t('placeholder.componentFilter')"
+        >
+          <template #prepend>
+            <el-icon>
+              <Search/>
+            </el-icon>
+          </template>
+        </el-input>
         <div class="readyComponents">
           <div
-            v-for="name of Object.keys(components)"
+            v-for="name of Object.keys(filterComponents)"
             class="componentItem"
             @click="addComponent(name)"
           >
@@ -135,7 +168,7 @@ function handleFileDrop(e) {
         </div>
         <div class="moduleComponents">
           <div
-            v-for="name of Object.keys(moduleComponents)"
+            v-for="name of Object.keys(filterModuleComponents)"
             class="componentItem"
             @click="addModuleComponent(name)"
           >
@@ -180,8 +213,16 @@ function handleFileDrop(e) {
 <style>
 .readyComponentDialog {
 
+  .filterName {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 8px;
+  }
+
   .readyComponents, .moduleComponents {
-    height: calc(35% - 1px);
+    height: calc(35% - 21px);
     overflow: auto;
     position: relative;
   }
