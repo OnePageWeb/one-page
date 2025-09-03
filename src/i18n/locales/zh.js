@@ -27,6 +27,7 @@ export default {
     view: '查看',
     execute: '执行',
     copy: '复制',
+    pinToTop: '置顶',
   },
   menu: {
     close: '关闭操作栏',

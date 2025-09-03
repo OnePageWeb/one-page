@@ -2,7 +2,7 @@
 import {ElIcon, ElMessage, ElTooltip} from "element-plus"
 import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
-import {CopyDocument, Delete, Edit, Plus, View} from '@element-plus/icons-vue'
+import {CopyDocument, Delete, Edit, Plus, Upload, View} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
 import {useI18n} from "vue-i18n"
@@ -55,6 +55,18 @@ function closeEdit() {
     currentIndex = -1
     save()
   }
+}
+
+function top(index) {
+  if (index === -1) {
+    return
+  }
+  const item = contentList.value[index]
+  contentList.value.splice(index, 1)
+  contentList.value.unshift(item)
+  resultList.value.splice(index, 1)
+  resultList.value.unshift(item.text)
+  save()
 }
 
 function deleteRecord(index) {
@@ -122,6 +134,16 @@ defineExpose({
           >
             <el-icon class="edit"  @click="edit(index)">
               <Edit/>
+            </el-icon>
+          </el-tooltip>
+          <el-tooltip
+              effect="light"
+              :content="t('common.pinToTop')"
+              placement="top"
+              :show-after="200"
+          >
+            <el-icon class="pinToTop"  @click="top(index)">
+              <upload/>
             </el-icon>
           </el-tooltip>
           <el-tooltip
@@ -222,11 +244,10 @@ defineExpose({
 
     .recordOperator {
       display: flex;
-      align-items: center;
       justify-content: center;
       position: absolute;
       right: 4px;
-      top: 0;
+      top: 4px;
       height: 100%;
       opacity: 0;
       pointer-events: none;
@@ -235,18 +256,24 @@ defineExpose({
         margin: 0 2px;
         border-radius: 40px;
         padding: 4px;
+        opacity: 0.8;
 
         svg {
           color: white;
         }
 
         &:hover {
+          opacity: 1;
           scale: 1.2;
         }
       }
 
       .edit {
         background-color: #46a9df;
+      }
+
+      .pinToTop {
+        background-color: #75e350;
       }
 
       .delete {
@@ -260,7 +287,7 @@ defineExpose({
 
     &:hover {
       .recordOperator {
-        opacity: 0.6;
+        opacity: 1;
         pointer-events: auto;
       }
     }

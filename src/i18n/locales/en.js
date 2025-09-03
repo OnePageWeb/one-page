@@ -27,6 +27,7 @@ export default {
     view: 'View',
     execute: 'Execute',
     copy: 'Copy',
+    pinToTop: 'Pin to Top',
   },
   menu: {
     close: 'Close Action Bar',
