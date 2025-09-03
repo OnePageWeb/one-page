@@ -124,7 +124,7 @@ defineExpose({
             v-model="param.value"
             v-for="param in params"
             :rows="1"
-            :placeholder="param.desc || (t('input.needInput') + param.name)"
+            :placeholder="param.desc || (t('placeholder.needInput') + param.name)"
             @change="update"
             @blur="onInputBlur"
         >
@@ -140,7 +140,7 @@ defineExpose({
         class="input"
         :rows="2"
         type="textarea"
-        :placeholder="placeholder || t('input.needInput')"
+        :placeholder="placeholder || t('placeholder.needInput')"
         @blur="onInputBlur"
         @focus="onInputFocus"
         @change="update"

@@ -195,7 +195,7 @@ export default {
   text: {
     configTip1: 'You can paste the configuration content into the input box, or drag the JSON file into the input box.',
     configTip2: 'It also supports using the configuration download address to fill in here to get automatically.',
-    configTip3: 'Note: Due to cross-domain restrictions, when the configuration address is unavailable, the page may try to use the proxy method of <a href="https://corsproxy.io">corsproxy.io</a> to obtain it.',
+    configTip3: 'Note: Due to cross-domain restrictions, when the configuration address is unavailable, the page may try to use the proxy method of https://corsproxy.io to obtain it.',
     configTip4: 'It is recommended to build your own proxy server.',
     h5Support: 'Support H5 tags',
     workspaceDesc: 'Workspace represents the current working environment. Different workspaces can have different configurations and data.',
@@ -203,10 +203,11 @@ export default {
   input: {
     params: 'Parameter List',
     paramsInfo: 'Parameter Description',
-    paramsTip: 'Use the format ${parameter name:parameter description?parameter default value} in the text to reference parameters. Both parameter description and default value can be omitted, for example: ${title:title content}',
+    paramsTip: `Use the format {'$'}{'{'}parameter name:parameter description?parameter default value{'}'} in the text to reference parameters. Both parameter description and default value can be omitted, for example: {'$'}{'{'}title:title content{'}'}`,
     name: 'Input Name',
   },
   lang: {
+    title: 'Language',
     zh: 'Chinese',
     en: 'English',
     switch: 'Switch Language',

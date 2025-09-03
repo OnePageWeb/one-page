@@ -192,7 +192,7 @@ function handleFileDrop(e) {
     position: absolute;
     top: 0;
     left: 0;
-    font-size: 5vw;
+    font-size: 4vw;
     font-weight: bold;
     display: flex;
     align-items: center;

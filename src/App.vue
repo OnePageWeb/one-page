@@ -50,6 +50,15 @@
           $t('workspace.settings')
         }}
       </el-button>
+      <el-text class="menuTitle" truncated>{{ $t('lang.title') }}</el-text>
+      <el-select class="langSelect" v-model="currentLang">
+        <el-option
+          v-for="item in langList"
+          :key="item"
+          :label="t(`lang.${item}`)"
+          :value="item"
+        />
+      </el-select>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
     <div ref="gridContainer" style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
@@ -261,9 +270,19 @@ import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
 import i18n from './i18n'
+import { changeLanguage, getCurrentLanguage } from "./i18n/utils.js"
 
 import {useI18n} from 'vue-i18n'
 const {t} = useI18n()
+
+const currentLang = ref(getCurrentLanguage())
+watch(currentLang, (newLang) => {
+  changeLanguage(newLang)
+})
+const langList = [
+  'zh',
+  'en'
+]
 
 const itemType = [
   {
@@ -1003,6 +1022,10 @@ body {
 
   .addItemSelect {
 
+  }
+
+  .langSelect {
+    width: 100px;
   }
 }
 

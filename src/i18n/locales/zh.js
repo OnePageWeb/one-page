@@ -195,7 +195,7 @@ export default {
   text: {
     configTip1: '可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。',
     configTip2: '同样支持使用配置下载地址填写于此处自动获取。',
-    configTip3: `注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。`,
+    configTip3: '注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用 https://corsproxy.io 的代理方式获取。',
     configTip4: '推荐自建代理服务器。',
     h5Support: '支持H5标签',
     workspaceDesc: '工作区表示了当前正在使用的工作环境，不同的工作区可以拥有不同的配置和数据。',
@@ -203,10 +203,11 @@ export default {
   input: {
     params: '参数列表',
     paramsInfo: '参数说明',
-    paramsTip: '在文本中使用 ${参数名:参数说明?参数默认值} 的格式来引用参数，参数说明与默认值都可以不填写，例如：${标题:标题内容}',
+    paramsTip: `在文本中使用 {'$'}{'{'}参数名:参数说明?参数默认值{'}'} 的格式来引用参数，参数说明与默认值都可以不填写，例如：{'$'}{'{'}标题:标题内容{'}'}`,
     name: '输入名称',
   },
   lang: {
+    title: '语言',
     zh: '中文',
     en: 'English',
     switch: '切换语言',
