@@ -1,0 +1,258 @@
+export default {
+  common: {
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    submit: 'Submit',
+    save: 'Save',
+    delete: 'Delete',
+    reset: 'Reset',
+    clear: 'Clear',
+    style: 'Style',
+    close: 'Close',
+    closeEdit: 'Close Edit',
+    openEdit: 'Open Edit',
+    load: 'Load',
+    download: 'Download',
+    refresh: 'Refresh',
+    apply: 'Apply',
+    name: 'Name',
+    showName: 'Show Name',
+    hideName: 'Hide Name',
+    desc: 'Description',
+    add: 'Add',
+    switch: 'Switch',
+    pressed: 'Pressed',
+    error: 'Error',
+    edit: 'Edit',
+    view: 'View',
+    execute: 'Execute',
+    copy: 'Copy',
+  },
+  menu: {
+    close: 'Close Action Bar',
+    open: 'Open Action Bar',
+  },
+  component: {
+    add: 'Add Grid',
+    addItem: 'Add Custom Grid',
+    addToModule: 'Add Component to Template',
+    name: 'Component Name',
+    desc: 'Component Description',
+    defined: 'Built-in Components',
+    custom: 'Custom Components',
+    operate: {
+      drag: 'Drag component, you can also drag by holding the component border',
+      export: 'Export this component data',
+      module: 'Add to Template',
+      copy: 'Copy this component',
+      zoomIn: 'Enlarge component',
+      style: 'Edit component style',
+      deleteConfirm: 'Are you sure to delete this component?',
+    },
+    delete: {
+      title: 'Confirm to delete this component',
+      content: 'Whether to delete the style',
+      confirm: 'This style content will be deleted and cannot be recovered!',
+    },
+    button: {
+      name: 'Button Name',
+    },
+    function: {
+      autoExecute: 'Auto-run on load is enabled',
+      clickExecute: 'Auto-run is disabled',
+      autoExecuteDesc: 'When enabled, the method will be executed automatically when the page loads',
+      execute: 'Execute',
+      executeDesc: 'Execute the method to get data in the result window',
+      functionContentView: 'View method content',
+    },
+    input: {
+      executeDesc: 'Execute the method to get results below',
+      copyDesc: 'Copy method result to clipboard',
+      clearDesc: 'Clear method execution result',
+      functionName: 'Method Name',
+    },
+    link: {
+      url: 'Link URL',
+      img: 'Link Icon Address',
+      switchNameVisible: 'Toggle Name Display',
+      layout: {
+        horizontal: 'Horizontal Layout',
+        floating: 'Floating Layout',
+        vertical: 'Vertical Layout',
+        switch: 'Toggle scrolling direction, applies when the component cannot display all links',
+      },
+      edit: {
+        title: 'Edit Quick Links',
+        urlName: 'Please enter link name',
+        url: 'Please enter link URL',
+        img: 'Please enter link icon address',
+      }
+    },
+    note: {
+      title: 'Note',
+      openWindow: 'Display in pop-up window',
+      export: 'Export note file',
+    },
+    search: {
+      title: 'Search Engine',
+      edit: {
+        title: 'Edit Search Engine',
+        prefix: 'Prefix Content',
+        prefixDesc: 'Content before the link, usually empty',
+        suffix: 'Suffix Content',
+        suffixDesc: 'Content after the link, usually advanced search append',
+        name: 'Search Engine Name',
+        nameDesc: 'Search engine name, used for display',
+        url: 'Search Engine URL',
+        urlDesc: 'Search engine URL, used for searching',
+        pd: 'Search Prompt',
+        pdDesc: 'Search prompt, displayed in the input box',
+      },
+    },
+  },
+  style: {
+    title: 'Style',
+    global: 'Global Style',
+    component: 'Component Style',
+    active_: 'Activated style: ',
+    inactive_: 'Deactivated style: ',
+    add: 'Add New Style',
+    edit: 'Edit Style',
+    name: 'Style Name',
+    delete: {
+      title: 'Delete Selected Style',
+      content: 'Whether to delete the style',
+      confirm: 'This style content will be deleted and cannot be recovered!',
+    },
+  },
+  config: {
+    title: 'Configuration',
+    switch: 'Configuration Switch',
+    load: 'Load Configuration',
+    save: 'Save Configuration',
+    loadConfirm: 'Are you sure to load the above configuration, which will overwrite all local configurations?',
+    clearConfirm: 'Are you sure to clear and reload the page?',
+    loading: 'Loading configuration...',
+    loadFail: '',
+  },
+  success: {
+    add: 'Add successful',
+    save: 'Save successful',
+    delete: 'Delete successful',
+    copy: 'Copy successful',
+  },
+  error: {
+    load: 'Load failed!',
+    noSuchComponent_: 'Corresponding component not found - %s',
+    noName: 'Please enter a name',
+    nameExist: 'Name already exists',
+    noConfigContent: 'No configuration content',
+    loadFormat: 'Format error',
+    uploadJson: 'Please upload a JSON file',
+    uploadMarkdown: 'Please upload a Markdown file',
+    noSelectStyle: 'Please select a style',
+    componentNotExist: 'Component does not exist',
+    workspaceEmpty: 'Workspace name cannot be empty',
+    cannotOpenWindow: 'Pop-up window is blocked! Please allow pop-ups for this site.',
+  },
+  layout: {
+    edit: 'Layout Edit',
+    enableMove: 'Enable Movement',
+    enableEdit: 'Enable Editing',
+  },
+  workspace: {
+    title: 'Workspace',
+    switch: 'Switch Workspace',
+    settings: 'Workspace Settings',
+    alreadyInThis: 'Already in current workspace',
+    current: 'Current Workspace',
+    delete: {
+      title: 'Delete Selected Workspace',
+      content: 'Whether to delete the workspace',
+      tip: 'All data under this workspace will be deleted and cannot be recovered!',
+    },
+  },
+  placeholder: {
+    configInput: 'Please enter configuration URL or drag JSON file here',
+    componentInput: 'Please enter configuration data or drag JSON file here',
+    newWorkspaceName: 'Please enter new workspace name',
+    noteInput: 'Enter content or drag Markdown file here',
+    searchInput: 'Enter search content, press Enter to search',
+    styleInput: 'Please enter style',
+    styleEdit_: 'Please edit style - ',
+    styleSelect: 'Click the style tab above to start editing',
+    styleNameAdd: 'Add new style name, press Enter to add',
+    styleNameEdit: 'Edit style name, press Enter to save',
+    needInput: 'Please enter',
+    buttonNameInput: 'Button name',
+    functionContentInput: 'Enter method content',
+    functionContentEdit: 'Edit method content',
+    htmlInput: 'Enter web page code',
+    iframeInput: 'Please enter URL',
+    inputDataInput: 'Enter parameters, press ctrl + enter to execute the method',
+    inputFunctionInput: 'Enter method content, you can use input variable to get input value, setResult(String) method to set result',
+  },
+  text: {
+    configTip1: 'You can paste the configuration content into the input box, or drag the JSON file into the input box.',
+    configTip2: 'It also supports using the configuration download address to fill in here to get automatically.',
+    configTip3: 'Note: Due to cross-domain restrictions, when the configuration address is unavailable, the page may try to use the proxy method of <a href="https://corsproxy.io">corsproxy.io</a> to obtain it.',
+    configTip4: 'It is recommended to build your own proxy server.',
+    h5Support: 'Support H5 tags',
+    workspaceDesc: 'Workspace represents the current working environment. Different workspaces can have different configurations and data.',
+  },
+  input: {
+    params: 'Parameter List',
+    paramsInfo: 'Parameter Description',
+    paramsTip: 'Use the format ${parameter name:parameter description?parameter default value} in the text to reference parameters. Both parameter description and default value can be omitted, for example: ${title:title content}',
+    name: 'Input Name',
+  },
+  lang: {
+    zh: 'Chinese',
+    en: 'English',
+    switch: 'Switch Language',
+  },
+  shortcut: {
+    q: 'Move Mode',
+    e: 'Edit Mode',
+    d: 'Action Bar',
+    r: 'Refresh Page',
+  },
+  itemType: {
+    text: {
+      name: 'Text Grid',
+      desc: 'Grid for displaying text content, allowing html tags'
+    },
+    notes: {
+      name: 'Note Grid',
+      desc: 'Grid for displaying Markdown content'
+    },
+    search: {
+      name: 'Search Bar',
+      desc: 'Search engine input box for searching specified content'
+    },
+    iframe: {
+      name: 'URL Grid',
+      desc: 'Grid for embedding web addresses, cross-domain not supported'
+    },
+    html: {
+      name: 'Web Page Grid',
+      desc: 'Grid that can embed web page code'
+    },
+    link: {
+      name: 'Quick Links',
+      desc: 'Grid for quick jumps, supporting custom links'
+    },
+    button: {
+      name: 'Button Grid',
+      desc: 'Button for triggering scripts'
+    },
+    input: {
+      name: 'Input Conversion',
+      desc: 'Conversion grid for calculating input, custom processing function, and getting results'
+    },
+    function: {
+      name: 'Calculation Function',
+      desc: 'Grid for custom calculations, custom processing functions. Double-click the grid in use mode to run'
+    }
+  }
+}

@@ -2,6 +2,8 @@
 import {defineEmits, ref, toRefs} from 'vue'
 import {Close, Connection, CopyDocument, Download, Picture, Rank, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy', 'module'])
 const props = defineProps({
@@ -51,7 +53,7 @@ const operatorContainer = ref(null)
       <el-tooltip
           v-if="enableMove || ctrl"
           effect="light"
-          content="拖动组件，按住组件边框也可以进行拖动"
+          :content="t('component.operate.drag')"
           placement="top-start"
           :show-after="300"
       >
@@ -62,7 +64,7 @@ const operatorContainer = ref(null)
       <el-tooltip
           v-if="enableEdit || ctrl"
           effect="light"
-          content="导出此组件数据"
+          :content="t('component.operate.export')"
           placement="top-start"
           :show-after="300"
       >
@@ -73,7 +75,7 @@ const operatorContainer = ref(null)
       <el-tooltip
           v-if="enableMove || ctrl"
           effect="light"
-          content="模板"
+          :content="t('component.operate.module')"
           placement="top-start"
           :show-after="300"
       >
@@ -84,7 +86,7 @@ const operatorContainer = ref(null)
       <el-tooltip
           v-if="enableMove || ctrl"
           effect="light"
-          content="复制此组件"
+          :content="t('component.operate.copy')"
           placement="top-start"
           :show-after="300"
       >
@@ -94,7 +96,7 @@ const operatorContainer = ref(null)
       </el-tooltip>
       <el-tooltip
           effect="light"
-          content="放大此组件"
+          :content="t('component.operate.zoomIn')"
           placement="top-start"
           :show-after="300"
       >
@@ -105,7 +107,7 @@ const operatorContainer = ref(null)
       <el-tooltip
           v-if="enableEdit || ctrl"
           effect="light"
-          content="编辑此组件样式"
+          :content="t('component.operate.style')"
           placement="top-start"
           :show-after="300"
       >
@@ -116,10 +118,11 @@ const operatorContainer = ref(null)
       <el-popconfirm
           v-if="enableEdit || ctrl"
           class="deleteItem"
-          title="确定删除此组件"
+          width="160px"
+          :title="t('component.operate.deleteConfirm')"
           placement="top-start"
-          confirm-button-text="确定"
-          cancel-button-text="取消"
+          :confirm-button-text="t('common.confirm')"
+          :cancel-button-text="t('common.cancel')"
           @confirm="deleteItem"
       >
         <template #reference>

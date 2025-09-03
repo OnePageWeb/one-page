@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import {ElTooltip} from "element-plus";
+import {ElTooltip} from "element-plus"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   text: {
@@ -19,7 +21,7 @@ const text = ref(props.text)
     <el-tooltip
       class="box-item"
       effect="light"
-      content="支持H5标签"
+      :content="t('text.h5Support')"
       placement="top-start"
       :show-after="200"
     >

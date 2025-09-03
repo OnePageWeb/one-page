@@ -14,7 +14,9 @@ import {
 import {onMounted, ref, toRefs} from "vue"
 import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
-import H5tag from "@/items/h5tag.vue";
+import H5tag from "@/items/h5tag.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const defaultLinks = [
   {
@@ -187,7 +189,7 @@ defineExpose({
           draggable="true"
           @dragend="openNewWindow(link)"
       >
-        <el-image :src="link.img" alt="图标">
+        <el-image :src="link.img" alt="favicon">
           <template #error>
             <div class="image-slot">
               <el-icon>
@@ -212,7 +214,7 @@ defineExpose({
     <el-dialog
         class="linkEditDialog commonDialog"
         v-model="dialogVisible"
-        title="编辑快速链接"
+        :title="t('component.link.edit.title')"
         width="60%"
         :append-to-body="true"
         align-center
@@ -222,17 +224,17 @@ defineExpose({
           <template v-for="(item, index) in tempLinks">
             <div class="linkEditItem">
               <el-form-item prop="name" class="linkName">
-                <el-input v-model="item.name" placeholder="请输入链接名称">
+                <el-input v-model="item.name" :placeholder="t('component.link.edit.urlName')">
                   <template #prepend>
-                    <h5tag text="名称" />
+                    <h5tag :text="t('common.name')" />
                   </template>
                 </el-input>
               </el-form-item>
-              <el-form-item label="链接URL" prop="url" class="linkUrl">
-                <el-input v-model="item.url" placeholder="请输入快速链接URL"/>
+              <el-form-item :label="t('component.link.url')" prop="url" class="linkUrl">
+                <el-input v-model="item.url" :placeholder="t('component.link.edit.url')"/>
               </el-form-item>
-              <el-form-item label="链接图标地址" prop="img" class="linkImg">
-                <el-input v-model="item.img" placeholder="请输入快速链接图标地址"/>
+              <el-form-item :label="t('component.link.img')" prop="img" class="linkImg">
+                <el-input v-model="item.img" :placeholder="t('component.link.edit.img')"/>
               </el-form-item>
               <el-form-item class="deleteIcon" @click="deleteLink(index)">
                 <el-icon>
@@ -247,8 +249,8 @@ defineExpose({
         <div class="dialog-footer">
           <el-popover
             class="box-item"
-            :title="nameVisible ? '显示名称' : '隐藏名称'"
-            content="切换名称显示"
+            :title="nameVisible ? t('common.showName') : t('common.hideName')"
+            :content="t('component.link.switchNameVisible')"
             placement="top-end"
           >
             <template #reference>
@@ -263,8 +265,8 @@ defineExpose({
           </el-popover>
           <el-popover
               class="box-item"
-              :title="layout === 0 ? '水平布局' : (layout === 1 ? '浮动布局' : '垂直布局')"
-              content="切换滚动方向，作用于组件不足以显示所有链接时"
+              :title="layout === 0 ? t('component.link.layout.horizontal') : (layout === 1 ? t('component.link.layout.floating') : t('component.link.layout.vertical'))"
+              :content="t('component.link.layout.switch')"
               placement="top-end"
           >
             <template #reference>
@@ -278,9 +280,11 @@ defineExpose({
               <Plus/>
             </el-icon>
           </el-button>
-          <el-button @click="cancelEdit">取消</el-button>
+          <el-button @click="cancelEdit">
+            {{ t('common.cancel') }}
+          </el-button>
           <el-button type="primary" @click="saveEdit">
-            保存
+            {{ t('common.save') }}
           </el-button>
         </div>
       </template>

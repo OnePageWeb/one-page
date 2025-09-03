@@ -4,6 +4,8 @@ import {onMounted, ref, toRefs, watch} from "vue"
 import {Close, Plus, Tools} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -182,7 +184,7 @@ defineExpose({
     <div class="searchContent">
       <el-select
           v-model="nowSearchEngine"
-          placeholder="搜索引擎"
+          :placeholder="t('component.search.title')"
           class="searchEngine"
           @change="save"
       >
@@ -201,7 +203,7 @@ defineExpose({
       <el-input
           v-model="searchContent"
           class="input"
-          :placeholder="searchEngineMap[nowSearchEngine]?.pd || '输入搜索内容'"
+          :placeholder="searchEngineMap[nowSearchEngine]?.pd || t('placeholder.searchInput')"
           @keydown.enter.prevent.stop="search"
           @keydown.tab.prevent="nextSearchEngine"
           clearable
@@ -218,34 +220,34 @@ defineExpose({
     <el-dialog
         class="commonDialog"
         v-model="dialogVisible"
-        title="编辑搜索引擎"
+        :title="t('component.search.edit.title')"
         width="60%"
         align-center
         destroy-on-close
     >
       <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">
         <div class="appendContainer">
-          <el-form-item label="前置内容" prop="prefix" class="prefix">
-            <el-input v-model="prefix" placeholder="在链接前的内容，通常是空"/>
+          <el-form-item :label="t('component.search.edit.prefix')" prop="prefix" class="prefix">
+            <el-input v-model="prefix" :placeholder="t('component.search.edit.prefixDesc')"/>
           </el-form-item>
-          <el-form-item label="后置内容" prop="suffix" class="suffix">
-            <el-input v-model="suffix" placeholder="在链接后的内容，通常是高级搜索"/>
+          <el-form-item :label="t('component.search.edit.suffix')" prop="suffix" class="suffix">
+            <el-input v-model="suffix" :placeholder="t('component.search.edit.suffixDesc')"/>
           </el-form-item>
         </div>
         <template v-for="(item, index) in tempSearchEngineList">
           <div class="searchItem">
             <el-form-item prop="name" class="searchName">
-              <el-input v-model="item.name" placeholder="请输入搜索引擎名称">
+              <el-input v-model="item.name" :placeholder="t('component.search.edit.nameDesc')">
                 <template #prepend>
-                  <h5tag text="搜索名称" />
+                  <h5tag :text="t('component.search.edit.name')" />
                 </template>
               </el-input>
             </el-form-item>
-            <el-form-item label="搜索引擎URL" prop="url" class="searchUrl">
-              <el-input v-model="item.url" placeholder="请输入搜索引擎URL"/>
+            <el-form-item :label="t('component.search.edit.url')" prop="url" class="searchUrl">
+              <el-input v-model="item.url" :placeholder="t('component.search.edit.urlDesc')"/>
             </el-form-item>
-            <el-form-item label="搜索提示语" prop="pd" class="searchPlaceholder">
-              <el-input v-model="item.pd" placeholder="请输入搜索提示语"/>
+            <el-form-item :label="t('component.search.edit.pd')" prop="pd" class="searchPlaceholder">
+              <el-input v-model="item.pd" :placeholder="t('component.search.edit.pdDesc')"/>
             </el-form-item>
             <el-form-item class="deleteIcon" @click="deleteSearch(index)">
               <el-icon>
@@ -262,9 +264,11 @@ defineExpose({
               <Plus/>
             </el-icon>
           </el-button>
-          <el-button @click="cancelEdit">取消</el-button>
+          <el-button @click="cancelEdit">
+            {{ t('common.cancel') }}
+          </el-button>
           <el-button type="primary" @click="saveEdit">
-            保存
+            {{ t('common.save') }}
           </el-button>
         </div>
       </template>

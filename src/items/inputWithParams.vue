@@ -2,6 +2,8 @@
 import {ElCollapse, ElCollapseItem, ElIcon, ElInput, ElPopover} from "element-plus"
 import {InfoFilled} from "@element-plus/icons-vue"
 import {ref, toRefs} from "vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   initText: String,
@@ -101,11 +103,11 @@ defineExpose({
       <el-collapse-item name="params">
         <template #title>
           <div class="title-wrapper">
-            参数列表
+            {{t('input.params')}}
             <el-popover
                 class="box-item"
-                title="参数说明"
-                content="在文本中使用 ${参数名:参数说明?参数默认值} 的格式来引用参数，参数说明与默认值都可以不填写，例如：${标题:标题内容}"
+                :title="t('input.paramsInfo')"
+                :content="t('input.paramsTip')"
                 placement="top-start"
                 width="400"
             >
@@ -122,7 +124,7 @@ defineExpose({
             v-model="param.value"
             v-for="param in params"
             :rows="1"
-            :placeholder="param.desc || ('请填写' + param.name)"
+            :placeholder="param.desc || (t('input.needInput') + param.name)"
             @change="update"
             @blur="onInputBlur"
         >
@@ -138,7 +140,7 @@ defineExpose({
         class="input"
         :rows="2"
         type="textarea"
-        :placeholder="placeholder || '输入内容'"
+        :placeholder="placeholder || t('input.needInput')"
         @blur="onInputBlur"
         @focus="onInputFocus"
         @change="update"

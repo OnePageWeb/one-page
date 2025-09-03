@@ -4,7 +4,9 @@ import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
-import InputWithParams from "@/items/inputWithParams.vue";
+import InputWithParams from "@/items/inputWithParams.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -22,10 +24,10 @@ function onInputUpdate(value) {
 
 const isEditing = ref(false)
 
-const inputWithParams = ref(null)
+const inputWithParamsRef = ref(null)
 
 function save() {
-  const data = inputWithParams.value.save()
+  const data = inputWithParamsRef.value.save()
   saveData(props.id, JSON.stringify(data))
 }
 
@@ -44,7 +46,7 @@ function load(data) {
   if (save) {
     const parse = JSON.parse(save)
     nextTick(() => {
-      inputWithParams.value.load(parse)
+      inputWithParamsRef.value.load(parse)
     })
   }
 }
@@ -58,14 +60,14 @@ defineExpose({
   <div class="textContent">
     <div :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="contentValue"/>
     <input-with-params
-        ref="inputWithParams"
+        ref="inputWithParamsRef"
         :class="['editContainer', isEditing ? 'editOnFocus' : '']"
         @update="onInputUpdate"/>
     <component-operator :visible="enableEdit">
       <el-tooltip
           v-if="isEditing"
           effect="light"
-          content="关闭编辑"
+          :content="t('common.closeEdit')"
           placement="top"
       >
         <el-icon @click="isEditing = false">
@@ -75,7 +77,7 @@ defineExpose({
       <el-tooltip
           v-else
           effect="light"
-          content="开启编辑"
+          :content="t('common.openEdit')"
           placement="top"
       >
         <el-icon @click="isEditing = true">

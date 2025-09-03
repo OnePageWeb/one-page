@@ -1,33 +1,36 @@
 <template>
   <div style="height: 100%; width: 100%; position: relative;">
     <div
-        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
+      :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
     >
       <el-tooltip
-          content="关闭操作栏"
-          placement="right"
+        :content="$t('common.close')"
+        placement="right"
       >
         <el-icon class="hideMenu" @click="showMenu = false">
           <Top/>
         </el-icon>
       </el-tooltip>
-      <el-text class="menuTitle" truncated>新增格子</el-text>
-      <el-button @click="readyComponent.open()" class="btn" :icon="CirclePlus" plain>添加格子</el-button>
-      <el-select class="addItemSelect" placeholder="添加自定义格子" @change="addItemWithEdit">
+      <el-text class="menuTitle" truncated>{{ $t('component.add') }}</el-text>
+      <el-button @click="readyComponent.open()" class="btn" :icon="CirclePlus" plain>{{
+          $t('component.add')
+        }}
+      </el-button>
+      <el-select class="addItemSelect" :placeholder="$t('component.addItem')" @change="addItemWithEdit">
         <el-popover
-            class="box-item"
-            v-for="item in itemType"
-            :title="item.label"
-            :content="item.desc"
-            width="300"
-            placement="right-start"
+          class="box-item"
+          v-for="item in itemType"
+          :title="item.label"
+          :content="item.desc"
+          width="300"
+          placement="right-start"
         >
           <template #reference>
             <div>
               <el-option
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
                 <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
                 {{ item.label }}
@@ -36,14 +39,17 @@
           </template>
         </el-popover>
       </el-select>
-      <el-text class="menuTitle" truncated>布局编辑</el-text>
-      <el-checkbox v-model="enableMove" label="开启移动" border/>
-      <el-checkbox v-model="enableEdit" label="开启编辑" border/>
-      <el-text class="menuTitle" truncated>样式</el-text>
-      <el-button @click="editGlobalStyle" class="btn" :icon="Picture" plain>全局样式</el-button>
-      <el-text class="menuTitle" truncated>配置切换</el-text>
-      <el-button @click="openLoadConfig" class="btn" :icon="Edit" plain>加载配置</el-button>
-      <el-button @click="openWorkspaceHolder" class="btn" :icon="Monitor" plain>工作区设定</el-button>
+      <el-text class="menuTitle" truncated>{{ $t('layout.edit') }}</el-text>
+      <el-checkbox v-model="enableMove" :label="$t('layout.enableMove')" border/>
+      <el-checkbox v-model="enableEdit" :label="$t('layout.enableEdit')" border/>
+      <el-text class="menuTitle" truncated>{{ $t('style.title') }}</el-text>
+      <el-button @click="editGlobalStyle" class="btn" :icon="Picture" plain>{{ $t('style.global') }}</el-button>
+      <el-text class="menuTitle" truncated>{{ $t('config.title') }}</el-text>
+      <el-button @click="openLoadConfig" class="btn" :icon="Edit" plain>{{ $t('config.load') }}</el-button>
+      <el-button @click="openWorkspaceHolder" class="btn" :icon="Monitor" plain>{{
+          $t('workspace.settings')
+        }}
+      </el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
     <div ref="gridContainer" style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
@@ -52,71 +58,73 @@
 
     <!-- 配置加载弹窗 -->
     <el-dialog
-        title="加载配置"
-        v-model="configLoaderVisible"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
+      :title="$t('config.load')"
+      v-model="configLoaderVisible"
+      width="50%"
+      class="configDialog commonDialog"
+      align-center
     >
       <template #header="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
-          <div :id="titleId" :class="titleClass">加载配置</div>
+          <div :id="titleId" :class="titleClass">{{ $t('config.load') }}</div>
           <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true">
             <InfoFilled/>
           </el-icon>
         </div>
       </template>
       <el-input
-          v-model="configData"
-          class="globeStyleInput"
-          type="textarea"
-          resize="none"
-          placeholder="请输入配置URL或拖拽JSON文件到此处"
-          @dragover.prevent
-          @drop.prevent="handleFileDrop"
+        v-model="configData"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        :placeholder="$t('placeholder.configInput')"
+        @dragover.prevent
+        @drop.prevent="handleFileDrop"
       />
 
       <!-- 配置提示弹窗 -->
       <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
-            可以将配置内容粘贴到输入框内，也可以拖拽JSON文件到输入框中。
+            {{ $t('text.configTip1') }}
           </div>
-          <div style="font-size:large;font-weight: bold;margin-bottom: 4px">同样支持使用配置下载地址填写于此处自动获取。
+          <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
+            {{ $t('text.configTip2') }}
           </div>
-          <div style="margin-bottom: 4px">注意：由于跨域限制，当配置地址无法使用时，页面或尝试使用<a
-              href="https://corsproxy.io">corsproxy.io</a>的代理方式获取。
+          <div style="margin-bottom: 4px">{{ $t('text.configTip3') }}
           </div>
-          <div style="margin-bottom: 4px">推荐自建代理服务器。</div>
+          <div style="margin-bottom: 4px">{{ $t('text.configTip4') }}</div>
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="configLoaderTipVisible = false">关闭</el-button>
+            <el-button @click="configLoaderTipVisible = false">{{ $t('common.close') }}</el-button>
           </div>
         </template>
       </el-dialog>
       <template #footer>
-        <el-button type="primary" @click="downloadConfig">下载</el-button>
+        <el-button type="primary" @click="downloadConfig">{{ $t('common.download') }}</el-button>
         <el-popconfirm
-            title="确定加载以上配置，这会覆盖本地的所有配置？"
-            placement="top-start"
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            @confirm="loadConfig()"
+          :title="$t('config.loadConfirm')"
+          placement="top-end"
+          :confirm-button-text="$t('common.confirm')"
+          :cancel-button-text="$t('common.cancel')"
+          width="300"
+          @confirm="loadConfig()"
         >
           <template #reference>
-            <el-button type="primary">加载</el-button>
+            <el-button type="primary">{{ $t('config.load') }}</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
-            title="确定清空并重新加载页面？"
-            placement="top-start"
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            @confirm="clearConfig(true)"
+          :title="$t('config.clearConfirm')"
+          placement="top-end"
+          :confirm-button-text="$t('common.confirm')"
+          :cancel-button-text="$t('common.cancel')"
+          width="240"
+          @confirm="clearConfig(true)"
         >
           <template #reference>
-            <el-button type="danger">清空</el-button>
+            <el-button type="danger">{{ $t('common.clear') }}</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -124,59 +132,59 @@
 
     <!-- 组件样式弹窗 -->
     <el-dialog
-        title="组件样式"
-        v-model="isEditComponentStyle"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
+      title="组件样式"
+      v-model="isEditComponentStyle"
+      width="50%"
+      class="configDialog commonDialog"
+      align-center
     >
       <el-input
-          v-model="componentStyle"
-          class="globeStyleInput"
-          type="textarea"
-          resize="none"
-          placeholder="请输入样式"
+        v-model="componentStyle"
+        class="globeStyleInput"
+        type="textarea"
+        resize="none"
+        :placeholder="$t('placeholder.styleInput')"
       />
       <template #footer>
-        <el-button type="primary" @click="refreshComponentStyle(curComponentId)">刷新</el-button>
+        <el-button type="primary" @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
       </template>
     </el-dialog>
 
     <el-dialog
-        v-model="zoomInDialogVisible"
-        class="zoomInDialog"
-        width="95%"
-        align-center
-        :show-close="false"
-        @close="onZoomInClose"
+      v-model="zoomInDialogVisible"
+      class="zoomInDialog"
+      width="95%"
+      align-center
+      :show-close="false"
+      @close="onZoomInClose"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
 
     <readyComponent
-        ref="readyComponent"
-        @addComponent="addComponent"
+      ref="readyComponent"
+      @addComponent="addComponent"
     />
 
     <globalStyle
-        ref="globalStyle"
-        @load-style="loadStyle"
+      ref="globalStyle"
+      @load-style="loadStyle"
     />
 
     <workspaceHolder
-        ref="workspaceHolder"
+      ref="workspaceHolder"
     />
 
     <name-desc-dialog
       ref="nameDescDialog"
-      title="新增组件到模板"
-      name-text="组件名称"
-      desc-text="组件描述"
+      :title="$t('component.addToModule')"
+      :name-text="$t('component.name')"
+      :desc-text="$t('component.desc')"
       @save="addModule"
     />
 
     <div
-        :class="['shortcutKeys', {'transparent': !ctrlDown}]"
+      :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
@@ -184,28 +192,28 @@
           <el-icon>
             <Rank/>
           </el-icon>
-          <div class="shortcutKeysItemDesc">移动模式</div>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.q') }}</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">E</div>
           <el-icon>
             <Edit/>
           </el-icon>
-          <div class="shortcutKeysItemDesc">编辑模式</div>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.e') }}</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">D</div>
           <el-icon>
             <Operation/>
           </el-icon>
-          <div class="shortcutKeysItemDesc">操作栏</div>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.d') }}</div>
         </div>
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">R</div>
           <el-icon>
             <Rank/>
           </el-icon>
-          <div class="shortcutKeysItemDesc">重载页面</div>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.r') }}</div>
         </div>
       </div>
     </div>
@@ -252,68 +260,72 @@ import {setWorkspace} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
+import i18n from './i18n'
+
+import {useI18n} from 'vue-i18n'
+const {t} = useI18n()
 
 const itemType = [
   {
     value: 'text',
-    label: '文本格子',
-    desc: '用于显示文本内容的格子，允许html标签',
+    label: t('itemType.text.name'),
+    desc: t('itemType.text.desc'),
     color: '#ffffff',
     component: textComponent
   },
   {
     value: 'note',
-    label: '便签格子',
-    desc: '用于显示Markdown内容的格子',
+    label: t('itemType.notes.name'),
+    desc: t('itemType.notes.desc'),
     color: '#ff86e7',
     component: noteComponent
   },
   {
     value: 'search',
-    label: '搜索栏',
-    desc: '搜索引擎输入框，用于搜索指定内容',
+    label: t('itemType.search.name'),
+    desc: t('itemType.search.desc'),
     color: '#000000',
     component: searchComponent
   },
   {
     value: 'iframe',
-    label: '网址格子',
-    desc: '用于嵌入网页地址的格子，不支持跨域',
+    label: t('itemType.iframe.name'),
+    desc: t('itemType.iframe.desc'),
     color: '#439af8',
     component: iframeComponent
   },
   {
     value: 'html',
-    label: '网页格子',
-    desc: '用于嵌入网页代码的格子',
+    label: t('itemType.html.name'),
+    desc: t('itemType.html.desc'),
     color: '#eae25f',
     component: htmlComponent
   },
   {
     value: 'link',
-    label: '快速链接',
-    desc: '用于快速跳转的格子，支持自定义链接',
+    label: t('itemType.link.name'),
+    desc: t('itemType.link.desc'),
     color: '#3fd165',
     component: linkComponent
   },
   {
     value: 'button',
-    label: '按钮格子',
-    desc: '用于触发脚本的按钮',
+    label: t('itemType.button.name'),
+    desc: t('itemType.button.desc'),
     color: '#47c8c8',
     component: buttonComponent
   },
   {
     value: 'input',
-    label: '输入转换',
-    desc: '用于计算输入的转换格子，自定义处理函数，并得到结果',
+    label: t('itemType.input.name'),
+    desc: t('itemType.input.desc'),
     color: '#ff5d5d',
     component: inputComponent
   },
   {
     value: 'function',
-    label: '计算函数',
-    desc: '用于执行计算函数的格子，可以在格子中输出计算结果。使用模式下双击格子即可运行',
+    label: t('itemType.function.name'),
+    desc: t('itemType.function.desc'),
     color: '#272727',
     component: functionComponent
   }
@@ -397,7 +409,7 @@ onMounted(async () => {
   // 初始化配置
   const configUrl = urlParams.get('config')
   if (configUrl) {
-    ElMessage.info('正在加载配置...')
+    ElMessage.info(t('config.loading'))
     configData.value = configUrl
     if (await loadConfig(false)) {
       reloadWithoutParams('config')
@@ -452,7 +464,7 @@ const loadJsonData = async () => {
     // 使用绝对路径指向 public 文件夹
     return await fetchWithBase('/first-config.json')
   } catch (err) {
-    console.error('加载JSON失败:', err)
+    console.error(t('error.load'), err)
   }
 }
 
@@ -568,7 +580,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   // 挂载Vue组件到格子
   const component = itemType.find(item => item.value === type)?.component
   if (!component) {
-    ElMessage.error(`未找到对应的组件 - ${type}`)
+    ElMessage.error(t('error.noSuchComponent_') + type)
     return
   }
   const app = createApp(createItemComponent(type, component), {
@@ -577,6 +589,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
     enableMove: enableMove,
     ctrl: ctrl
   })
+  app.use(i18n)
   elementMap[itemEl.id] = app.mount(itemEl)
 
   itemEl.element = app
@@ -602,7 +615,7 @@ function addComponent(data) {
         saveData(id + '-style', data.style)
       }
     } else {
-      ElMessage.error(`未找到对应的组件 - ${data.type}`)
+      ElMessage.error(t('error.noSuchComponent_') + data.type)
     }
   }
 }
@@ -690,7 +703,7 @@ function createZoomIn(id, componentItem) {
 function zoomIn(id, type) {
   const find = itemType.find(item => item.value === type.value)
   if (!find) {
-    ElMessage.error('未找到对应的组件')
+    ElMessage.error(t('error.noSuchComponent_') + type.value)
     return
   }
   zoomInId = id.value
@@ -708,6 +721,7 @@ function zoomIn(id, type) {
         enableEdit: enableEdit,
         enableMove: enableMove
       })
+      zoomApp.use(i18n)
       zoomApp.mount(elementById)
       if (elementById.firstElementChild) {
         elementById.firstElementChild.id = id.value
@@ -756,6 +770,7 @@ function exportComponentData(id, type) {
 const nameDescDialog = ref(null)
 let moduleId = null
 let moduleType = null
+
 function addModuleConfirm(id, type) {
   moduleId = id.value
   moduleType = type.value
@@ -764,7 +779,7 @@ function addModuleConfirm(id, type) {
 
 function addModule({name, desc}) {
   if (!name) {
-    ElMessage.error('请输入名称')
+    ElMessage.error(t('error.noName'))
     return
   }
   const componentData = exportComponentData(moduleId, moduleType)
@@ -773,7 +788,7 @@ function addModule({name, desc}) {
     ...componentData
   }
   saveDataDirect('module-' + name, JSON.stringify(moduleData))
-  ElMessage.success('添加成功')
+  ElMessage.success(t('success.add'))
   nameDescDialog.value.cancel()
 }
 
@@ -845,7 +860,7 @@ function clearConfig(reload = false) {
 // 加载配置
 async function loadConfig(reload = true) {
   if (!configData.value) {
-    ElMessage.error('无配置内容')
+    ElMessage.error(t('error.noConfigContent'))
     return
   }
   // 解析json
@@ -865,7 +880,7 @@ async function loadConfig(reload = true) {
         config = JSON.parse(config)
       }
     } catch (error) {
-      ElMessage.error('配置文件无法加载', error)
+      ElMessage.error(t('error.load'), error)
       return
     } finally {
       setTimeout(() => {
@@ -874,12 +889,12 @@ async function loadConfig(reload = true) {
     }
   }
   if (!config || typeof config !== 'object') {
-    ElMessage.error('配置文件格式错误')
+    ElMessage.error(t('error.loadFormat'))
     return
   }
   // 校验配置
   if (!config.globalStyle || !config.layout || !config.components) {
-    ElMessage.error('配置文件格式错误')
+    ElMessage.error(t('error.loadFormat'))
     return
   }
   // 清除旧配置
@@ -915,7 +930,7 @@ function handleFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (file.type !== 'application/json') {
-    ElMessage.error('请上传JSON文件')
+    ElMessage.error(t('error.uploadJson'))
     return
   }
   const reader = new FileReader()
