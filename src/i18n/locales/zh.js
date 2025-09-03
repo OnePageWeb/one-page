@@ -143,7 +143,7 @@ export default {
   },
   error: {
     load: '加载失败！',
-    noSuchComponent_: '未找到对应的组件 - %s',
+    noSuchComponent_: '未找到对应的组件 - ',
     noName: '请输入名称',
     nameExist: '已存在同名',
     noConfigContent: '无配置内容',
@@ -178,6 +178,7 @@ export default {
     newWorkspaceName: '请输入新工作区名称',
     noteInput: '输入内容或将Markdown文件拖拽到此处',
     searchInput: '输入搜索内容，按下Enter以搜索',
+    recordInput: '输入记录，按下Ctrl + Enter快速保存',
     styleInput: '请输入样式',
     styleEdit_: '请编辑样式 - ',
     styleSelect: '点击上方样式标签即可开启编辑',
@@ -255,6 +256,10 @@ export default {
     function: {
       name: '计算函数',
       desc: '用于自定义计算的格子，自定义处理函数。使用模式下双击格子即可运行'
+    },
+    record: {
+      name: '记录格子',
+      desc: '用于记录数据的格子，非常适合作为数据记录器'
     }
   }
 }

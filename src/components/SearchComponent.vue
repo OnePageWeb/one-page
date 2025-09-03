@@ -206,7 +206,6 @@ defineExpose({
           :placeholder="searchEngineMap[nowSearchEngine]?.pd || t('placeholder.searchInput')"
           @keydown.enter.prevent.stop="search"
           @keydown.tab.prevent="nextSearchEngine"
-          clearable
       >
         <template #prepend>
           <el-icon class="editIcon" :class="{'hide': !enableEdit}" @click="editSearchEngine">

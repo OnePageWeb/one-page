@@ -46,7 +46,7 @@ const operatorContainer = ref(null)
   <div
       v-show="enableEdit || enableMove || ctrl"
       ref="operatorContainer"
-      :class="['operatorContainer', {'visible': enableEdit || enableMove || ctrl}]"
+      :class="['operatorContainer', {'visible': enableEdit || enableMove || ctrl, 'onlyMove': enableMove && !enableEdit && !ctrl}]"
   >
     <div class="buttonContainer">
 
@@ -118,7 +118,7 @@ const operatorContainer = ref(null)
       <el-popconfirm
           v-if="enableEdit || ctrl"
           class="deleteItem"
-          width="160px"
+          width="180px"
           :title="t('component.operate.deleteConfirm')"
           placement="top-start"
           :confirm-button-text="t('common.confirm')"
@@ -148,6 +148,7 @@ const operatorContainer = ref(null)
   border-radius: 8px;
   pointer-events: none;
   transition: opacity 1s ease-in-out;
+  z-index: 20;
 
   .buttonContainer {
     width: fit-content;
@@ -242,6 +243,12 @@ const operatorContainer = ref(null)
 
 .visible {
   opacity: 1;
+}
+
+.onlyMove {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  pointer-events: all;
 }
 
 </style>

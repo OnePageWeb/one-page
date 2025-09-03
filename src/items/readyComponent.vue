@@ -13,6 +13,7 @@ const dialogVisible = ref(false)
 defineExpose({
   open() {
     loadModuleComponents()
+    filterName.value = ''
     dialogVisible.value = true
   }
 })

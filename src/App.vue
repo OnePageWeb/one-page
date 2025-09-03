@@ -257,6 +257,7 @@ import htmlComponent from "./components/HtmlComponent.vue"
 import linkComponent from './components/LinkComponent.vue'
 import buttonComponent from './components/ButtonComponent.vue'
 import functionComponent from './components/FunctionComponent.vue'
+import recordComponent from "./components/RecordComponent.vue"
 import inputComponent from "@/components/InputComponent.vue"
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
@@ -347,7 +348,14 @@ const itemType = [
     desc: t('itemType.function.desc'),
     color: '#272727',
     component: functionComponent
-  }
+  },
+  {
+    value: 'record',
+    label: t('itemType.record.name'),
+    desc: t('itemType.record.desc'),
+    color: '#5dffa9',
+    component: recordComponent
+  },
 ]
 // 菜单是否显示
 let showMenu = ref(false)
@@ -390,6 +398,10 @@ function keyListener(event) {
   } else {
     ctrlDown.value = false
   }
+}
+
+function mouseDown(event) {
+  ctrlDown.value = false
 }
 
 const globalStyle = ref(null)
@@ -466,12 +478,14 @@ onMounted(async () => {
   // 监听按键
   window.addEventListener('keydown', keyListener)
   window.addEventListener('keyup', keyListener)
+  window.addEventListener('mousedown', mouseDown)
 })
 
 // 注销按键监听
 onUnmounted(() => {
   window.removeEventListener('keydown', keyListener)
   window.removeEventListener('keyup', keyListener)
+  window.removeEventListener('mousedown', mouseDown)
 })
 
 function editGlobalStyle() {
@@ -992,7 +1006,7 @@ body {
   scrollbar-width: none;
   gap: 10px;
   padding: 0 10px;
-  z-index: 1;
+  z-index: 100;
   background-color: rgba(64, 158, 255, 0.3);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
@@ -1046,7 +1060,6 @@ body {
 .menu-show {
   height: 80px;
   opacity: 1;
-  z-index: 2;
 }
 
 .menu-hide {

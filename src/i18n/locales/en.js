@@ -143,7 +143,7 @@ export default {
   },
   error: {
     load: 'Load failed!',
-    noSuchComponent_: 'Corresponding component not found - %s',
+    noSuchComponent_: 'Corresponding component not found - ',
     noName: 'Please enter a name',
     nameExist: 'Name already exists',
     noConfigContent: 'No configuration content',
@@ -178,6 +178,7 @@ export default {
     newWorkspaceName: 'Please enter new workspace name',
     noteInput: 'Enter content or drag Markdown file here',
     searchInput: 'Enter search content, press Enter to search',
+    recordInput: 'Enter the record, press Ctrl + Enter to save quickly',
     styleInput: 'Please enter style',
     styleEdit_: 'Please edit style - ',
     styleSelect: 'Click the style tab above to start editing',
@@ -202,7 +203,7 @@ export default {
     workspaceDesc: 'Workspace represents the current working environment. Different workspaces can have different configurations and data.',
   },
   input: {
-    params: 'Parameter List',
+    params: 'Parameters',
     paramsInfo: 'Parameter Description',
     paramsTip: `Use the format {'$'}{'{'}parameter name:parameter description?parameter default value{'}'} in the text to reference parameters. Both parameter description and default value can be omitted, for example: {'$'}{'{'}title:title content{'}'}`,
     name: 'Input Name',
@@ -255,6 +256,10 @@ export default {
     function: {
       name: 'Calculation Function',
       desc: 'Grid for custom calculations, custom processing functions. Double-click the grid in use mode to run'
-    }
+    },
+    record: {
+      name: 'Record Grid',
+      desc: 'A grid for recording data, ideal as a data logger'
+    },
   }
 }

@@ -27,6 +27,7 @@ const {visible} = toRefs(props)
   align-items: center;
   background-color: white;
   border-radius: 8px;
+  z-index: 10;
 
   &:hover {
     opacity: 0.8;

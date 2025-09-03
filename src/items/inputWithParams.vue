@@ -9,7 +9,7 @@ const props = defineProps({
   initText: String,
   placeholder: String
 })
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update', 'enter'])
 
 const collapse = ref([])
 const contentValue = ref('')
@@ -38,8 +38,9 @@ function calcParams() {
       const strings = paramContent.split('?', 2)
       let name = ''
       let desc = ''
-      const defaultVal = strings[1]
+      let defaultVal = ''
       if (strings.length > 1) {
+        defaultVal = strings[1]
         const nameDesc = strings[0].split(':', 2)
         name = nameDesc[0]
         if (nameDesc.length > 1) {
@@ -78,11 +79,15 @@ function onInputFocus() {
 
 function update() {
   calcParams()
-  emit('update', contentValue.value)
+  emit('update', contentValue.value, params.value)
+}
+
+function enter() {
+  emit('enter', contentValue.value, params.value)
 }
 
 function load(data) {
-  if (data) {
+  if (data !== undefined && data !== null) {
     content.value = data.text || content.value
     params.value = data.params || []
     calcParams()
@@ -93,7 +98,10 @@ function save() {
   return {text: content.value, params: params.value}
 }
 defineExpose({
-  save, load
+  save, load, clear() {
+    content.value = ''
+    params.value = []
+  }
 })
 </script>
 
@@ -144,6 +152,7 @@ defineExpose({
         @blur="onInputBlur"
         @focus="onInputFocus"
         @change="update"
+        @keydown.enter.ctrl="enter"
     />
   </div>
 </template>
@@ -181,7 +190,7 @@ defineExpose({
 
   .input {
     width: 100%;
-    height: calc(100% - 48px);
+    height: calc(100% - 37px);
   }
 
   .input .el-textarea__inner {
