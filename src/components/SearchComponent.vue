@@ -1,8 +1,9 @@
 <script setup>
 import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElOption, ElSelect} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
-import {Close, Plus, Tools} from "@element-plus/icons-vue";
+import {Close, Plus, Tools} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
+import H5tag from "@/items/h5tag.vue"
 
 const props = defineProps({
   id: String,
@@ -236,7 +237,7 @@ defineExpose({
             <el-form-item prop="name" class="searchName">
               <el-input v-model="item.name" placeholder="请输入搜索引擎名称">
                 <template #prepend>
-                  搜索名称
+                  <h5tag text="搜索名称" />
                 </template>
               </el-input>
             </el-form-item>

@@ -55,10 +55,7 @@ defineExpose({
 </script>
 
 <template>
-  <div
-      class="textContent"
-      @dblclick="edit"
-  >
+  <div class="textContent">
     <div :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="contentValue"/>
     <input-with-params
         ref="inputWithParams"

@@ -14,6 +14,7 @@ import {
 import {onMounted, ref, toRefs} from "vue"
 import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
+import H5tag from "@/items/h5tag.vue";
 
 const defaultLinks = [
   {
@@ -223,7 +224,7 @@ defineExpose({
               <el-form-item prop="name" class="linkName">
                 <el-input v-model="item.name" placeholder="请输入链接名称">
                   <template #prepend>
-                    名称
+                    <h5tag text="名称" />
                   </template>
                 </el-input>
               </el-form-item>

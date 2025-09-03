@@ -5,6 +5,7 @@ import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import H5tag from "@/items/h5tag.vue";
 
 const props = defineProps({
   id: String,
@@ -77,7 +78,9 @@ defineExpose({
             placeholder="按钮名称（支持HTML标签）"
             @change="save"
         >
-          <template #prepend>按钮名称</template>
+          <template #prepend>
+            <h5tag text="按钮名称" />
+          </template>
         </el-input>
         <input-with-params
             ref="inputWithParams"
