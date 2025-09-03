@@ -220,7 +220,7 @@
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">R</div>
           <el-icon>
-            <Rank/>
+            <RefreshRight/>
           </el-icon>
           <div class="shortcutKeysItemDesc">{{ $t('shortcut.r') }}</div>
         </div>
@@ -263,7 +263,17 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
-import {CirclePlus, Edit, InfoFilled, Monitor, Operation, Picture, Rank, Top} from "@element-plus/icons-vue"
+import {
+  CirclePlus,
+  Edit,
+  InfoFilled,
+  Monitor,
+  Operation,
+  Picture,
+  Rank,
+  RefreshRight,
+  Top
+} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {exportData, loadData, removeData, saveData, saveDataDirect,} from "@/js/data.js"
 import {setWorkspace} from "@/js/workspcae.js"

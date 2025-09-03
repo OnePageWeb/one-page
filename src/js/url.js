@@ -1,8 +1,7 @@
-import {ElMessage} from "element-plus"
-
 export async function parseBlobJson(blobUrl) {
     try {
-        let response = await fetch(blobUrl)
+        const decode = decodeURIComponent(blobUrl)
+        let response = await fetch(decode)
         // 处理跨域错误
         if (response.status === 403) {
             // 尝试代理服务器
