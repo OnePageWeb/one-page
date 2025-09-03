@@ -4,6 +4,8 @@ import {onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {CloseBold, CopyDocument, Edit, SortDown, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -52,7 +54,7 @@ async function execute() {
     functionResult.value = executeCode()
   } catch (e) {
     console.log(e)
-    functionResult.value = `错误: ${e}`
+    functionResult.value = `error: ${e}`
   }
   save()
 }
@@ -60,7 +62,7 @@ async function execute() {
 function copyResult() {
   if (functionResult.value) {
     navigator.clipboard.writeText(functionResult.value)
-    ElMessage.success('复制成功')
+    ElMessage.success(t('success.copy'))
   }
 }
 
@@ -93,7 +95,7 @@ defineExpose({
             v-model="inputText"
             ref="input"
             type="textarea"
-            :placeholder="nameText || '输入参数，按下ctrl + enter即可执行方法'"
+            :placeholder="nameText || t('placeholder.inputDataInput')"
             :class="['input', isEditing ? 'inputOnFocus' : '']"
             @keydown.ctrl.enter="execute"
         />
@@ -101,8 +103,8 @@ defineExpose({
 
         <el-popover
             class="box-item"
-            title="执行"
-            content="执行方法，在下方得到结果"
+            :title="t('common.execute')"
+            :content="t('component.input.executeDesc')"
             placement="top-end"
         >
           <template #reference>
@@ -113,8 +115,8 @@ defineExpose({
         </el-popover>
         <el-popover
             class="box-item"
-            title="复制"
-            content="复制方法结果到剪切板"
+            :title="t('common.copy')"
+            :content="t('component.input.copyDesc')"
             placement="bottom-end"
         >
           <template #reference>
@@ -125,8 +127,8 @@ defineExpose({
         </el-popover>
         <el-popover
             class="box-item"
-            title="清除结果"
-            content="清除方法执行结果"
+            :title="t('common.clear')"
+            :content="t('component.input.clearDesc')"
             placement="bottom-end"
         >
           <template #reference>
@@ -143,17 +145,17 @@ defineExpose({
         <el-input
             v-model="nameText"
             class="functionName"
-            placeholder="方法名称"
+            :placeholder="t('component.input.functionName')"
             @change="save"
         >
-          <template #prepend>方法名称</template>
+          <template #prepend>{{t('component.input.functionName')}}</template>
         </el-input>
         <el-input
             v-model="functionText"
             class="functionContent"
             :rows="2"
             type="textarea"
-            placeholder="输入方法内容，可以使用input变量来获取输入值，setResult(String)方法来设置结果"
+            :placeholder="t('placeholder.inputFunctionInput')"
             @change="save"
         />
       </div>
@@ -163,7 +165,7 @@ defineExpose({
       <el-tooltip
           v-if="isEditing"
           effect="light"
-          content="关闭编辑"
+          :content="t('common.closeEdit')"
           placement="top"
       >
         <el-icon @click="isEditing = false">
@@ -173,7 +175,7 @@ defineExpose({
       <el-tooltip
           v-else
           effect="light"
-          content="开启编辑"
+          :content="t('common.openEdit')"
           placement="top"
       >
         <el-icon @click="isEditing = true">

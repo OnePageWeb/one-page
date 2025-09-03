@@ -2,6 +2,8 @@
 import {ref} from 'vue'
 import {defineProps, defineExpose} from 'vue'
 import {ElButton, ElInput, ElDialog} from "element-plus"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   title: {
@@ -72,7 +74,7 @@ defineExpose({
     </div>
 
     <template #footer>
-      <el-button type="primary" @click="save">保存</el-button>
+      <el-button type="primary" @click="save">{{ t('common.apply') }}</el-button>
     </template>
   </el-dialog>
 </template>

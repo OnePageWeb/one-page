@@ -5,6 +5,9 @@ import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import H5tag from "@/items/h5tag.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -13,7 +16,7 @@ const props = defineProps({
 })
 const {id, text, enableEdit} = toRefs(props)
 
-const nameText = ref('按下')
+const nameText = ref(t('common.pressed'))
 // 方法内容
 const functionText = ref(text.value || `alert('Hello World!')`)
 const isEditing = ref(false)
@@ -23,7 +26,7 @@ watch(enableEdit, (newValue) => {
   }
 })
 
-const inputWithParams = ref(null)
+const inputWithParamsRef = ref(null)
 
 function onInputUpdate(value) {
   functionText.value = value
@@ -33,7 +36,7 @@ function onInputUpdate(value) {
 function save() {
   saveData(props.id, JSON.stringify({
     name: nameText.value,
-    content: inputWithParams.value.save(),
+    content: inputWithParamsRef.value.save(),
   }))
 }
 
@@ -51,7 +54,7 @@ function load(data) {
     const parse = JSON.parse(save)
     nameText.value = parse.name
     nextTick(() => {
-      inputWithParams.value.load(parse.content)
+      inputWithParamsRef.value.load(parse.content)
     })
   }
 }
@@ -74,13 +77,15 @@ defineExpose({
         <el-input
             v-model="nameText"
             class="functionName"
-            placeholder="按钮名称（支持HTML标签）"
+            :placeholder="t('placeholder.buttonNameInput')"
             @change="save"
         >
-          <template #prepend>按钮名称</template>
+          <template #prepend>
+            <h5tag :text="t('component.button.name')" />
+          </template>
         </el-input>
         <input-with-params
-            ref="inputWithParams"
+            ref="inputWithParamsRef"
             class="inputWithParams"
             @update="onInputUpdate"/>
       </div>
@@ -90,7 +95,7 @@ defineExpose({
       <el-tooltip
           v-if="isEditing"
           effect="light"
-          content="关闭编辑"
+          :content="t('common.closeEdit')"
           placement="top"
       >
         <el-icon @click="isEditing = false">
@@ -100,7 +105,7 @@ defineExpose({
       <el-tooltip
           v-else
           effect="light"
-          content="开启编辑"
+          :content="t('common.openEdit')"
           placement="top"
       >
         <el-icon @click="isEditing = true">

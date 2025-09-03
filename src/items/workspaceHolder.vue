@@ -4,6 +4,8 @@ import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/j
 import {ElButton, ElDialog, ElInput, ElTag, ElPopconfirm, ElMessage, ElPopover, ElIcon} from "element-plus"
 import {InfoFilled} from "@element-plus/icons-vue"
 import {reloadWithoutParams} from "@/js/url.js"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const dialogVisible = ref(false)
 defineExpose({
@@ -29,14 +31,14 @@ const deleteConfirm = ref(false)
 function switchWorkspace(workspace) {
   if (!workspace || workspace.trim() === '') {
     ElMessage({
-      message: '工作区名称不能为空',
+      message: t('error.workspaceEmpty'),
       type: 'warning'
     })
     return
   }
   if (nowWorkspace.value === workspace) {
     ElMessage({
-      message: '已处于当前工作区',
+      message: t('workspace.alreadyInThis'),
       type: 'success'
     })
     return
@@ -77,12 +79,12 @@ function deleteItem(workspace) {
   >
     <template #header>
       <div style="display: flex;align-items: center;color: white;">
-        <span style="font-size: 18px;font-weight: bolder">工作区</span>
+        <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }}</span>
         <el-popover
           class="box-item"
-          :title="`当前工作区：${nowWorkspace}`"
+          :title="`${t('workspace.current')}：${nowWorkspace}`"
           width="350"
-          content="工作区表示了当前正在使用的工作环境，不同的工作区可以拥有不同的配置和数据。"
+          :content="t('text.workspaceDesc')"
           placement="top-start"
         >
           <template #reference>
@@ -98,12 +100,12 @@ function deleteItem(workspace) {
       <el-popconfirm
         class="box-item"
         v-for="tag in workspaceList"
-        :title="nowWorkspace === tag ? '当前工作区' : `切换工作区到 ${tag}`"
+        :title="nowWorkspace === tag ? t('workspace.alreadyInThis') : (t('workspace.switch') + ' ' + tag)"
         placement="top-start"
         width="300px"
         @confirm="switchWorkspace(tag)"
-        confirm-button-text="切换"
-        cancel-button-text="取消"
+        :confirm-button-text="t('common.switch')"
+        :cancel-button-text="t('common.cancel')"
       >
         <template #reference>
           <el-tag
@@ -123,15 +125,15 @@ function deleteItem(workspace) {
         <el-input
           v-model="newWorkspaceName"
           class="workspaceName"
-          placeholder="请输入新工作区名称"
+          :placeholder="t('placeholder.newWorkspaceName')"
           @keydown.ctrl.enter="switchWorkspace(newWorkspaceName)"
         />
-        <el-button type="primary" @click="switchWorkspace(newWorkspaceName)">添加</el-button>
+        <el-button type="primary" @click="switchWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
       </div>
     </template>
 
     <el-dialog
-      title="删除选中工作区"
+      :title="t('workspace.delete.title')"
       v-model="deleteConfirm"
       width="400px"
       class="deleteConfirm commonDialog"
@@ -139,15 +141,15 @@ function deleteItem(workspace) {
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          是否删除工作区 <span style="font-size: 24px;font-weight: bolder">{{ deleteWorkspaceName }}</span> ？
+          {{t('workspace.delete.content')}} <span style="font-size: 24px;font-weight: bolder">{{ deleteWorkspaceName }}</span> ？
           <div>
-            此工作区下的所有数据将被删除，不可恢复！
+            {{t('workspace.delete.tip')}}
           </div>
         </div>
       </div>
       <template #footer>
-        <el-button @click="deleteItem(deleteWorkspaceName)">确定</el-button>
-        <el-button type="primary" @click="deleteConfirm = false">取消</el-button>
+        <el-button @click="deleteItem(deleteWorkspaceName)">{{ t('common.confirm') }}</el-button>
+        <el-button type="primary" @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
   </el-dialog>

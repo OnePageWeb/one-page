@@ -3,6 +3,8 @@ import {computed, nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {ElButton, ElIcon, ElInput} from "element-plus";
 import {ChromeFilled, Search} from "@element-plus/icons-vue";
 import {loadData, saveData} from "@/js/data.js"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -56,7 +58,7 @@ defineExpose({
 <template>
   <div class="iframeContent">
     <div :class="['urlEdit', enableEdit ? 'editing' : 'hide']">
-      <el-input v-model="url" placeholder="请输入网址" clearable @blur="saveEdit">
+      <el-input v-model="url" :placeholder="t('placeholder.iframeInput')" clearable @blur="saveEdit">
         <template #prepend>
           <el-icon>
             <ChromeFilled/>

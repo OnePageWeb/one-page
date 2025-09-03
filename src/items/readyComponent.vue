@@ -1,8 +1,10 @@
 <script setup>
 import {ElButton, ElDialog, ElIcon, ElInput, ElLoading, ElMessage, ElPopconfirm} from "element-plus"
-import {defineEmits, onMounted, ref} from "vue"
+import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
-import {Close} from "@element-plus/icons-vue"
+import {Close, Search} from "@element-plus/icons-vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const emit = defineEmits(['addComponent'])
 
@@ -11,11 +13,15 @@ const dialogVisible = ref(false)
 defineExpose({
   open() {
     loadModuleComponents()
+    filterName.value = ''
     dialogVisible.value = true
   }
 })
 
 const components = ref({})
+const filterComponents = computed(() => {
+  return filterComponentName(filterName.value, components.value)
+})
 const loadConfigFiles = async () => {
   const files = import.meta.glob('/public/configs/components/*.json')
 
@@ -24,12 +30,29 @@ const loadConfigFiles = async () => {
       const file = await files[path]()
       components.value[file.name] = { desc: file.desc, path: path.replace('/public', '') }
     } catch (error) {
-      console.error('加载文件失败:', path, error)
+      console.error(t('error.load'), path, error)
     }
   }
 }
 
+const filterComponentName = (name, components) => {
+  if (!filterName.value) {
+    return components
+  }
+  const filter = filterName.value.toLowerCase()
+  const result = {}
+  for (const name in components) {
+    if (name.toLowerCase().includes(filter) || components[name].desc?.includes(filter)) {
+      result[name] = components[name]
+    }
+  }
+  return result
+}
+
 const moduleComponents = ref({})
+const filterModuleComponents = computed(() => {
+  return filterComponentName(filterName.value, moduleComponents.value)
+})
 const loadModuleComponents = async () => {
   // 遍历localStorage
   for (let i = 0; i < localStorage.length; i++) {
@@ -45,6 +68,7 @@ onMounted(() => {
   loadConfigFiles()
 })
 
+const filterName = ref('')
 async function addComponent(name) {
   const loading = ElLoading.service({
     lock: true,
@@ -55,7 +79,7 @@ async function addComponent(name) {
     if (name) {
       const component = components.value[name]
       if (!component) {
-        ElMessage.error('组件不存在')
+        ElMessage.error(t('error.componentNotExist'))
         return
       }
       // 加载path对应的组件
@@ -65,7 +89,7 @@ async function addComponent(name) {
       return
     }
     if (!configData.value) {
-      ElMessage.error('请输入配置数据')
+      ElMessage.error(t('error.noConfigContent'))
       return
     }
     emit('addComponent', JSON.parse(configData.value))
@@ -80,7 +104,7 @@ async function addComponent(name) {
 async function addModuleComponent(name) {
   const module = moduleComponents.value[name]
   if (!module) {
-    ElMessage.error('组件不存在')
+    ElMessage.error(t('error.componentNotExist'))
     return
   }
   emit('addComponent', module)
@@ -89,7 +113,7 @@ async function addModuleComponent(name) {
 function deleteItem(name) {
   delete moduleComponents.value[name]
   localStorage.removeItem('module-' + name)
-  ElMessage.success('删除成功')
+  ElMessage.success(t('success.delete'))
 }
 
 const configData = ref('')
@@ -98,7 +122,7 @@ function handleFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (file.type !== 'application/json') {
-    ElMessage.error('请上传JSON文件')
+    ElMessage.error(t('error.uploadJson'))
     return
   }
   const reader = new FileReader()
@@ -115,24 +139,36 @@ function handleFileDrop(e) {
     <el-dialog
       v-model="dialogVisible"
       class="commonDialog readyComponentDialog"
-      title="添加格子"
+      :title="t('component.add')"
       align-center
     >
       <div>
+        <el-input
+          v-model="filterName"
+          class="filterName"
+          resize="none"
+          :placeholder="t('placeholder.componentFilter')"
+        >
+          <template #prepend>
+            <el-icon>
+              <Search/>
+            </el-icon>
+          </template>
+        </el-input>
         <div class="readyComponents">
           <div
-            v-for="name of Object.keys(components)"
+            v-for="name of Object.keys(filterComponents)"
             class="componentItem"
             @click="addComponent(name)"
           >
             <div class="componentName">{{ name }}</div>
             <div class="componentDesc">{{ components[name].desc }}</div>
           </div>
-          <div class="componentAreaName">内置组件</div>
+          <div class="componentAreaName">{{ t('component.defined') }}</div>
         </div>
         <div class="moduleComponents">
           <div
-            v-for="name of Object.keys(moduleComponents)"
+            v-for="name of Object.keys(filterModuleComponents)"
             class="componentItem"
             @click="addModuleComponent(name)"
           >
@@ -140,10 +176,10 @@ function handleFileDrop(e) {
             <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
             <el-popconfirm
               class="deleteItem"
-              title="确定删除此组件"
+              :title="t('component.delete.title')"
               placement="top-start"
-              confirm-button-text="确定"
-              cancel-button-text="取消"
+              :confirm-button-text="t('common.confirm')"
+              :cancel-button-text="t('common.cancel')"
               @confirm="deleteItem(name)"
             >
               <template #reference>
@@ -153,7 +189,7 @@ function handleFileDrop(e) {
               </template>
             </el-popconfirm>
           </div>
-          <div class="componentAreaName">自定义组件</div>
+          <div class="componentAreaName">{{ t('component.custom') }}</div>
         </div>
 
         <div class="addComponentContainer">
@@ -161,12 +197,12 @@ function handleFileDrop(e) {
               v-model="configData"
               type="textarea"
               resize="none"
-              placeholder="请输入配置数据或拖拽JSON文件到此处"
+              :placeholder="t('placeholder.componentInput')"
               @dragover.prevent
               @drop.prevent="handleFileDrop"
               @keydown.enter.ctrl="addComponent"
           />
-          <el-button class="addComponent" type="primary" @click="addComponent(null)">添加</el-button>
+          <el-button class="addComponent" type="primary" @click="addComponent(null)">{{t('common.add')}}</el-button>
         </div>
       </div>
     </el-dialog>
@@ -177,8 +213,16 @@ function handleFileDrop(e) {
 <style>
 .readyComponentDialog {
 
+  .filterName {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 8px;
+  }
+
   .readyComponents, .moduleComponents {
-    height: calc(35% - 1px);
+    height: calc(35% - 21px);
     overflow: auto;
     position: relative;
   }
@@ -189,7 +233,7 @@ function handleFileDrop(e) {
     position: absolute;
     top: 0;
     left: 0;
-    font-size: 5vw;
+    font-size: 4vw;
     font-weight: bold;
     display: flex;
     align-items: center;

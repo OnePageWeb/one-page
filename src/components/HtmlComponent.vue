@@ -4,6 +4,8 @@ import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -21,7 +23,6 @@ watch(enableEdit, (newVal) => {
   }
 })
 
-const textContentRef = ref(null)
 const collapse = ref([])
 const contentValue = ref('')
 const calcContentValue = () => {
@@ -134,7 +135,7 @@ defineExpose({
         :class="['input', isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
-        placeholder="输入内容"
+        :placeholder="t('placeholder.htmlInput')"
         @blur="updateIframeContent"
         @change="save"
     />
@@ -143,7 +144,7 @@ defineExpose({
       <el-tooltip
           v-if="isEditing"
           effect="light"
-          content="关闭编辑"
+          :content="t('common.closeEdit')"
           placement="top"
       >
         <el-icon @click="view">
@@ -153,7 +154,7 @@ defineExpose({
       <el-tooltip
           v-else
           effect="light"
-          content="开启编辑"
+          :content="t('common.openEdit')"
           placement="top"
       >
         <el-icon @click="edit">

@@ -2,12 +2,14 @@
 import {ElCollapse, ElCollapseItem, ElIcon, ElInput, ElPopover} from "element-plus"
 import {InfoFilled} from "@element-plus/icons-vue"
 import {ref, toRefs} from "vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   initText: String,
   placeholder: String
 })
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update', 'enter'])
 
 const collapse = ref([])
 const contentValue = ref('')
@@ -36,8 +38,9 @@ function calcParams() {
       const strings = paramContent.split('?', 2)
       let name = ''
       let desc = ''
-      const defaultVal = strings[1]
+      let defaultVal = ''
       if (strings.length > 1) {
+        defaultVal = strings[1]
         const nameDesc = strings[0].split(':', 2)
         name = nameDesc[0]
         if (nameDesc.length > 1) {
@@ -76,11 +79,15 @@ function onInputFocus() {
 
 function update() {
   calcParams()
-  emit('update', contentValue.value)
+  emit('update', contentValue.value, params.value)
+}
+
+function enter() {
+  emit('enter', contentValue.value, params.value)
 }
 
 function load(data) {
-  if (data) {
+  if (data !== undefined && data !== null) {
     content.value = data.text || content.value
     params.value = data.params || []
     calcParams()
@@ -91,7 +98,10 @@ function save() {
   return {text: content.value, params: params.value}
 }
 defineExpose({
-  save, load
+  save, load, clear() {
+    content.value = ''
+    params.value = []
+  }
 })
 </script>
 
@@ -101,11 +111,11 @@ defineExpose({
       <el-collapse-item name="params">
         <template #title>
           <div class="title-wrapper">
-            参数列表
+            {{t('input.params')}}
             <el-popover
                 class="box-item"
-                title="参数说明"
-                content="在文本中使用 ${参数名:参数说明?参数默认值} 的格式来引用参数，参数说明与默认值都可以不填写，例如：${标题:标题内容}"
+                :title="t('input.paramsInfo')"
+                :content="t('input.paramsTip')"
                 placement="top-start"
                 width="400"
             >
@@ -122,7 +132,7 @@ defineExpose({
             v-model="param.value"
             v-for="param in params"
             :rows="1"
-            :placeholder="param.desc || ('请填写' + param.name)"
+            :placeholder="param.desc || (t('placeholder.needInput') + param.name)"
             @change="update"
             @blur="onInputBlur"
         >
@@ -138,10 +148,11 @@ defineExpose({
         class="input"
         :rows="2"
         type="textarea"
-        :placeholder="placeholder || '输入内容'"
+        :placeholder="placeholder || t('placeholder.needInput')"
         @blur="onInputBlur"
         @focus="onInputFocus"
         @change="update"
+        @keydown.enter.ctrl="enter"
     />
   </div>
 </template>
@@ -179,7 +190,7 @@ defineExpose({
 
   .input {
     width: 100%;
-    height: calc(100% - 48px);
+    height: calc(100% - 37px);
   }
 
   .input .el-textarea__inner {

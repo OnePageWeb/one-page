@@ -2,7 +2,9 @@
 import {ElButton, ElDialog, ElInput, ElMessage, ElTag, ElIcon} from "element-plus"
 import {onMounted, ref} from "vue"
 import {loadData, removeData, saveData} from "@/js/data.js"
-import {CircleCheckFilled} from "@element-plus/icons-vue";
+import {CircleCheckFilled} from "@element-plus/icons-vue"
+import {useI18n} from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const emit = defineEmits(['loadStyle'])
 const visible = ref(false)
@@ -51,13 +53,13 @@ function selectTag(tag) {
     // 已选择则取消选择
     selectTags.value = selectTags.value.filter(item => item !== tag)
     ElMessage({
-      message: '已取消样式：' + tag,
+      message: t('style.inactive_') + tag,
       type: 'warning'
     })
   } else {
     selectTags.value.push(tag)
     ElMessage({
-      message: '已激活样式：' + tag,
+      message: t('style.active_') + tag,
       type: 'success'
     })
   }
@@ -76,7 +78,7 @@ function addTag() {
 function editTagName() {
   if (curTagName.value.trim() === '') {
     ElMessage({
-      message: '样式名称不能为空',
+      message: t('error.noName'),
       type: 'warning'
     })
     return
@@ -84,7 +86,7 @@ function editTagName() {
   // 检查是否已存在
   if (styleTags.value.includes(curTagName.value)) {
     ElMessage({
-      message: '样式名称已存在',
+      message: t('error.nameExist'),
       type: 'warning'
     })
     return
@@ -122,7 +124,7 @@ function refreshGlobalStyle() {
 function saveTagStyle() {
   if (selectedTagIndex.value === -1) {
     ElMessage({
-      message: '请选择样式',
+      message: t('error.noSelectStyle'),
       type: 'warning'
     })
     return
@@ -130,7 +132,7 @@ function saveTagStyle() {
   // 保存样式
   saveData('globalStyle-tag-' + styleTags.value[selectedTagIndex.value], globalStyle.value)
   ElMessage({
-    message: '保存成功',
+    message: t('success.save'),
     type: 'success'
   })
 }
@@ -212,7 +214,7 @@ defineExpose({
 <template>
   <!-- 全局样式弹窗 -->
   <el-dialog
-      title="全局样式"
+      :title="t('style.global')"
       v-model="visible"
       width="50%"
       class="globeStyleDialog commonDialog"
@@ -241,7 +243,7 @@ defineExpose({
             class="addTag"
             @click="addTag"
         >
-          新增样式
+          {{ t('style.add') }}
         </el-tag>
       </div>
       <el-input
@@ -249,17 +251,17 @@ defineExpose({
           class="globeStyleInput"
           type="textarea"
           resize="none"
-          :placeholder="selectedTagIndex > -1 ? `请编辑样式 - ${styleTags[selectedTagIndex]}` : '点击上方样式标签即可开启编辑'"
+          :placeholder="selectedTagIndex > -1 ? (t('placeholder.styleEdit_') + styleTags[selectedTagIndex]) : t('placeholder.styleSelect')"
           :disabled="selectedTagIndex === -1"
           @change="saveTagStyle"
       />
     </div>
     <template #footer>
-      <el-button type="primary" @click="loadSelectedStyle">应用</el-button>
+      <el-button type="primary" @click="loadSelectedStyle">{{ t('common.apply') }}</el-button>
     </template>
 
     <el-dialog
-        :title="selectedTagIndex > -1 ? '编辑样式' : '新增样式'"
+        :title="selectedTagIndex > -1 ? t('style.edit') : t('style.add')"
         v-model="tagNameDialogVisible"
         @close="tagNameDialogVisible = false"
         class="editTagDialog commonDialog"
@@ -268,16 +270,16 @@ defineExpose({
     >
       <el-input
           v-model="curTagName"
-          :placeholder="(selectedTagIndex > -1 ? '编辑样式名称' : '新增样式名称') + '，按下Enter以新增'"
+          :placeholder="(selectedTagIndex > -1 ? t('placeholder.styleNameEdit') : t('placeholder.styleNameAdd'))"
           @keydown.enter="editTagName"
           :autofocus="true"
       >
-        <template #prepend>样式名称</template>
+        <template #prepend>{{ t('style.name') }}</template>
       </el-input>
     </el-dialog>
 
     <el-dialog
-        title="删除选中样式"
+        :title="t('style.deleteConfirm')"
         v-model="deleteConfirm"
         width="400px"
         class="deleteConfirm commonDialog"
@@ -285,15 +287,15 @@ defineExpose({
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          是否删除样式 <span style="font-size: 24px;font-weight: bolder">{{ deleteTagName }}</span> ？
+          {{ t('style.delete.content') }} <span style="font-size: 24px;font-weight: bolder">{{ deleteTagName }}</span>
           <div>
-            此样式内容将被删除，不可恢复！
+            {{ t('style.delete.confirm') }}
           </div>
         </div>
       </div>
       <template #footer>
-        <el-button @click="deleteItem(deleteTagName)">确定</el-button>
-        <el-button type="primary" @click="deleteConfirm = false">取消</el-button>
+        <el-button @click="deleteItem(deleteTagName)">{{ t('common.confirm') }}</el-button>
+        <el-button type="primary" @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
   </el-dialog>

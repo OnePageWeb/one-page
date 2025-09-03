@@ -19,6 +19,8 @@ import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-csharp'
 import {Picture, Upload, Edit, Download} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -75,10 +77,10 @@ function openNewWindow() {
   // 尝试打开新窗口
   const newWindow = window.open('', '_blank', features)
   if (!newWindow) {
-    alert('弹出窗口被阻止了！请允许此站点的弹出窗口。')
+    ElMessage.warning(t('error.cannotOpenWindow'))
     return
   }
-  setTimeout(() => { newWindow.document.title = "便签"; }, 100);
+  setTimeout(() => { newWindow.document.title = t('component.note.title'); }, 100);
   // 向新窗口写入内容
   newWindow.document.write(renderedContent.value)
   // 结束文档写入
@@ -113,7 +115,7 @@ function handleFileDrop(e) {
   const file = e.dataTransfer.files[0]
   // 检查文件名后缀是否是markdown文件
   if (!file.name.toLocaleLowerCase().endsWith('.md')) {
-    ElMessage.error('请上传Markdown文件')
+    ElMessage.error(t('error.uploadMarkdown'))
     return
   }
   const reader = new FileReader()
@@ -159,7 +161,7 @@ defineExpose({
         :class="['input', onFocus && enableEdit || isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
-        placeholder="输入内容或将Markdown文件拖拽到此处"
+        :placeholder="t('placeholder.noteInput')"
         @blur="onFocus = false; isEditing = false"
         @change="save"
     />
@@ -167,7 +169,7 @@ defineExpose({
       <el-tooltip
           v-if="(!onFocus || !enableEdit) && !isEditing"
           effect="light"
-          content="开启编辑"
+          :content="t('common.openEdit')"
           placement="bottom"
       >
         <el-icon @click="edit">
@@ -176,7 +178,7 @@ defineExpose({
       </el-tooltip>
       <el-tooltip
           effect="light"
-          content="弹出窗口显示"
+          :content="t('component.note.openWindow')"
           placement="bottom"
       >
         <el-icon @click="openNewWindow">
@@ -185,7 +187,7 @@ defineExpose({
       </el-tooltip>
       <el-tooltip
           effect="light"
-          content="导出便签文件"
+          :content="t('component.note.export')"
           placement="bottom"
       >
         <el-icon @click="exportNote">

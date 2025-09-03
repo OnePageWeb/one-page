@@ -4,6 +4,8 @@ import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Finished, SwitchButton, VideoPlay, Edit, View} from "@element-plus/icons-vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {useI18n} from "vue-i18n"
+const {t} = useI18n()
 
 const props = defineProps({
   id: String,
@@ -34,7 +36,7 @@ function dbclick() {
 
 const functionRef = ref(null)
 
-const inputWithParams = ref(null)
+const inputWithParamsRef = ref(null)
 
 function onInputUpdate(value) {
   functionContent.value = value
@@ -43,7 +45,7 @@ function onInputUpdate(value) {
 
 function save() {
   saveData(props.id, JSON.stringify({
-    content: inputWithParams.value.save(),
+    content: inputWithParamsRef.value.save(),
     result: functionResult.value,
     autoExecute: autoExecute.value
   }))
@@ -54,7 +56,6 @@ let iframe
 
 // 监听 iframe 的消息
 function listener(event) {
-  console.log('收到消息:', event)
   // 验证消息来源
   if (!iframe || event.source !== iframe.contentWindow) return
   functionResult.value = event.data?.data || event.data?.error
@@ -85,8 +86,8 @@ async function execute() {
   try {
     functionResult.value = executeCode()
   } catch (e) {
-    console.log(e)
-    functionResult.value = `错误: ${e}`
+    console.warn(e)
+    functionResult.value = t('common.error') + ': ' + e
   }
   save()
 }
@@ -102,7 +103,7 @@ function load(data) {
     functionResult.value = parse.result
     autoExecute.value = parse.autoExecute
     nextTick(() => {
-      inputWithParams.value.load(parse.content)
+      inputWithParamsRef.value.load(parse.content)
       if (autoExecute.value) {
         execute()
       }
@@ -122,19 +123,19 @@ defineExpose({
     <div class="textContainer">
       <iframe :id="'sandbox' + id" sandbox="allow-scripts" style="display: none;"></iframe>
       <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
-      <inputWithParams
-          ref="inputWithParams"
+      <input-with-params
+          ref="inputWithParamsRef"
           :class="['input', isEditing ? 'inputOnFocus' : '']"
           :initText="functionContent"
-          placeholder="输入方法内容"
+          :placeholder="t('placeholder.functionContentInput')"
           @update="onInputUpdate"
       />
     </div>
     <div :class="['params', !enableEdit ? 'hide' : '']">
       <el-popover
           class="box-item"
-          :title="autoExecute ? '已开启载入时自动运行' : '已关闭自动运行'"
-          content="开启后，页面加载时会自动执行方法"
+          :title="autoExecute ? t('component.function.autoExecute') : t('component.function.clickExecute')"
+          :content="t('component.function.autoExecuteDesc')"
           placement="bottom-end"
           width="200"
       >
@@ -146,8 +147,8 @@ defineExpose({
       </el-popover>
       <el-popover
           class="box-item"
-          title="执行"
-          content="执行方法，在下方得到结果"
+          :title="t('common.execute')"
+          :content="t('component.function.executeDesc')"
           placement="bottom-end"
           width="200"
       >
@@ -160,8 +161,8 @@ defineExpose({
       <el-popover
           v-if="!isEditing"
           class="box-item"
-          title="编辑"
-          content="编辑方法内容"
+          :title="t('common.edit')"
+          :content="t('placeholder.functionContentEdit')"
           placement="bottom-end"
           width="200"
       >
@@ -174,8 +175,8 @@ defineExpose({
       <el-popover
           v-else
           class="box-item"
-          title="查看"
-          content="查看方法内容"
+          :title="t('common.view')"
+          :content="t('component.function.functionContentView')"
           placement="bottom-end"
           width="200"
       >
