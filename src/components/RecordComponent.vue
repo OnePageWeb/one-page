@@ -286,6 +286,8 @@ defineExpose({
     }
 
     &:hover {
+      margin: 4px 0;
+      padding: 8px 4px;
       .recordOperator {
         opacity: 1;
         pointer-events: auto;

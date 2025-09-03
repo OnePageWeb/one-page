@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue"
 import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/js/workspcae.js"
 import {ElButton, ElDialog, ElInput, ElTag, ElPopconfirm, ElMessage, ElPopover, ElIcon} from "element-plus"
-import {InfoFilled} from "@element-plus/icons-vue"
+import {Check, InfoFilled} from "@element-plus/icons-vue"
 import {reloadWithoutParams} from "@/js/url.js"
 import {useI18n} from "vue-i18n"
 const {t} = useI18n()
@@ -73,7 +73,7 @@ function deleteItem(workspace) {
   <!-- 组件样式弹窗 -->
   <el-dialog
     v-model="dialogVisible"
-    width="50%"
+    width="30%"
     class="workspaceDialog commonDialog"
     align-center
   >
@@ -111,12 +111,15 @@ function deleteItem(workspace) {
           <el-tag
             class="workspaceTag"
             :key="tag"
-            :type="nowWorkspace === tag ? 'primary' : 'success'"
+            :type="nowWorkspace === tag ? 'primary' : 'info'"
             closable
             @close="showDeleteConfirm(tag)"
           >
             {{ tag }}
           </el-tag>
+        </template>
+        <template v-if="nowWorkspace === tag" #actions>
+          <el-icon><Check /></el-icon>
         </template>
       </el-popconfirm>
     </div>

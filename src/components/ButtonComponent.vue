@@ -166,7 +166,7 @@ defineExpose({
     }
 
     .functionOnFocus {
-      width: 100%;
+      width: 200%;
       height: 100%;
       opacity: 1;
 
@@ -180,7 +180,7 @@ defineExpose({
     }
   }
 
-  :deep(.el-text) {
+  .el-text {
     width: 100%;
     height: 100%;
     font-size: 18px;

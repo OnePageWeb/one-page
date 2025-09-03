@@ -216,7 +216,7 @@ defineExpose({
   <el-dialog
       :title="t('style.global')"
       v-model="visible"
-      width="50%"
+      width="30%"
       class="globeStyleDialog commonDialog"
       align-center
       @close="refreshGlobalStyle"

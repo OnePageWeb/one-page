@@ -159,6 +159,7 @@ defineExpose({
 
 <style>
 .inputWithParams {
+  overflow: hidden;
 
   .paramContainer {
     width: 100%;

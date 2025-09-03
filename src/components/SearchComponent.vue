@@ -118,6 +118,7 @@ function cancelEdit() {
 }
 
 function saveEdit() {
+  console.log(tempSearchEngineList.value)
   // 去除空格，并去除无效项
   tempSearchEngineList.value = tempSearchEngineList.value
       .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
@@ -131,6 +132,7 @@ function saveEdit() {
     prev[cur.name] = cur
     return prev
   }, {})
+  searchEngineList.value = Object.values(searchEngineMap)
   save()
   dialogVisible.value = false
 }
