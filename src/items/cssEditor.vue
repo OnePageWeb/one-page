@@ -48,7 +48,9 @@ const focus = () => {
   emit('focus', content.value)
 }
 defineExpose({
-  load
+  load, clear() {
+    content.value = ''
+  }
 })
 </script>
 

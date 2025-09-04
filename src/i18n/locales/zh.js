@@ -5,6 +5,7 @@ export default {
     submit: '提交',
     save: '保存',
     delete: '删除',
+    dbDelete: '双击删除',
     reset: '重置',
     clear: '清空',
     style: '样式',

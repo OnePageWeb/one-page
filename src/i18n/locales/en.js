@@ -5,6 +5,7 @@ export default {
     submit: 'Submit',
     save: 'Save',
     delete: 'Delete',
+    dbDelete: 'Double Click Delete',
     reset: 'Reset',
     clear: 'Clear',
     style: 'Style',

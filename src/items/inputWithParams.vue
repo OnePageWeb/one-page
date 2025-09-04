@@ -25,7 +25,7 @@ const calcContentValue = () => {
 
 // 默认文本内容
 const content = ref('')
-const input = ref(null)
+const inputRef = ref(null)
 const params = ref([])
 const paramItems = []
 
@@ -93,7 +93,7 @@ function enter() {
 function load(data) {
   if (data !== undefined && data !== null) {
     content.value = data.text || content.value
-    input.value.load(content.value)
+    inputRef.value.load(content.value)
     params.value = data.params || []
     calcParams()
     emit('update', contentValue.value, params.value)
@@ -108,6 +108,7 @@ defineExpose({
   save, load, clear() {
     content.value = ''
     params.value = []
+    inputRef.value.clear()
   }
 })
 </script>
@@ -150,7 +151,7 @@ defineExpose({
       </el-collapse-item>
     </el-collapse>
     <html-editor
-      ref="input"
+      ref="inputRef"
       class="input"
       :init-content="content"
       @blur="onInputBlur"

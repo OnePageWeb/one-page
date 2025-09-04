@@ -78,6 +78,74 @@ function deleteRecord(index) {
   save()
 }
 
+let dragIndex = -1
+let dragItem = null
+
+function onDragstart(event, index) {
+  dragItem = event.target
+  dragIndex = index
+  // 将内容添加到dataTransfer
+  event.dataTransfer.setData('text/plain', dragItem.textContent)
+}
+
+function onDragover(event) {
+  event.preventDefault()
+  if (dragItem) {
+    dragItem.classList.add('highlight')
+  }
+}
+
+function onDragleave(event) {
+  if (dragItem) {
+    dragItem.classList.remove('highlight')
+  }
+}
+
+function onDragend() {
+  if (dragItem) {
+    dragItem.classList.remove('highlight')
+    dragItem = null
+    dragIndex = -1
+  }
+}
+
+function onDrop(event, index = -1) {
+  // 如果是自己元素的内容则忽略
+  if (event.target === event.currentTarget || index === -1) {
+    dragItem = null
+    dragIndex = -1
+    return
+  }
+  if (dragItem) {
+    dragItem.classList.remove('highlight')
+  }
+  event.preventDefault()
+  // 如果是文本则添加
+  const data = event.dataTransfer.getData('text/plain')
+  if (data) {
+    if (index === -1) {
+      index = contentList.value.length
+    }
+    if (dragItem) {
+      // 交换元素
+      const temp = contentList.value[dragIndex]
+      contentList.value[dragIndex] = contentList.value[index]
+      contentList.value[index] = temp
+      // 交换元素
+      const tempResult = resultList.value[dragIndex]
+      resultList.value[dragIndex] = resultList.value[index]
+      resultList.value[index] = tempResult
+    } else {
+      // 添加到index的位置
+      contentList.value.splice(index, 0, { text: data })
+      resultList.value.splice(index, 0, data)
+    }
+    save()
+  }
+  dragItem = null
+  dragIndex = -1
+}
+
 function copy(index) {
   // 将resultList.value[index]复制到剪切板
   navigator.clipboard.writeText(resultList.value[index])
@@ -106,10 +174,8 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
-    console.log('list', parse.list)
     contentList.value = parse.list
     resultList.value = parse.list.map(item => item.text)
-    console.log('resultList', resultList.value)
   }
 }
 
@@ -120,11 +186,18 @@ defineExpose({
 
 <template>
   <div class="recordContent">
-    <div :class="['result', isEditing ? 'resultOnFocus' : '']">
+    <div :class="['result', isEditing ? 'resultOnFocus' : '']"
+         @drop="onDrop">
       <div
           v-for="(content, index) in resultList"
           class="record"
           @dblclick="edit(index)"
+          draggable="true"
+          @dragstart="onDragstart($event, index)"
+          @dragover="onDragover"
+          @dragleave="onDragleave"
+          @dragend="onDragend"
+          @drop="onDrop($event, index)"
       >
         <el-tooltip
             class="box-item"
@@ -157,11 +230,11 @@ defineExpose({
           </el-tooltip>
           <el-tooltip
               effect="light"
-              :content="t('common.delete')"
+              :content="t('common.dbDelete')"
               placement="top"
               :show-after="200"
           >
-            <el-icon class="delete" @click="deleteRecord(index)">
+            <el-icon class="delete" @dblclick="deleteRecord(index)">
               <Delete/>
             </el-icon>
           </el-tooltip>
@@ -345,6 +418,24 @@ defineExpose({
     width: 200%;
     height: 100%;
     opacity: 1;
+  }
+
+  .draggable {
+    cursor: grab;
+    transition: all 0.2s;
+  }
+
+  .draggable:active {
+    cursor: grabbing;
+  }
+
+  .drop-target {
+    transition: all 0.2s;
+  }
+
+  .drop-target.highlight {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
   }
 }
 </style>
