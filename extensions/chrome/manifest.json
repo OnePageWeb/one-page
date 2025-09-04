@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "一页·ONE",
+  "version": "1.0",
+  "description": "不只是导航页，更是你的个人工作台",
+  "permissions": ["tabs"],
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "icons": {
+    "16": "one_16.png",
+    "48": "one_48.png",
+    "128": "one_128.png"
+  }
+}
