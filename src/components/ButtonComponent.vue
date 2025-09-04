@@ -166,7 +166,7 @@ defineExpose({
     }
 
     .functionOnFocus {
-      width: 200%;
+      width: 60%;
       height: 100%;
       opacity: 1;
 

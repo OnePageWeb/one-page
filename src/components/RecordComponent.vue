@@ -78,6 +78,74 @@ function deleteRecord(index) {
   save()
 }
 
+let dragIndex = -1
+let dragItem = null
+
+function onDragstart(event, index) {
+  dragItem = event.target
+  dragIndex = index
+  // 将内容添加到dataTransfer
+  event.dataTransfer.setData('text/plain', dragItem.textContent)
+}
+
+function onDragover(event) {
+  event.preventDefault()
+  if (dragItem) {
+    dragItem.classList.add('highlight')
+  }
+}
+
+function onDragleave(event) {
+  if (dragItem) {
+    dragItem.classList.remove('highlight')
+  }
+}
+
+function onDragend() {
+  if (dragItem) {
+    dragItem.classList.remove('highlight')
+    dragItem = null
+    dragIndex = -1
+  }
+}
+
+function onDrop(event, index = -1) {
+  // 如果是自己元素的内容则忽略
+  if (event.target === event.currentTarget || index === -1) {
+    dragItem = null
+    dragIndex = -1
+    return
+  }
+  if (dragItem) {
+    dragItem.classList.remove('highlight')
+  }
+  event.preventDefault()
+  // 如果是文本则添加
+  const data = event.dataTransfer.getData('text/plain')
+  if (data) {
+    if (index === -1) {
+      index = contentList.value.length
+    }
+    if (dragItem) {
+      // 交换元素
+      const temp = contentList.value[dragIndex]
+      contentList.value[dragIndex] = contentList.value[index]
+      contentList.value[index] = temp
+      // 交换元素
+      const tempResult = resultList.value[dragIndex]
+      resultList.value[dragIndex] = resultList.value[index]
+      resultList.value[index] = tempResult
+    } else {
+      // 添加到index的位置
+      contentList.value.splice(index, 0, { text: data })
+      resultList.value.splice(index, 0, data)
+    }
+    save()
+  }
+  dragItem = null
+  dragIndex = -1
+}
+
 function copy(index) {
   // 将resultList.value[index]复制到剪切板
   navigator.clipboard.writeText(resultList.value[index])
@@ -118,13 +186,27 @@ defineExpose({
 
 <template>
   <div class="recordContent">
-    <div :class="['result', isEditing ? 'resultOnFocus' : '']">
+    <div :class="['result', isEditing ? 'resultOnFocus' : '']"
+         @drop="onDrop">
       <div
           v-for="(content, index) in resultList"
           class="record"
           @dblclick="edit(index)"
+          draggable="true"
+          @dragstart="onDragstart($event, index)"
+          @dragover="onDragover"
+          @dragleave="onDragleave"
+          @dragend="onDragend"
+          @drop="onDrop($event, index)"
       >
-        <span class="recordText">{{ content }}</span>
+        <el-tooltip
+            class="box-item"
+            :effect="index % 2 === 0 ? 'dark' : 'light'"
+            placement="left"
+        >
+          <template #content><pre>{{ content }}</pre></template>
+          <div class="recordText">{{ content }}</div>
+        </el-tooltip>
         <div class="recordOperator">
           <el-tooltip
               effect="light"
@@ -148,22 +230,22 @@ defineExpose({
           </el-tooltip>
           <el-tooltip
               effect="light"
-              :content="t('common.delete')"
-              placement="top"
-              :show-after="200"
-          >
-            <el-icon class="delete" @click="deleteRecord(index)">
-              <Delete/>
-            </el-icon>
-          </el-tooltip>
-          <el-tooltip
-              effect="light"
               :content="t('common.copy')"
               placement="top"
               :show-after="200"
           >
             <el-icon class="copy" @click="copy(index)">
               <CopyDocument/>
+            </el-icon>
+          </el-tooltip>
+          <el-tooltip
+              effect="light"
+              :content="t('common.dbDelete')"
+              placement="top"
+              :show-after="200"
+          >
+            <el-icon class="delete" @dblclick="deleteRecord(index)">
+              <Delete/>
             </el-icon>
           </el-tooltip>
         </div>
@@ -228,24 +310,37 @@ defineExpose({
     width: calc(100% - 8px);
     padding: 4px;
     border-radius: 4px;
-    background-color: #0000001c;
+    background-color: rgba(255, 255, 255, 0.3);
     cursor: pointer;
     position: relative;
     backdrop-filter: blur(4px);
     box-shadow: 0 0 2px #00000040;
+    scrollbar-width: none;
+
+    /* 对子元素每一个间隔一个来设置背景 */
+    &:nth-child(odd) {
+      background-color: rgba(0, 0, 0, 0.3);
+
+      .recordText {
+        color: #cdcdcd;
+      }
+    }
 
     .recordText {
       width: 100%;
       height: 100%;
       font-size: 20px;
-      color: #e8e8e8;
-      font-weight: bold;
+      color: #494949;
+      font-weight: bolder;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     .recordOperator {
       display: flex;
       justify-content: center;
-      position: absolute;
+      position: fixed;
       right: 4px;
       top: 4px;
       height: 100%;
@@ -286,8 +381,10 @@ defineExpose({
     }
 
     &:hover {
-      margin: 4px 0;
-      padding: 8px 4px;
+      .recordText {
+        letter-spacing: 1px;
+      }
+
       .recordOperator {
         opacity: 1;
         pointer-events: auto;
@@ -321,6 +418,24 @@ defineExpose({
     width: 200%;
     height: 100%;
     opacity: 1;
+  }
+
+  .draggable {
+    cursor: grab;
+    transition: all 0.2s;
+  }
+
+  .draggable:active {
+    cursor: grabbing;
+  }
+
+  .drop-target {
+    transition: all 0.2s;
+  }
+
+  .drop-target.highlight {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
   }
 }
 </style>

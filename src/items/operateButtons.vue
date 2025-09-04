@@ -116,7 +116,7 @@ const operatorContainer = ref(null)
         </el-icon>
       </el-tooltip>
       <el-popconfirm
-          v-if="enableEdit || ctrl"
+          v-if="enableEdit || enableMove || ctrl"
           class="deleteItem"
           width="180px"
           :title="t('component.operate.deleteConfirm')"

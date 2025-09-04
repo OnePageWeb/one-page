@@ -1,6 +1,6 @@
 {
   "name": "网页直达",
   "desc": "点击后可直接跳转至对应网页",
-  "config": "{\"name\":\"直达\",\"content\":{\"text\":\"const url = '${网址:这里输入点击按钮要打开的网址?https://github.com/Verlif/one}';\\nwindow.open(url, '_blank');\",\"params\":[{\"name\":\"网址\",\"desc\":\"这里输入点击按钮要打开的网址\",\"value\":\"https://github.com/Verlif/one\"}]}}",
+  "config": "{\"name\":\"直达\",\"content\":{\"text\":\"const url = '@{网址:这里输入点击按钮要打开的网址?https://github.com/Verlif/one}';\\nwindow.open(url, '_blank');\",\"params\":[{\"name\":\"网址\",\"desc\":\"这里输入点击按钮要打开的网址\",\"value\":\"https://github.com/Verlif/one\"}]}}",
   "type": "button"
 }
