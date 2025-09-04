@@ -5,6 +5,7 @@ import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
+import InputWithParams from "@/items/inputWithParams.vue";
 const {t} = useI18n()
 
 const props = defineProps({
@@ -15,40 +16,31 @@ const props = defineProps({
 const {text, enableEdit} = toRefs(props)
 
 // 默认文本内容
-let content = ref(text.value)
-let isEditing = ref(false)
+const content = ref(text.value)
+let params = []
+const contentValue = ref('')
+const isEditing = ref(false)
 watch(enableEdit, (newVal) => {
   if (!newVal) {
     isEditing.value = false
   }
 })
 
-const collapse = ref([])
-const contentValue = ref('')
-const calcContentValue = () => {
-  let value = content.value
-  for (let i = 0; i < paramItems.length; i++) {
-    value = value.replace(paramItems[i], params.value[i].value)
-  }
-  contentValue.value = value
-}
-
-const input = ref(null)
-const params = ref([])
-const paramItems = []
+const inputRef = ref(null)
 
 const webIframe = ref(null)
-const updateIframeContent = () => {
-  if (!webIframe.value) return
-  const blob = new Blob([content.value], { type: 'text/html' })
+const updateIframeContent = (value) => {
+  if (!webIframe.value || value === undefined) return
+  contentValue.value = value
+  const blob = new Blob([value], { type: 'text/html' })
   webIframe.value.src = URL.createObjectURL(blob)
+  save()
 }
 
 function edit() {
   isEditing.value = !isEditing.value
   if (isEditing.value) {
-    calcParams()
-    collapse.value.push("params")
+    inputRef.value.load(content.value)
   }
 }
 
@@ -56,47 +48,9 @@ function view() {
   isEditing.value = false
 }
 
-function calcParams() {
-  const value = content.value
-  // 从value中提取参数，参数格式如下${}，并将每一个参数提取到一个列表中
-  const matches = value.match(/\${(.*?)}/g) || []
-  const tempParams = []
-  paramItems.length = 0
-  for (let param of matches) {
-    const paramContent = param.substring(2, param.length - 1)
-    if (paramContent.length > 0) {
-      const strings = paramContent.split('?', 2)
-      let name = ''
-      let desc = ''
-      const defaultVal = strings[1]
-      if (strings.length > 1) {
-        const defaultValStrings = strings[1].split(':', 2)
-        name = defaultValStrings[0]
-        if (defaultValStrings.length > 1) {
-          desc = defaultValStrings[1]
-        }
-      }
-      tempParams.push({
-        name,
-        desc,
-        value: defaultVal
-      })
-      paramItems.push(param)
-    }
-  }
-  // 合并参数
-  for (let tempParam of tempParams) {
-    const param = params.value.find(item => item.name === tempParam.name)
-    if (param) {
-      tempParam.value = param.value
-    }
-  }
-  params.value = tempParams
-  calcContentValue()
-}
-
 function save() {
-  saveData(props.id, JSON.stringify({text: content.value}))
+  const save = inputRef.value.save()
+  saveData(props.id, JSON.stringify(save))
 }
 
 onMounted(() => {
@@ -106,9 +60,11 @@ onMounted(() => {
 function load(data) {
   const save = data || loadData(props.id)
   if (save) {
-    content.value = JSON.parse(save).text
+    const parse = JSON.parse(save)
+    content.value = parse.text
+    params = parse.params
     nextTick(() => {
-      updateIframeContent()
+      inputRef.value.load({text: content.value, params})
     })
   }
 }
@@ -121,7 +77,6 @@ defineExpose({
 <template>
   <div
       class="htmlContent"
-      @dblclick="edit"
   >
     <iframe
         ref="webIframe"
@@ -129,14 +84,14 @@ defineExpose({
         sandbox="allow-scripts allow-same-origin"
         frameborder="0"
     ></iframe>
-    <el-input
-        v-model="content"
-        ref="input"
+    <input-with-params
+        :init-text="content"
+        ref="inputRef"
         :class="['input', isEditing ? 'inputOnFocus' : '']"
         :rows="2"
         type="textarea"
         :placeholder="t('placeholder.htmlInput')"
-        @blur="updateIframeContent"
+        @update="updateIframeContent"
         @change="save"
     />
 

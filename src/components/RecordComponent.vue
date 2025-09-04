@@ -230,22 +230,22 @@ defineExpose({
           </el-tooltip>
           <el-tooltip
               effect="light"
-              :content="t('common.dbDelete')"
-              placement="top"
-              :show-after="200"
-          >
-            <el-icon class="delete" @dblclick="deleteRecord(index)">
-              <Delete/>
-            </el-icon>
-          </el-tooltip>
-          <el-tooltip
-              effect="light"
               :content="t('common.copy')"
               placement="top"
               :show-after="200"
           >
             <el-icon class="copy" @click="copy(index)">
               <CopyDocument/>
+            </el-icon>
+          </el-tooltip>
+          <el-tooltip
+              effect="light"
+              :content="t('common.dbDelete')"
+              placement="top"
+              :show-after="200"
+          >
+            <el-icon class="delete" @dblclick="deleteRecord(index)">
+              <Delete/>
             </el-icon>
           </el-tooltip>
         </div>

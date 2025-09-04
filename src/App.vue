@@ -396,13 +396,13 @@ const ctrlDown = ref(false)
 function keyListener(event) {
   if (event.altKey && event.type === 'keydown') {
     ctrlDown.value = true
-    if (event.key === 'q') {
+    if (event.key === 'q' || event.key === 'Q') {
       enableMove.value ? disabledMove() : enabledMove()
-    } else if (event.key === 'e') {
+    } else if (event.key === 'e' || event.key === 'E') {
       enableEdit.value ? disabledEdit() : enabledEdit()
-    } else if (event.key === 'd') {
+    } else if (event.key === 'd' || event.key === 'D') {
       showMenu.value = !showMenu.value
-    } else if (event.key === 'r') {
+    } else if (event.key === 'r' || event.key === 'R') {
       window.location.reload()
     }
     event.preventDefault()

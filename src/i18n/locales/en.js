@@ -207,7 +207,7 @@ export default {
   input: {
     params: 'Parameters',
     paramsInfo: 'Parameter Description',
-    paramsTip: `Use the format {'$'}{'{'}parameter name:parameter description?parameter default value{'}'} in the text to reference parameters. Both parameter description and default value can be omitted, for example: {'$'}{'{'}title:title content{'}'}`,
+    paramsTip: `Use the format {'@'}{'{'}parameter name:parameter description?parameter default value{'}'} in the text to reference parameters. Both parameter description and default value can be omitted, for example: {'@'}{'{'}title:title content{'}'}`,
     name: 'Input Name',
   },
   lang: {

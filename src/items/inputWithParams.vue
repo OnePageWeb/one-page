@@ -32,7 +32,7 @@ const paramItems = []
 function calcParams() {
   const value = content.value
   // 从value中提取参数，参数格式如下${}，并将每一个参数提取到一个列表中
-  const matches = value?.match(/\${(.*?)}/g) || []
+  const matches = value?.match(/@{(.*?)}/g) || []
   const tempParams = []
   paramItems.length = 0
   for (let param of matches) {
