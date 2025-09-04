@@ -3,6 +3,7 @@ import {ElButton, ElDialog, ElInput, ElMessage, ElTag, ElIcon} from "element-plu
 import {onMounted, ref} from "vue"
 import {loadData, removeData, saveData} from "@/js/data.js"
 import {CircleCheckFilled} from "@element-plus/icons-vue"
+import cssEditor from "@/items/cssEditor.vue"
 import {useI18n} from 'vue-i18n'
 const { t, locale } = useI18n()
 
@@ -13,6 +14,7 @@ const visible = ref(false)
 const globalStyle = ref('')
 const styleTags = ref([])
 const selectTags = ref([])
+const cssEditorRef = ref(null)
 
 onMounted(() => {
   // 加载样式标签
@@ -46,6 +48,7 @@ function showTagStyle(index) {
   curTagName.value = styleTags.value[index]
   // 加载样式
   globalStyle.value = loadData('globalStyle-tag-' + styleTags.value[index]) || ''
+  cssEditorRef.value.load(globalStyle.value)
 }
 
 function selectTag(tag) {
@@ -121,7 +124,7 @@ function refreshGlobalStyle() {
   visible.value = false
 }
 
-function saveTagStyle() {
+function saveTagStyle(value) {
   if (selectedTagIndex.value === -1) {
     ElMessage({
       message: t('error.noSelectStyle'),
@@ -129,6 +132,7 @@ function saveTagStyle() {
     })
     return
   }
+  globalStyle.value = value
   // 保存样式
   saveData('globalStyle-tag-' + styleTags.value[selectedTagIndex.value], globalStyle.value)
   ElMessage({
@@ -204,6 +208,7 @@ function open() {
   globalStyle.value = ''
   selectedTagIndex.value = -1
   curTagName.value = ''
+  cssEditorRef.value.load('')
 }
 
 defineExpose({
@@ -246,14 +251,13 @@ defineExpose({
           {{ t('style.add') }}
         </el-tag>
       </div>
-      <el-input
-          v-model="globalStyle"
+      <css-editor
+          :init-content="globalStyle"
           class="globeStyleInput"
-          type="textarea"
-          resize="none"
+          ref="cssEditorRef"
           :placeholder="selectedTagIndex > -1 ? (t('placeholder.styleEdit_') + styleTags[selectedTagIndex]) : t('placeholder.styleSelect')"
           :disabled="selectedTagIndex === -1"
-          @change="saveTagStyle"
+          @blur="saveTagStyle"
       />
     </div>
     <template #footer>
@@ -279,7 +283,7 @@ defineExpose({
     </el-dialog>
 
     <el-dialog
-        :title="t('style.deleteConfirm')"
+        :title="t('style.delete.title')"
         v-model="deleteConfirm"
         width="400px"
         class="deleteConfirm commonDialog"
@@ -370,6 +374,11 @@ defineExpose({
       width: 20px;
       color: white;
     }
+  }
+
+  .globeStyleInput {
+    height: 80%;
+    display: block !important;
   }
 
   .el-textarea {

@@ -124,7 +124,7 @@ defineExpose({
           class="record"
           @dblclick="edit(index)"
       >
-        <span class="recordText">{{ content }}</span>
+        <pre class="recordText">{{ content }}</pre>
         <div class="recordOperator">
           <el-tooltip
               effect="light"
@@ -233,6 +233,8 @@ defineExpose({
     position: relative;
     backdrop-filter: blur(4px);
     box-shadow: 0 0 2px #00000040;
+    overflow: hidden;
+    scrollbar-width: none;
 
     .recordText {
       width: 100%;
@@ -245,7 +247,7 @@ defineExpose({
     .recordOperator {
       display: flex;
       justify-content: center;
-      position: absolute;
+      position: fixed;
       right: 4px;
       top: 4px;
       height: 100%;

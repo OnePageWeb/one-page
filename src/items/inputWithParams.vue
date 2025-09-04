@@ -1,8 +1,10 @@
 <script setup>
 import {ElCollapse, ElCollapseItem, ElIcon, ElInput, ElPopover} from "element-plus"
 import {InfoFilled} from "@element-plus/icons-vue"
-import {ref, toRefs} from "vue"
+import {ref} from "vue"
 import {useI18n} from "vue-i18n"
+import HtmlEditor from "@/items/htmlEditor.vue"
+
 const {t} = useI18n()
 
 const props = defineProps({
@@ -26,6 +28,7 @@ const content = ref('')
 const input = ref(null)
 const params = ref([])
 const paramItems = []
+
 function calcParams() {
   const value = content.value
   // 从value中提取参数，参数格式如下${}，并将每一个参数提取到一个列表中
@@ -68,16 +71,17 @@ function calcParams() {
   calcContentValue()
 }
 
-function onInputBlur() {
+function onInputBlur(value) {
   calcParams()
-  update()
+  update(value)
 }
 
 function onInputFocus() {
   collapse.value = []
 }
 
-function update() {
+function update(value) {
+  content.value = value
   calcParams()
   emit('update', contentValue.value, params.value)
 }
@@ -89,14 +93,17 @@ function enter() {
 function load(data) {
   if (data !== undefined && data !== null) {
     content.value = data.text || content.value
+    input.value.load(content.value)
     params.value = data.params || []
     calcParams()
-    update()
+    emit('update', contentValue.value, params.value)
   }
 }
+
 function save() {
   return {text: content.value, params: params.value}
 }
+
 defineExpose({
   save, load, clear() {
     content.value = ''
@@ -111,13 +118,13 @@ defineExpose({
       <el-collapse-item name="params">
         <template #title>
           <div class="title-wrapper">
-            {{t('input.params')}}
+            {{ t('input.params') }}
             <el-popover
-                class="box-item"
-                :title="t('input.paramsInfo')"
-                :content="t('input.paramsTip')"
-                placement="top-start"
-                width="400"
+              class="box-item"
+              :title="t('input.paramsInfo')"
+              :content="t('input.paramsTip')"
+              placement="top-start"
+              width="400"
             >
               <template #reference>
                 <el-icon class="header-icon">
@@ -128,13 +135,13 @@ defineExpose({
           </div>
         </template>
         <el-input
-            class="paramInput"
-            v-model="param.value"
-            v-for="param in params"
-            :rows="1"
-            :placeholder="param.desc || (t('placeholder.needInput') + param.name)"
-            @change="update"
-            @blur="onInputBlur"
+          class="paramInput"
+          v-model="param.value"
+          v-for="param in params"
+          :rows="1"
+          :placeholder="param.desc || (t('placeholder.needInput') + param.name)"
+          @change="update"
+          @blur="onInputBlur"
         >
           <template #prepend>
             <div class="paramName">{{ param.name }}</div>
@@ -142,17 +149,14 @@ defineExpose({
         </el-input>
       </el-collapse-item>
     </el-collapse>
-    <el-input
-        v-model="content"
-        ref="input"
-        class="input"
-        :rows="2"
-        type="textarea"
-        :placeholder="placeholder || t('placeholder.needInput')"
-        @blur="onInputBlur"
-        @focus="onInputFocus"
-        @change="update"
-        @keydown.enter.ctrl="enter"
+    <html-editor
+      ref="input"
+      class="input"
+      :init-content="content"
+      @blur="onInputBlur"
+      @focus="onInputFocus"
+      @update="update"
+      @enter="enter"
     />
   </div>
 </template>
@@ -192,6 +196,8 @@ defineExpose({
   .input {
     width: 100%;
     height: calc(100% - 37px);
+    display: block !important;
+    background-color: white;
   }
 
   .input .el-textarea__inner {
@@ -205,11 +211,11 @@ defineExpose({
     color: #3a3a3a;
     font-weight: bold;
     background: repeating-linear-gradient(
-        -45deg,
-        rgba(240, 240, 240, 0.9),
-        rgba(240, 240, 240, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 80px
+      -45deg,
+      rgba(240, 240, 240, 0.9),
+      rgba(240, 240, 240, 0.9) 40px,
+      rgba(255, 255, 255, 0.9) 40px,
+      rgba(255, 255, 255, 0.9) 80px
     );
   }
 

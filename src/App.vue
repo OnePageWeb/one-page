@@ -147,12 +147,12 @@
       class="configDialog commonDialog"
       align-center
     >
-      <el-input
-        v-model="componentStyle"
+      <css-editor
         class="globeStyleInput"
-        type="textarea"
-        resize="none"
+        ref="componentStyleRef"
+        :init-content="componentStyle"
         :placeholder="$t('placeholder.styleInput')"
+        @update="value => componentStyle = value"
       />
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
@@ -284,6 +284,7 @@ import i18n from './i18n'
 import { changeLanguage, getCurrentLanguage } from "./i18n/utils.js"
 
 import {useI18n} from 'vue-i18n'
+import CssEditor from "@/items/cssEditor.vue";
 const {t} = useI18n()
 
 const currentLang = ref(getCurrentLanguage())
@@ -677,6 +678,7 @@ function deleteItem(id) {
 // 编辑组件样式
 const curComponentId = ref('')
 const isEditComponentStyle = ref(false)
+const componentStyleRef = ref(null)
 const componentStyle = ref('')
 
 function editStyle(id) {
@@ -684,6 +686,9 @@ function editStyle(id) {
   // 获取组件样式
   componentStyle.value = loadData(id.value + '-style')
   isEditComponentStyle.value = true
+  nextTick(() => {
+    componentStyleRef.value.load(componentStyle.value)
+  })
 }
 
 function loadStyle(id, styleContent) {
