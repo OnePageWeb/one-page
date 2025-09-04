@@ -106,8 +106,10 @@ function load(data) {
   const save = data || loadData(props.id)
   if (save) {
     const parse = JSON.parse(save)
+    console.log('list', parse.list)
     contentList.value = parse.list
     resultList.value = parse.list.map(item => item.text)
+    console.log('resultList', resultList.value)
   }
 }
 
@@ -124,7 +126,14 @@ defineExpose({
           class="record"
           @dblclick="edit(index)"
       >
-        <pre class="recordText">{{ content }}</pre>
+        <el-tooltip
+            class="box-item"
+            :effect="index % 2 === 0 ? 'dark' : 'light'"
+            placement="left"
+        >
+          <template #content><pre>{{ content }}</pre></template>
+          <div class="recordText">{{ content }}</div>
+        </el-tooltip>
         <div class="recordOperator">
           <el-tooltip
               effect="light"
@@ -228,20 +237,31 @@ defineExpose({
     width: calc(100% - 8px);
     padding: 4px;
     border-radius: 4px;
-    background-color: #0000001c;
+    background-color: rgba(255, 255, 255, 0.3);
     cursor: pointer;
     position: relative;
     backdrop-filter: blur(4px);
     box-shadow: 0 0 2px #00000040;
-    overflow: hidden;
     scrollbar-width: none;
+
+    /* 对子元素每一个间隔一个来设置背景 */
+    &:nth-child(odd) {
+      background-color: rgba(0, 0, 0, 0.3);
+
+      .recordText {
+        color: #cdcdcd;
+      }
+    }
 
     .recordText {
       width: 100%;
       height: 100%;
       font-size: 20px;
-      color: #e8e8e8;
-      font-weight: bold;
+      color: #494949;
+      font-weight: bolder;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     .recordOperator {
@@ -288,8 +308,10 @@ defineExpose({
     }
 
     &:hover {
-      margin: 4px 0;
-      padding: 8px 4px;
+      .recordText {
+        letter-spacing: 1px;
+      }
+
       .recordOperator {
         opacity: 1;
         pointer-events: auto;
