@@ -35,7 +35,7 @@ const {visible} = toRefs(props)
     gap: 16px;
 
     .el-icon {
-      scale: 1.4;
+      scale: 1.6;
     }
   }
 
@@ -43,7 +43,10 @@ const {visible} = toRefs(props)
     scale: 0.4;
     cursor: pointer;
     &:hover {
-      scale: 1.8;
+      scale: 2.0;
+      svg {
+        color: var(--el-color-primary);
+      }
     }
   }
 }

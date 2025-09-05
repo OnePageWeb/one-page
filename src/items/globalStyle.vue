@@ -310,7 +310,7 @@ defineExpose({
 .globeStyleDialog {
   .tagContainer {
     height: calc(20% - 36px);
-    border: 2px solid var(--el-color-primary);
+    border: 2px solid #dddddd;
     margin: 4px 0;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 4px;

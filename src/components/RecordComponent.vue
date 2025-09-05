@@ -90,34 +90,28 @@ function onDragstart(event, index) {
 
 function onDragover(event) {
   event.preventDefault()
-  if (dragItem) {
-    dragItem.classList.add('highlight')
-  }
+  event.target.classList.add('dragTarget')
 }
 
 function onDragleave(event) {
-  if (dragItem) {
-    dragItem.classList.remove('highlight')
-  }
+  event.target.classList.remove('dragTarget')
 }
 
-function onDragend() {
+function onDragend(event) {
+  event.target.classList.remove('dragTarget')
   if (dragItem) {
-    dragItem.classList.remove('highlight')
     dragItem = null
     dragIndex = -1
   }
 }
 
 function onDrop(event, index = -1) {
+  event.target.classList.remove('dragTarget')
   // 如果是自己元素的内容则忽略
   if (event.target === event.currentTarget || index === -1) {
     dragItem = null
     dragIndex = -1
     return
-  }
-  if (dragItem) {
-    dragItem.classList.remove('highlight')
   }
   event.preventDefault()
   // 如果是文本则添加
@@ -187,11 +181,12 @@ defineExpose({
 <template>
   <div class="recordContent">
     <div :class="['result', isEditing ? 'resultOnFocus' : '']"
-         @drop="onDrop">
+         @drop="onDrop"
+         @dblclick.prevent.stop="edit(-1)">
       <div
           v-for="(content, index) in resultList"
           class="record"
-          @dblclick="edit(index)"
+          @dblclick.prevent.stop="edit(index)"
           draggable="true"
           @dragstart="onDragstart($event, index)"
           @dragover="onDragover"
@@ -203,11 +198,12 @@ defineExpose({
             class="box-item"
             :effect="index % 2 === 0 ? 'dark' : 'light'"
             placement="left"
+            popper-class="recordPreContainer"
         >
-          <template #content><pre>{{ content }}</pre></template>
+          <template #content><pre class="recordPre">{{ content }}</pre></template>
           <div class="recordText">{{ content }}</div>
         </el-tooltip>
-        <div class="recordOperator">
+        <div v-if="!isEditing" class="recordOperator">
           <el-tooltip
               effect="light"
               :content="t('common.edit')"
@@ -244,7 +240,7 @@ defineExpose({
               placement="top"
               :show-after="200"
           >
-            <el-icon class="delete" @dblclick="deleteRecord(index)">
+            <el-icon class="delete" @dblclick.prevent.stop="deleteRecord(index)">
               <Delete/>
             </el-icon>
           </el-tooltip>
@@ -326,6 +322,11 @@ defineExpose({
       }
     }
 
+    .dragTarget {
+      margin-top: 4px;
+      font-weight: bold;
+    }
+
     .recordText {
       width: 100%;
       height: 100%;
@@ -398,6 +399,11 @@ defineExpose({
     font-size: 18px;
   }
 
+  .resultOnFocus {
+    width: 10%;
+    padding: 4px 0;
+  }
+
   .editContainer {
     display: flex;
     flex-direction: column;
@@ -405,37 +411,27 @@ defineExpose({
     height: 100%;
     opacity: 0;
 
-    .resultOnFocus {
-      width: 20%;
-    }
-
     .inputOnFocus .el-textarea__inner {
       padding: 8px !important;
     }
   }
 
   .editOnFocus {
-    width: 200%;
+    width: 100%;
     height: 100%;
     opacity: 1;
   }
+}
 
-  .draggable {
-    cursor: grab;
-    transition: all 0.2s;
-  }
+.recordPreContainer {
+  max-width: 40%;
+  max-height: 80%;
+  overflow-x: auto;
 
-  .draggable:active {
-    cursor: grabbing;
-  }
-
-  .drop-target {
-    transition: all 0.2s;
-  }
-
-  .drop-target.highlight {
-    background-color: #e3f2fd;
-    border-color: #2196f3;
+  .recordPre {
+    font-size: 16px;
+    font-weight: bolder;
+    max-width: 100%;
   }
 }
 </style>
