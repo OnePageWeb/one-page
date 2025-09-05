@@ -1,7 +1,7 @@
 <script setup>
 import {ElCollapse, ElCollapseItem, ElIcon, ElInput, ElPopover} from "element-plus"
 import {InfoFilled} from "@element-plus/icons-vue"
-import {ref} from "vue"
+import {ref, watch} from "vue"
 import {useI18n} from "vue-i18n"
 import HtmlEditor from "@/items/htmlEditor.vue"
 
@@ -71,11 +71,6 @@ function calcParams() {
   calcContentValue()
 }
 
-function onInputBlur(value) {
-  calcParams()
-  update(value)
-}
-
 function onInputFocus() {
   collapse.value = []
 }
@@ -86,9 +81,17 @@ function update(value) {
   emit('update', contentValue.value, params.value)
 }
 
+function updateParam() {
+  update(content.value)
+}
+
 function enter() {
   emit('enter', contentValue.value, params.value)
 }
+
+watch(params, v => {
+  collapse.value = ['params']
+})
 
 function load(data) {
   if (data !== undefined && data !== null) {
@@ -141,8 +144,8 @@ defineExpose({
           v-for="param in params"
           :rows="1"
           :placeholder="param.desc || (t('placeholder.needInput') + param.name)"
-          @change="update"
-          @blur="onInputBlur"
+          @change="updateParam"
+          @blur="collapse = []"
         >
           <template #prepend>
             <div class="paramName">{{ param.name }}</div>
@@ -154,7 +157,7 @@ defineExpose({
       ref="inputRef"
       class="input"
       :init-content="content"
-      @blur="onInputBlur"
+      @blur="update"
       @focus="onInputFocus"
       @update="update"
       @enter="enter"
