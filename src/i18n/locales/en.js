@@ -83,6 +83,8 @@ export default {
       url: 'Link URL',
       img: 'Link Icon Address',
       switchNameVisible: 'Toggle Name Display',
+      dragTip: 'Drag to enable fast switching window',
+      openFastWindow: 'Click to switch to fast switching window',
       layout: {
         horizontal: 'Horizontal Layout',
         floating: 'Floating Layout',
@@ -91,7 +93,7 @@ export default {
       },
       edit: {
         title: 'Edit Quick Links',
-        urlName: 'Please enter link name',
+        urlName: 'Link name',
         url: 'Please enter link URL',
         img: 'Please enter link icon address',
       }

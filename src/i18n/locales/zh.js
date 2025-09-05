@@ -83,6 +83,8 @@ export default {
       url: '链接URL',
       img: '链接图标地址',
       switchNameVisible: '切换名称显示',
+      dragTip: '拖动即可开启快切窗口',
+      openFastWindow: '点击切换至快切窗口',
       layout: {
         horizontal: '水平布局',
         floating: '浮动布局',
@@ -91,7 +93,7 @@ export default {
       },
       edit: {
         title: '编辑快速链接',
-        urlName: '请输入链接名称',
+        urlName: '链接名称',
         url: '请输入链接URL',
         img: '请输入链接图标地址',
       }

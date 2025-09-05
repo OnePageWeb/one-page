@@ -9,10 +9,10 @@ import {
   ElInput,
   ElOption,
   ElPopover,
-  ElText
+  ElText, ElTooltip
 } from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Download, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
@@ -62,6 +62,10 @@ function edit() {
   dialogVisible.value = true
   tempLinks.value.length = 0
   tempLinks.value = JSON.parse(JSON.stringify(links.value))
+  tempLinks.value.push({
+    name: '',
+    url: ''
+  })
 }
 
 function cancelEdit() {
@@ -74,7 +78,7 @@ function deleteLink(index) {
 }
 
 function saveEdit() {
-  links.value = [...tempLinks.value]
+  links.value = [...tempLinks.value].filter(link => link.url)
   tempLinks.value.length = 0
   dialogVisible.value = false
   refreshIcon()
@@ -184,24 +188,32 @@ defineExpose({
         class="linkContainer"
         @click="open(link)"
     >
-      <div
+      <el-tooltip
+        effect="light"
+        :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : t('component.link.dragTip')"
+        placement="top"
+        :show-after="800"
+        :hide-after="10"
+      >
+        <div
           :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
           draggable="true"
           @dragend="openNewWindow(link)"
-      >
-        <el-image :src="link.img" alt="favicon">
-          <template #error>
-            <div class="image-slot">
-              <el-icon>
-                <Picture/>
-              </el-icon>
-            </div>
-          </template>
-        </el-image>
-        <el-text v-if="nameVisible" tag="span">
-          <div v-html="link.name" />
-        </el-text>
-      </div>
+        >
+          <el-image :src="link.img" alt="favicon">
+            <template #error>
+              <div class="image-slot">
+                <el-icon>
+                  <Picture/>
+                </el-icon>
+              </div>
+            </template>
+          </el-image>
+          <el-text v-if="nameVisible" tag="span">
+            <div v-html="link.name" />
+          </el-text>
+        </div>
+      </el-tooltip>
     </div>
 
     <div v-show="enableEdit" class="editContainer" @click.stop="edit">
@@ -223,10 +235,19 @@ defineExpose({
         <el-form ref="formRef" class="linkForm">
           <template v-for="(item, index) in tempLinks">
             <div class="linkEditItem">
-              <el-form-item prop="name" class="linkName">
+              <el-form-item prop="name" :class="['linkName', {'imgLinkName': item.img}]">
                 <el-input v-model="item.name" :placeholder="t('component.link.edit.urlName')">
                   <template #prepend>
-                    <h5tag :text="t('common.name')" />
+                    <el-image v-if="item.img" :src="item.img" fit="scale-down" alt="favicon">
+                      <template #error>
+                        <div class="image-slot">
+                          <el-icon>
+                            <Picture/>
+                          </el-icon>
+                        </div>
+                      </template>
+                    </el-image>
+                    <h5tag v-else :text="t('common.name')" />
                   </template>
                 </el-input>
               </el-form-item>
@@ -510,6 +531,10 @@ defineExpose({
         padding-top: 0;
       }
 
+      .el-image {
+        height: 100%;
+      }
+
       .linkName {
         width: 20%;
         height: 60px;
@@ -543,6 +568,12 @@ defineExpose({
 
         .el-input {
           height: 100%;
+        }
+      }
+
+      .imgLinkName {
+        .el-input-group__prepend {
+          background-color: unset;
         }
       }
 
