@@ -171,7 +171,8 @@ defineExpose({
           effect="light"
           :content="t('common.openEdit')"
           placement="bottom"
-          :show-after="200"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="edit">
           <Edit />
@@ -181,7 +182,8 @@ defineExpose({
           effect="light"
           :content="t('component.note.openWindow')"
           placement="bottom"
-          :show-after="200"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="openNewWindow">
           <Upload />
@@ -191,7 +193,8 @@ defineExpose({
           effect="light"
           :content="t('component.note.export')"
           placement="bottom"
-          :show-after="200"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="exportNote">
           <Download />

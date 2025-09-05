@@ -30,6 +30,12 @@ export default {
     copy: '复制',
     pinToTop: '置顶',
   },
+  status: {
+    enabledMove: '已开启移动',
+    disabledMove: '已关闭移动',
+    enabledEdit: '已开启编辑',
+    disabledEdit: '已关闭编辑',
+  },
   menu: {
     close: '关闭操作栏',
     open: '打开操作栏',

@@ -30,6 +30,12 @@ export default {
     copy: 'Copy',
     pinToTop: 'Pin to Top',
   },
+  status: {
+    enabledMove: 'Enabled Move',
+    disabledMove: 'Disabled Move',
+    enabledEdit: 'Enabled Edit',
+    disabledEdit: 'Disabled Edit',
+  },
   menu: {
     close: 'Close Action Bar',
     open: 'Open Action Bar',

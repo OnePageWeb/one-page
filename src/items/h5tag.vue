@@ -23,7 +23,8 @@ const text = ref(props.text)
       effect="light"
       :content="t('text.h5Support')"
       placement="top-start"
-      :show-after="200"
+      :show-after="800"
+      :hide-after="10"
     >
       <div class="h5tag">h5</div>
     </el-tooltip>

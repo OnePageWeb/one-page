@@ -199,6 +199,8 @@ defineExpose({
             :effect="index % 2 === 0 ? 'dark' : 'light'"
             placement="left"
             popper-class="recordPreContainer"
+            :show-after="400"
+            :hide-after="10"
         >
           <template #content><pre class="recordPre">{{ content }}</pre></template>
           <div class="recordText">{{ content }}</div>
@@ -208,7 +210,8 @@ defineExpose({
               effect="light"
               :content="t('common.edit')"
               placement="top"
-              :show-after="200"
+              :show-after="800"
+              :hide-after="10"
           >
             <el-icon class="edit"  @click="edit(index)">
               <Edit/>
@@ -218,7 +221,8 @@ defineExpose({
               effect="light"
               :content="t('common.pinToTop')"
               placement="top"
-              :show-after="200"
+              :show-after="800"
+              :hide-after="10"
           >
             <el-icon class="pinToTop"  @click="top(index)">
               <upload/>
@@ -228,7 +232,8 @@ defineExpose({
               effect="light"
               :content="t('common.copy')"
               placement="top"
-              :show-after="200"
+              :show-after="800"
+              :hide-after="10"
           >
             <el-icon class="copy" @click="copy(index)">
               <CopyDocument/>
@@ -238,7 +243,8 @@ defineExpose({
               effect="light"
               :content="t('common.dbDelete')"
               placement="top"
-              :show-after="200"
+              :show-after="800"
+              :hide-after="10"
           >
             <el-icon class="delete" @dblclick.prevent.stop="deleteRecord(index)">
               <Delete/>
@@ -260,7 +266,8 @@ defineExpose({
           effect="light"
           :content="t('common.closeEdit')"
           placement="top"
-          :show-after="200"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="closeEdit">
           <View/>
@@ -271,7 +278,8 @@ defineExpose({
           effect="light"
           :content="t('common.add')"
           placement="top"
-          :show-after="200"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="edit(-1)">
           <Plus/>
