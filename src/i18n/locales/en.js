@@ -176,6 +176,11 @@ export default {
     settings: 'Workspace Settings',
     alreadyInThis: 'Already in current workspace',
     current: 'Current Workspace',
+    temp: {
+      title: 'Temporary Workspace',
+      desc: 'Temporary workspace, data will be lost when closing the page',
+      warning: 'Warning: Temporary workspace data will be lost when closing or reloading the page',
+    },
     delete: {
       title: 'Delete Selected Workspace',
       content: 'Whether to delete the workspace',

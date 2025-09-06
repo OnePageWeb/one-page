@@ -275,8 +275,16 @@ import {
   Top
 } from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
-import {exportData, loadData, removeData, saveData, saveDataDirect,} from "@/js/data.js"
-import {setWorkspace} from "@/js/workspcae.js"
+import {
+  exportData,
+  loadData,
+  loadDataDirect,
+  removeData,
+  removeDataDirect,
+  saveData,
+  saveDataDirect,
+} from "@/js/data.js"
+import {setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
@@ -473,7 +481,14 @@ onMounted(async () => {
         loadComponentStyle(componentId, componentStyle)
       }
     }
+
+    // 加载配置时删除临时工作区标记
+    if (loadDataDirect(TEMP_WORKSPACE)) {
+      // 存在则删除
+      removeDataDirect(TEMP_WORKSPACE)
+    }
   } else {
+    // 首次加载
     configData.value = await loadJsonData()
     await loadConfig(true)
   }

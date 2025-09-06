@@ -176,6 +176,11 @@ export default {
     settings: '工作区设定',
     alreadyInThis: '已处于当前工作区',
     current: '当前工作区',
+    temp: {
+      title: '临时工作区',
+      desc: '临时工作区，关闭页面后数据将丢失',
+      warning: '警告：临时工作区数据将在关闭或刷新页面后丢失',
+    },
     delete: {
       title: '删除选中工作区',
       content: '是否删除工作区',
