@@ -1,11 +1,11 @@
 <template>
   <div style="height: 100%; width: 100%; position: relative;">
     <div
-      :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
+        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
     >
       <el-tooltip
-        :content="$t('common.close')"
-        placement="right"
+          :content="$t('common.close')"
+          placement="right"
       >
         <el-icon class="hideMenu" @click="showMenu = false">
           <Top/>
@@ -18,19 +18,19 @@
       </el-button>
       <el-select class="addItemSelect" :placeholder="$t('component.addItem')" @change="addItemWithEdit">
         <el-popover
-          class="box-item"
-          v-for="item in itemType"
-          :title="item.label"
-          :content="item.desc"
-          width="300"
-          placement="right-start"
+            class="box-item"
+            v-for="item in itemType"
+            :title="item.label"
+            :content="item.desc"
+            width="300"
+            placement="right-start"
         >
           <template #reference>
             <div>
               <el-option
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
                 <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
                 {{ item.label }}
@@ -53,10 +53,10 @@
       <el-text class="menuTitle" truncated>{{ $t('lang.title') }}</el-text>
       <el-select class="langSelect" v-model="currentLang">
         <el-option
-          v-for="item in langList"
-          :key="item"
-          :label="t(`lang.${item}`)"
-          :value="item"
+            v-for="item in langList"
+            :key="item"
+            :label="t(`lang.${item}`)"
+            :value="item"
         />
       </el-select>
     </div>
@@ -67,11 +67,11 @@
 
     <!-- 配置加载弹窗 -->
     <el-dialog
-      :title="$t('config.load')"
-      v-model="configLoaderVisible"
-      width="50%"
-      class="configDialog commonDialog"
-      align-center
+        :title="$t('config.load')"
+        v-model="configLoaderVisible"
+        width="50%"
+        class="configDialog commonDialog"
+        align-center
     >
       <template #header="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
@@ -81,15 +81,38 @@
           </el-icon>
         </div>
       </template>
-      <el-input
-        v-model="configData"
-        class="globeStyleInput"
-        type="textarea"
-        resize="none"
-        :placeholder="$t('placeholder.configInput')"
-        @dragover.prevent
-        @drop.prevent="handleFileDrop"
-      />
+
+      <div
+          @dragover.prevent
+          @drop.prevent="handleFileDrop">
+        <el-tooltip
+            effect="light"
+            :content="t('config.lockUrl')"
+            placement="top-start"
+            :show-after="300"
+            :hide-after="10"
+            :enterable="false"
+        >
+          <div style="display: flex;gap: 8px;">
+            <el-switch
+                v-model="configUrlLock"
+                @change="saveUrlLock"
+                inline-prompt
+                :active-text="$t('config.lock')"
+                :inactive-text="$t('config.unlock')"
+            />
+            <el-input v-model="configUrl" @change="saveUrl" :placeholder="$t('config.configUrl')" :disabled="!configUrlLock"/>
+            <el-button @click="loadConfigFromUrl">{{ $t('common.load') }}</el-button>
+          </div>
+        </el-tooltip>
+        <el-input
+            v-model="configData"
+            class="globeConfigInput"
+            type="textarea"
+            resize="none"
+            :placeholder="$t('placeholder.configInput')"
+        />
+      </div>
 
       <!-- 配置提示弹窗 -->
       <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
@@ -113,24 +136,24 @@
       <template #footer>
         <el-button type="primary" @click="downloadConfig">{{ $t('common.download') }}</el-button>
         <el-popconfirm
-          :title="$t('config.loadConfirm')"
-          placement="top-end"
-          :confirm-button-text="$t('common.confirm')"
-          :cancel-button-text="$t('common.cancel')"
-          width="300"
-          @confirm="loadConfig()"
+            :title="$t('config.loadConfirm')"
+            placement="top-end"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            width="300"
+            @confirm="loadConfig(configData)"
         >
           <template #reference>
             <el-button type="primary">{{ $t('config.load') }}</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
-          :title="$t('config.clearConfirm')"
-          placement="top-end"
-          :confirm-button-text="$t('common.confirm')"
-          :cancel-button-text="$t('common.cancel')"
-          width="240"
-          @confirm="clearConfig(true)"
+            :title="$t('config.clearConfirm')"
+            placement="top-end"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            width="240"
+            @confirm="clearConfig(true)"
         >
           <template #reference>
             <el-button type="danger">{{ $t('common.clear') }}</el-button>
@@ -141,18 +164,18 @@
 
     <!-- 组件样式弹窗 -->
     <el-dialog
-      title="组件样式"
-      v-model="isEditComponentStyle"
-      width="50%"
-      class="configDialog commonDialog"
-      align-center
+        title="组件样式"
+        v-model="isEditComponentStyle"
+        width="50%"
+        class="configDialog commonDialog"
+        align-center
     >
       <css-editor
-        class="globeStyleInput"
-        ref="componentStyleRef"
-        :init-content="componentStyle"
-        :placeholder="$t('placeholder.styleInput')"
-        @update="value => componentStyle = value"
+          class="globeStyleInput"
+          ref="componentStyleRef"
+          :init-content="componentStyle"
+          :placeholder="$t('placeholder.styleInput')"
+          @update="value => componentStyle = value"
       />
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
@@ -160,40 +183,40 @@
     </el-dialog>
 
     <el-dialog
-      v-model="zoomInDialogVisible"
-      class="zoomInDialog"
-      width="95%"
-      align-center
-      :show-close="false"
-      @close="onZoomInClose"
+        v-model="zoomInDialogVisible"
+        class="zoomInDialog"
+        width="95%"
+        align-center
+        :show-close="false"
+        @close="onZoomInClose"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
 
     <readyComponent
-      ref="readyComponent"
-      @addComponent="addComponent"
+        ref="readyComponent"
+        @addComponent="addComponent"
     />
 
     <globalStyle
-      ref="globalStyle"
-      @load-style="loadStyle"
+        ref="globalStyle"
+        @load-style="loadStyle"
     />
 
     <workspaceHolder
-      ref="workspaceHolder"
+        ref="workspaceHolder"
     />
 
     <name-desc-dialog
-      ref="nameDescDialog"
-      :title="$t('component.addToModule')"
-      :name-text="$t('component.name')"
-      :desc-text="$t('component.desc')"
-      @save="addModule"
+        ref="nameDescDialog"
+        :title="$t('component.addToModule')"
+        :name-text="$t('component.name')"
+        :desc-text="$t('component.desc')"
+        @save="addModule"
     />
 
     <div
-      :class="['shortcutKeys', {'transparent': !ctrlDown}]"
+        :class="['shortcutKeys', {'transparent': !ctrlDown}]"
     >
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
@@ -244,8 +267,9 @@ import {
   ElPopconfirm,
   ElPopover,
   ElSelect,
+  ElSwitch,
   ElText,
-  ElTooltip
+  ElTooltip,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -289,10 +313,11 @@ import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
 import i18n from './i18n'
-import { changeLanguage, getCurrentLanguage } from "./i18n/utils.js"
+import {changeLanguage, getCurrentLanguage} from "./i18n/utils.js"
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
+
 const {t} = useI18n()
 
 const currentLang = ref(getCurrentLanguage())
@@ -457,12 +482,28 @@ onMounted(async () => {
     setWorkspace(workspace)
   }
   // 初始化配置
-  const configUrl = urlParams.get('config')
-  if (configUrl) {
-    ElMessage.info(t('config.loading'))
-    configData.value = configUrl
-    if (await loadConfig(false)) {
+  configUrl.value = loadData('configUrl')
+  const urlLock = urlParams.get('lock')
+  if (urlLock === 'true') {
+    configUrlLock.value = true
+  } else {
+    configUrlLock.value = (loadData('lock') === 'true')
+  }
+  saveUrlLock()
+  if (!configUrl.value) {
+    const configParam = urlParams.get('config')
+    if (configParam) {
+      ElMessage.info(t('config.loading'))
+      configUrl.value = decodeURIComponent(configParam)
+      saveUrl()
+      await loadConfig(configUrl.value, false)
       reloadWithoutParams('config')
+      return
+    }
+  } else {
+    if (configUrlLock.value) {
+      ElMessage.info(t('config.loading'))
+      await loadConfig(configUrl.value, false)
     }
   }
 
@@ -490,7 +531,7 @@ onMounted(async () => {
   } else {
     // 首次加载
     configData.value = await loadJsonData()
-    await loadConfig(true)
+    await loadConfig(configData.value, true)
   }
 
   disabledEdit()
@@ -863,9 +904,23 @@ function exportComponent(id, type) {
 
 const readyComponent = ref(null)
 
-let configData = ref('')
-let configLoaderVisible = ref(false)
-let configLoaderTipVisible = ref(false)
+const configData = ref('')
+const configUrlLock = ref(false)
+const configUrl = ref('')
+const configLoaderVisible = ref(false)
+const configLoaderTipVisible = ref(false)
+
+function saveUrlLock() {
+  saveData('lock', configUrlLock.value)
+}
+
+function saveUrl() {
+  if (configUrl.value) {
+    saveData('configUrl', configUrl.value)
+  } else {
+    removeData('configUrl')
+  }
+}
 
 // 打开加载配置弹窗
 function openLoadConfig() {
@@ -880,6 +935,8 @@ function generateConfig() {
   let config = {
     globalStyle: globalStyle.value.generateStyleConfig(),
     layout: JSON.parse(loadData('layout')),
+    configLock: configUrlLock.value,
+    configUrl: configUrl.value,
     components: []
   }
   // 所有组件
@@ -913,6 +970,10 @@ function clearConfig(reload = false) {
     removeData(id + '-style')
   }
   removeData('layout')
+  // 删除配置URL
+  removeData('configUrl')
+  // 删除配置URL锁定
+  removeData('lock')
   globalStyle.value.clearStyle()
   // 刷新页面
   if (reload) {
@@ -920,15 +981,21 @@ function clearConfig(reload = false) {
   }
 }
 
+async function loadConfigFromUrl() {
+  if (!configUrl.value) {
+    ElMessage.error(t('error.noConfigUrl'))
+    return
+  }
+  await loadConfig(configUrl.value)
+}
+
 // 加载配置
-async function loadConfig(reload = true) {
-  if (!configData.value) {
+async function loadConfig(config = configData.value, reload = true) {
+  if (!config) {
     ElMessage.error(t('error.noConfigContent'))
     return
   }
   // 解析json
-  let config = configData.value
-  configData.value = ''
   if (typeof config === 'string') {
     const loading = ElLoading.service({
       lock: true,
@@ -966,6 +1033,11 @@ async function loadConfig(reload = true) {
   globalStyle.value.initStyleConfig(config.globalStyle)
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
+  // 加载配置锁
+  configUrlLock.value = config.configLock || (loadData('lock') === 'true')
+  saveUrlLock()
+  configUrl.value = config.configUrl || loadData('configUrl') || ''
+  saveUrl()
   // 加载组件
   for (let component of config.components) {
     if (component.data) {
@@ -979,6 +1051,7 @@ async function loadConfig(reload = true) {
   // 刷新页面
   if (reload) {
     window.location.reload()
+    // TODO: 跳过刷新后的url同步
   }
   return true
 }
@@ -1224,6 +1297,15 @@ textarea {
 .configLoaderHeader {
   display: flex;
   align-items: center;
+}
+
+.globeConfigInput {
+  height: calc(100% - 40px) !important;
+  margin-top: 8px;
+
+  .el-textarea__inner {
+    height: 100%;
+  }
 }
 
 /* 配置加载器弹窗样式结束 */

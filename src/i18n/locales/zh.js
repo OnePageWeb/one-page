@@ -144,6 +144,10 @@ export default {
     clearConfirm: '确定清空并重新加载页面？',
     loading: '正在加载配置...',
     loadFail: '',
+    configUrl: '配置URL，填入远端配置的可访问或下载地址，开启左侧同步后会在页面加载时自动载入最新配置',
+    lockUrl: '配置URL锁定，开启时会在页面加载时自动载入最新配置',
+    lock: '同步开启',
+    unlock: '关闭同步',
   },
   success: {
     add: '添加成功',
@@ -157,6 +161,7 @@ export default {
     noName: '请输入名称',
     nameExist: '已存在同名',
     noConfigContent: '无配置内容',
+    noConfigUrl: '无配置URL',
     loadFormat: '格式错误',
     uploadJson: '请上传JSON文件',
     uploadMarkdown: '请上传Markdown文件',

@@ -200,7 +200,7 @@ defineExpose({
             placement="left"
             popper-class="recordPreContainer"
             :show-after="400"
-            :hide-after="10"
+            :hide-after="100"
         >
           <template #content><pre class="recordPre">{{ content }}</pre></template>
           <div class="recordText">{{ content }}</div>

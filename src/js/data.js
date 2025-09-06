@@ -9,7 +9,7 @@ export function saveDataDirect(key, data) {
 }
 
 export function loadData(key) {
-    return window.localStorage.getItem(getWorkspacePrefix() + key)
+    return window.localStorage.getItem(getWorkspacePrefix() + key) || null
 }
 
 export function loadDataDirect(key) {

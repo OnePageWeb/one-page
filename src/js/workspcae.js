@@ -20,6 +20,8 @@ export function initWorkspace() {
 export function setWorkspace(workspace) {
     if (!workspace || workspace === '' || workspace === 'default') {
         nowWorkspace = 'default'
+    } else if (nowWorkspace === workspace) {
+        return
     } else {
         saveDataDirect('lastWorkspace', nowWorkspace)
         nowWorkspace = workspace

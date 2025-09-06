@@ -144,6 +144,10 @@ export default {
     clearConfirm: 'Are you sure to clear and reload the page?',
     loading: 'Loading configuration...',
     loadFail: '',
+    configUrl: 'Configure the URL, enter the accessible or downloadable address of the remote configuration. After enabling left-side synchronization, the latest configuration will be automatically loaded when the page loads.',
+    lockUrl: 'Configuration URL lock, enabled will automatically load the latest configuration when the page loads',
+    lock: 'Enable',
+    unlock: 'Disable',
   },
   success: {
     add: 'Add successful',
@@ -157,6 +161,7 @@ export default {
     noName: 'Please enter a name',
     nameExist: 'Name already exists',
     noConfigContent: 'No configuration content',
+    noConfigUrl: 'No configuration URL',
     loadFormat: 'Format error',
     uploadJson: 'Please upload a JSON file',
     uploadMarkdown: 'Please upload a Markdown file',
