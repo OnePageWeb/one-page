@@ -56,10 +56,6 @@ export function getNowWorkspace() {
 }
 
 export function deleteWorkspace(workspace) {
-    // 不能删除默认工作空间
-    if (workspace === 'default') {
-        return
-    }
     // 删除存储
     const workspacePrefix = getWorkspacePrefix(workspace)
     const needDeleteKeys = []
