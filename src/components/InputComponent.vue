@@ -62,7 +62,7 @@ async function execute() {
   try {
     functionResult.value = executeCode()
   } catch (e) {
-    console.log(e)
+    console.error(e)
     functionResult.value = `error: ${e}`
   }
   save()

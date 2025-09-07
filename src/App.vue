@@ -663,13 +663,13 @@ function createItemComponent(type, componentItem) {
   }
 }
 
-const addItemWithEdit = (type) => {
-  const id = addItem(type)
+const addItemWithEdit = (type, x, y, w = '4', h = '4', id) => {
+  const nowId = addItem(type, x, y, w, h, id)
   // 保存布局
   saveLayout()
   enabledEdit()
   enabledMove()
-  return id
+  return nowId
 }
 
 const addItem = (type, x, y, w = '4', h = '4', id) => {
@@ -872,6 +872,13 @@ function exportComponentData(id, type) {
   if (componentStyle) {
     componentData.style = componentStyle
   }
+  // 找到组件大小
+  for (let node of grid.engine.nodes) {
+    if (node.el.id === idValue) {
+      componentData.w = node.w
+      componentData.h = node.h
+    }
+  }
   componentData.type = type.value || type
   return componentData
 }
@@ -945,7 +952,7 @@ function generateConfig() {
     components: []
   }
   // 所有组件
-  const nodes = grid.engine.nodes; // 获取所有格子节点数据
+  const nodes = grid.engine.nodes // 获取所有格子节点数据
   const ids = nodes.map(node => node.el.id)
   for (let id of ids) {
     // 组件样式
