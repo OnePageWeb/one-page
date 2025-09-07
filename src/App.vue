@@ -286,7 +286,7 @@ import inputComponent from "@/components/InputComponent.vue"
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
-import {fetchWithBase, parseBlobJson, reloadWithoutParams} from "@/js/url.js"
+import {fetchWithBase, parseBlobJson, reloadWithoutParams, removeParams} from "@/js/url.js"
 import {
   CirclePlus,
   Edit,
@@ -490,22 +490,27 @@ onMounted(async () => {
     configUrlLock.value = (loadData('lock') === 'true')
   }
   saveUrlLock()
+  // 移除config参数
+  removeParams('lock')
+  // 不存在同步值时，从url参数加载
   if (!configUrl.value) {
     const configParam = urlParams.get('config')
     if (configParam) {
       ElMessage.info(t('config.loading'))
       configUrl.value = decodeURIComponent(configParam)
       saveUrl()
-      await loadConfig(configUrl.value, false)
-      reloadWithoutParams('config')
-      return
+      if (!loadDataDirect('skipReload')) {
+        await loadConfig(configUrl.value, false)
+        reloadWithoutParams('config')
+        return
+      }
     }
-  } else {
-    if (configUrlLock.value) {
-      ElMessage.info(t('config.loading'))
-      await loadConfig(configUrl.value, false)
-    }
+  } else if (configUrlLock.value && !loadDataDirect('skipReload')) {
+    ElMessage.info(t('config.loading'))
+    await loadConfig(configUrl.value, false)
   }
+  // 跳过刷新后的url同步
+  removeDataDirect('skipReload')
 
   // 恢复布局
   const layout = loadData('layout')
@@ -1006,6 +1011,7 @@ async function loadConfig(config = configData.value, reload = true) {
       if (startsWith(config, 'http')) {
         // 从网络加载
         config = await parseBlobJson(config)
+        console.log('从网络加载配置', JSON.stringify(config, 2))
       } else {
         config = JSON.parse(config)
       }
@@ -1027,16 +1033,16 @@ async function loadConfig(config = configData.value, reload = true) {
     ElMessage.error(t('error.loadFormat'))
     return
   }
+  // 保留配置锁
+  configUrlLock.value = config.configLock || (loadData('lock') === 'true')
+  configUrl.value = config.configUrl || loadData('configUrl') || ''
   // 清除旧配置
   clearConfig()
   // 加载全局样式
   globalStyle.value.initStyleConfig(config.globalStyle)
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
-  // 加载配置锁
-  configUrlLock.value = config.configLock || (loadData('lock') === 'true')
   saveUrlLock()
-  configUrl.value = config.configUrl || loadData('configUrl') || ''
   saveUrl()
   // 加载组件
   for (let component of config.components) {
@@ -1051,8 +1057,9 @@ async function loadConfig(config = configData.value, reload = true) {
   // 刷新页面
   if (reload) {
     window.location.reload()
-    // TODO: 跳过刷新后的url同步
   }
+  // 跳过刷新后的url同步
+  saveDataDirect('skipReload', true)
   return true
 }
 
