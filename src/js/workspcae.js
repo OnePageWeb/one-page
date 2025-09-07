@@ -1,4 +1,7 @@
+import {loadDataDirect, saveDataDirect} from "@/js/data.js";
+
 let nowWorkspace = ''
+export const TEMP_WORKSPACE = 'temp'
 
 export function getWorkspacePrefix(workspace) {
     if (!workspace) {
@@ -17,7 +20,10 @@ export function initWorkspace() {
 export function setWorkspace(workspace) {
     if (!workspace || workspace === '' || workspace === 'default') {
         nowWorkspace = 'default'
+    } else if (nowWorkspace === workspace) {
+        return
     } else {
+        saveDataDirect('lastWorkspace', nowWorkspace)
         nowWorkspace = workspace
     }
     const ws= listWorkspace()
@@ -50,10 +56,6 @@ export function getNowWorkspace() {
 }
 
 export function deleteWorkspace(workspace) {
-    // 不能删除默认工作空间
-    if (workspace === 'default') {
-        return
-    }
     // 删除存储
     const workspacePrefix = getWorkspacePrefix(workspace)
     const needDeleteKeys = []
@@ -75,6 +77,11 @@ export function deleteWorkspace(workspace) {
     }
     // 切换当前工作区
     if (workspace === getNowWorkspace()) {
-        setWorkspace('default')
+        const last = loadDataDirect('lastWorkspace')
+        if (wsList.includes(last)) {
+            setWorkspace(last)
+        } else {
+            setWorkspace('default')
+        }
     }
 }

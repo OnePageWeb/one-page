@@ -192,6 +192,7 @@ defineExpose({
 
     .el-collapse-item__wrap {
       position: absolute;
+      width: 100%;
       border-bottom: unset;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }

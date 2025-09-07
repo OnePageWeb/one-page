@@ -69,6 +69,8 @@ defineExpose({
           effect="light"
           :content="t('common.closeEdit')"
           placement="top"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="isEditing = false">
           <View/>
@@ -79,6 +81,8 @@ defineExpose({
           effect="light"
           :content="t('common.openEdit')"
           placement="top"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="isEditing = true">
           <Edit/>

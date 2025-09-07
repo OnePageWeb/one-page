@@ -29,6 +29,13 @@ export default {
     execute: 'Execute',
     copy: 'Copy',
     pinToTop: 'Pin to Top',
+    export: 'Export',
+  },
+  status: {
+    enabledMove: 'Enabled Move',
+    disabledMove: 'Disabled Move',
+    enabledEdit: 'Enabled Edit',
+    disabledEdit: 'Disabled Edit',
   },
   menu: {
     close: 'Close Action Bar',
@@ -77,6 +84,8 @@ export default {
       url: 'Link URL',
       img: 'Link Icon Address',
       switchNameVisible: 'Toggle Name Display',
+      dragTip: 'Drag to enable fast switching window',
+      openFastWindow: 'Click to switch to fast switching window',
       layout: {
         horizontal: 'Horizontal Layout',
         floating: 'Floating Layout',
@@ -85,7 +94,7 @@ export default {
       },
       edit: {
         title: 'Edit Quick Links',
-        urlName: 'Please enter link name',
+        urlName: 'Link name',
         url: 'Please enter link URL',
         img: 'Please enter link icon address',
       }
@@ -136,6 +145,10 @@ export default {
     clearConfirm: 'Are you sure to clear and reload the page?',
     loading: 'Loading configuration...',
     loadFail: '',
+    configUrl: 'Configure URL, the access address or download address for synchronous configuration.',
+    lockUrl: 'Configure URL lock. After enabling left-side synchronization, the configuration address parameters will be automatically synchronized when the page loads.',
+    lock: 'Enable',
+    unlock: 'Disable',
   },
   success: {
     add: 'Add successful',
@@ -149,6 +162,7 @@ export default {
     noName: 'Please enter a name',
     nameExist: 'Name already exists',
     noConfigContent: 'No configuration content',
+    noConfigUrl: 'No configuration URL',
     loadFormat: 'Format error',
     uploadJson: 'Please upload a JSON file',
     uploadMarkdown: 'Please upload a Markdown file',
@@ -168,6 +182,11 @@ export default {
     settings: 'Workspace Settings',
     alreadyInThis: 'Already in current workspace',
     current: 'Current Workspace',
+    temp: {
+      title: 'Temporary Workspace',
+      desc: 'Temporary workspace, data will be lost when closing the page',
+      warning: 'Warning: Temporary workspace data will be lost when closing or reloading the page',
+    },
     delete: {
       title: 'Delete Selected Workspace',
       content: 'Whether to delete the workspace',

@@ -29,6 +29,13 @@ export default {
     execute: '执行',
     copy: '复制',
     pinToTop: '置顶',
+    export: '导出',
+  },
+  status: {
+    enabledMove: '已开启移动',
+    disabledMove: '已关闭移动',
+    enabledEdit: '已开启编辑',
+    disabledEdit: '已关闭编辑',
   },
   menu: {
     close: '关闭操作栏',
@@ -77,6 +84,8 @@ export default {
       url: '链接URL',
       img: '链接图标地址',
       switchNameVisible: '切换名称显示',
+      dragTip: '拖动即可开启快切窗口',
+      openFastWindow: '点击切换至快切窗口',
       layout: {
         horizontal: '水平布局',
         floating: '浮动布局',
@@ -85,7 +94,7 @@ export default {
       },
       edit: {
         title: '编辑快速链接',
-        urlName: '请输入链接名称',
+        urlName: '链接名称',
         url: '请输入链接URL',
         img: '请输入链接图标地址',
       }
@@ -136,6 +145,10 @@ export default {
     clearConfirm: '确定清空并重新加载页面？',
     loading: '正在加载配置...',
     loadFail: '',
+    configUrl: '配置URL，同步配置的访问地址或下载地址',
+    lockUrl: '配置URL锁定，开启左侧同步后会在页面加载时自动同步配置地址参数',
+    lock: '同步开启',
+    unlock: '关闭同步',
   },
   success: {
     add: '添加成功',
@@ -149,6 +162,7 @@ export default {
     noName: '请输入名称',
     nameExist: '已存在同名',
     noConfigContent: '无配置内容',
+    noConfigUrl: '无配置URL',
     loadFormat: '格式错误',
     uploadJson: '请上传JSON文件',
     uploadMarkdown: '请上传Markdown文件',
@@ -168,6 +182,11 @@ export default {
     settings: '工作区设定',
     alreadyInThis: '已处于当前工作区',
     current: '当前工作区',
+    temp: {
+      title: '临时工作区',
+      desc: '临时工作区，关闭页面后数据将丢失',
+      warning: '警告：临时工作区数据将在关闭或刷新页面后丢失',
+    },
     delete: {
       title: '删除选中工作区',
       content: '是否删除工作区',

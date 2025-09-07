@@ -79,3 +79,31 @@ export function reloadWithoutParams(paramsToRemove) {
         window.location.reload()
     }
 }
+
+export function changeUrlParams(params) {
+    // 当前URL的路径部分
+    const path = window.location.pathname;
+
+    // 将参数对象转换为查询字符串
+    const queryString = new URLSearchParams(params).toString()
+
+    // 新的URL
+    const newUrl = queryString ? `${path}?${queryString}` : path
+
+    history.replaceState({ params }, '', newUrl)
+}
+
+export function removeParams(paramToRemove) {
+    // 获取当前URL的参数
+    const params = new URLSearchParams(window.location.search)
+
+    // 删除指定参数
+    params.delete(paramToRemove)
+
+    // 构建新的URL
+    const path = window.location.pathname;
+    const newUrl = params.toString() ? `${path}?${params.toString()}` : path
+
+    // 更新地址栏
+    history.replaceState(null, '', newUrl)
+}

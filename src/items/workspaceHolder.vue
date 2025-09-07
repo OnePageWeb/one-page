@@ -1,10 +1,23 @@
-<script setup>
-import {onMounted, ref} from "vue"
+<script lang="ts" setup>
+import {onMounted, onUnmounted, ref} from "vue"
 import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/js/workspcae.js"
-import {ElButton, ElDialog, ElInput, ElTag, ElPopconfirm, ElMessage, ElPopover, ElIcon} from "element-plus"
+import {saveDataDirect, loadDataDirect, removeDataDirect} from "@/js/data.js"
+import {
+  ElButton,
+  ElDialog,
+  ElInput,
+  ElTag,
+  ElPopconfirm,
+  ElMessage,
+  ElPopover,
+  ElIcon,
+  ElMessageBox,
+} from "element-plus"
 import {Check, InfoFilled} from "@element-plus/icons-vue"
 import {reloadWithoutParams} from "@/js/url.js"
 import {useI18n} from "vue-i18n"
+import {TEMP_WORKSPACE} from "@/js/workspcae.js"
+
 const {t} = useI18n()
 
 const dialogVisible = ref(false)
@@ -21,6 +34,14 @@ const nowWorkspace = ref('')
 const workspaceList = ref([])
 // 创建时加载工作区
 onMounted(() => {
+  const tempFlag = loadDataDirect(TEMP_WORKSPACE)
+  if (tempFlag === null || tempFlag === undefined) {
+    // 不存在在尝试删除
+    deleteWorkspace(TEMP_WORKSPACE)
+  }
+  if (getNowWorkspace() === TEMP_WORKSPACE) {
+    ElMessage.warning(t('workspace.temp.warning'))
+  }
   workspaceList.value.push(...listWorkspace())
 })
 
@@ -28,7 +49,29 @@ onMounted(() => {
 const newWorkspaceName = ref('')
 const deleteConfirm = ref(false)
 
-function switchWorkspace(workspace) {
+function newWorkspace(workspace: string) {
+  // 特殊处理
+  if (workspace.toLowerCase() === TEMP_WORKSPACE) {
+    ElMessageBox.confirm(
+        t('workspace.temp.desc'),
+        t('workspace.temp.title'),
+        {
+          distinguishCancelAndClose: true,
+          confirmButtonText: t('common.confirm'),
+          cancelButtonText: t('common.cancel'),
+        }
+    ).then(() => {
+      // 设置临时工作区标记
+      saveDataDirect(TEMP_WORKSPACE, getNowWorkspace())
+      switchWorkspace(workspace.toLowerCase())
+    })
+  } else {
+    // 普通工作区
+    switchWorkspace(workspace)
+  }
+}
+
+function switchWorkspace(workspace: string) {
   if (!workspace || workspace.trim() === '') {
     ElMessage({
       message: t('error.workspaceEmpty'),
@@ -51,12 +94,13 @@ function switchWorkspace(workspace) {
 
 // 删除工作区
 const deleteWorkspaceName = ref('')
-function showDeleteConfirm(tag) {
+
+function showDeleteConfirm(tag: string) {
   deleteWorkspaceName.value = tag
   deleteConfirm.value = true
 }
 
-function deleteItem(workspace) {
+function deleteItem(workspace: string) {
   deleteWorkspace(workspace)
   if (nowWorkspace.value === workspace) {
     // 刷新页面
@@ -72,20 +116,20 @@ function deleteItem(workspace) {
 <template>
   <!-- 组件样式弹窗 -->
   <el-dialog
-    v-model="dialogVisible"
-    width="30%"
-    class="workspaceDialog commonDialog"
-    align-center
+      v-model="dialogVisible"
+      width="30%"
+      class="workspaceDialog commonDialog"
+      align-center
   >
     <template #header>
       <div style="display: flex;align-items: center;color: white;">
         <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }}</span>
         <el-popover
-          class="box-item"
-          :title="`${t('workspace.current')}：${nowWorkspace}`"
-          width="350"
-          :content="t('text.workspaceDesc')"
-          placement="top-start"
+            class="box-item"
+            :title="`${t('workspace.current')}：${nowWorkspace}`"
+            width="350"
+            :content="t('text.workspaceDesc')"
+            placement="top-start"
         >
           <template #reference>
             <el-icon style="margin-left: 8px;cursor: pointer;">
@@ -98,55 +142,59 @@ function deleteItem(workspace) {
     <div>
       <!-- 工作区列表 -->
       <el-popconfirm
-        class="box-item"
-        v-for="tag in workspaceList"
-        :title="nowWorkspace === tag ? t('workspace.alreadyInThis') : (t('workspace.switch') + ' ' + tag)"
-        placement="top-start"
-        width="300px"
-        @confirm="switchWorkspace(tag)"
-        :confirm-button-text="t('common.switch')"
-        :cancel-button-text="t('common.cancel')"
+          class="box-item"
+          v-for="tag in workspaceList"
+          :title="nowWorkspace === tag ? t('workspace.alreadyInThis') : (t('workspace.switch') + ' ' + tag)"
+          placement="top-start"
+          width="300px"
+          @confirm="switchWorkspace(tag)"
+          :confirm-button-text="t('common.switch')"
+          :cancel-button-text="t('common.cancel')"
       >
         <template #reference>
           <el-tag
-            class="workspaceTag"
-            :key="tag"
-            :type="nowWorkspace === tag ? 'primary' : 'info'"
-            closable
-            @close="showDeleteConfirm(tag)"
+              class="workspaceTag"
+              :key="tag"
+              :type="nowWorkspace === tag ? 'primary' : 'info'"
+              closable
+              @close="showDeleteConfirm(tag)"
           >
             {{ tag }}
           </el-tag>
         </template>
         <template v-if="nowWorkspace === tag" #actions>
-          <el-icon><Check /></el-icon>
+          <el-icon>
+            <Check/>
+          </el-icon>
         </template>
       </el-popconfirm>
     </div>
     <template #footer>
       <div>
         <el-input
-          v-model="newWorkspaceName"
-          class="workspaceName"
-          :placeholder="t('placeholder.newWorkspaceName')"
-          @keydown.ctrl.enter="switchWorkspace(newWorkspaceName)"
+            v-model="newWorkspaceName"
+            class="workspaceName"
+            :placeholder="t('placeholder.newWorkspaceName')"
+            @keydown.ctrl.enter="newWorkspace(newWorkspaceName)"
         />
-        <el-button type="primary" @click="switchWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
+        <el-button type="primary" @click="newWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
       </div>
     </template>
 
     <el-dialog
-      :title="t('workspace.delete.title')"
-      v-model="deleteConfirm"
-      width="400px"
-      class="deleteConfirm commonDialog"
-      align-center
+        :title="t('workspace.delete.title')"
+        v-model="deleteConfirm"
+        width="400px"
+        class="deleteConfirm commonDialog"
+        align-center
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{t('workspace.delete.content')}} <span style="font-size: 24px;font-weight: bolder">{{ deleteWorkspaceName }}</span> ？
+          {{ t('workspace.delete.content') }} <span style="font-size: 24px;font-weight: bolder">{{
+            deleteWorkspaceName
+          }}</span> ？
           <div>
-            {{t('workspace.delete.tip')}}
+            {{ t('workspace.delete.tip') }}
           </div>
         </div>
       </div>

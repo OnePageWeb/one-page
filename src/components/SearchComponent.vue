@@ -336,6 +336,8 @@ defineExpose({
       .el-input__wrapper {
         width: 100%;
         height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
         border-radius: 0 120px 120px 0;
         box-shadow: unset;
         padding: 0;
@@ -346,7 +348,7 @@ defineExpose({
           border-radius: 0 120px 120px 0;
 
           &:hover, &:focus {
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 8px var(--el-color-primary);
           }
         }
       }

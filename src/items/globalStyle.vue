@@ -1,6 +1,6 @@
 <script setup>
 import {ElButton, ElDialog, ElInput, ElMessage, ElTag, ElIcon} from "element-plus"
-import {onMounted, ref} from "vue"
+import {nextTick, onMounted, ref} from "vue"
 import {loadData, removeData, saveData} from "@/js/data.js"
 import {CircleCheckFilled} from "@element-plus/icons-vue"
 import cssEditor from "@/items/cssEditor.vue"
@@ -208,7 +208,9 @@ function open() {
   globalStyle.value = ''
   selectedTagIndex.value = -1
   curTagName.value = ''
-  cssEditorRef.value.load('')
+  nextTick(() => {
+    cssEditorRef.value.load('')
+  })
 }
 
 defineExpose({
@@ -310,7 +312,7 @@ defineExpose({
 .globeStyleDialog {
   .tagContainer {
     height: calc(20% - 36px);
-    border: 2px solid var(--el-color-primary);
+    border: 2px solid #dddddd;
     margin: 4px 0;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 4px;

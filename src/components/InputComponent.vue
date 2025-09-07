@@ -1,10 +1,11 @@
 <script setup>
 import {ElIcon, ElInput, ElMessage, ElPopover, ElText, ElTooltip} from "element-plus"
-import {onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {CloseBold, CopyDocument, Edit, SortDown, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
+import InputWithParams from "@/items/inputWithParams.vue"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -16,7 +17,9 @@ const {id, text, enableEdit} = toRefs(props)
 
 const nameText = ref('')
 // 方法内容
+const functionTextRef = ref(null)
 const functionText = ref(text.value || `'input : ' + input`)
+let params = []
 const inputText = ref('')
 // 方法结果
 const functionResult = ref('')
@@ -28,12 +31,18 @@ watch(enableEdit, (newValue) => {
   }
 })
 
-const inputContentRef = ref(null)
+function onFunctionChange(value) {
+  functionText.value = value
+  save()
+}
 
 function save() {
+  const data = functionTextRef.value.save()
+  params = data.params
   saveData(props.id, JSON.stringify({
     name: nameText.value,
-    content: functionText.value,
+    content: data.text,
+    params: data.params
   }))
 }
 
@@ -53,7 +62,7 @@ async function execute() {
   try {
     functionResult.value = executeCode()
   } catch (e) {
-    console.log(e)
+    console.error(e)
     functionResult.value = `error: ${e}`
   }
   save()
@@ -76,6 +85,10 @@ function load(data) {
     const parse = JSON.parse(save)
     nameText.value = parse.name
     functionText.value = parse.content
+    params = parse.params || []
+    nextTick(() => {
+      functionTextRef.value.load({ text: functionText.value, params: params })
+    })
   }
 }
 
@@ -86,10 +99,7 @@ defineExpose({
 
 <template>
   <div class="inputContent">
-    <div
-        class="textContainer"
-        ref="inputContentRef"
-    >
+    <div class="textContainer">
       <div class="ioContainer">
         <el-input
             v-model="inputText"
@@ -150,13 +160,13 @@ defineExpose({
         >
           <template #prepend>{{t('component.input.functionName')}}</template>
         </el-input>
-        <el-input
-            v-model="functionText"
+        <input-with-params
+            ref="functionTextRef"
             class="functionContent"
             :rows="2"
             type="textarea"
             :placeholder="t('placeholder.inputFunctionInput')"
-            @change="save"
+            @update="onFunctionChange"
         />
       </div>
     </div>
@@ -167,6 +177,8 @@ defineExpose({
           effect="light"
           :content="t('common.closeEdit')"
           placement="top"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="isEditing = false">
           <View/>
@@ -177,6 +189,8 @@ defineExpose({
           effect="light"
           :content="t('common.openEdit')"
           placement="top"
+          :show-after="800"
+          :hide-after="10"
       >
         <el-icon @click="isEditing = true">
           <Edit/>
@@ -220,20 +234,20 @@ defineExpose({
       justify-content: space-between;
       height: 100%;
       width: 100%;
-    }
 
-    .input {
-      .el-textarea__inner {
-        height: 100%;
+      .input {
+        .el-textarea__inner {
+          height: 100%;
+        }
       }
-    }
 
-    .input, .result {
-      width: calc(100% - 16px);
-      height: calc(50% - 18px);
-      border-radius: 8px;
-      padding: 8px;
-      background-color: white;
+      .input, .result {
+        width: calc(100% - 16px);
+        height: calc(50% - 18px);
+        border-radius: 8px;
+        padding: 8px;
+        background-color: white;
+      }
     }
 
     .executeIcon, .copyIcon, .clearIcon {

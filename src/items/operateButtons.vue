@@ -56,6 +56,8 @@ const operatorContainer = ref(null)
           :content="t('component.operate.drag')"
           placement="top-start"
           :show-after="300"
+          :hide-after="10"
+          :enterable="false"
       >
         <el-icon class="dragHandle">
           <Rank/>
@@ -67,6 +69,8 @@ const operatorContainer = ref(null)
           :content="t('component.operate.export')"
           placement="top-start"
           :show-after="300"
+          :hide-after="10"
+          :enterable="false"
       >
         <el-icon class="exportComponent" @click="exportComponent">
           <Download/>
@@ -78,6 +82,8 @@ const operatorContainer = ref(null)
           :content="t('component.operate.module')"
           placement="top-start"
           :show-after="300"
+          :hide-after="10"
+          :enterable="false"
       >
         <el-icon class="module" @click="module">
           <Connection/>
@@ -89,6 +95,8 @@ const operatorContainer = ref(null)
           :content="t('component.operate.copy')"
           placement="top-start"
           :show-after="300"
+          :hide-after="10"
+          :enterable="false"
       >
         <el-icon class="copy" @click="copy">
           <CopyDocument/>
@@ -99,6 +107,8 @@ const operatorContainer = ref(null)
           :content="t('component.operate.zoomIn')"
           placement="top-start"
           :show-after="300"
+          :hide-after="10"
+          :enterable="false"
       >
         <el-icon class="zoomIn" @click="zoomIn">
           <ZoomIn/>
@@ -110,6 +120,8 @@ const operatorContainer = ref(null)
           :content="t('component.operate.style')"
           placement="top-start"
           :show-after="300"
+          :hide-after="10"
+          :enterable="false"
       >
         <el-icon class="editStyle" @click="editStyle">
           <Picture/>
