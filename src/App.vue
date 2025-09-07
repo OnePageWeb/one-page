@@ -182,6 +182,7 @@
       </template>
     </el-dialog>
 
+    <!-- 组件放大弹窗 -->
     <el-dialog
         v-model="zoomInDialogVisible"
         class="zoomInDialog"
@@ -193,20 +194,24 @@
       <div id="zoomInElement" class="zoomInElement"></div>
     </el-dialog>
 
+    <!-- 组件库 -->
     <readyComponent
         ref="readyComponent"
         @addComponent="addComponent"
     />
 
+    <!-- 全局样式弹窗 -->
     <globalStyle
         ref="globalStyle"
         @load-style="loadStyle"
     />
 
+    <!-- 工作区配置弹窗 -->
     <workspaceHolder
         ref="workspaceHolder"
     />
 
+    <!-- 名称与描述输入框 -->
     <name-desc-dialog
         ref="nameDescDialog"
         :title="$t('component.addToModule')"
@@ -215,9 +220,7 @@
         @save="addModule"
     />
 
-    <div
-        :class="['shortcutKeys', {'transparent': !ctrlDown}]"
-    >
+    <div :class="['shortcutKeys', {'transparent': !ctrlDown}]">
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">Q</div>
@@ -1327,21 +1330,22 @@ textarea {
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(4px);
-  margin: 10px;
-  padding: 10px 40px 10px 10px;
-  bottom: 0;
-  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  width: 50%;
+  height: 80%;
+  bottom: 10%;
+  left: 25%;
   opacity: 1;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
   user-select: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  animation-duration: 0.3s;
 
   .shortcutKeysList {
     font-size: 24px;
@@ -1350,30 +1354,38 @@ textarea {
     align-items: center;
     justify-items: center;
     flex-direction: column;
+    gap: 16px;
   }
 
   .shortcutKeysItem {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 20px;
     justify-content: flex-start;
     width: 100%;
 
     .el-icon {
       color: #ffffff;
+      height: 2vw;
+      width: 2vw;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
     }
 
     .shortcutKeysItemTitle {
-      font-size: 32px;
+      font-size: 4vw;
       font-weight: bold;
-      width: 32px;
+      width: 4vw;
       color: #ffffff;
     }
 
     .shortcutKeysItemDesc {
-      font-size: 24px;
+      font-size: 2vw;
       font-weight: bold;
       color: #e3e3e3;
     }

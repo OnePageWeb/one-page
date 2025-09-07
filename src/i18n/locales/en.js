@@ -29,6 +29,7 @@ export default {
     execute: 'Execute',
     copy: 'Copy',
     pinToTop: 'Pin to Top',
+    export: 'Export',
   },
   status: {
     enabledMove: 'Enabled Move',

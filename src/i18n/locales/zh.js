@@ -29,6 +29,7 @@ export default {
     execute: '执行',
     copy: '复制',
     pinToTop: '置顶',
+    export: '导出',
   },
   status: {
     enabledMove: '已开启移动',
