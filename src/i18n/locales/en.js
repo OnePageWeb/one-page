@@ -29,6 +29,7 @@ export default {
     execute: 'Execute',
     copy: 'Copy',
     pinToTop: 'Pin to Top',
+    sync: 'Sync',
     export: 'Export',
   },
   status: {
@@ -56,7 +57,7 @@ export default {
       copy: 'Copy this component',
       zoomIn: 'Enlarge component',
       style: 'Edit component style',
-      deleteConfirm: 'Are you sure to delete this component?',
+      deleteConfirm: 'Are you sure to delete this component? The data of this component will be permanently deleted.',
     },
     delete: {
       title: 'Confirm to delete this component',

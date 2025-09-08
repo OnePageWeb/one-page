@@ -2,192 +2,201 @@
 }
 
 .menu {
-    .el-button.is-plain {
-        --el-button-hover-text-color: #ffffff;
-        background: repeating-linear-gradient(
-                45deg,
-                rgba(150, 150, 150, 0.3),
-                rgba(150, 150, 150, 0.3) 40px,
-                rgba(255, 255, 255, 0.1) 40px,
-                rgba(255, 255, 255, 0.1) 80px
-        );
-        background-size: 200%;
-        --el-button-hover-border-color: rgba(255, 255, 255);
+  .el-button.is-plain {
+    --el-button-hover-text-color: #ffffff;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(150, 150, 150, 0.3),
+        rgba(150, 150, 150, 0.3) 40px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.1) 80px
+    );
+    background-size: 200%;
+    --el-button-hover-border-color: rgba(255, 255, 255);
 
-        &:hover {
-            animation: gradientScroll 1s ease-in-out infinite;
-        }
+    &:hover {
+      animation: gradientScroll 1s ease-in-out infinite;
+    }
+  }
+
+  .el-button {
+    margin-left: 0;
+    --el-border: unset;
+    --el-button-bg-color: rgba(0, 0, 0, 0.1);
+    --el-button-text-color: #ffffff;
+    --el-button-border-color: #ffffff5A;
+
+    &:hover {
+      --el-button-border-color: #ffffff;
+    }
+  }
+
+  .el-select__wrapper {
+    --el-select-border-color-hover: rgba(255, 255, 255, 0.35);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(150, 150, 150, 0.3),
+        rgba(150, 150, 150, 0.3) 40px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.1) 80px
+    );
+    background-size: 200%;
+
+    &:hover {
+      animation: gradientScroll 1s ease-in-out infinite;
     }
 
-    .el-button {
-        margin-left: 0;
-        --el-border: unset;
-        --el-button-bg-color: rgba(0, 0, 0, 0.1);
-        --el-button-text-color: #ffffff;
-        --el-button-border-color: #ffffff5A;
+    .el-select__input, .el-select__placeholder {
+      color: #ffffff;
+    }
+  }
 
-        &:hover {
-            --el-button-border-color: #ffffff;
-        }
+  .el-checkbox.is-bordered {
+    --el-border: 1px solid rgba(255, 255, 255, 0.35);
+    --el-checkbox-bg-color: rgba(0, 0, 0, 0.1);
+    --el-checkbox-checked-bg-color: rgba(255, 255, 255);
+    --el-checkbox-checked-input-border-color: #ffffff;
+    --el-checkbox-checked-icon-color: #fca76c;
+    margin-right: unset;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(150, 150, 150, 0.3),
+        rgba(150, 150, 150, 0.3) 40px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.1) 80px
+    );
+    background-size: 200%;
+
+    &:hover {
+      border-color: #ffffff;
+      background: repeating-linear-gradient(
+          45deg,
+          rgba(150, 150, 150, 0.5),
+          rgba(150, 150, 150, 0.5) 40px,
+          rgba(255, 255, 255, 0.3) 40px,
+          rgba(255, 255, 255, 0.3) 80px
+      );
     }
 
-    .el-select__wrapper {
-        --el-select-border-color-hover: rgba(255, 255, 255, 0.35);
-        background: repeating-linear-gradient(
-                45deg,
-                rgba(150, 150, 150, 0.3),
-                rgba(150, 150, 150, 0.3) 40px,
-                rgba(255, 255, 255, 0.1) 40px,
-                rgba(255, 255, 255, 0.1) 80px
-        );
-        background-size: 200%;
-
-        &:hover {
-            animation: gradientScroll 1s ease-in-out infinite;
-        }
-
-        .el-select__input, .el-select__placeholder {
-            color: #ffffff;
-        }
+    &.is-checked {
+      border-color: #ffffff;
+      animation: gradientScroll 2s ease-in-out infinite;
     }
 
-    .el-checkbox.is-bordered {
-        --el-border: 1px solid rgba(255, 255, 255, 0.35);
-        --el-checkbox-bg-color: rgba(0, 0, 0, 0.1);
-        --el-checkbox-checked-bg-color: rgba(255, 255, 255);
-        --el-checkbox-checked-input-border-color: #ffffff;
-        --el-checkbox-checked-icon-color: #fca76c;
-        margin-right: unset;
-        background: repeating-linear-gradient(
-                45deg,
-                rgba(150, 150, 150, 0.3),
-                rgba(150, 150, 150, 0.3) 40px,
-                rgba(255, 255, 255, 0.1) 40px,
-                rgba(255, 255, 255, 0.1) 80px
-        );
-        background-size: 200%;
-
-        &:hover {
-            border-color: #ffffff;
-            background: repeating-linear-gradient(
-                    45deg,
-                    rgba(150, 150, 150, 0.5),
-                    rgba(150, 150, 150, 0.5) 40px,
-                    rgba(255, 255, 255, 0.3) 40px,
-                    rgba(255, 255, 255, 0.3) 80px
-            );
-        }
-
-        &.is-checked {
-            border-color: #ffffff;
-            animation: gradientScroll 2s ease-in-out infinite;
-        }
-
-        .el-checkbox__label {
-            color: #ffffff;
-        }
+    .el-checkbox__label {
+      color: #ffffff;
     }
+  }
 }
 
 .commonDialog {
-    height: calc(80% - 2px);
-    max-height: calc(80% - 2px);
-    --el-dialog-padding-primary: 0;
-    --el-dialog-border-radius: 0;
-    --el-dialog-bg-color: rgb(255, 255, 255);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  height: calc(80% - 2px);
+  max-height: calc(80% - 2px);
+  --el-dialog-padding-primary: 0;
+  --el-dialog-border-radius: 0;
+  --el-dialog-bg-color: rgb(255, 255, 255);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 
-    .el-dialog__header {
-        padding: 12px 16px;
-        background-color: var(--el-color-primary);
-        display: flex;
-        align-items: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  .el-dialog__header {
+    padding: 12px 16px;
+    background-color: var(--el-color-primary);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
-        .el-dialog__title {
-            color: white;
-            font-weight: bold;
-        }
-
-        .el-dialog__headerbtn {
-            top: unset !important;
-        }
-
-        .el-dialog__headerbtn .el-dialog__close {
-            color: white !important;
-            font-size: 24px !important;
-        }
+    .el-dialog__title {
+      color: white;
+      font-weight: bold;
     }
 
-    .el-dialog__body {
-        height: calc(100% - 128px);
-        max-height: calc(100% - 128px);
-        padding: 16px;
-        overflow-x: hidden;
-        /* 对其中的第一个子组件设置高度为100% */
-
-        > *:first-child {
-            height: 100% !important;
-            overflow: auto;
-        }
+    .el-dialog__headerbtn {
+      top: unset !important;
     }
 
-    .el-dialog__footer {
-        padding: 8px;
-        background-color: rgb(255, 255, 255);
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+    .el-dialog__headerbtn .el-dialog__close {
+      color: white !important;
+      font-size: 24px !important;
     }
+  }
 
-    .el-textarea__inner, .el-textarea {
-        height: 100%;
+  .el-dialog__body {
+    height: calc(100% - 128px);
+    max-height: calc(100% - 128px);
+    padding: 16px;
+    overflow-x: hidden;
+    /* 对其中的第一个子组件设置高度为100% */
+
+    > *:first-child {
+      height: 100% !important;
+      overflow: auto;
     }
+  }
+
+  .el-dialog__footer {
+    padding: 8px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .el-textarea__inner, .el-textarea {
+    height: 100%;
+  }
 }
 
 el-tooltip {
-    pointer-events: none;
+  pointer-events: none;
 }
 
+.grid-stack-item>.ui-resizable-se {
+  border-radius: 24px;
+  padding: 4px;
+
+  &:hover {
+    scale: 1.6;
+    transform: rotate(225deg);
+  }
+}
 
 /* 背景滚动动画 */
 @keyframes gradientScroll {
-    0% {
-        background-position: 0 0;
-    }
-    50% {
-        background-position: 100% 0;
-    }
-    100% {
-        background-position: 0 0;
-    }
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 
 @keyframes upAndDown {
-    0% {
-        transform: translateY(0);
-    }
-    25% {
-        transform: translateY(3px);
-    }
-    75% {
-        transform: translateY(-3px);
-    }
-    100% {
-        transform: translateY(-1px);
-    }
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(3px);
+  }
+  75% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(-1px);
+  }
 }
 
 @keyframes shake {
-    0% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(3deg);
-    }
-    75% {
-        transform: rotate(-3deg);
-    }
-    100% {
-        transform: rotate(-1deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(-1deg);
+  }
 }

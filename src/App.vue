@@ -101,8 +101,8 @@
                 :active-text="$t('config.lock')"
                 :inactive-text="$t('config.unlock')"
             />
-            <el-input v-model="configUrl" @change="saveUrl" :placeholder="$t('config.configUrl')" :disabled="!configUrlLock"/>
-            <el-button @click="loadConfigFromUrl">{{ $t('common.load') }}</el-button>
+            <el-input v-model="configUrl" @change="saveUrl" :placeholder="$t('config.configUrl')"/>
+            <el-button @click="loadConfigFromUrl" type="primary">{{ $t('common.sync') }}</el-button>
           </div>
         </el-tooltip>
         <el-input
@@ -115,7 +115,7 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
+      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -220,6 +220,7 @@
         @save="addModule"
     />
 
+    <!-- 快捷键提示 -->
     <div :class="['shortcutKeys', {'shortcutKeysHidden': !ctrlDown}]">
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
@@ -1127,7 +1128,7 @@ body {
   gap: 10px;
   padding: 0 10px;
   z-index: 100;
-  background-color: rgba(64, 158, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -1137,7 +1138,6 @@ body {
     padding: 4px;
     background: rgba(255, 255, 255, 0.6);
     border-radius: 24px;
-    color: var(--el-color-primary);
 
     &:hover {
       animation: upAndDown 0.5s ease-in-out infinite;
@@ -1311,17 +1311,23 @@ textarea {
 /* 组件弹窗样式结束 */
 
 /* 配置加载器弹窗样式开始 */
-.configLoaderHeader {
-  display: flex;
-  align-items: center;
-}
+.configDialog {
+  .configLoaderHeader {
+    display: flex;
+    align-items: center;
+  }
 
-.globeConfigInput {
-  height: calc(100% - 40px) !important;
-  margin-top: 8px;
+  .globeConfigInput {
+    height: calc(100% - 40px) !important;
+    margin-top: 8px;
 
-  .el-textarea__inner {
-    height: 100%;
+    .el-textarea__inner {
+      height: 100%;
+    }
+  }
+
+  .el-switch__core {
+    height: calc(100% - 2px);
   }
 }
 
@@ -1332,11 +1338,11 @@ textarea {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  width: 40%;
-  height: 80%;
-  bottom: 10%;
-  left: 30%;
+  width: calc(20% - 56px);
+  bottom: 5%;
+  left: 40%;
   opacity: 1;
+  padding: 24px;
   border-radius: 24px;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
   user-select: none;
@@ -1345,8 +1351,14 @@ textarea {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  transition: all 0.2s ease-in-out;
-  pointer-events: all;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+  border: 4px solid rgba(255, 255, 255, 0.6);
+
+  * {
+    user-select: none;
+    pointer-events: none;
+  }
 
   .shortcutKeysList {
     font-size: 24px;
@@ -1355,7 +1367,6 @@ textarea {
     align-items: center;
     justify-items: center;
     flex-direction: column;
-    gap: 16px;
   }
 
   .shortcutKeysItem {
@@ -1379,14 +1390,14 @@ textarea {
     }
 
     .shortcutKeysItemTitle {
-      font-size: 4vw;
+      font-size: 3vw;
       font-weight: bold;
-      width: 4vw;
+      width: 3vw;
       color: #ffffff;
     }
 
     .shortcutKeysItemDesc {
-      font-size: 2vw;
+      font-size: 1.5vw;
       font-weight: bold;
       color: #e3e3e3;
     }
@@ -1395,11 +1406,10 @@ textarea {
 
 .shortcutKeysHidden {
   opacity: 0;
-  height: 0;
   padding: 0;
   bottom: 0;
 
-  .shortcutKeysList {
+  * {
     opacity: 0;
     padding: 0;
   }

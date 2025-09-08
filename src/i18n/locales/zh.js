@@ -29,6 +29,7 @@ export default {
     execute: '执行',
     copy: '复制',
     pinToTop: '置顶',
+    sync: '同步',
     export: '导出',
   },
   status: {
@@ -56,7 +57,7 @@ export default {
       copy: '复制此组件',
       zoomIn: '放大组件',
       style: '编辑组件样式',
-      deleteConfirm: '确定删除此组件？',
+      deleteConfirm: '确定删除此组件？此组件数据将被永久删除',
     },
     delete: {
       title: '确定删除此组件',

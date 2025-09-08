@@ -123,7 +123,7 @@ function deleteItem(workspace: string) {
   >
     <template #header>
       <div style="display: flex;align-items: center;color: white;">
-        <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }}</span>
+        <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }} - {{ nowWorkspace }}</span>
         <el-popover
             class="box-item"
             :title="`${t('workspace.current')}：${nowWorkspace}`"
