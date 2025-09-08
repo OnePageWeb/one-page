@@ -1,4 +1,4 @@
-import {loadDataDirect, saveDataDirect} from "@/js/data.js";
+import {loadDataDirect, saveDataDirect} from "@/js/data.js"
 
 let nowWorkspace = ''
 export const TEMP_WORKSPACE = 'temp'
@@ -15,6 +15,11 @@ export function getWorkspacePrefix(workspace) {
 
 export function initWorkspace() {
     nowWorkspace = window.localStorage.getItem('nowWorkspace')
+    const tempFlag = loadDataDirect(TEMP_WORKSPACE)
+    if (tempFlag === null || tempFlag === undefined) {
+        // 不存在在尝试删除
+        deleteWorkspace(TEMP_WORKSPACE)
+    }
 }
 
 export function setWorkspace(workspace) {
@@ -25,6 +30,9 @@ export function setWorkspace(workspace) {
     } else {
         saveDataDirect('lastWorkspace', nowWorkspace)
         nowWorkspace = workspace
+    }
+    if (workspace.toLowerCase() === TEMP_WORKSPACE) {
+        saveDataDirect(TEMP_WORKSPACE, nowWorkspace)
     }
     const ws= listWorkspace()
     if (ws === null) {

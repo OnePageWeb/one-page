@@ -312,7 +312,7 @@ import {
   saveData,
   saveDataDirect,
 } from "@/js/data.js"
-import {setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
@@ -485,6 +485,7 @@ onMounted(async () => {
   if (workspace) {
     setWorkspace(workspace)
   }
+  removeParams('workspace')
   // 初始化配置
   configUrl.value = loadData('configUrl')
   const urlLock = urlParams.get('lock')
@@ -1022,7 +1023,6 @@ async function loadConfig(config = configData.value, reload = true) {
       if (startsWith(config, 'http')) {
         // 从网络加载
         config = await parseBlobJson(config)
-        console.log('从网络加载配置', JSON.stringify(config, 2))
       } else {
         config = JSON.parse(config)
       }
