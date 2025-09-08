@@ -239,6 +239,11 @@ export default {
     en: 'English',
     switch: '切换语言',
   },
+  version: {
+    currentVersion: '当前版本',
+    updateInfo: '更新说明',
+    fetchError: '未获取到新版本信息'
+  },
   shortcut: {
     q: '移动模式',
     e: '编辑模式',

@@ -239,6 +239,11 @@ export default {
     en: 'English',
     switch: 'Switch Language',
   },
+  version: {
+    currentVersion: 'Current version',
+    updateInfo: 'Update notes',
+    fetchError: 'No new version information obtained'
+  },
   shortcut: {
     q: 'Move Mode',
     e: 'Edit Mode',

@@ -224,6 +224,8 @@
         @save="addModule"
     />
 
+    <version-info/>
+
     <!-- 快捷键提示 -->
     <div :class="['shortcutKeys', {'shortcutKeysHidden': !ctrlDown}]">
       <div class="shortcutKeysList">
@@ -314,6 +316,7 @@ import NameDescDialog from "@/items/nameDescDialog.vue"
 import i18n from './i18n'
 import {changeLanguage, getCurrentLanguage} from "./i18n/utils.js"
 import {itemType} from "@/js/components.js"
+import versionInfo from '@/items/versionInfo.vue'
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
