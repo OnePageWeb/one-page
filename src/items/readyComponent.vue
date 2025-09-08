@@ -1,5 +1,16 @@
 <script setup>
-import {ElButton, ElDialog, ElIcon, ElInput, ElLoading, ElMessage, ElPopconfirm} from "element-plus"
+import {
+  ElButton,
+  ElDialog,
+  ElIcon, ElImage,
+  ElInput,
+  ElLoading,
+  ElMessage,
+  ElOption,
+  ElPopconfirm,
+  ElPopover,
+  ElSelect
+} from "element-plus"
 import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
 import {Close, Search} from "@element-plus/icons-vue"
@@ -156,14 +167,27 @@ function handleFileDrop(e) {
           </template>
         </el-input>
         <div class="readyComponents">
-          <div
-            v-for="name of Object.keys(filterComponents)"
-            class="componentItem"
-            @click="addComponent(name)"
+
+          <el-popover
+              class="box-item"
+              v-for="name of Object.keys(filterComponents)"
+              width="300"
+              placement="bottom"
+              popper-class="componentItem"
+              :show-after="200"
+              :hide-after="10"
           >
-            <div class="componentName">{{ name }}</div>
-            <div class="componentDesc">{{ components[name].desc }}</div>
-          </div>
+            <template #reference>
+              <div
+                  class="componentItem"
+                  @click="addComponent(name)"
+              >
+                <div class="componentName">{{ name }}</div>
+                <div class="componentDesc">{{ components[name].desc }}</div>
+              </div>
+            </template>
+            <el-image :src="'imgs/ready/' + name + '.png'"/>
+          </el-popover>
           <div class="componentAreaName">{{ t('component.defined') }}</div>
         </div>
         <div class="moduleComponents">

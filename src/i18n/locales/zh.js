@@ -29,6 +29,7 @@ export default {
     execute: '执行',
     copy: '复制',
     pinToTop: '置顶',
+    sync: '同步',
     export: '导出',
   },
   status: {
@@ -56,7 +57,7 @@ export default {
       copy: '复制此组件',
       zoomIn: '放大组件',
       style: '编辑组件样式',
-      deleteConfirm: '确定删除此组件？',
+      deleteConfirm: '确定删除此组件？此组件数据将被永久删除',
     },
     delete: {
       title: '确定删除此组件',
@@ -120,6 +121,9 @@ export default {
         pdDesc: '搜索提示语，显示于输入框中',
       },
     },
+    record: {
+      dbClickType: '双击',
+    }
   },
   style: {
     title: '样式',
@@ -235,6 +239,11 @@ export default {
     en: 'English',
     switch: '切换语言',
   },
+  version: {
+    currentVersion: '当前版本',
+    updateInfo: '更新说明',
+    fetchError: '未获取到新版本信息'
+  },
   shortcut: {
     q: '移动模式',
     e: '编辑模式',
@@ -246,7 +255,7 @@ export default {
       name: '文本格子',
       desc: '用于显示文本内容的格子，允许html标签'
     },
-    notes: {
+    note: {
       name: '便签格子',
       desc: '用于显示Markdown内容的格子'
     },

@@ -130,7 +130,7 @@ const operatorContainer = ref(null)
       <el-popconfirm
           v-if="enableEdit || enableMove || ctrl"
           class="deleteItem"
-          width="180px"
+          width="240px"
           :title="t('component.operate.deleteConfirm')"
           placement="top-start"
           :confirm-button-text="t('common.confirm')"
@@ -155,9 +155,8 @@ const operatorContainer = ref(null)
   top: 0;
   left: 0;
   display: flex;
-  border: 2px dashed rgba(255, 255, 255, 0.32);
+  border: 2px dashed rgba(255, 255, 255, 0.6);
   justify-content: flex-end;
-  border-radius: 8px;
   pointer-events: none;
   transition: opacity 1s ease-in-out;
   z-index: 20;
@@ -261,6 +260,7 @@ const operatorContainer = ref(null)
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
   pointer-events: all;
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 </style>

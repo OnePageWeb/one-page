@@ -34,15 +34,10 @@ const nowWorkspace = ref('')
 const workspaceList = ref([])
 // 创建时加载工作区
 onMounted(() => {
-  const tempFlag = loadDataDirect(TEMP_WORKSPACE)
-  if (tempFlag === null || tempFlag === undefined) {
-    // 不存在在尝试删除
-    deleteWorkspace(TEMP_WORKSPACE)
-  }
+  workspaceList.value.push(...listWorkspace())
   if (getNowWorkspace() === TEMP_WORKSPACE) {
     ElMessage.warning(t('workspace.temp.warning'))
   }
-  workspaceList.value.push(...listWorkspace())
 })
 
 // 工作区设定
@@ -61,8 +56,6 @@ function newWorkspace(workspace: string) {
           cancelButtonText: t('common.cancel'),
         }
     ).then(() => {
-      // 设置临时工作区标记
-      saveDataDirect(TEMP_WORKSPACE, getNowWorkspace())
       switchWorkspace(workspace.toLowerCase())
     })
   } else {
@@ -123,7 +116,7 @@ function deleteItem(workspace: string) {
   >
     <template #header>
       <div style="display: flex;align-items: center;color: white;">
-        <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }}</span>
+        <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }} - {{ nowWorkspace }}</span>
         <el-popover
             class="box-item"
             :title="`${t('workspace.current')}：${nowWorkspace}`"

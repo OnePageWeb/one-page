@@ -15,26 +15,37 @@ const emit = defineEmits(['update', 'enter'])
 
 const collapse = ref([])
 const contentValue = ref('')
-const calcContentValue = () => {
-  let value = content.value
+const calcContentValue = (value = content.value, params = params.value, paramItems) => {
   for (let i = 0; i < paramItems.length; i++) {
-    value = value.replace(paramItems[i], params.value[i].value)
+    value = value.replace(paramItems[i], params[i]?.value || '')
   }
-  contentValue.value = value
+  return value
 }
 
 // 默认文本内容
 const content = ref('')
 const inputRef = ref(null)
 const params = ref([])
-const paramItems = []
 
-function calcParams() {
-  const value = content.value
+function calcParams(value) {
+  value = value || content.value
+  const { params: tempParams, paramItems } = getParams(value)
+  // 合并参数
+  for (let tempParam of tempParams) {
+    const param = params.value.find(item => item.name === tempParam.name)
+    if (param && param.value) {
+      tempParam.value = param.value
+    }
+  }
+  params.value = tempParams
+  contentValue.value = calcContentValue(value, tempParams, paramItems)
+}
+
+function getParams(value) {
   // 从value中提取参数，参数格式如下${}，并将每一个参数提取到一个列表中
   const matches = value?.match(/@{(.*?)}/g) || []
   const tempParams = []
-  paramItems.length = 0
+  const paramItems = []
   for (let param of matches) {
     const paramContent = param.substring(2, param.length - 1)
     if (paramContent.length > 0) {
@@ -60,15 +71,7 @@ function calcParams() {
       paramItems.push(param)
     }
   }
-  // 合并参数
-  for (let tempParam of tempParams) {
-    const param = params.value.find(item => item.name === tempParam.name)
-    if (param) {
-      tempParam.value = param.value
-    }
-  }
-  params.value = tempParams
-  calcContentValue()
+  return { params: tempParams, paramItems: paramItems }
 }
 
 function onInputFocus() {
@@ -112,6 +115,9 @@ defineExpose({
     content.value = ''
     params.value = []
     inputRef.value.clear()
+  }, calcValue(value, params) {
+    const { params: tempParams, paramItems } = getParams(value)
+    return calcContentValue(value, params || tempParams, paramItems)
   }
 })
 </script>

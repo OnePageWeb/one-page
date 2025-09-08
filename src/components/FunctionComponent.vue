@@ -72,12 +72,12 @@ onUnmounted(() => {
 
 async function execute() {
   isEditing.value = false
-  const setResult = (result) => {
-    nextTick(() => {
-      functionResult.value = result
-    })
-  }
   function executeCode() {
+    const setResult = (result) => {
+      nextTick(() => {
+        functionResult.value = result
+      })
+    }
     return eval(`(function (setResult) {
       ${functionContent.value}
     })(setResult)`)

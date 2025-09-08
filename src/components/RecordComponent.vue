@@ -18,6 +18,21 @@ const {enableEdit} = toRefs(props)
 const resultList = ref([])
 const contentList = ref([])
 
+const dbClickType = ref(1)
+
+function dbClick(index) {
+  if (dbClickType.value === 1) {
+    copy(index)
+  } else {
+    edit(index)
+  }
+}
+
+function changeDbClickType() {
+  dbClickType.value = (dbClickType.value + 1) % 2
+  save()
+}
+
 let currentIndex = -1
 function edit(index) {
   if (index === -1) {
@@ -46,7 +61,6 @@ function onInputUpdate(value, params) {
 function closeEdit() {
   if (isEditing.value) {
     contentList.value[currentIndex] = inputWithParamsRef.value.save()
-    resultList.value[currentIndex] = contentList.value[currentIndex].text
     inputWithParamsRef.value.clear()
     isEditing.value = false
     if (resultList.value[currentIndex].trim().length === 0) {
@@ -151,7 +165,7 @@ const isEditing = ref(false)
 const inputWithParamsRef = ref(null)
 
 function save() {
-  saveData(props.id, JSON.stringify({ list: contentList.value }))
+  saveData(props.id, JSON.stringify({ list: contentList.value, dbClick: dbClickType.value }))
 }
 
 onMounted(() => {
@@ -169,7 +183,15 @@ function load(data) {
   if (save) {
     const parse = JSON.parse(save)
     contentList.value = parse.list
-    resultList.value = parse.list.map(item => item.text)
+    dbClickType.value = parse.dbClick || 0
+    resultList.value = []
+    nextTick(() => {
+      const tempList = []
+      for (let value of contentList.value) {
+        tempList.push(inputWithParamsRef.value.calcValue(value.text, value.params))
+      }
+      resultList.value = tempList
+    })
   }
 }
 
@@ -186,7 +208,7 @@ defineExpose({
       <div
           v-for="(content, index) in resultList"
           class="record"
-          @dblclick.prevent.stop="edit(index)"
+          @dblclick.prevent.stop="dbClick(index)"
           draggable="true"
           @dragstart="onDragstart($event, index)"
           @dragover="onDragover"
@@ -283,6 +305,19 @@ defineExpose({
       >
         <el-icon @click="edit(-1)">
           <Plus/>
+        </el-icon>
+      </el-tooltip>
+      <el-tooltip
+          effect="light"
+          :content="t('component.record.dbClickType') + ' : ' + t('common.' + (dbClickType === 1 ? 'copy' : 'edit'))"
+          placement="top"
+          :show-after="800"
+          :hide-after="10"
+          popper-class="recordOperateToolTip"
+      >
+        <el-icon class="dbClickIcon" @click="changeDbClickType">
+          <CopyDocument v-if="dbClickType === 1"/>
+          <Edit v-else/>
         </el-icon>
       </el-tooltip>
     </component-operator>
@@ -429,6 +464,26 @@ defineExpose({
     height: 100%;
     opacity: 1;
   }
+
+  .componentOperatorContainer {
+    .dbClickIcon {
+      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.45);
+      border-radius: 4px;
+      padding: 2px;
+
+      &:hover {
+        padding: 2px;
+        scale: 1.6;
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.45);
+      }
+    }
+
+    &:hover {
+      .dbClickIcon {
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.45);
+      }
+    }
+  }
 }
 
 .recordPreContainer {
@@ -442,4 +497,5 @@ defineExpose({
     max-width: 100%;
   }
 }
+
 </style>

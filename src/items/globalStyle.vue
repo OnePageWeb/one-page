@@ -238,7 +238,7 @@ defineExpose({
             @click="showTagStyle(index)"
             @close="showDeleteConfirm(tag)"
         >
-          <div style="display: flex; align-items: center;gap: 4px">
+          <div style="display: flex; align-items: center;gap: 8px">
             <el-icon :class="[selectTags.indexOf(tag) > -1 ? 'activeIcon' : 'inactiveIcon']" @click.prevent="selectTag(tag)">
               <CircleCheckFilled/>
             </el-icon>
@@ -320,7 +320,7 @@ defineExpose({
     overflow: auto;
 
     .styleTag, .addTag {
-      margin: 10px;
+      margin: 6px;
       font-size: large;
       padding: 8px 16px;
       cursor: pointer;

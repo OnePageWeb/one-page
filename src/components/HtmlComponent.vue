@@ -5,7 +5,7 @@ import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
-import InputWithParams from "@/items/inputWithParams.vue";
+import InputWithParams from "@/items/inputWithParams.vue"
 const {t} = useI18n()
 
 const props = defineProps({

@@ -19,11 +19,10 @@
       <el-select class="addItemSelect" :placeholder="$t('component.addItem')" @change="addItemWithEdit">
         <el-popover
             class="box-item"
-            v-for="item in itemType"
-            :title="item.label"
-            :content="item.desc"
-            width="300"
+            v-for="item in components"
+            width="400"
             placement="right-start"
+            popper-class="componentItem"
         >
           <template #reference>
             <div>
@@ -37,6 +36,11 @@
               </el-option>
             </div>
           </template>
+          <div>
+            <div class="componentName">{{ item.label }}</div>
+            <div class="componentDesc">{{ item.desc }}</div>
+            <el-image :src="item.img"/>
+          </div>
         </el-popover>
       </el-select>
       <el-text class="menuTitle" truncated>{{ $t('layout.edit') }}</el-text>
@@ -101,8 +105,8 @@
                 :active-text="$t('config.lock')"
                 :inactive-text="$t('config.unlock')"
             />
-            <el-input v-model="configUrl" @change="saveUrl" :placeholder="$t('config.configUrl')" :disabled="!configUrlLock"/>
-            <el-button @click="loadConfigFromUrl">{{ $t('common.load') }}</el-button>
+            <el-input v-model="configUrl" @change="saveUrl" :placeholder="$t('config.configUrl')"/>
+            <el-button @click="loadConfigFromUrl" type="primary">{{ $t('common.sync') }}</el-button>
           </div>
         </el-tooltip>
         <el-input
@@ -115,7 +119,7 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="50%" align-center>
+      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -220,7 +224,10 @@
         @save="addModule"
     />
 
-    <div :class="['shortcutKeys', {'transparent': !ctrlDown}]">
+    <version-info/>
+
+    <!-- 快捷键提示 -->
+    <div :class="['shortcutKeys', {'shortcutKeysHidden': !ctrlDown}]">
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">Q</div>
@@ -273,19 +280,10 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
+  ElImage,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
-import textComponent from './components/TextComponent.vue'
-import noteComponent from "./components/NoteComponent.vue"
-import searchComponent from './components/SearchComponent.vue'
-import iframeComponent from './components/IframeComponent.vue'
-import htmlComponent from "./components/HtmlComponent.vue"
-import linkComponent from './components/LinkComponent.vue'
-import buttonComponent from './components/ButtonComponent.vue'
-import functionComponent from './components/FunctionComponent.vue'
-import recordComponent from "./components/RecordComponent.vue"
-import inputComponent from "@/components/InputComponent.vue"
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
@@ -311,12 +309,14 @@ import {
   saveData,
   saveDataDirect,
 } from "@/js/data.js"
-import {setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
 import i18n from './i18n'
 import {changeLanguage, getCurrentLanguage} from "./i18n/utils.js"
+import {itemType} from "@/js/components.js"
+import versionInfo from '@/items/versionInfo.vue'
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
@@ -332,78 +332,14 @@ const langList = [
   'en'
 ]
 
-const itemType = [
-  {
-    value: 'text',
-    label: t('itemType.text.name'),
-    desc: t('itemType.text.desc'),
-    color: '#ffffff',
-    component: textComponent
-  },
-  {
-    value: 'note',
-    label: t('itemType.notes.name'),
-    desc: t('itemType.notes.desc'),
-    color: '#ff86e7',
-    component: noteComponent
-  },
-  {
-    value: 'search',
-    label: t('itemType.search.name'),
-    desc: t('itemType.search.desc'),
-    color: '#000000',
-    component: searchComponent
-  },
-  {
-    value: 'iframe',
-    label: t('itemType.iframe.name'),
-    desc: t('itemType.iframe.desc'),
-    color: '#439af8',
-    component: iframeComponent
-  },
-  {
-    value: 'html',
-    label: t('itemType.html.name'),
-    desc: t('itemType.html.desc'),
-    color: '#eae25f',
-    component: htmlComponent
-  },
-  {
-    value: 'link',
-    label: t('itemType.link.name'),
-    desc: t('itemType.link.desc'),
-    color: '#3fd165',
-    component: linkComponent
-  },
-  {
-    value: 'button',
-    label: t('itemType.button.name'),
-    desc: t('itemType.button.desc'),
-    color: '#47c8c8',
-    component: buttonComponent
-  },
-  {
-    value: 'input',
-    label: t('itemType.input.name'),
-    desc: t('itemType.input.desc'),
-    color: '#ff5d5d',
-    component: inputComponent
-  },
-  {
-    value: 'function',
-    label: t('itemType.function.name'),
-    desc: t('itemType.function.desc'),
-    color: '#272727',
-    component: functionComponent
-  },
-  {
-    value: 'record',
-    label: t('itemType.record.name'),
-    desc: t('itemType.record.desc'),
-    color: '#5dffa9',
-    component: recordComponent
-  },
-]
+const components = ref([])
+for (let item of itemType) {
+  item.label = t('itemType.' + item.value + '.name')
+  item.desc = t('itemType.' + item.value + '.desc')
+  item.img = '/one/imgs/components/' + item.value + '.png'
+}
+components.value = itemType
+
 // 菜单是否显示
 let showMenu = ref(false)
 
@@ -484,6 +420,7 @@ onMounted(async () => {
   if (workspace) {
     setWorkspace(workspace)
   }
+  removeParams('workspace')
   // 初始化配置
   configUrl.value = loadData('configUrl')
   const urlLock = urlParams.get('lock')
@@ -1021,7 +958,6 @@ async function loadConfig(config = configData.value, reload = true) {
       if (startsWith(config, 'http')) {
         // 从网络加载
         config = await parseBlobJson(config)
-        console.log('从网络加载配置', JSON.stringify(config, 2))
       } else {
         config = JSON.parse(config)
       }
@@ -1127,7 +1063,7 @@ body {
   gap: 10px;
   padding: 0 10px;
   z-index: 100;
-  background-color: rgba(64, 158, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -1137,7 +1073,6 @@ body {
     padding: 4px;
     background: rgba(255, 255, 255, 0.6);
     border-radius: 24px;
-    color: var(--el-color-primary);
 
     &:hover {
       animation: upAndDown 0.5s ease-in-out infinite;
@@ -1193,6 +1128,20 @@ body {
 }
 
 /* 菜单样式结束 */
+
+.componentItem {
+  .componentName {
+    font-weight: bold;
+    font-size: 22px;
+  }
+  .componentDesc {
+    font-size: 18px;
+    margin: 4px 0;
+  }
+  .el-image {
+    width: 100%;
+  }
+}
 
 /* 选择器样式 */
 .el-select.addItemSelect {
@@ -1311,17 +1260,23 @@ textarea {
 /* 组件弹窗样式结束 */
 
 /* 配置加载器弹窗样式开始 */
-.configLoaderHeader {
-  display: flex;
-  align-items: center;
-}
+.configDialog {
+  .configLoaderHeader {
+    display: flex;
+    align-items: center;
+  }
 
-.globeConfigInput {
-  height: calc(100% - 40px) !important;
-  margin-top: 8px;
+  .globeConfigInput {
+    height: calc(100% - 40px) !important;
+    margin-top: 8px;
 
-  .el-textarea__inner {
-    height: 100%;
+    .el-textarea__inner {
+      height: 100%;
+    }
+  }
+
+  .el-switch__core {
+    height: calc(100% - 2px);
   }
 }
 
@@ -1330,13 +1285,13 @@ textarea {
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  width: 50%;
-  height: 80%;
-  bottom: 10%;
-  left: 25%;
+  width: calc(20% - 56px);
+  bottom: 5%;
+  left: 40%;
   opacity: 1;
+  padding: 24px;
   border-radius: 24px;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
   user-select: none;
@@ -1345,7 +1300,14 @@ textarea {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  animation-duration: 0.3s;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+  border: 4px solid rgba(255, 255, 255, 0.6);
+
+  * {
+    user-select: none;
+    pointer-events: none;
+  }
 
   .shortcutKeysList {
     font-size: 24px;
@@ -1354,7 +1316,6 @@ textarea {
     align-items: center;
     justify-items: center;
     flex-direction: column;
-    gap: 16px;
   }
 
   .shortcutKeysItem {
@@ -1378,28 +1339,27 @@ textarea {
     }
 
     .shortcutKeysItemTitle {
-      font-size: 4vw;
+      font-size: 3vw;
       font-weight: bold;
-      width: 4vw;
+      width: 3vw;
       color: #ffffff;
     }
 
     .shortcutKeysItemDesc {
-      font-size: 2vw;
+      font-size: 1.5vw;
       font-weight: bold;
       color: #e3e3e3;
     }
   }
 }
 
-.transparent {
+.shortcutKeysHidden {
   opacity: 0;
-  height: 0;
   padding: 0;
+  bottom: 0;
 
   * {
     opacity: 0;
-    height: 0;
     padding: 0;
   }
 }

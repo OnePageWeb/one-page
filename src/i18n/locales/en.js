@@ -29,6 +29,7 @@ export default {
     execute: 'Execute',
     copy: 'Copy',
     pinToTop: 'Pin to Top',
+    sync: 'Sync',
     export: 'Export',
   },
   status: {
@@ -56,7 +57,7 @@ export default {
       copy: 'Copy this component',
       zoomIn: 'Enlarge component',
       style: 'Edit component style',
-      deleteConfirm: 'Are you sure to delete this component?',
+      deleteConfirm: 'Are you sure to delete this component? The data of this component will be permanently deleted.',
     },
     delete: {
       title: 'Confirm to delete this component',
@@ -120,6 +121,9 @@ export default {
         pdDesc: 'Search prompt, displayed in the input box',
       },
     },
+    record: {
+      dbClickType: 'Double-click',
+    }
   },
   style: {
     title: 'Style',
@@ -235,6 +239,11 @@ export default {
     en: 'English',
     switch: 'Switch Language',
   },
+  version: {
+    currentVersion: 'Current version',
+    updateInfo: 'Update notes',
+    fetchError: 'No new version information obtained'
+  },
   shortcut: {
     q: 'Move Mode',
     e: 'Edit Mode',
@@ -246,7 +255,7 @@ export default {
       name: 'Text Grid',
       desc: 'Grid for displaying text content, allowing html tags'
     },
-    notes: {
+    note: {
       name: 'Note Grid',
       desc: 'Grid for displaying Markdown content'
     },
