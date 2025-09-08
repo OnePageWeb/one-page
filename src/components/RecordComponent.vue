@@ -46,7 +46,6 @@ function onInputUpdate(value, params) {
 function closeEdit() {
   if (isEditing.value) {
     contentList.value[currentIndex] = inputWithParamsRef.value.save()
-    resultList.value[currentIndex] = contentList.value[currentIndex].text
     inputWithParamsRef.value.clear()
     isEditing.value = false
     if (resultList.value[currentIndex].trim().length === 0) {
@@ -169,7 +168,14 @@ function load(data) {
   if (save) {
     const parse = JSON.parse(save)
     contentList.value = parse.list
-    resultList.value = parse.list.map(item => item.text)
+    resultList.value = []
+    nextTick(() => {
+      const tempList = []
+      for (let value of contentList.value) {
+        tempList.push(inputWithParamsRef.value.calcValue(value.text, value.params))
+      }
+      resultList.value = tempList
+    })
   }
 }
 

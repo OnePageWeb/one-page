@@ -220,7 +220,7 @@
         @save="addModule"
     />
 
-    <div :class="['shortcutKeys', {'transparent': !ctrlDown}]">
+    <div :class="['shortcutKeys', {'shortcutKeysHidden': !ctrlDown}]">
       <div class="shortcutKeysList">
         <div class="shortcutKeysItem">
           <div class="shortcutKeysItemTitle">Q</div>
@@ -1330,12 +1330,12 @@ textarea {
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  width: 50%;
+  width: 40%;
   height: 80%;
   bottom: 10%;
-  left: 25%;
+  left: 30%;
   opacity: 1;
   border-radius: 24px;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
@@ -1345,7 +1345,8 @@ textarea {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  animation-duration: 0.3s;
+  transition: all 0.2s ease-in-out;
+  pointer-events: all;
 
   .shortcutKeysList {
     font-size: 24px;
@@ -1392,14 +1393,14 @@ textarea {
   }
 }
 
-.transparent {
+.shortcutKeysHidden {
   opacity: 0;
   height: 0;
   padding: 0;
+  bottom: 0;
 
-  * {
+  .shortcutKeysList {
     opacity: 0;
-    height: 0;
     padding: 0;
   }
 }
