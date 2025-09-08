@@ -19,11 +19,10 @@
       <el-select class="addItemSelect" :placeholder="$t('component.addItem')" @change="addItemWithEdit">
         <el-popover
             class="box-item"
-            v-for="item in itemType"
-            :title="item.label"
-            :content="item.desc"
-            width="300"
+            v-for="item in components"
+            width="400"
             placement="right-start"
+            popper-class="componentItem"
         >
           <template #reference>
             <div>
@@ -37,6 +36,11 @@
               </el-option>
             </div>
           </template>
+          <div>
+            <div class="componentName">{{ item.label }}</div>
+            <div class="componentDesc">{{ item.desc }}</div>
+            <el-image :src="item.img"/>
+          </div>
         </el-popover>
       </el-select>
       <el-text class="menuTitle" truncated>{{ $t('layout.edit') }}</el-text>
@@ -274,19 +278,10 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
+  ElImage,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
-import textComponent from './components/TextComponent.vue'
-import noteComponent from "./components/NoteComponent.vue"
-import searchComponent from './components/SearchComponent.vue'
-import iframeComponent from './components/IframeComponent.vue'
-import htmlComponent from "./components/HtmlComponent.vue"
-import linkComponent from './components/LinkComponent.vue'
-import buttonComponent from './components/ButtonComponent.vue'
-import functionComponent from './components/FunctionComponent.vue'
-import recordComponent from "./components/RecordComponent.vue"
-import inputComponent from "@/components/InputComponent.vue"
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
@@ -318,6 +313,7 @@ import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
 import i18n from './i18n'
 import {changeLanguage, getCurrentLanguage} from "./i18n/utils.js"
+import {itemType} from "@/js/components.js"
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
@@ -333,78 +329,14 @@ const langList = [
   'en'
 ]
 
-const itemType = [
-  {
-    value: 'text',
-    label: t('itemType.text.name'),
-    desc: t('itemType.text.desc'),
-    color: '#ffffff',
-    component: textComponent
-  },
-  {
-    value: 'note',
-    label: t('itemType.notes.name'),
-    desc: t('itemType.notes.desc'),
-    color: '#ff86e7',
-    component: noteComponent
-  },
-  {
-    value: 'search',
-    label: t('itemType.search.name'),
-    desc: t('itemType.search.desc'),
-    color: '#000000',
-    component: searchComponent
-  },
-  {
-    value: 'iframe',
-    label: t('itemType.iframe.name'),
-    desc: t('itemType.iframe.desc'),
-    color: '#439af8',
-    component: iframeComponent
-  },
-  {
-    value: 'html',
-    label: t('itemType.html.name'),
-    desc: t('itemType.html.desc'),
-    color: '#eae25f',
-    component: htmlComponent
-  },
-  {
-    value: 'link',
-    label: t('itemType.link.name'),
-    desc: t('itemType.link.desc'),
-    color: '#3fd165',
-    component: linkComponent
-  },
-  {
-    value: 'button',
-    label: t('itemType.button.name'),
-    desc: t('itemType.button.desc'),
-    color: '#47c8c8',
-    component: buttonComponent
-  },
-  {
-    value: 'input',
-    label: t('itemType.input.name'),
-    desc: t('itemType.input.desc'),
-    color: '#ff5d5d',
-    component: inputComponent
-  },
-  {
-    value: 'function',
-    label: t('itemType.function.name'),
-    desc: t('itemType.function.desc'),
-    color: '#272727',
-    component: functionComponent
-  },
-  {
-    value: 'record',
-    label: t('itemType.record.name'),
-    desc: t('itemType.record.desc'),
-    color: '#5dffa9',
-    component: recordComponent
-  },
-]
+const components = ref([])
+for (let item of itemType) {
+  item.label = t('itemType.' + item.value + '.name')
+  item.desc = t('itemType.' + item.value + '.desc')
+  item.img = '/imgs/components/' + item.value + '.png'
+}
+components.value = itemType
+
 // 菜单是否显示
 let showMenu = ref(false)
 
@@ -1193,6 +1125,20 @@ body {
 }
 
 /* 菜单样式结束 */
+
+.componentItem {
+  .componentName {
+    font-weight: bold;
+    font-size: 22px;
+  }
+  .componentDesc {
+    font-size: 18px;
+    margin: 4px 0;
+  }
+  .el-image {
+    width: 100%;
+  }
+}
 
 /* 选择器样式 */
 .el-select.addItemSelect {

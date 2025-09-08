@@ -247,7 +247,7 @@ export default {
       name: 'Text Grid',
       desc: 'Grid for displaying text content, allowing html tags'
     },
-    notes: {
+    note: {
       name: 'Note Grid',
       desc: 'Grid for displaying Markdown content'
     },

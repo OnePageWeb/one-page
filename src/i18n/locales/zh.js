@@ -247,7 +247,7 @@ export default {
       name: '文本格子',
       desc: '用于显示文本内容的格子，允许html标签'
     },
-    notes: {
+    note: {
       name: '便签格子',
       desc: '用于显示Markdown内容的格子'
     },
