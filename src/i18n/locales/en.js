@@ -121,6 +121,9 @@ export default {
         pdDesc: 'Search prompt, displayed in the input box',
       },
     },
+    record: {
+      dbClickType: 'Double-click',
+    }
   },
   style: {
     title: 'Style',

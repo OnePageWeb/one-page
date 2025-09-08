@@ -121,6 +121,9 @@ export default {
         pdDesc: '搜索提示语，显示于输入框中',
       },
     },
+    record: {
+      dbClickType: '双击',
+    }
   },
   style: {
     title: '样式',
