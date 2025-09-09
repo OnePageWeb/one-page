@@ -163,18 +163,21 @@ const operatorContainer = ref(null)
 
   .buttonContainer {
     width: fit-content;
-    max-width: calc(100% - 16px);
+    max-width: calc(100% - 8px);
     height: fit-content;
-    padding: 8px;
+    padding: 4px;
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
     gap: 4px;
     position: relative;
     pointer-events: auto;
+    top: -13px;
+    right: -8px;
 
     &:hover {
-      gap: 8px;
+      max-width: calc(100% + 8px);
+      top: -5px;
 
       .el-icon {
         width: 32px;

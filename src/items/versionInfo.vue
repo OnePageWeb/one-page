@@ -71,7 +71,6 @@ const fetchReleases = async () => {
     console.error('获取版本信息失败:', err)
     ElMessage.warning(t('version.fetchError'))
   }
-  console.log('releases', releases.value)
 }
 
 // 打开GitHub Release页面

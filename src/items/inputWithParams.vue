@@ -13,7 +13,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update', 'enter'])
 
-const collapse = ref([])
+const collapse = ref(['params'])
 const contentValue = ref('')
 const calcContentValue = (value = content.value, params = params.value, paramItems) => {
   for (let i = 0; i < paramItems.length; i++) {
@@ -91,10 +91,6 @@ function updateParam() {
 function enter() {
   emit('enter', contentValue.value, params.value)
 }
-
-watch(params, v => {
-  collapse.value = ['params']
-})
 
 function load(data) {
   if (data !== undefined && data !== null) {

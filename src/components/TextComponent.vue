@@ -121,13 +121,13 @@ defineExpose({
     height: 100%;
     opacity: 0;
 
-    .resultOnFocus {
-      width: 40%;
-    }
-
     .inputOnFocus .el-textarea__inner {
       padding: 8px !important;
     }
+  }
+
+  .resultOnFocus {
+    width: 40%;
   }
 
   .editOnFocus {
