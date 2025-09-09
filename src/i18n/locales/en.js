@@ -180,6 +180,7 @@ export default {
     componentNotExist: 'Component does not exist',
     workspaceEmpty: 'Workspace name cannot be empty',
     cannotOpenWindow: 'Pop-up window is blocked! Please allow pop-ups for this site.',
+    unknownContent: 'Unknown content'
   },
   layout: {
     edit: 'Layout Edit',

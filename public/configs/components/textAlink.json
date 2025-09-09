@@ -1,0 +1,9 @@
+{
+  "name": "简单链接",
+  "desc": "通过配置来显示一个简单的链接，点击即可跳转",
+  "config": "{\"text\":\"<a href=\\\"@{链接地址?https://github.com/Verlif/one}\\\" class=\\\"link-block\\\" target=\\\"_blank\\\">\\n  <img src=\\\"@{图标地址?https://picsum.photos/100/100}\\\" alt=\\\"图标\\\" class=\\\"link-image\\\">\\n  <span class=\\\"link-name\\\">@{标签名称?标签名称}</span>\\n</a>\",\"params\":[{\"name\":\"链接地址\",\"desc\":\"\",\"value\":\"https://github.com/Verlif/one\"},{\"name\":\"图标地址\",\"desc\":\"\",\"value\":\"https://picsum.photos/200/200\"},{\"name\":\"标签名称\",\"desc\":\"\",\"value\":\"标签名称\"}]}",
+  "style": ".result {\n    align-items: center;\n    display: flex;\n    justify-content: center;\n}\n\n.link-block {\n    text-align: center;\n    text-decoration: none;\n    padding: 8px;\n    border-radius: 8px;\n    transition: background-color 0.3s ease;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    width: fit-content;\n}\n\n.link-block:hover {\n    background-color: #ffffff24;\n}\n\n.link-image {\n    width: 40px;\n    height: 40px;\n    border-radius: 6px;\n    object-fit: cover;\n    margin-bottom: 8px;\n}\n\n.link-name {\n    color: #333;\n    font-size: 16px;\n    font-weight: bold;\n}",
+  "w": 2,
+  "h": 4,
+  "type": "text"
+}

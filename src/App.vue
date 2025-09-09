@@ -1086,7 +1086,11 @@ function onDragIn(data) {
       ).then(() => {
         loadConfig(data)
       })
+    } else {
+      ElMessage.error(t('error.unknownContent'))
     }
+  } else {
+    ElMessage.error(t('error.unknownContent'))
   }
 }
 

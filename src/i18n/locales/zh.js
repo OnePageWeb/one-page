@@ -180,6 +180,7 @@ export default {
     componentNotExist: '组件不存在',
     workspaceEmpty: '工作区名称不能为空',
     cannotOpenWindow: '弹出窗口被阻止了！请允许此站点的弹出窗口。',
+    unknownContent: '未知内容'
   },
   layout: {
     edit: '布局编辑',

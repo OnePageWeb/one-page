@@ -201,7 +201,7 @@ const operatorContainer = ref(null)
 
     &:hover {
       max-width: calc(100% + 8px);
-      top: -5px;
+      top: -9px;
 
       .el-icon {
         width: 32px;
