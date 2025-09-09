@@ -88,7 +88,7 @@
 
       <div
           @dragover.prevent
-          @drop.prevent="handleFileDrop">
+          @drop.prevent="handleConfigFileDrop">
         <el-tooltip
             effect="light"
             :content="t('config.lockUrl')"
@@ -224,7 +224,16 @@
         @save="addModule"
     />
 
+    <!-- 版本信息 -->
     <version-info/>
+
+    <!-- 拖动数据进入弹窗 -->
+    <dragInCover
+        ref="dragInCover"
+        style="z-index: 30;"
+        :active="everyDrag"
+        @onDragIn="onDragIn"
+    />
 
     <!-- 快捷键提示 -->
     <div :class="['shortcutKeys', {'shortcutKeysHidden': !ctrlDown}]">
@@ -257,6 +266,13 @@
           </el-icon>
           <div class="shortcutKeysItemDesc">{{ $t('shortcut.r') }}</div>
         </div>
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">F</div>
+          <el-icon>
+            <UploadFilled/>
+          </el-icon>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.f') }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -270,6 +286,7 @@ import {
   ElCheckbox,
   ElDialog,
   ElIcon,
+  ElImage,
   ElInput,
   ElLoading,
   ElMessage,
@@ -280,7 +297,6 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
-  ElImage,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -297,7 +313,8 @@ import {
   Picture,
   Rank,
   RefreshRight,
-  Top
+  Top,
+  UploadFilled
 } from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
@@ -309,7 +326,7 @@ import {
   saveData,
   saveDataDirect,
 } from "@/js/data.js"
-import {getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
@@ -320,6 +337,7 @@ import versionInfo from '@/items/versionInfo.vue'
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
+import DragInCover from "@/items/DragInCover.vue";
 
 const {t} = useI18n()
 
@@ -376,6 +394,8 @@ function keyListener(event) {
       showMenu.value = !showMenu.value
     } else if (event.key === 'r' || event.key === 'R') {
       window.location.reload()
+    } else if (event.key === 'F' || event.key === 'f') {
+      everyDrag.value = !everyDrag.value
     }
     event.preventDefault()
   } else {
@@ -591,6 +611,7 @@ function createItemComponent(type, componentItem) {
           enableEdit: enableEdit,
           enableMove: enableMove,
           ctrl: props.ctrl,
+          transferData: exportComponentData(props.id, type),
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
           onZoomIn: zoomIn,
@@ -1015,7 +1036,7 @@ function downloadConfig() {
 }
 
 // 处理文件拖拽
-function handleFileDrop(e) {
+function handleConfigFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (file.type !== 'application/json') {
@@ -1026,6 +1047,22 @@ function handleFileDrop(e) {
   reader.readAsText(file, 'utf-8')
   reader.onload = () => {
     configData.value = reader.result
+  }
+}
+
+// 处理文件拖拽
+const everyDrag = ref(false)
+
+function onDragIn(data) {
+  // 判断data是否是json对象
+  if (typeof data === 'object') {
+    if (data.type) {
+      // 组件配置
+      addComponent(data)
+    } else if (data.globalStyle || data.layout) {
+      // 全局样式或布局
+      loadConfig(data)
+    }
   }
 }
 
@@ -1134,10 +1171,12 @@ body {
     font-weight: bold;
     font-size: 22px;
   }
+
   .componentDesc {
     font-size: 18px;
     margin: 4px 0;
   }
+
   .el-image {
     width: 100%;
   }
@@ -1154,6 +1193,7 @@ body {
   height: 100% !important;
   overflow-x: hidden;
   scrollbar-width: none;
+  z-index: 5;
 }
 
 .grid-stack-item.ui-resizable-autohide {

@@ -51,6 +51,7 @@ export default {
     defined: 'Built-in Components',
     custom: 'Custom Components',
     operate: {
+      transfer: 'Send component. Drag this button to the input box to copy the component data.',
       drag: 'Drag component, you can also drag by holding the component border',
       export: 'Export this component data',
       module: 'Add to Template',
@@ -226,6 +227,7 @@ export default {
     configTip4: 'It is recommended to build your own proxy server.',
     h5Support: 'Support H5 tags',
     workspaceDesc: 'Workspace represents the current working environment. Different workspaces can have different configurations and data.',
+    uploadTip: 'Release the file to upload',
   },
   input: {
     params: 'Parameters',
@@ -249,6 +251,7 @@ export default {
     e: 'Edit Mode',
     d: 'Action Bar',
     r: 'Refresh Page',
+    f: 'Receive Mode',
   },
   itemType: {
     text: {

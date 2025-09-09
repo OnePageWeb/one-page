@@ -51,6 +51,7 @@ export default {
     defined: '内置组件',
     custom: '自定义组件',
     operate: {
+      transfer: '发送组件，拖拽此按钮到输入框即可复制组件数据',
       drag: '拖动组件，按住组件边框也可以进行拖动',
       export: '导出此组件数据',
       module: '添加到模板',
@@ -226,6 +227,7 @@ export default {
     configTip4: '推荐自建代理服务器。',
     h5Support: '支持H5标签',
     workspaceDesc: '工作区表示了当前正在使用的工作环境，不同的工作区可以拥有不同的配置和数据。',
+    uploadTip: '松开鼠标以上传',
   },
   input: {
     params: '参数列表',
@@ -249,6 +251,7 @@ export default {
     e: '编辑模式',
     d: '操作栏',
     r: '刷新页面',
+    f: '接收模式',
   },
   itemType: {
     text: {
