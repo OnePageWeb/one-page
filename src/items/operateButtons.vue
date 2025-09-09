@@ -1,6 +1,6 @@
 <script setup>
 import {defineEmits, ref, toRefs} from 'vue'
-import {Close, Connection, CopyDocument, Download, Picture, Rank, ZoomIn} from "@element-plus/icons-vue"
+import {Close, Connection, CopyDocument, Download, Picture, Promotion, Rank, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
 const {t} = useI18n()
@@ -11,7 +11,8 @@ const props = defineProps({
   type: String,
   enableEdit: Object,
   enableMove: Object,
-  ctrl: Object
+  ctrl: Object,
+  transferData: Object,
 })
 const {id, type, enableEdit, enableMove, ctrl} = toRefs(props)
 
@@ -35,6 +36,12 @@ function zoomIn() {
   emit('zoomIn', id, type)
 }
 
+function onTransferStart(e) {
+  e.stopPropagation()
+  const transferData = props.transferData
+  e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
+}
+
 function exportComponent() {
   emit('exportComponent', id, type)
 }
@@ -50,6 +57,23 @@ const operatorContainer = ref(null)
   >
     <div class="buttonContainer">
 
+      <el-tooltip
+          v-if="enableEdit && !enableMove"
+          effect="light"
+          :content="t('component.operate.transfer')"
+          placement="top-start"
+          :show-after="300"
+          :hide-after="10"
+          :enterable="false"
+      >
+        <el-icon
+            class="transfer"
+            draggable="true"
+            @dragstart.stop="onTransferStart"
+        >
+          <Promotion />
+        </el-icon>
+      </el-tooltip>
       <el-tooltip
           v-if="enableMove || ctrl"
           effect="light"
@@ -163,18 +187,21 @@ const operatorContainer = ref(null)
 
   .buttonContainer {
     width: fit-content;
-    max-width: calc(100% - 16px);
+    max-width: calc(100% - 8px);
     height: fit-content;
-    padding: 8px;
+    padding: 4px;
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
     gap: 4px;
     position: relative;
     pointer-events: auto;
+    top: -13px;
+    right: -8px;
 
     &:hover {
-      gap: 8px;
+      max-width: calc(100% + 8px);
+      top: -9px;
 
       .el-icon {
         width: 32px;
@@ -209,6 +236,13 @@ const operatorContainer = ref(null)
     width: unset !important;
     border-radius: 48px;
     padding: 4px;
+  }
+
+  .transfer {
+    cursor: move;
+    svg {
+      background-color: #ff5858;
+    }
   }
 
   .zoomIn {

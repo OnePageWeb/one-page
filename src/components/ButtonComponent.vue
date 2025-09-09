@@ -67,7 +67,7 @@ defineExpose({
 <template>
   <div class="buttonContent">
     <div class="textContainer">
-      <div class="buttonContainer">
+      <div :class="['buttonContainer', isEditing ? 'buttonContainerOnFocus' : '']">
         <div class="button" @click="execute" v-html="nameText"/>
       </div>
 
@@ -169,8 +169,14 @@ defineExpose({
       }
     }
 
+    .buttonContainerOnFocus {
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .functionOnFocus {
-      width: 60%;
+      width: 100%;
       height: 100%;
       opacity: 1;
 

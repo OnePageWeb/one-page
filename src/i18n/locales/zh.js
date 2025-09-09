@@ -51,6 +51,7 @@ export default {
     defined: '内置组件',
     custom: '自定义组件',
     operate: {
+      transfer: '发送组件，拖拽此按钮到输入框即可复制组件数据',
       drag: '拖动组件，按住组件边框也可以进行拖动',
       export: '导出此组件数据',
       module: '添加到模板',
@@ -145,6 +146,11 @@ export default {
     switch: '配置切换',
     load: '加载配置',
     save: '保存配置',
+    transfer: '发送配置，拖拽此按钮到输入框即可复制配置数据',
+    transferReceive: {
+      title: '配置接收',
+      desc: '是否接收从外部拖拽进入的配置，这将覆盖当前工作区的所有数据，是否继续加载？'
+    },
     loadConfirm: '确定加载以上配置，这会覆盖本地的所有配置？',
     clearConfirm: '确定清空并重新加载页面？',
     loading: '正在加载配置...',
@@ -174,6 +180,7 @@ export default {
     componentNotExist: '组件不存在',
     workspaceEmpty: '工作区名称不能为空',
     cannotOpenWindow: '弹出窗口被阻止了！请允许此站点的弹出窗口。',
+    unknownContent: '未知内容'
   },
   layout: {
     edit: '布局编辑',
@@ -226,6 +233,7 @@ export default {
     configTip4: '推荐自建代理服务器。',
     h5Support: '支持H5标签',
     workspaceDesc: '工作区表示了当前正在使用的工作环境，不同的工作区可以拥有不同的配置和数据。',
+    uploadTip: '松开鼠标以上传',
   },
   input: {
     params: '参数列表',
@@ -249,6 +257,7 @@ export default {
     e: '编辑模式',
     d: '操作栏',
     r: '刷新页面',
+    f: '接收模式',
   },
   itemType: {
     text: {

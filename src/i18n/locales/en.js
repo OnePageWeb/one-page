@@ -51,6 +51,7 @@ export default {
     defined: 'Built-in Components',
     custom: 'Custom Components',
     operate: {
+      transfer: 'Send component. Drag this button to the input box to copy the component data.',
       drag: 'Drag component, you can also drag by holding the component border',
       export: 'Export this component data',
       module: 'Add to Template',
@@ -145,6 +146,11 @@ export default {
     switch: 'Configuration Switch',
     load: 'Load Configuration',
     save: 'Save Configuration',
+    transfer: 'Send configuration. Drag this button to the input box to copy the configuration data.',
+    transferReceive: {
+      title: 'Configuration Receive',
+      desc: 'Whether to receive configurations dragged in from outside, which will overwrite all data in the current workspace. Continue loading?'
+    },
     loadConfirm: 'Are you sure to load the above configuration, which will overwrite all local configurations?',
     clearConfirm: 'Are you sure to clear and reload the page?',
     loading: 'Loading configuration...',
@@ -174,6 +180,7 @@ export default {
     componentNotExist: 'Component does not exist',
     workspaceEmpty: 'Workspace name cannot be empty',
     cannotOpenWindow: 'Pop-up window is blocked! Please allow pop-ups for this site.',
+    unknownContent: 'Unknown content'
   },
   layout: {
     edit: 'Layout Edit',
@@ -226,6 +233,7 @@ export default {
     configTip4: 'It is recommended to build your own proxy server.',
     h5Support: 'Support H5 tags',
     workspaceDesc: 'Workspace represents the current working environment. Different workspaces can have different configurations and data.',
+    uploadTip: 'Release the file to upload',
   },
   input: {
     params: 'Parameters',
@@ -249,6 +257,7 @@ export default {
     e: 'Edit Mode',
     d: 'Action Bar',
     r: 'Refresh Page',
+    f: 'Receive Mode',
   },
   itemType: {
     text: {

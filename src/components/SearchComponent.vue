@@ -118,7 +118,6 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-  console.log(tempSearchEngineList.value)
   // 去除空格，并去除无效项
   tempSearchEngineList.value = tempSearchEngineList.value
       .filter(item => item.name.trim() !== '' && item.url.trim() !== '')
