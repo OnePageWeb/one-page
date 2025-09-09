@@ -146,6 +146,11 @@ export default {
     switch: '配置切换',
     load: '加载配置',
     save: '保存配置',
+    transfer: '发送配置，拖拽此按钮到输入框即可复制配置数据',
+    transferReceive: {
+      title: '配置接收',
+      desc: '是否接收从外部拖拽进入的配置，这将覆盖当前工作区的所有数据，是否继续加载？'
+    },
     loadConfirm: '确定加载以上配置，这会覆盖本地的所有配置？',
     clearConfirm: '确定清空并重新加载页面？',
     loading: '正在加载配置...',

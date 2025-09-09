@@ -138,6 +138,20 @@
         </template>
       </el-dialog>
       <template #footer>
+        <el-tooltip
+            :content="$t('config.transfer')"
+            placement="top"
+            width="240"
+            effect="dark"
+        >
+          <el-icon
+              class="transfer"
+              draggable="true"
+              @dragstart.stop="onConfigTransferStart"
+          >
+            <Promotion />
+          </el-icon>
+        </el-tooltip>
         <el-button type="primary" @click="downloadConfig">{{ $t('common.download') }}</el-button>
         <el-popconfirm
             :title="$t('config.loadConfirm')"
@@ -289,7 +303,7 @@ import {
   ElImage,
   ElInput,
   ElLoading,
-  ElMessage,
+  ElMessage, ElMessageBox,
   ElOption,
   ElPopconfirm,
   ElPopover,
@@ -310,7 +324,7 @@ import {
   InfoFilled,
   Monitor,
   Operation,
-  Picture,
+  Picture, Promotion,
   Rank,
   RefreshRight,
   Top,
@@ -1039,7 +1053,7 @@ function downloadConfig() {
 function handleConfigFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
-  if (file.type !== 'application/json') {
+  if (!file || file.type !== 'application/json') {
     ElMessage.error(t('error.uploadJson'))
     return
   }
@@ -1061,9 +1075,26 @@ function onDragIn(data) {
       addComponent(data)
     } else if (data.globalStyle || data.layout) {
       // 全局样式或布局
-      loadConfig(data)
+      ElMessageBox.confirm(
+          t('config.transferReceive.desc'),
+          t('config.transferReceive.title'),
+          {
+            distinguishCancelAndClose: true,
+            confirmButtonText: t('common.confirm'),
+            cancelButtonText: t('common.cancel'),
+          }
+      ).then(() => {
+        loadConfig(data)
+      })
     }
   }
+}
+
+// 全局配置拖拽导出
+function onConfigTransferStart(e) {
+  e.stopPropagation()
+  const transferData = generateConfig()
+  e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
 }
 
 // 打开工作区弹窗
@@ -1312,6 +1343,28 @@ textarea {
 
     .el-textarea__inner {
       height: 100%;
+    }
+  }
+
+  .el-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+
+    .transfer {
+      cursor: move;
+      font-size: 32px;
+      color: #ff5858;
+
+      svg {
+        padding: 4px;
+        border-radius: 24px;
+      }
+    }
+
+    .el-button+.el-button {
+      margin-left: 0;
     }
   }
 

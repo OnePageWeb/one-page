@@ -42,16 +42,6 @@ function onTransferStart(e) {
   e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
 }
 
-function onTransferEnd(e) {
-  e.stopPropagation()
-  e.preventDefault()
-}
-
-function onTransfer(e) {
-  e.stopPropagation()
-  e.preventDefault()
-}
-
 function exportComponent() {
   emit('exportComponent', id, type)
 }
@@ -79,8 +69,6 @@ const operatorContainer = ref(null)
         <el-icon
             class="transfer"
             draggable="true"
-            @drop.prevent.stop="onTransfer"
-            @dragend.prevent.stop="onTransferEnd"
             @dragstart.stop="onTransferStart"
         >
           <Promotion />

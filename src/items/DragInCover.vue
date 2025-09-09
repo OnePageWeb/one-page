@@ -1,7 +1,7 @@
 <script setup>
 import {defineEmits, onMounted, onUnmounted, ref, toRefs} from "vue"
 import {UploadFilled} from "@element-plus/icons-vue"
-import {ElIcon} from "element-plus"
+import {ElIcon, ElMessage} from "element-plus"
 import {useI18n} from "vue-i18n"
 const {t} = useI18n()
 
@@ -35,7 +35,15 @@ const onDrop = (e) => {
   } else {
     const data = e.dataTransfer.getData('text/plain')
     if (data) {
-      emit('onDragIn', JSON.parse(data))
+      let transferData
+      try {
+        transferData = JSON.parse(data)
+      } catch (e) {
+        ElMessage.warning(t('error.loadFormat'))
+      }
+      if (transferData) {
+        emit('onDragIn', transferData)
+      }
     }
   }
 }

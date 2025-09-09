@@ -146,6 +146,11 @@ export default {
     switch: 'Configuration Switch',
     load: 'Load Configuration',
     save: 'Save Configuration',
+    transfer: 'Send configuration. Drag this button to the input box to copy the configuration data.',
+    transferReceive: {
+      title: 'Configuration Receive',
+      desc: 'Whether to receive configurations dragged in from outside, which will overwrite all data in the current workspace. Continue loading?'
+    },
     loadConfirm: 'Are you sure to load the above configuration, which will overwrite all local configurations?',
     clearConfirm: 'Are you sure to clear and reload the page?',
     loading: 'Loading configuration...',
