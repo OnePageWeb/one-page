@@ -368,7 +368,7 @@ const components = ref([])
 for (let item of itemType) {
   item.label = t('itemType.' + item.value + '.name')
   item.desc = t('itemType.' + item.value + '.desc')
-  item.img = '/one/imgs/components/' + item.value + '.png'
+  item.img = '/imgs/components/' + item.value + '.png'
 }
 components.value = itemType
 
