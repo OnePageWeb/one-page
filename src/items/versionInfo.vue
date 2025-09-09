@@ -21,7 +21,7 @@ const apiUrl = 'https://api.github.com/repos/Verlif/one/releases?per_page=10'
 
 // 处理版本号格式（移除可能的 'v' 前缀）
 const normalizeVersion = (version: string) => {
-  return version.replace(/^v/, '')
+  return version.replace(/^v/, '').split('-')[0]
 }
 
 // 比较版本号大小

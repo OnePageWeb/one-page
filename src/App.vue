@@ -239,7 +239,7 @@
     />
 
     <!-- 版本信息 -->
-    <version-info/>
+    <version-info style="z-index: 25;"/>
 
     <!-- 拖动数据进入弹窗 -->
     <dragInCover
