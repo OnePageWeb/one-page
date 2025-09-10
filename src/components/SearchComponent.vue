@@ -223,6 +223,7 @@ defineExpose({
         :title="t('component.search.edit.title')"
         width="60%"
         align-center
+        :close-on-press-escape="false"
         destroy-on-close
     >
       <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">

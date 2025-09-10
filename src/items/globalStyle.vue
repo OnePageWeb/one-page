@@ -226,6 +226,7 @@ defineExpose({
       width="30%"
       class="globeStyleDialog commonDialog"
       align-center
+      :close-on-press-escape="false"
       @close="refreshGlobalStyle"
   >
     <div style="position: relative;">
@@ -272,6 +273,7 @@ defineExpose({
         @close="tagNameDialogVisible = false"
         class="editTagDialog commonDialog"
         width="400px"
+        :close-on-press-escape="false"
         align-center
     >
       <el-input

@@ -233,7 +233,7 @@ export default {
     configTip4: '推荐自建代理服务器。',
     h5Support: '支持H5标签',
     workspaceDesc: '工作区表示了当前正在使用的工作环境，不同的工作区可以拥有不同的配置和数据。',
-    uploadTip: '松开鼠标以上传',
+    uploadTip: '将配置文件拖拽至此处以应用',
   },
   input: {
     params: '参数列表',

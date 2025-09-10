@@ -23,6 +23,8 @@
             width="400"
             placement="right-start"
             popper-class="componentItem"
+            :show-after="200"
+            :hide-after="10"
         >
           <template #reference>
             <div>
@@ -187,6 +189,7 @@
         width="50%"
         class="configDialog commonDialog"
         align-center
+        :close-on-press-escape="false"
     >
       <css-editor
           class="globeStyleInput"
@@ -207,6 +210,7 @@
         width="95%"
         align-center
         :show-close="false"
+        :close-on-press-escape="false"
         @close="onZoomInClose"
     >
       <div id="zoomInElement" class="zoomInElement"></div>
@@ -1224,10 +1228,7 @@ body {
 
 /* 栅格容器样式 */
 .grid-stack {
-  min-height: 300px;
-  height: 100% !important;
-  overflow-x: hidden;
-  scrollbar-width: none;
+  min-height: 100%;
   z-index: 5;
 }
 

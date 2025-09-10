@@ -58,6 +58,7 @@ defineExpose({
     class="commonDialog nameDescDialog"
     width="30%"
     align-center
+    :close-on-press-escape="false"
     @close="close"
   >
     <div>

@@ -1,0 +1,165 @@
+{
+  "globalStyle": {
+    "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\n\n.linkItem .el-text {\n    color: #efefef;\n}\n",
+    "globalStyle-tag-渐变背景": "body {\n  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);\n  background-size: 400% 400%;\n  animation: gradientBG 5s ease infinite;\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
+    "globalStyle-tag-全局动画库": "@keyframes textShadow {\n  0%, 100% {\n    text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.3);\n  }\n  50% {\n    text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.8);\n  }\n}",
+    "globalStyle-tag-背景图": "body {\n  background-image: url('https://cdn.jsdelivr.net/gh/Verlif/one@32a8991/imgs/starter/background_linear.png');\n\n  #app {\n    background-color: #00000012;\n    backdrop-filter: blur(8px);\n  }\n}",
+    "globalStyle-tags": [
+      "默认",
+      "渐变背景",
+      "全局动画库",
+      "背景图"
+    ],
+    "globalStyle-selectTags": [
+      "默认",
+      "全局动画库",
+      "背景图"
+    ]
+  },
+  "layout": [
+    {
+      "type": "text",
+      "id": "53556eceff0f-4cf6-bfde-6220096c42b7",
+      "x": 37,
+      "y": 0,
+      "w": 11,
+      "h": 21
+    },
+    {
+      "type": "text",
+      "id": "84b7a686e292-4471-a904-3e77042625a5",
+      "x": 9,
+      "y": 8,
+      "w": 6,
+      "h": 13
+    },
+    {
+      "type": "text",
+      "id": "3fa73b47024f-4ea2-848f-c024939c8696",
+      "x": 18,
+      "y": 17,
+      "w": 8,
+      "h": 9
+    },
+    {
+      "type": "text",
+      "id": "6d81ba865e66-45a6-99c3-11f75e7fcc20",
+      "x": 26,
+      "y": 17,
+      "w": 8,
+      "h": 9
+    },
+    {
+      "type": "text",
+      "id": "28689ef0cc04-42f9-8ef5-841f35da749e",
+      "x": 9,
+      "y": 21,
+      "w": 6,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "e1a76ddcf37a-41e3-b732-1db415d4bd67",
+      "x": 9,
+      "y": 25,
+      "w": 4,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "cf24ceebb75e-4817-9a8c-5c0f2354c630",
+      "x": 26,
+      "y": 26,
+      "w": 8,
+      "h": 9
+    },
+    {
+      "type": "text",
+      "id": "6f6105206c87-4e00-a46a-1383d7f5b2ca",
+      "x": 9,
+      "y": 29,
+      "w": 5,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "2d9fb770d697-4009-ad54-f046906da0ac",
+      "x": 9,
+      "y": 33,
+      "w": 9,
+      "h": 5
+    },
+    {
+      "type": "text",
+      "id": "e16e857295c4-47f8-a05d-82dfaeef95ae",
+      "x": 14,
+      "y": 47,
+      "w": 20,
+      "h": 2
+    }
+  ],
+  "configLock": false,
+  "configUrl": null,
+  "components": [
+    {
+      "id": "53556eceff0f-4cf6-bfde-6220096c42b7",
+      "style": null,
+      "data": "{\"text\":\"<div class=\\\"effect-container\\\">\\n    <div class=\\\"glowing-box\\\">\\n        <span class=\\\"text\\\"></span>\\n    </div>\\n</div>\\n\\n<style>\\n.effect-container {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n  overflow: hidden;\\n}\\n\\n.glowing-box {\\n  position: relative;\\n  width: 200px;\\n  height: 200px;\\n  border-radius: 50%;\\n  background: linear-gradient(45deg, #ff0057, #4285f4, #0f9d58, #f4b400);\\n  animation: rotate 4s linear infinite;\\n}\\n\\n/* 发光效果 */\\n.glowing-box::before {\\n  content: '';\\n  position: absolute;\\n  top: -5px;\\n  left: -5px;\\n  right: -5px;\\n  bottom: -5px;\\n  background: inherit;\\n  border-radius: 50%;\\n  filter: blur(30px);\\n  opacity: 0.7;\\n  z-index: -1;\\n}\\n\\n/* 内部装饰环 */\\n.glowing-box::after {\\n  content: '';\\n  position: absolute;\\n  top: 20px;\\n  left: 20px;\\n  right: 20px;\\n  bottom: 20px;\\n  background: #ffffff;\\n  border-radius: 50%;\\n}\\n\\n.glowing-box:hover {\\n  & {\\n    scale: 1.2;\\n  }\\n}\\n\\n/* 旋转动画 */\\n@keyframes rotate {\\n    0% {\\n        background-position: 0% 50%;\\n        transform: rotate(0deg);\\n    }\\n    50% {\\n        background-position: 100% 50%;\\n    }\\n    100% {\\n        background-position: 0% 50%;\\n        transform: rotate(360deg);\\n    }\\n}\\n</style>\\n    \",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "84b7a686e292-4471-a904-3e77042625a5",
+      "style": ".responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n    border-radius: 100%;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://avatars.githubusercontent.com/u/39126497?v=4\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "3fa73b47024f-4ea2-848f-c024939c8696",
+      "style": ".project-intro {\n    width: calc(100% - 24px);\n    padding: 25px;\n    margin: 8px;\n    border-radius: 8px;\n    background-color: #ffffff3d;\n    border: 4px solid #ffffff1a;\n    transition: all 0.3s ease;\n    box-sizing: border-box;\n}\n\n/* 鼠标悬停效果 */\n.project-intro:hover {\n    transform: translateY(-5px);\n    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);\n    border-color: #d0e1ff;\n}\n\n/* 标题样式 */\n.project-title {\n    margin: 0 0 15px 0;\n    font-size: 1.5rem;\n    color: #1a365d;\n    transition: color 0.3s ease;\n}\n\n.project-intro:hover .project-title {\n    color: #2563eb;\n}\n\n/* 描述样式 */\n.project-description {\n    margin: 0;\n    font-size: 1rem;\n    line-height: 1.6;\n    color: #4b5563;\n    transition: color 0.3s ease;\n}\n\n.project-intro:hover .project-description {\n    color: #1f2937;\n}\n\n/* 响应式字体调整 */\n@media (max-width: 768px) {\n    .project-title {\n        font-size: 1.3rem;\n    }\n\n    .project-description {\n        font-size: 0.95rem;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"project-intro\\\">\\n  <a class=\\\"project-title\\\" href='@{项目地址}' target='_blank'>@{项目名称}</a>\\n  <p class=\\\"project-description\\\">\\n    @{项目简介}\\n  </p>\\n</div>\",\"params\":[{\"name\":\"项目地址\",\"desc\":\"\",\"value\":\"https://github.com/Verlif/mockdata\"},{\"name\":\"项目名称\",\"desc\":\"\",\"value\":\"mock-data\"},{\"name\":\"项目简介\",\"desc\":\"\",\"value\":\"非常简单但又高度自定义的数据生成工具，一行代码即可为任何类实例化并填充随机数据。\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "6d81ba865e66-45a6-99c3-11f75e7fcc20",
+      "style": ".project-intro {\n    width: calc(100% - 24px);\n    padding: 25px;\n    margin: 8px;\n    border-radius: 8px;\n    background-color: #ffffff3d;\n    border: 4px solid #ffffff1a;\n    transition: all 0.3s ease;\n    box-sizing: border-box;\n}\n\n/* 鼠标悬停效果 */\n.project-intro:hover {\n    transform: translateY(-5px);\n    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);\n    border-color: #d0e1ff;\n}\n\n/* 标题样式 */\n.project-title {\n    margin: 0 0 15px 0;\n    font-size: 1.5rem;\n    color: #1a365d;\n    transition: color 0.3s ease;\n}\n\n.project-intro:hover .project-title {\n    color: #2563eb;\n}\n\n/* 描述样式 */\n.project-description {\n    margin: 0;\n    font-size: 1rem;\n    line-height: 1.6;\n    color: #4b5563;\n    transition: color 0.3s ease;\n}\n\n.project-intro:hover .project-description {\n    color: #1f2937;\n}\n\n/* 响应式字体调整 */\n@media (max-width: 768px) {\n    .project-title {\n        font-size: 1.3rem;\n    }\n\n    .project-description {\n        font-size: 0.95rem;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"project-intro\\\">\\n  <a class=\\\"project-title\\\" href='@{项目地址}' target='_blank'>@{项目名称}</a>\\n  <p class=\\\"project-description\\\">\\n    @{项目简介}\\n  </p>\\n</div>\",\"params\":[{\"name\":\"项目地址\",\"desc\":\"\",\"value\":\"https://github.com/Verlif/windonly\"},{\"name\":\"项目名称\",\"desc\":\"\",\"value\":\"windonly\"},{\"name\":\"项目简介\",\"desc\":\"\",\"value\":\"简单好用的粘贴面板，使用鼠标拖拽完成数据、图片、文件的转移或定位\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "28689ef0cc04-42f9-8ef5-841f35da749e",
+      "style": ".result {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-weight: bold;\n    font-size: 2vw;\n    color: white;\n}",
+      "data": "{\"text\":\"Verlif\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "e1a76ddcf37a-41e3-b732-1db415d4bd67",
+      "style": "/* 单个链接项样式 */\n.link-item {\n    display: inline-flex;\n    align-items: center;\n    gap: 10px;\n    text-decoration: none;\n    color: #333;\n    background-color: #f5f5f52b;\n    border-radius: 8px;\n    padding: 16px 20px;\n    margin: 8px;\n    transition: all 0.3s ease;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n    width: calc(100% - 56px);\n    height: calc(100% - 48px);\n}\n\n.link-item:hover {\n    transform: translateY(-3px);\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);\n}\n\n.link-icon {\n    font-size: 24px;\n    width: 40px;\n    height: 40px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.3s ease;\n\n  img {\n    width: 100%;\n  }\n}\n\n.link-item:hover .link-icon {\n    color: white;\n}\n\n.link-text {\n    font-size: 16px;\n    font-weight: bolder;\n}",
+      "data": "{\"text\":\"<a href=\\\"@{链接地址}\\\" target=\\\"_blank\\\" class=\\\"link-item\\\">\\n  <span class=\\\"link-icon\\\"><img class=\\\"fa fa-github\\\" src=\\\"@{图标地址}\\\"/></span>\\n  <span class=\\\"link-text\\\">@{链接名称}</span>\\n</a>\",\"params\":[{\"name\":\"链接地址\",\"desc\":\"\",\"value\":\"https://github.com/verlif\"},{\"name\":\"图标地址\",\"desc\":\"\",\"value\":\"https://github.githubassets.com/favicons/favicon-dark.svg\"},{\"name\":\"链接名称\",\"desc\":\"\",\"value\":\"Github\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "cf24ceebb75e-4817-9a8c-5c0f2354c630",
+      "style": ".project-intro {\n    width: calc(100% - 24px);\n    padding: 25px;\n    margin: 8px;\n    border-radius: 8px;\n    background-color: #ffffff3d;\n    border: 4px solid #ffffff1a;\n    transition: all 0.3s ease;\n    box-sizing: border-box;\n}\n\n/* 鼠标悬停效果 */\n.project-intro:hover {\n    transform: translateY(-5px);\n    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);\n    border-color: #d0e1ff;\n}\n\n/* 标题样式 */\n.project-title {\n    margin: 0 0 15px 0;\n    font-size: 1.5rem;\n    color: #1a365d;\n    transition: color 0.3s ease;\n}\n\n.project-intro:hover .project-title {\n    color: #2563eb;\n}\n\n/* 描述样式 */\n.project-description {\n    margin: 0;\n    font-size: 1rem;\n    line-height: 1.6;\n    color: #4b5563;\n    transition: color 0.3s ease;\n}\n\n.project-intro:hover .project-description {\n    color: #1f2937;\n}\n\n/* 响应式字体调整 */\n@media (max-width: 768px) {\n    .project-title {\n        font-size: 1.3rem;\n    }\n\n    .project-description {\n        font-size: 0.95rem;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"project-intro\\\">\\n  <a class=\\\"project-title\\\" href='@{项目地址}' target='_blank'>@{项目名称}</a>\\n  <p class=\\\"project-description\\\">\\n    @{项目简介}\\n  </p>\\n</div>\",\"params\":[{\"name\":\"项目地址\",\"desc\":\"\",\"value\":\"https://github.com/Verlif/one\"},{\"name\":\"项目名称\",\"desc\":\"\",\"value\":\"one\"},{\"name\":\"项目简介\",\"desc\":\"\",\"value\":\"高度自定义的导航页，或者不仅仅是导航页，而是任何人都可以定制的属于自己的主页。\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "6f6105206c87-4e00-a46a-1383d7f5b2ca",
+      "style": "/* 单个链接项样式 */\n.link-item {\n    display: inline-flex;\n    align-items: center;\n    gap: 10px;\n    text-decoration: none;\n    color: #333;\n    background-color: #f5f5f52b;\n    border-radius: 8px;\n    padding: 16px 20px;\n    margin: 8px;\n    transition: all 0.3s ease;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n    width: calc(100% - 56px);\n    height: calc(100% - 48px);\n}\n\n.link-item:hover {\n    transform: translateY(-3px);\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);\n}\n\n.link-icon {\n    font-size: 24px;\n    width: 40px;\n    height: 40px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.3s ease;\n\n  img {\n    width: 100%;\n  }\n}\n\n.link-item:hover .link-icon {\n    color: white;\n}\n\n.link-text {\n    font-size: 16px;\n    font-weight: bolder;\n}",
+      "data": "{\"text\":\"<a href=\\\"@{链接地址}\\\" target=\\\"_blank\\\" class=\\\"link-item\\\">\\n  <span class=\\\"link-icon\\\"><img class=\\\"fa fa-github\\\" src=\\\"@{图标地址}\\\"/></span>\\n  <span class=\\\"link-text\\\">@{链接名称}</span>\\n</a>\",\"params\":[{\"name\":\"链接地址\",\"desc\":\"\",\"value\":\"https://blog.verlif.top/\"},{\"name\":\"图标地址\",\"desc\":\"\",\"value\":\" https://blog.verlif.top/favicon.ico\"},{\"name\":\"链接名称\",\"desc\":\"\",\"value\":\"Verlif的小站\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "2d9fb770d697-4009-ad54-f046906da0ac",
+      "style": ".container {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-end;\n    height: calc(100% - 32px);\n    padding: 16px;\n\n    .line {\n        color: white;\n    }\n}",
+      "data": "{\"text\":\"<div class=container>\\n  <div class=\\\"line\\\">这里是<strong>Verlif</strong>，一个正在学习的开发者。</div>\\n  <div class=\\\"line\\\">热衷于写一些无聊的代码。</div>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "e16e857295c4-47f8-a05d-82dfaeef95ae",
+      "style": ".result {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-size: 24px;\n  font-weight: lighter;\n  white-space:nowrap;\n  color: white;\n  animation: textShadow 2s ease-in-out infinite;\n\n  &:hover {\n  }\n}\n",
+      "data": "{\"text\":\"你知道吗？蜡烛可以让影子动起来。\",\"params\":[]}",
+      "type": "text"
+    }
+  ]
+}

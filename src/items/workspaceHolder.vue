@@ -113,6 +113,7 @@ function deleteItem(workspace: string) {
       width="30%"
       class="workspaceDialog commonDialog"
       align-center
+      :close-on-press-escape="false"
   >
     <template #header>
       <div style="display: flex;align-items: center;color: white;">
