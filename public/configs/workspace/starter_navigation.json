@@ -1,0 +1,227 @@
+{
+  "globalStyle": {
+    "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\nbody {\n  background-color: #3d3d3d;\n}\n.linkItem .el-text {\n    color: #efefef;\n}\n",
+    "globalStyle-tag-搜索栏暗色": "div.searchContainer > div.searchContent {\n\n  .el-input-group__prepend {\n    background-color: gray;\n  }\n\n  div.el-input__wrapper {\n    background-color: gray;\n\n    input {\n      color: #313131;\n\n      &::placeholder {\n        color: #313131;\n      }\n    }\n  }\n}",
+    "globalStyle-tag-black": ".commonDialog {\n  --el-dialog-bg-color: #575757;\n\n  .el-dialog__header {\n    background-color: #225b95;\n  }\n\n  .el-dialog__footer {\n    background-color: #373737;\n  }\n\n  .globeStyleInput {\n    .el-textarea__inner {\n      background-color: #4d4d4d;\n      color: #c6c6c7;\n    }\n  }\n}\n\n* {\n  --el-color-primary: #235e9b;\n  --el-color-primary-light-3: rgb(65 105 145);\n}\n\n.el-input__wrapper {\n  background-color: #2f2f2f;\n\n  .el-input__inner {\n    color: #c3c3c3;\n  }\n}\n\n.el-textarea__inner {\n  background-color: #2f2f2f;\n  color: white;\n}\n\n.el-form-item__label {\n    background-color: #2e2e2e;\n    color: #b2b2b2;\n}\n\n.deleteIcon {\n  background-color: #ad3838;\n}\n\n.readyComponentDialog {\n  .componentItem {\n    background: #cbcbcb;\n  }\n}\n\n.el-popper {\n  background: #c7c7c7;\n}\n\n.ioContainer {\n  .input, .result {\n    background-color: #c7c7c7 !important;\n  }\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
+    "globalStyle-tag-标签暗色": "div.noteContent {\n\n  div.result {\n    border: 4px solid rgb(0, 0, 0, 0.4);\n    color: #b9b9b9;\n    background: #535353;\n  }\n\n  .input .el-textarea__inner {\n    color: #b5b5b5;\n    background: #272727;\n  }\n}",
+    "globalStyle-tag-变换背景": "body {\n  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);\n  background-size: 400% 400%;\n  animation: gradientBG 5s ease infinite;\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
+    "globalStyle-tag-背景图": "body {\n  background-image: url('https://cdn.jsdelivr.net/gh/Verlif/one@32a8991/imgs/starter/background_spring.png');\n\n  #app {\n    background-color: #00000012;\n    backdrop-filter: blur(4px);\n  }\n}",
+    "globalStyle-tag-快速按钮黑色字体": ".linkContent {\n  & .linkItem {\n    span {\n      color: #3d3d3d;\n    }\n  }\n}",
+    "globalStyle-tags": [
+      "默认",
+      "搜索栏暗色",
+      "black",
+      "标签暗色",
+      "变换背景",
+      "背景图",
+      "快速按钮黑色字体"
+    ],
+    "globalStyle-selectTags": [
+      "默认",
+      "背景图",
+      "快速按钮黑色字体"
+    ]
+  },
+  "layout": [
+    {
+      "type": "button",
+      "id": "a8abb3addaf9-4b53-8222-ed1b5e5e7505",
+      "x": 46,
+      "y": 0,
+      "w": 2,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "abb00c3f9e55-49c5-8771-e56743f9ddad",
+      "x": 20,
+      "y": 3,
+      "w": 8,
+      "h": 3
+    },
+    {
+      "type": "html",
+      "id": "038f259e0199-4e1d-a553-ee2a65c5d1bf",
+      "x": 18,
+      "y": 6,
+      "w": 12,
+      "h": 6
+    },
+    {
+      "type": "search",
+      "id": "80b2d02f5e64-47db-a04e-bf96ffb7b8cc",
+      "x": 12,
+      "y": 12,
+      "w": 24,
+      "h": 7
+    },
+    {
+      "type": "link",
+      "id": "e7a9413f-370b-4a33-9bfb-05c354b24899",
+      "x": 14,
+      "y": 20,
+      "w": 24,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "f1429f51-5ecd-45e7-8b1c-0c8240302c35",
+      "x": 10,
+      "y": 21,
+      "w": 4,
+      "h": 2
+    },
+    {
+      "type": "link",
+      "id": "7d9485dc-23f9-4add-8f3f-bc0d0476d306",
+      "x": 14,
+      "y": 25,
+      "w": 24,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "b94e074e2a48-4624-ab08-d06bd75e3cdf",
+      "x": 10,
+      "y": 26,
+      "w": 4,
+      "h": 2
+    },
+    {
+      "type": "link",
+      "id": "e851a5102862-40d4-b5ed-4c94798a9d8c",
+      "x": 14,
+      "y": 30,
+      "w": 24,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "e089d0397e94-41ca-a053-ce5a3c1db646",
+      "x": 10,
+      "y": 31,
+      "w": 4,
+      "h": 2
+    },
+    {
+      "type": "link",
+      "id": "ff8ef29ac877-4f0d-ade4-1f910448fe76",
+      "x": 14,
+      "y": 35,
+      "w": 24,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "a1b53e29f8bc-4131-86c8-80a99740d056",
+      "x": 10,
+      "y": 36,
+      "w": 4,
+      "h": 2
+    },
+    {
+      "type": "link",
+      "id": "a84801c7f4f8-49f8-ad6f-90dd02601b59",
+      "x": 14,
+      "y": 40,
+      "w": 24,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "c7c1a0ee84e1-4df4-9b21-f05a4bf0a906",
+      "x": 10,
+      "y": 41,
+      "w": 4,
+      "h": 2
+    }
+  ],
+  "configLock": false,
+  "configUrl": null,
+  "components": [
+    {
+      "id": "a8abb3addaf9-4b53-8222-ed1b5e5e7505",
+      "style": ".button {\n  background-color: unset !important;\n\n  svg {\n    width: 60%;\n    fill: white;\n\n    &:hover {\n       transform: rotate(180deg);\n    }\n  }\n}\n",
+      "data": "{\"name\":\"<svg t=\\\"1756708969473\\\" class=\\\"icon\\\" viewBox=\\\"0 0 1024 1024\\\" version=\\\"1.1\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" p-id=\\\"5418\\\"><path d=\\\"M512 697.6c102.4 0 182.4-83.2 182.4-185.6 0-102.4-83.2-185.6-182.4-185.6-102.4 0-182.4 83.2-182.4 185.6C329.6 614.4 412.8 697.6 512 697.6L512 697.6zM512 646.4c-73.6 0-134.4-60.8-134.4-134.4 0-73.6 60.8-134.4 134.4-134.4 73.6 0 134.4 60.8 134.4 134.4C646.4 585.6 585.6 646.4 512 646.4L512 646.4z\\\" p-id=\\\"5419\\\"></path><path d=\\\"M249.015232 843.178592c35.2 28.8 73.6 51.2 112 67.2 41.6-38.4 96-60.8 150.4-60.8 57.6 0 108.8 22.4 150.4 60.8 41.6-16 80-38.4 112-67.2-12.8-54.4-3.2-112 22.4-163.2 28.8-48 73.6-86.4 128-102.4 3.2-22.4 6.4-44.8 6.4-67.2 0-22.4-3.2-44.8-6.4-67.2-54.4-16-99.2-54.4-128-102.4-28.8-48-35.2-108.8-22.4-163.2-35.2-28.8-73.6-51.2-112-67.2-41.6 38.4-92.8 60.8-150.4 60.8-54.4 0-108.8-22.4-150.4-60.8-41.6 16-80 38.4-112 67.2 12.8 54.4 3.2 112-22.4 163.2-28.8 48-73.6 86.4-128 102.4-3.2 22.4-6.4 44.8-6.4 67.2 0 22.4 3.2 44.8 6.4 67.2 54.4 16 99.2 54.4 128 102.4C252.215232 731.178592 261.815232 788.778592 249.015232 843.178592M361.015232 958.378592c-54.4-19.2-105.6-48-150.4-89.6-6.4-6.4-9.6-16-6.4-22.4 16-48 9.6-99.2-16-140.8-25.6-44.8-64-73.6-112-83.2-9.6-3.2-16-9.6-16-19.2-6.4-28.8-9.6-60.8-9.6-89.6 0-28.8 3.2-57.6 9.6-89.6 3.2-9.6 9.6-16 16-19.2 48-12.8 89.6-41.6 112-83.2 25.6-44.8 28.8-92.8 16-140.8-3.2-9.6 0-19.2 6.4-22.4 44.8-38.4 96-67.2 150.4-89.6 9.6-3.2 16 0 22.4 6.4 35.2 35.2 80 57.6 128 57.6 48 0 96-19.2 128-57.6 6.4-6.4 16-9.6 22.4-6.4 54.4 19.2 105.6 48 150.4 89.6 6.4 6.4 9.6 16 6.4 22.4-16 48-9.6 99.2 16 140.8 25.6 44.8 64 73.6 112 83.2 9.6 3.2 16 9.6 16 19.2 6.4 28.8 9.6 60.8 9.6 89.6 0 28.8-3.2 57.6-9.6 89.6-3.2 9.6-9.6 16-16 19.2-48 12.8-89.6 41.6-112 83.2-25.6 44.8-28.8 92.8-16 140.8 3.2 9.6 0 19.2-6.4 22.4-44.8 38.4-96 67.2-150.4 89.6-9.6 3.2-16 0-22.4-6.4-35.2-35.2-80-57.6-128-57.6-48 0-96 19.2-128 57.6-3.2 3.2-9.6 6.4-16 6.4C364.215232 958.378592 361.015232 958.378592 361.015232 958.378592z\\\" p-id=\\\"5420\\\"></path></svg>\",\"content\":{\"text\":\"const key = '@{快捷按键值:小写字母?d}'\\n\\n// 创建键盘按下事件\\nconst keydownEvent = new KeyboardEvent('keydown', {\\n  key: key,\\n  keyCode: 'KeyD',\\n  altKey: true,\\n  code: key\\n});\\n\\n// 创建键盘释放事件\\nconst keyupEvent = new KeyboardEvent('keyup', {\\n  key: key,\\n  keyCode: 'KeyD',\\n  altKey: true,\\n  code: key\\n});\\n\\n// 向文档或特定元素触发事件\\nwindow.dispatchEvent(keydownEvent);\\n// 模拟按下后释放\\nsetTimeout(() => {\\n  window.dispatchEvent(keyupEvent);\\n}, 100);\",\"params\":[{\"name\":\"快捷按键值\",\"desc\":\"小写字母\",\"value\":\"d\"}]}}",
+      "type": "button"
+    },
+    {
+      "id": "abb00c3f9e55-49c5-8771-e56743f9ddad",
+      "style": ".typing {\n  color: white;\n  font-size: 42px;\n  font-weight: blod;\n}",
+      "data": "{\"text\":\"<div style=\\\"height:100%;width:100%;display: flex;justify-content: center;align-items: center;\\\">\\n<span class=\\\"typing\\\">一页 · ONE</span>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "038f259e0199-4e1d-a553-ee2a65c5d1bf",
+      "style": null,
+      "data": "{\"text\":\"<!DOCTYPE html>\\n<html lang=\\\"zh-CN\\\">\\n<head>\\n    <meta charset=\\\"UTF-8\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\\n    <title>高精度纯净时钟</title>\\n    <style>\\n        * {\\n            margin: 0;\\n            padding: 0;\\n            box-sizing: border-box;\\n        }\\n        \\n        body, html {\\n            height: 100%;\\n            display: flex;\\n            justify-content: center;\\n            align-items: center;\\n        }\\n        \\n        .clock-container {\\n            width: 100%;\\n            text-align: center;\\n        }\\n        \\n        .time-display {\\n            color: @{时间颜色:输入颜色代码?white};\\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\\n            font-size: clamp(4rem, 14vw, 10rem);\\n            font-weight: 300;\\n            transition: transform 0.3s ease;\\n        }\\n        \\n        .clock-container:hover .time-display {\\n            transform: scale(1.1);\\n        }\\n        \\n        .time-separator {\\n            display: inline-block;\\n            animation: blink 1s step-end infinite;\\n        }\\n        \\n        @keyframes blink {\\n            from, to { opacity: 1; }\\n            50% { opacity: 0.5; }\\n        }\\n    </style>\\n</head>\\n<body>\\n    <div class=\\\"clock-container\\\">\\n        <div id=\\\"clock\\\" class=\\\"time-display\\\">\\n            <span id=\\\"hours\\\">00</span>\\n            <span class=\\\"time-separator\\\">:</span>\\n            <span id=\\\"minutes\\\">00</span>\\n            <span class=\\\"time-separator\\\">:</span>\\n            <span id=\\\"seconds\\\">00</span>\\n        </div>\\n    </div>\\n\\n    <script>\\n        // 高精度时间更新函数，减少定时器误差\\n        function updateClock() {\\n            const now = new Date();\\n            const hours = String(now.getHours()).padStart(2, '0');\\n            const minutes = String(now.getMinutes()).padStart(2, '0');\\n            const seconds = String(now.getSeconds()).padStart(2, '0');\\n            \\n            document.getElementById('hours').textContent = hours;\\n            document.getElementById('minutes').textContent = minutes;\\n            document.getElementById('seconds').textContent = seconds;\\n            \\n            // 计算下一次更新的精确时间点（下一毫秒）\\n            const nextUpdate = 1000 - now.getMilliseconds();\\n            setTimeout(updateClock, nextUpdate);\\n        }\\n        \\n        // 立即执行一次，然后开始精确更新\\n        updateClock();\\n    </script>\\n</body>\\n</html>\\n    \",\"params\":[{\"name\":\"时间颜色\",\"desc\":\"输入颜色代码\",\"value\":\"black\"}]}",
+      "type": "html"
+    },
+    {
+      "id": "80b2d02f5e64-47db-a04e-bf96ffb7b8cc",
+      "style": null,
+      "data": null,
+      "type": "search"
+    },
+    {
+      "id": "e7a9413f-370b-4a33-9bfb-05c354b24899",
+      "style": "height: 100%; width: 100%; position: relative;",
+      "data": "{\"links\":[{\"name\":\"腾讯视频\",\"url\":\"https://v.qq.com/\",\"img\":\"https://v.qq.com/favicon.ico\"},{\"name\":\"Bilibili\",\"url\":\"https://www.bilibili.com/\",\"img\":\"https://www.bilibili.com/favicon.ico\"},{\"name\":\"优酷\",\"url\":\"https://www.youku.com/\",\"img\":\"https://www.youku.com/favicon.ico\"},{\"name\":\"爱奇艺\",\"url\":\"https://www.iqiyi.com/\",\"img\":\"https://www.iqiyi.com/favicon.ico\"},{\"name\":\"芒果TV\",\"url\":\"https://www.mgtv.com/\",\"img\":\"https://www.mgtv.com/favicon.ico\"},{\"name\":\"QQ音乐\",\"url\":\"https://y.qq.com/\",\"img\":\"https://y.qq.com/favicon.ico\"},{\"name\":\"网易云音乐\",\"url\":\"https://music.163.com/\",\"img\":\"https://music.163.com/favicon.ico\"},{\"name\":\"酷狗\",\"url\":\"https://www.kugou.com/\",\"img\":\"https://www.kugou.com/favicon.ico\"}],\"layout\":0,\"nameVisible\":true}",
+      "type": "link"
+    },
+    {
+      "id": "f1429f51-5ecd-45e7-8b1c-0c8240302c35",
+      "style": ".container {\n    display: flex;\n    justify-content: center;\n    align-items: flex-end;\n    height: calc(100% - 4px);\n    width: 100%;\n    border-bottom: 4px solid #ffffff;\n\n    .text {\n        font-weight: bold;\n        font-size: 24px;\n        color: white;\n        padding-bottom: 4px;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"container\\\">\\n  <span class=\\\"text\\\">\\n    视频影音\\n  </span>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "7d9485dc-23f9-4add-8f3f-bc0d0476d306",
+      "style": "height: 100%; width: 100%; position: relative;",
+      "data": "{\"links\":[{\"name\":\"豆包\",\"url\":\"https://www.doubao.com/chat/\",\"img\":\"data:image/png;base64,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\"},{\"name\":\"DeepSeek\",\"url\":\"https://chat.deepseek.com/\",\"img\":\"https://deepseek.com/favicon.ico\"},{\"name\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\",\"img\":\"https://img.icons8.com/?size=50&id=FBO05Dys9QCg&format=png\"},{\"name\":\"Kimi\",\"url\":\"https://www.kimi.com/\",\"img\":\"https://www.kimi.com/favicon.ico\"},{\"name\":\"文心一言\",\"url\":\"https://yiyan.baidu.com/\",\"img\":\"https://eb118-file.cdn.bcebos.com/aisuda/2025-06/cTKkPpfZ6iQKJ3ubrtMTRQ.png\"},{\"name\":\"通义千问\",\"url\":\"https://www.tongyi.com/qianwen/\",\"img\":\"https://img.alicdn.com/imgextra/i4/O1CN01EfJVFQ1uZPd7W4W6i_!!6000000006051-2-tps-112-112.png\"}],\"layout\":0,\"nameVisible\":true}",
+      "type": "link"
+    },
+    {
+      "id": "b94e074e2a48-4624-ab08-d06bd75e3cdf",
+      "style": ".container {\n    display: flex;\n    justify-content: center;\n    align-items: flex-end;\n    height: calc(100% - 4px);\n    width: 100%;\n    border-bottom: 4px solid #ffffff;\n\n    .text {\n        font-weight: bold;\n        font-size: 24px;\n        color: white;\n        padding-bottom: 4px;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"container\\\">\\n  <span class=\\\"text\\\">\\n    常用AI\\n  </span>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "e851a5102862-40d4-b5ed-4c94798a9d8c",
+      "style": null,
+      "data": "{\"links\":[{\"name\":\"Twitter\",\"url\":\"https://twitter.com/\",\"img\":\"https://twitter.com/favicon.ico\"},{\"name\":\"今日头条\",\"url\":\"https://www.toutiao.com/\",\"img\":\"https://www.toutiao.com/favicon.ico\"},{\"name\":\"人民日报\",\"url\":\"https://paper.people.com.cn/\",\"img\":\"https://paper.people.com.cn/favicon.ico\"},{\"name\":\"凤凰网\",\"url\":\"https://www.ifeng.com/\",\"img\":\"https://www.ifeng.com/favicon.ico\"},{\"name\":\"网易\",\"url\":\"https://www.163.com/\",\"img\":\"https://www.163.com/favicon.ico\"},{\"name\":\"澎湃新闻\",\"url\":\"https://www.thepaper.cn/\",\"img\":\"https://www.thepaper.cn/favicon.ico\"},{\"name\":\"央视网\",\"url\":\"https://news.cctv.com/\",\"img\":\"https://news.cctv.com/favicon.ico\"},{\"name\":\"新浪\",\"url\":\"https://www.sina.com.cn/\",\"img\":\"https://www.sina.com.cn/favicon.ico\"},{\"name\":\"新浪微博\",\"url\":\"https://weibo.com/\",\"img\":\"https://weibo.com/favicon.ico\"},{\"name\":\"知乎\",\"url\":\"https://www.zhihu.com/\",\"img\":\"https://www.zhihu.com/favicon.ico\"}],\"layout\":0,\"nameVisible\":true}",
+      "type": "link"
+    },
+    {
+      "id": "e089d0397e94-41ca-a053-ce5a3c1db646",
+      "style": ".container {\n    display: flex;\n    justify-content: center;\n    align-items: flex-end;\n    height: calc(100% - 4px);\n    width: 100%;\n    border-bottom: 4px solid #ffffff;\n\n    .text {\n        font-weight: bold;\n        font-size: 24px;\n        color: white;\n        padding-bottom: 4px;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"container\\\">\\n  <span class=\\\"text\\\">\\n    新闻资讯\\n  </span>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "ff8ef29ac877-4f0d-ade4-1f910448fe76",
+      "style": null,
+      "data": "{\"links\":[{\"name\":\"DeepL翻译\",\"url\":\"https://www.deepl.com/zh/translator\",\"img\":\"https://www.deepl.com/favicon.ico\"},{\"name\":\"语雀\",\"url\":\"https://www.yuque.com/\",\"img\":\"https://www.yuque.com/favicon.ico\"},{\"name\":\"测速网\",\"url\":\"https://www.speedtest.cn/\",\"img\":\"https://www.speedtest.cn/favicon.ico\"},{\"name\":\"UU在线工具\",\"url\":\"https://uutool.cn/\",\"img\":\"https://uutool.cn/favicon.ico\"},{\"name\":\"图片工具\",\"url\":\"https://phototool.cn/\",\"img\":\"https://phototool.cn/favicon.ico\"},{\"name\":\"DrawIO\",\"url\":\"https://draw.io/\",\"img\":\"https://draw.io/favicon.ico\"}],\"layout\":0,\"nameVisible\":true}",
+      "type": "link"
+    },
+    {
+      "id": "a1b53e29f8bc-4131-86c8-80a99740d056",
+      "style": ".container {\n    display: flex;\n    justify-content: center;\n    align-items: flex-end;\n    height: calc(100% - 4px);\n    width: 100%;\n    border-bottom: 4px solid #ffffff;\n\n    .text {\n        font-weight: bold;\n        font-size: 24px;\n        color: white;\n        padding-bottom: 4px;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"container\\\">\\n  <span class=\\\"text\\\">\\n    实用工具\\n  </span>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "a84801c7f4f8-49f8-ad6f-90dd02601b59",
+      "style": null,
+      "data": "{\"links\":[{\"name\":\"中国大学MOOC\",\"url\":\"https://www.icourse163.org/\",\"img\":\"https://www.icourse163.org/favicon.ico\"},{\"name\":\"菜鸟教程\",\"url\":\"https://www.runoob.com/\",\"img\":\"https://www.runoob.com/favicon.ico\"},{\"name\":\"网易公开课\",\"url\":\"https://open.163.com/\",\"img\":\"https://open.163.com/favicon.ico\"},{\"name\":\"力扣\",\"url\":\"https://leetcode.cn/\",\"img\":\"https://leetcode.cn/favicon.ico\"},{\"name\":\"古诗文网\",\"url\":\"https://www.gushiwen.cn/\",\"img\":\"https://www.gushiwen.cn/favicon.ico\"},{\"name\":\"慕课网\",\"url\":\"https://www.imooc.com/\",\"img\":\"https://www.imooc.com/favicon.ico\"},{\"name\":\"W3C\",\"url\":\"https://www.w3school.com.cn/\",\"img\":\" https://www.w3school.com.cn/ui2019/logo-32-red.png\"},{\"name\":\"课堂在线\",\"url\":\"https://next.xuetangx.com/\",\"img\":\" https://storagecdn.xuetangx.com/public_assets/xuetangx/new-miniprogram/3d9fe4276af97c456d7ab649b800677a.xuetang-logo.png?imageslim\"},{\"name\":\"StackOverflow\",\"url\":\"https://stackoverflow.com/\",\"img\":\"https://stackoverflow.com/favicon.ico\"}],\"layout\":0,\"nameVisible\":true}",
+      "type": "link"
+    },
+    {
+      "id": "c7c1a0ee84e1-4df4-9b21-f05a4bf0a906",
+      "style": ".container {\n    display: flex;\n    justify-content: center;\n    align-items: flex-end;\n    height: calc(100% - 4px);\n    width: 100%;\n    border-bottom: 4px solid #ffffff;\n\n    .text {\n        font-weight: bold;\n        font-size: 24px;\n        color: white;\n        padding-bottom: 4px;\n    }\n}",
+      "data": "{\"text\":\"<div class=\\\"container\\\">\\n  <span class=\\\"text\\\">\\n    阅读学习\\n  </span>\\n</div>\",\"params\":[]}",
+      "type": "text"
+    }
+  ]
+}

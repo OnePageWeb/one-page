@@ -1,0 +1,174 @@
+{
+  "globalStyle": {
+    "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\n\nbody {\n  margin: 0;\n\n  /* 背景渐变 */\n  background: radial-gradient(circle at center, #343496 0%, #372727 100%);\n  font-family: \"Segoe UI\", Arial, sans-serif;\n}\n\n/* 动态流光 */\nbody::before {\n  content: \"\";\n  position: absolute;\n  top: -50%; left: -50%;\n  width: 200%; height: 200%;\n  background: conic-gradient(from 0deg, #0ff, #7928ca, #2af598, #009efd, #0ff);\n  opacity: 0.5;\n  animation: flowRotate 30s linear infinite;\n  filter: blur(150px);\n}\n\n/* 流光旋转 */\n@keyframes flowRotate {\n  from { transform: rotate(0deg); }\n  to   { transform: rotate(360deg); }\n}\n",
+    "globalStyle-tag-文本框边框": ".textContent {\n  border: 2px dashed white;\n  height: calc(100% - 4px);\n  width: calc(100% - 4px);\n}",
+    "globalStyle-tags": [
+      "默认",
+      "文本框边框"
+    ],
+    "globalStyle-selectTags": [
+      "默认",
+      "文本框边框"
+    ]
+  },
+  "layout": [
+    {
+      "type": "text",
+      "id": "4534b8df58f0-445d-b18a-32cfec047a5b",
+      "x": 19,
+      "y": 4,
+      "w": 6,
+      "h": 11
+    },
+    {
+      "type": "text",
+      "id": "7621eb2fb836-4513-803e-ba9bcac9018b",
+      "x": 29,
+      "y": 5,
+      "w": 6,
+      "h": 12
+    },
+    {
+      "type": "text",
+      "id": "39d04ed9e6ae-4db8-8275-259ed3737150",
+      "x": 9,
+      "y": 10,
+      "w": 7,
+      "h": 8
+    },
+    {
+      "type": "text",
+      "id": "a4ce75cd667a-4d4c-965f-b90d817b4ef5",
+      "x": 1,
+      "y": 18,
+      "w": 7,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "0311c5d40e7d-4bee-96b6-b64262f8b4a1",
+      "x": 18,
+      "y": 22,
+      "w": 8,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "ea69eb4d62ac-413f-bbcf-75c1203657a4",
+      "x": 38,
+      "y": 22,
+      "w": 6,
+      "h": 13
+    },
+    {
+      "type": "text",
+      "id": "8577ec6d07ff-42e0-80e0-34b262c4bd5c",
+      "x": 27,
+      "y": 29,
+      "w": 8,
+      "h": 14
+    },
+    {
+      "type": "text",
+      "id": "d4084c543906-407f-9ba3-13843317a2f1",
+      "x": 3,
+      "y": 30,
+      "w": 11,
+      "h": 5
+    },
+    {
+      "type": "text",
+      "id": "335e0106b4d7-4bf6-b87e-d2910672526a",
+      "x": 16,
+      "y": 34,
+      "w": 7,
+      "h": 11
+    },
+    {
+      "type": "text",
+      "id": "6df18a3feb29-4ceb-bbff-5b68d4bdef2d",
+      "x": 41,
+      "y": 40,
+      "w": 6,
+      "h": 4
+    },
+    {
+      "type": "link",
+      "id": "2d057b992493-44ba-91c8-8afa5ffc3ded",
+      "x": 41,
+      "y": 44,
+      "w": 6,
+      "h": 5
+    }
+  ],
+  "configLock": false,
+  "configUrl": null,
+  "components": [
+    {
+      "id": "4534b8df58f0-445d-b18a-32cfec047a5b",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <div style=\\\"\\n    position:relative;width:60px;height:60px;\\n    background:red;transform:rotate(-45deg);\\n    animation:heartbeat 1s infinite;\\n  \\\">\\n    <div style=\\\"position:absolute;top:-30px;left:0;width:60px;height:60px;background:red;border-radius:50%;\\\"></div>\\n    <div style=\\\"position:absolute;left:30px;top:0;width:60px;height:60px;background:red;border-radius:50%;\\\"></div>\\n  </div>\\n  <style>\\n    @keyframes heartbeat {\\n      0%,100% { transform:rotate(-45deg) scale(1); }\\n      25%,75% { transform:rotate(-45deg) scale(1.2); }\\n      50% { transform:rotate(-45deg) scale(1); }\\n    }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "7621eb2fb836-4513-803e-ba9bcac9018b",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <div style=\\\"\\n    width:40px;height:40px;border-radius:50%;\\n    background:#0ff;animation:pulse 2s infinite;\\n  \\\"></div>\\n  <style>\\n    @keyframes pulse {\\n      0%   { transform:scale(1);   opacity:1; }\\n      70%  { transform:scale(2.5); opacity:0; }\\n      100% { transform:scale(1);   opacity:0; }\\n    }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "39d04ed9e6ae-4db8-8275-259ed3737150",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <h5 style=\\\"\\n    font-size:24px;color:#0f0;white-space:nowrap;overflow:hidden;\\n    border-right:2px solid #0f0;width:0;\\n    animation: typing 4s steps(10, end) forwards, blink 0.7s infinite;\\n  \\\">\\n    打字机动画\\n  </h5>\\n  <style>\\n    @keyframes typing { to { width: 10em; } }\\n    @keyframes blink { 50% { border-color: transparent; } }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "a4ce75cd667a-4d4c-965f-b90d817b4ef5",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <h5 style=\\\"font-size:28px;color:#000;animation: glow 2s infinite alternate;\\\">\\n    呼吸发光\\n  </h5>\\n  <style>\\n    @keyframes glow {\\n      from { text-shadow: 0 0 5px #0ff, 0 0 10px #0ff; }\\n      to   { text-shadow: 0 0 20px #0ff, 0 0 40px #0ff; }\\n    }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "0311c5d40e7d-4bee-96b6-b64262f8b4a1",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:flex-end;height:100%;gap:6px;\\\">\\n  <div style=\\\"width:8px;height:30px;background:#0ff;animation:bounce 1s infinite ease-in-out;\\\"></div>\\n  <div style=\\\"width:8px;height:50px;background:#0ff;animation:bounce 1s infinite ease-in-out 0.2s;\\\"></div>\\n  <div style=\\\"width:8px;height:70px;background:#0ff;animation:bounce 1s infinite ease-in-out 0.4s;\\\"></div>\\n  <div style=\\\"width:8px;height:50px;background:#0ff;animation:bounce 1s infinite ease-in-out 0.6s;\\\"></div>\\n  <div style=\\\"width:8px;height:30px;background:#0ff;animation:bounce 1s infinite ease-in-out 0.8s;\\\"></div>\\n  <style>\\n    @keyframes bounce {\\n      0%,100% { transform:scaleY(0.4); }\\n      50%     { transform:scaleY(1.2); }\\n    }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "ea69eb4d62ac-413f-bbcf-75c1203657a4",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <h5 style=\\\"font-size:28px;color:#0ff;display:inline-block;\\\">\\n    <span style=\\\"display:inline-block;animation:wave 1s infinite ease-in-out;\\\">波</span>\\n    <span style=\\\"display:inline-block;animation:wave 1s infinite ease-in-out 0.2s;\\\">浪</span>\\n    <span style=\\\"display:inline-block;animation:wave 1s infinite ease-in-out 0.4s;\\\">效</span>\\n    <span style=\\\"display:inline-block;animation:wave 1s infinite ease-in-out 0.6s;\\\">果</span>\\n  </h5>\\n  <style>\\n    @keyframes wave {\\n      0%,100% { transform:translateY(0); }\\n      50%     { transform:translateY(-15px); }\\n    }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "8577ec6d07ff-42e0-80e0-34b262c4bd5c",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <div style=\\\"\\n    width:60px;height:60px;border:6px solid rgba(0,0,0,0.2);\\n    border-top-color:#0ff;border-radius:50%;\\n    animation:spin 1s linear infinite;\\n  \\\"></div>\\n  <style>\\n    @keyframes spin { to { transform: rotate(360deg); } }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "d4084c543906-407f-9ba3-13843317a2f1",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <div style=\\\"\\n    width:200px;height:20px;border-radius:10px;\\n    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);\\n    background-size:400% 100%;\\n    animation: rainbow 5s linear infinite;\\n  \\\"></div>\\n  <style>\\n    @keyframes rainbow {\\n      from { background-position:0 0; }\\n      to   { background-position:100% 0; }\\n    }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "335e0106b4d7-4bf6-b87e-d2910672526a",
+      "style": null,
+      "data": "{\"text\":\"<div style=\\\"display:flex;justify-content:center;align-items:center;height:100%;\\\">\\n  <div style=\\\"\\n    width:80px;height:80px;border-radius:50%;\\n    background: conic-gradient(#ff0080, #7928ca, #2af598, #009efd, #ff0080);\\n    animation: spin 3s linear infinite;\\n  \\\"></div>\\n  <style>\\n    @keyframes spin { to { transform: rotate(360deg); } }\\n  </style>\\n</div>\\n\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "6df18a3feb29-4ceb-bbff-5b68d4bdef2d",
+      "style": ".result {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 8px;\n  color: white;\n  font-weight: bold;\n  background: linear-gradient(-45deg, #ffffff5e, #000000cc);\n  background-size: 400% 400%;\n  animation: gradientBG 10s ease infinite;\n}\n\n@keyframes gradientBG {\n  0% { background-position: 0% 50%; }\n  50% { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}",
+      "data": "{\"text\":\"感谢ChatGPT提供的创意\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "2d057b992493-44ba-91c8-8afa5ffc3ded",
+      "style": null,
+      "data": "{\"links\":[{\"name\":\"<span style=\\\"color:orange\\\">ChatGPT</span>\",\"url\":\"https://chatgpt.com/\",\"img\":\"https://chatgpt.com/favicon.ico\"}],\"layout\":1,\"nameVisible\":true}",
+      "type": "link"
+    }
+  ]
+}

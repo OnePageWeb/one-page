@@ -179,6 +179,7 @@ defineExpose({
       width: 100%;
       height: 100%;
       opacity: 1;
+      pointer-events: all;
 
       .el-input-group__prepend {
         display: block;
@@ -202,6 +203,7 @@ defineExpose({
     opacity: 0;
     display: flex;
     flex-direction: column;
+    pointer-events: none;
 
     .functionName {
       height: 32px;

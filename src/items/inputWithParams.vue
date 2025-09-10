@@ -75,6 +75,7 @@ function getParams(value) {
 }
 
 function onInputFocus() {
+  console.log('onInputFocus')
   collapse.value = []
 }
 
@@ -120,7 +121,7 @@ defineExpose({
 
 <template>
   <div class="inputWithParams">
-    <el-collapse v-model="collapse" class="paramContainer" @change="calcParams">
+    <el-collapse v-model="collapse" class="paramContainer" @change="calcParams(content)">
       <el-collapse-item name="params">
         <template #title>
           <div class="title-wrapper">
@@ -147,7 +148,6 @@ defineExpose({
           :rows="1"
           :placeholder="param.desc || (t('placeholder.needInput') + param.name)"
           @change="updateParam"
-          @blur="collapse = []"
         >
           <template #prepend>
             <div class="paramName">{{ param.name }}</div>
