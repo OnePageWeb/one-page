@@ -229,6 +229,7 @@ defineExpose({
         :title="t('component.link.edit.title')"
         width="60%"
         :append-to-body="true"
+        :close-on-press-escape="false"
         align-center
     >
       <div class="linkEditContainer">

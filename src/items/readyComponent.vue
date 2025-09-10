@@ -152,6 +152,7 @@ function handleFileDrop(e) {
       v-model="dialogVisible"
       class="commonDialog readyComponentDialog"
       :title="t('component.add')"
+      :close-on-press-escape="false"
       align-center
     >
       <div>

@@ -233,7 +233,7 @@ export default {
     configTip4: 'It is recommended to build your own proxy server.',
     h5Support: 'Support H5 tags',
     workspaceDesc: 'Workspace represents the current working environment. Different workspaces can have different configurations and data.',
-    uploadTip: 'Release the file to upload',
+    uploadTip: 'Drag the configuration file here to apply it',
   },
   input: {
     params: 'Parameters',
