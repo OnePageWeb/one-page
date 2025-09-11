@@ -268,19 +268,19 @@
     {
       "id": "7440f0bf71b0-44a2-a826-ee317939384b",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/display_text.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/display_text.png\"}]}",
       "type": "text"
     },
     {
       "id": "40e7ce40a7de-4942-a75f-e138644814dc",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_profile.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/starter_profile.png\"}]}",
       "type": "text"
     },
     {
       "id": "4ef1a1c1686b-4603-a3d5-8ba9fa085775",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_simple.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/starter_simple.png\"}]}",
       "type": "text"
     },
     {
@@ -322,19 +322,19 @@
     {
       "id": "e1edc63ce54d-4362-8d02-e8cc20ec343c",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_tutorial.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/starter_tutorial.png\"}]}",
       "type": "text"
     },
     {
       "id": "4258b4c35151-44a0-a915-7534b19f89a3",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_blank.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/starter_blank.png\"}]}",
       "type": "text"
     },
     {
       "id": "ea626c37f633-40e4-b176-1d3646cb3804",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_navigation.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/starter_navigation.png\"}]}",
       "type": "text"
     },
     {
@@ -352,7 +352,7 @@
     {
       "id": "49e4b94f76c2-4662-ac11-d0b07209e8eb",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/help_use_html.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/help_use_html.png\"}]}",
       "type": "text"
     },
     {
