@@ -471,12 +471,11 @@ onMounted(async () => {
   // 移除config参数
   removeParams('lock')
   // 不存在同步值时，从url参数加载
-  if (!configUrl.value) {
+  if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
     if (configParam) {
       ElMessage.info(t('config.loading'))
       configUrl.value = decodeURIComponent(configParam)
-      saveUrl()
       if (!loadDataDirect('skipReload')) {
         await loadConfig(configUrl.value, false)
         reloadWithoutParams('config')
