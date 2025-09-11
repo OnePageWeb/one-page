@@ -1,6 +1,6 @@
 {
   "globalStyle": {
-    "globalStyle-tag-默认": null,
+    "globalStyle-tag-默认": "",
     "globalStyle-tags": [
       "默认"
     ],
@@ -198,10 +198,18 @@
       "y": 52,
       "w": 12,
       "h": 12
+    },
+    {
+      "type": "text",
+      "id": "9d02becfc86c-44bb-90c8-1c944405bce8",
+      "x": 22,
+      "y": 65,
+      "w": 4,
+      "h": 4
     }
   ],
   "configLock": false,
-  "configUrl": null,
+  "configUrl": "/configs/display_text.json",
   "components": [
     {
       "id": "346a34d0a273-4b29-9db6-4b36e9ab8ce9",
@@ -224,19 +232,19 @@
     {
       "id": "f63404e93889-40a5-ac19-c7c8f61f0d95",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"尝试文本格子\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/configs/display_text.json\"}]}}",
+      "data": "{\"name\":\"尝试文本格子\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/display_text.json\"}]}}",
       "type": "button"
     },
     {
       "id": "d3d9dc89b86f-48cb-a831-52ca5324eda5",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"个人主页风格\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/configs/starter_profile.json\"}]}}",
+      "data": "{\"name\":\"个人主页风格\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/starter_profile.json\"}]}}",
       "type": "button"
     },
     {
       "id": "d51b6d48a1bc-4278-872c-14bf02c9f821",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"使用极简模式\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/configs/starter_simple.json\"}]}}",
+      "data": "{\"name\":\"使用极简模式\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/starter_simple.json\"}]}}",
       "type": "button"
     },
     {
@@ -260,37 +268,37 @@
     {
       "id": "7440f0bf71b0-44a2-a826-ee317939384b",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/imgs/display/display_text.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/display_text.png\"}]}",
       "type": "text"
     },
     {
       "id": "40e7ce40a7de-4942-a75f-e138644814dc",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/imgs/display/starter_profile.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_profile.png\"}]}",
       "type": "text"
     },
     {
       "id": "4ef1a1c1686b-4603-a3d5-8ba9fa085775",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/imgs/display/starter_simple.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_simple.png\"}]}",
       "type": "text"
     },
     {
       "id": "8b13f794a48a-414d-87ce-6ef4b97a040b",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"基础教学\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@e388a76/configs/starter_tutorial.json\"}]}}",
+      "data": "{\"name\":\"基础教学\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/starter_tutorial.json\"}]}}",
       "type": "button"
     },
     {
       "id": "8545bbb51dfa-4ffe-91e0-845e59d931d6",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"从零开始\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/configs/starter_blank.json\"}]}}",
+      "data": "{\"name\":\"从零开始\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/starter_blank.json\"}]}}",
       "type": "button"
     },
     {
       "id": "1b924593556c-4066-a65c-44445493b654",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"使用导航页\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/configs/starter_navigation.json\"}]}}",
+      "data": "{\"name\":\"使用导航页\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/starter_navigation.json\"}]}}",
       "type": "button"
     },
     {
@@ -314,25 +322,25 @@
     {
       "id": "e1edc63ce54d-4362-8d02-e8cc20ec343c",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@e388a76/imgs/display/starter_tutorial.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_tutorial.png\"}]}",
       "type": "text"
     },
     {
       "id": "4258b4c35151-44a0-a915-7534b19f89a3",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/imgs/display/starter_blank.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_blank.png\"}]}",
       "type": "text"
     },
     {
       "id": "ea626c37f633-40e4-b176-1d3646cb3804",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/imgs/display/starter_navigation.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/starter_navigation.png\"}]}",
       "type": "text"
     },
     {
       "id": "896302fc1f96-4f6b-9f19-70c399e3fd6f",
       "style": ".button {\n  background-color: #ffffff1c !important;\n}",
-      "data": "{\"name\":\"尝试制作网页组件\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst config = '@{样式地址}'\\nappendParam(encodeURIComponent(config))\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/configs/help_use_html.json\"}]}}",
+      "data": "{\"name\":\"尝试制作网页组件\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/help_use_html.json\"}]}}",
       "type": "button"
     },
     {
@@ -344,7 +352,13 @@
     {
       "id": "49e4b94f76c2-4662-ac11-d0b07209e8eb",
       "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
-      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://cdn.jsdelivr.net/gh/Verlif/one@cb3137f/imgs/display/help_use_html.png\"}]}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"/imgs/display/help_use_html.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "9d02becfc86c-44bb-90c8-1c944405bce8",
+      "style": null,
+      "data": "{\"text\":\"\",\"params\":[]}",
       "type": "text"
     }
   ]
