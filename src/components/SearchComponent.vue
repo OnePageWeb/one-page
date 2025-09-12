@@ -222,9 +222,10 @@ defineExpose({
         :visible="dialogVisible"
         :title="t('component.search.edit.title')"
         width="60%"
+        class="searchEditDialog"
         @closed="dialogVisible = false"
     >
-      <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">
+      <el-form ref="formRef" label-position="left" class="searchForm">
         <div class="appendContainer">
           <el-form-item :label="t('component.search.edit.prefix')" prop="prefix" class="prefix">
             <el-input v-model="prefix" :placeholder="t('component.search.edit.prefixDesc')"/>
@@ -379,7 +380,7 @@ defineExpose({
   }
 }
 
-.commonDialog {
+.searchEditDialog {
   .searchForm {
 
     .appendContainer {
@@ -388,19 +389,29 @@ defineExpose({
       border-bottom: 1px dashed #aaaaaa;
 
       .prefix {
-        width: 45%;
+        width: 49%;
       }
 
       .suffix {
-        width: 45%;
+        width: 49%;
       }
 
       .el-form-item__label {
         border-left: 8px solid #1bc3b3;
+        margin-bottom: 0;
+        border-radius: 4px 4px 0 0;
       }
 
       .el-form-item {
         flex-direction: column;
+      }
+
+      .el-input__wrapper {
+        border-radius: 0 0 4px 4px;
+      }
+
+      .el-input__wrapper {
+        height: 32px;
       }
     }
 
@@ -466,6 +477,21 @@ defineExpose({
       .searchPlaceholder {
         display: block;
         width: 30%;
+      }
+
+      .searchUrl, .searchPlaceholder {
+        .el-input__wrapper {
+          border-radius: 0 4px 4px 4px;
+        }
+
+        .el-form-item__label {
+          margin-bottom: 0;
+          border-radius: 4px 4px 0 0;
+        }
+
+        .el-input__wrapper {
+          height: 32px;
+        }
       }
     }
 

@@ -717,7 +717,11 @@ function addComponent(data) {
 // 删除格子
 function deleteItem(id) {
   nextTick(() => {
-    grid.removeWidget(document.getElementById(id.value))
+    // 卸载Vue组件
+    const elementById = document.getElementById(id.value)
+    elementById.element.unmount(elementById)
+    // 删除DOM元素
+    grid.removeWidget(elementById)
     // 删除本地存储
     removeData(id.value)
     // 保存布局

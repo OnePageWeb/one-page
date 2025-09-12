@@ -110,6 +110,7 @@
 
     &:empty {
       padding: 0;
+      height: 0;
     }
   }
 

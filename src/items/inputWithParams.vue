@@ -75,7 +75,6 @@ function getParams(value) {
 }
 
 function onInputFocus() {
-  console.log('onInputFocus')
   collapse.value = []
 }
 

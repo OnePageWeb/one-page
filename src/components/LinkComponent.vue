@@ -82,7 +82,7 @@ function open(link) {
     curWindow[link.name].focus()
     return
   }
-  window.open(link.url, '_blank')
+  return window.open(link.url, '_blank')
 }
 
 // 打开弹窗
@@ -166,6 +166,30 @@ function getFaviconUrl(url) {
   }
 }
 
+let dragLink = null
+function onLinkDragStart(e, link) {
+  dragLink = link
+}
+
+function onLinkDragover(e) {
+  e.preventDefault()
+  e.target.classList.add('dragTarget')
+}
+
+function onLinkDragleave(e) {
+  e.preventDefault()
+  e.target.classList.remove('dragTarget')
+}
+
+function onLinkDrop(e, link) {
+  e.preventDefault()
+  e.target.classList.remove('dragTarget')
+  const dragIndex = tempLinks.value.indexOf(dragLink)
+  const dropIndex = tempLinks.value.indexOf(link)
+  tempLinks.value.splice(dragIndex, 1)
+  tempLinks.value.splice(dropIndex, 0, dragLink)
+}
+
 defineExpose({
   save, load
 })
@@ -230,7 +254,13 @@ defineExpose({
       <div class="linkEditContainer">
         <el-form ref="formRef" class="linkForm">
           <template v-for="(item, index) in tempLinks">
-            <div class="linkEditItem">
+            <div class="linkEditItem"
+                 draggable="true"
+                 @dragstart="onLinkDragStart($event, item)"
+                 @dragover="onLinkDragover"
+                 @dragleave="onLinkDragleave"
+                 @drop="onLinkDrop($event, item)"
+            >
               <el-form-item prop="name" :class="['linkName', {'imgLinkName': item.img}]">
                 <el-input v-model="item.name" :placeholder="t('component.link.edit.urlName')">
                   <template #prepend>
@@ -535,6 +565,16 @@ defineExpose({
         padding-top: 0;
       }
 
+      &.dragTarget {
+        margin-top: 8px;
+
+        & > * {
+          pointer-events: none;
+          user-select: none;
+          opacity: 0.7;
+        }
+      }
+
       .el-image {
         height: 100%;
       }
@@ -583,12 +623,27 @@ defineExpose({
 
       .linkUrl {
         display: block !important;
-        width: calc(100% - 380px) !important;
+        width: calc(80% - 180px) !important;
       }
 
       .linkImg {
         display: block !important;
-        width: 200px !important;
+        width: 20% !important;
+      }
+
+      .linkUrl, .linkImg {
+        .el-input__wrapper {
+          border-radius: 0 8px 8px 8px;
+        }
+
+        .el-form-item__label {
+          margin-bottom: 0;
+          border-radius: 8px 8px 0 0;
+        }
+
+        .el-input__wrapper {
+          height: 32px;
+        }
       }
     }
   }
