@@ -1,18 +1,7 @@
 <script setup>
-import {
-  ElButton,
-  ElDialog,
-  ElForm,
-  ElFormItem,
-  ElIcon,
-  ElImage,
-  ElInput,
-  ElOption,
-  ElPopover,
-  ElText, ElTooltip
-} from "element-plus"
+import {ElButton, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Download, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
@@ -190,19 +179,18 @@ defineExpose({
         class="linkContainer"
         @click="open(link)"
     >
-      <el-tooltip
-          effect="light"
-          :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : t('component.link.dragTip')"
-          placement="top"
-          :show-after="800"
-          :hide-after="10"
+      <div
+          :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
+          draggable="true"
+          @dragend="openNewWindow(link)"
       >
-        <div
-            :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
-            draggable="true"
-            @dragend="openNewWindow(link)"
+        <el-tooltip
+            effect="light"
+            :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : link.url"
+            placement="top"
+            :show-after="400"
         >
-          <el-image :src="link.img" alt="favicon">
+          <el-image :src="link.img" alt="favicon" fit="contain">
             <template #error>
               <div class="image-slot">
                 <el-icon>
@@ -211,11 +199,18 @@ defineExpose({
               </div>
             </template>
           </el-image>
+        </el-tooltip>
+        <el-tooltip
+            effect="light"
+            :content="link.name"
+            placement="bottom"
+            :show-after="400"
+        >
           <el-text v-if="nameVisible" tag="span">
             <div v-html="link.name"/>
           </el-text>
-        </div>
-      </el-tooltip>
+        </el-tooltip>
+      </div>
     </div>
 
     <div v-show="enableEdit" class="editContainer" @click.stop="edit">
@@ -421,6 +416,7 @@ defineExpose({
 .vertical {
   flex-direction: column;
   width: 100%;
+  max-height: unset;
 
   .linkContainer {
     width: 100%;
@@ -442,14 +438,20 @@ defineExpose({
   }
 
   .linkItem {
+    max-height: 120px;
     width: calc(100% - 24px);
     padding: 8px 8px;
 
-    span {
+    .el-text {
       width: 100%;
-      white-space: wrap;
       display: block;
-      text-align: center
+      text-align: center;
+
+      div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
