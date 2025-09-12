@@ -6,6 +6,7 @@ import {CopyDocument, Delete, Edit, Plus, Upload, View} from '@element-plus/icon
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
 import {useI18n} from "vue-i18n"
+import {success} from "@/js/message.js"
 
 const {t} = useI18n()
 
@@ -157,7 +158,7 @@ function onDrop(event, index = -1) {
 function copy(index) {
   // 将resultList.value[index]复制到剪切板
   navigator.clipboard.writeText(resultList.value[index])
-  ElMessage.success(t('success.copy'))
+  success(t('success.copy'))
 }
 
 const isEditing = ref(false)

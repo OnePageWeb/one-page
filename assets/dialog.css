@@ -85,11 +85,18 @@
     align-items: center;
     gap: 8px;
     border-radius: 0 0 10px 10px;
+    height: 48px;
 
     .transfer {
       cursor: move;
       font-size: 32px;
       color: #ff5858;
+
+      &:hover {
+        svg {
+          scale: 1.4;
+        }
+      }
 
       svg {
         padding: 4px;
@@ -114,5 +121,11 @@
       background-color: rgba(0, 0, 0, 0.5);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  .cm-editor {
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    border: 2px solid rgba(255, 255, 255, 0.8);
   }
 }

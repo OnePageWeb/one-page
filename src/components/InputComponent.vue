@@ -6,6 +6,7 @@ import {CloseBold, CopyDocument, Edit, SortDown, View} from "@element-plus/icons
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {success} from "@/js/message.js"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -71,7 +72,7 @@ async function execute() {
 function copyResult() {
   if (functionResult.value) {
     navigator.clipboard.writeText(functionResult.value)
-    ElMessage.success(t('success.copy'))
+    success(t('success.copy'))
   }
 }
 

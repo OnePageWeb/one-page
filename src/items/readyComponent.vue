@@ -16,6 +16,7 @@ import {fetchWithBase} from "@/js/url.js"
 import {Close, Search} from "@element-plus/icons-vue"
 import {useI18n} from "vue-i18n"
 import commonDialog from "@/items/commonDialog.vue"
+import {error, success} from "@/js/message.js"
 const {t} = useI18n()
 
 const emit = defineEmits(['addComponent'])
@@ -92,7 +93,7 @@ async function addComponent(name) {
     if (name) {
       const component = components.value[name]
       if (!component) {
-        ElMessage.error(t('error.componentNotExist'))
+        error(t('error.componentNotExist'))
         return
       }
       // 加载path对应的组件
@@ -102,7 +103,7 @@ async function addComponent(name) {
       return
     }
     if (!configData.value) {
-      ElMessage.error(t('error.noConfigContent'))
+      error(t('error.noConfigContent'))
       return
     }
     emit('addComponent', JSON.parse(configData.value))
@@ -117,7 +118,7 @@ async function addComponent(name) {
 async function addModuleComponent(name) {
   const module = moduleComponents.value[name]
   if (!module) {
-    ElMessage.error(t('error.componentNotExist'))
+    error(t('error.componentNotExist'))
     return
   }
   emit('addComponent', module)
@@ -126,7 +127,7 @@ async function addModuleComponent(name) {
 function deleteItem(name) {
   delete moduleComponents.value[name]
   localStorage.removeItem('module-' + name)
-  ElMessage.success(t('success.delete'))
+  success(t('success.delete'))
 }
 
 const configData = ref('')
@@ -135,7 +136,7 @@ function handleFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (file.type !== 'application/json') {
-    ElMessage.error(t('error.uploadJson'))
+    error(t('error.uploadJson'))
     return
   }
   const reader = new FileReader()

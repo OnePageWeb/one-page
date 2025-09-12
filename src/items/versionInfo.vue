@@ -4,7 +4,8 @@ import {loadDataDirect, saveDataDirect} from "@/js/data.js"
 import {ref, onMounted, computed} from 'vue'
 import {ElLink, ElMessage, ElButton, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
-import {CircleClose, Close} from "@element-plus/icons-vue";
+import {CircleClose, Close} from "@element-plus/icons-vue"
+import {warning} from "@/js/message.js"
 
 const {t} = useI18n()
 
@@ -46,7 +47,7 @@ const fetchReleases = async () => {
     const response = await fetch(apiUrl)
 
     if (!response.ok) {
-      ElMessage.warning(t('version.fetchError'))
+      warning(t('version.fetchError'))
     }
 
     const data = await response.json()
@@ -69,7 +70,7 @@ const fetchReleases = async () => {
         }))
   } catch (err) {
     console.error('获取版本信息失败:', err)
-    ElMessage.warning(t('version.fetchError'))
+    warning(t('version.fetchError'))
   }
 }
 

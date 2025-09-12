@@ -17,6 +17,7 @@ import {reloadWithoutParams} from "@/js/url.js"
 import {useI18n} from "vue-i18n"
 import {TEMP_WORKSPACE} from "@/js/workspcae.js"
 import commonDialog from "@/items/commonDialog.vue"
+import {warning, success} from "@/js/message.js"
 
 const {t} = useI18n()
 
@@ -36,7 +37,7 @@ const workspaceList = ref([])
 onMounted(() => {
   workspaceList.value.push(...listWorkspace())
   if (getNowWorkspace() === TEMP_WORKSPACE) {
-    ElMessage.warning(t('workspace.temp.warning'))
+    warning(t('workspace.temp.warning'))
   }
 })
 
@@ -66,17 +67,11 @@ function newWorkspace(workspace: string) {
 
 function switchWorkspace(workspace: string) {
   if (!workspace || workspace.trim() === '') {
-    ElMessage({
-      message: t('error.workspaceEmpty'),
-      type: 'warning'
-    })
+    warning(t('error.workspaceEmpty'))
     return
   }
   if (nowWorkspace.value === workspace) {
-    ElMessage({
-      message: t('workspace.alreadyInThis'),
-      type: 'success'
-    })
+    success(t('workspace.alreadyInThis'))
     return
   }
   // 切换工作区
@@ -181,7 +176,7 @@ function deleteItem(workspace: string) {
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{ t('workspace.delete.content') }} <span style="font-size: 24px;font-weight: bolder">{{
+          {{ t('workspace.delete.content') }} <span style="color: white;font-size: 24px;font-weight: bolder">{{
             deleteWorkspaceName
           }}</span> ？
           <div>
@@ -190,7 +185,7 @@ function deleteItem(workspace: string) {
         </div>
       </div>
       <template #footer>
-        <el-button @click="deleteItem(deleteWorkspaceName)">{{ t('common.confirm') }}</el-button>
+        <el-button type="danger" @click="deleteItem(deleteWorkspaceName)">{{ t('common.confirm') }}</el-button>
         <el-button type="primary" @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
       </template>
     </common-dialog>
@@ -210,9 +205,13 @@ function deleteItem(workspace: string) {
     height: unset;
   }
 
-  .el-input {
-    width: calc(100% - 70px);
-    margin-right: 10px;
+  .workspaceName {
+    height: 100%;
+
+    .el-input {
+      width: calc(100% - 70px);
+      margin-right: 10px;
+    }
   }
 }
 

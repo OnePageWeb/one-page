@@ -1,11 +1,12 @@
 <script setup>
-import {ElButton, ElDialog, ElInput, ElMessage, ElTag, ElIcon} from "element-plus"
+import {ElButton, ElIcon, ElInput, ElTag} from "element-plus"
 import {nextTick, onMounted, ref} from "vue"
 import {loadData, removeData, saveData} from "@/js/data.js"
 import {CircleCheckFilled} from "@element-plus/icons-vue"
 import cssEditor from "@/items/cssEditor.vue"
 import {useI18n} from 'vue-i18n'
 import commonDialog from "@/items/commonDialog.vue"
+import {success, warning} from "@/js/message.js"
 
 const { t, locale } = useI18n()
 
@@ -57,16 +58,10 @@ function selectTag(tag) {
   if (selectTags.value.indexOf(tag) > -1) {
     // 已选择则取消选择
     selectTags.value = selectTags.value.filter(item => item !== tag)
-    ElMessage({
-      message: t('style.inactive_') + tag,
-      type: 'warning'
-    })
+    warning(t('style.inactive_') + tag)
   } else {
     selectTags.value.push(tag)
-    ElMessage({
-      message: t('style.active_') + tag,
-      type: 'success'
-    })
+    success(t('style.active_') + tag)
   }
   loadSelectedStyle()
   save()
@@ -82,18 +77,12 @@ function addTag() {
 
 function editTagName() {
   if (curTagName.value.trim() === '') {
-    ElMessage({
-      message: t('error.noName'),
-      type: 'warning'
-    })
+    warning(t('error.noName'))
     return
   }
   // 检查是否已存在
   if (styleTags.value.includes(curTagName.value)) {
-    ElMessage({
-      message: t('error.nameExist'),
-      type: 'warning'
-    })
+    warning(t('error.nameExist'))
     return
   }
   styleTags.value.push(curTagName.value)
@@ -128,19 +117,13 @@ function refreshGlobalStyle() {
 
 function saveTagStyle(value) {
   if (selectedTagIndex.value === -1) {
-    ElMessage({
-      message: t('error.noSelectStyle'),
-      type: 'warning'
-    })
+    warning(t('error.noSelectStyle'))
     return
   }
   globalStyle.value = value
   // 保存样式
   saveData('globalStyle-tag-' + styleTags.value[selectedTagIndex.value], globalStyle.value)
-  ElMessage({
-    message: t('success.save'),
-    type: 'success'
-  })
+  success(t('success.save'))
 }
 
 function save() {
@@ -288,11 +271,11 @@ defineExpose({
         :title="t('style.delete.title')"
         :visible="deleteConfirm"
         width="400px"
-        class="deleteConfirm"
+        class="deleteStyleConfirmDialog"
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{ t('style.delete.content') }} <span style="font-size: 24px;font-weight: bolder">{{ deleteTagName }}</span>
+          {{ t('style.delete.content') }} <span style="font-size: 24px;font-weight: bolder; color: #ffffff">{{ deleteTagName }}</span>
           <div>
             {{ t('style.delete.confirm') }}
           </div>
@@ -392,9 +375,10 @@ defineExpose({
     }
   }
 
-  .deleteConfirm {
-    height: 200px;
-  }
+}
+
+.deleteStyleConfirmDialog {
+  height: 200px !important;
 }
 
 .editTagDialog {

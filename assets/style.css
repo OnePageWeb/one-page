@@ -3,6 +3,7 @@
 
 :root {
   --background-opacity: rgba(255, 255, 255, 0.6);
+  --cursor-text: url("./cursor/text.cur");
 }
 
 .menu {
@@ -118,6 +119,9 @@ el-tooltip {
   .cm-content {
     background-color: rgba(255, 255, 255, 0.3);
     font-size: 18px;
+    &:hover {
+      cursor: var(--cursor-text), auto;
+    }
   }
 }
 
@@ -140,6 +144,9 @@ el-tooltip {
 }
 
 .el-textarea__inner {
+  &:hover {
+    cursor: var(--cursor-text), auto;
+  }
   &:focus {
     animation: inputBlink 1s ease-in-out infinite;
   }
@@ -154,10 +161,20 @@ el-tooltip {
   .el-input__inner {
     padding: 1px 12px;
     height: 100%;
+    &:hover {
+      cursor: var(--cursor-text), auto;
+    }
     &:focus {
       animation: inputBlink 1s ease-in-out infinite;
     }
   }
+}
+
+.el-message {
+  font-weight: bold;
+  font-size: 24px;
+  opacity: 0.8;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
 }
 
 /* 背景滚动动画 */

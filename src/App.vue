@@ -22,7 +22,7 @@
             v-for="item in components"
             width="400"
             placement="right-start"
-            popper-class="componentItem"
+            popper-class="componentItemPopover"
             :show-after="200"
             :hide-after="10"
         >
@@ -311,7 +311,7 @@ import {
   ElImage,
   ElInput,
   ElLoading,
-  ElMessage, ElMessageBox,
+  ElMessageBox,
   ElOption,
   ElPopconfirm,
   ElPopover,
@@ -319,7 +319,6 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
-  ElDivider,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -333,11 +332,13 @@ import {
   InfoFilled,
   Monitor,
   Operation,
-  Picture, Promotion,
+  Picture,
+  Promotion,
   Rank,
   RefreshRight,
   Top,
-  UploadFilled, View
+  UploadFilled,
+  View
 } from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
@@ -362,6 +363,7 @@ import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
 import DragInCover from "@/items/DragInCover.vue";
 import CommonDialog from "@/items/commonDialog.vue";
+import {error, info, success} from "@/js/message.js"
 
 const {t} = useI18n()
 
@@ -483,7 +485,7 @@ onMounted(async () => {
   if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
     if (configParam) {
-      ElMessage.info(t('config.loading'))
+      info(t('config.loading'))
       configUrl.value = decodeURIComponent(configParam)
       if (!loadDataDirect('skipReload')) {
         await loadConfig(configUrl.value, false)
@@ -492,7 +494,7 @@ onMounted(async () => {
       }
     }
   } else if (configUrlLock.value && !loadDataDirect('skipReload')) {
-    ElMessage.info(t('config.loading'))
+    info(t('config.loading'))
     await loadConfig(configUrl.value, false)
   }
   // 跳过刷新后的url同步
@@ -672,7 +674,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   // 挂载Vue组件到格子
   const component = itemType.find(item => item.value === type)?.component
   if (!component) {
-    ElMessage.error(t('error.noSuchComponent_') + type)
+    error(t('error.noSuchComponent_') + type)
     return
   }
   const app = createApp(createItemComponent(type, component), {
@@ -707,7 +709,7 @@ function addComponent(data) {
         saveData(id + '-style', data.style)
       }
     } else {
-      ElMessage.error(t('error.noSuchComponent_') + data.type)
+      error(t('error.noSuchComponent_') + data.type)
     }
   }
 }
@@ -734,7 +736,7 @@ function editStyle(id) {
   isEditComponentStyle.value = true
 }
 
-function onComponentStyleOpened () {
+function onComponentStyleOpened() {
   // 获取组件样式
   componentStyle.value = loadData(curComponentId.value + '-style')
   componentStyleRef.value.load(componentStyle.value)
@@ -800,7 +802,7 @@ function createZoomIn(id, componentItem) {
 function zoomIn(id, type) {
   const find = itemType.find(item => item.value === type.value)
   if (!find) {
-    ElMessage.error(t('error.noSuchComponent_') + type.value)
+    error(t('error.noSuchComponent_') + type.value)
     return
   }
   zoomInId = id.value
@@ -883,7 +885,7 @@ function addModuleConfirm(id, type) {
 
 function addModule({name, desc}) {
   if (!name) {
-    ElMessage.error(t('error.noName'))
+    error(t('error.noName'))
     return
   }
   const componentData = exportComponentData(moduleId, moduleType)
@@ -892,7 +894,7 @@ function addModule({name, desc}) {
     ...componentData
   }
   saveDataDirect('module-' + name, JSON.stringify(moduleData))
-  ElMessage.success(t('success.add'))
+  success(t('success.add'))
   nameDescDialog.value.cancel()
 }
 
@@ -983,7 +985,7 @@ function clearConfig(reload = false) {
 
 async function loadConfigFromUrl() {
   if (!configUrl.value) {
-    ElMessage.error(t('error.noConfigUrl'))
+    error(t('error.noConfigUrl'))
     return
   }
   await loadConfig(configUrl.value)
@@ -992,7 +994,7 @@ async function loadConfigFromUrl() {
 // 加载配置
 async function loadConfig(config = configData.value, reload = true) {
   if (!config) {
-    ElMessage.error(t('error.noConfigContent'))
+    error(t('error.noConfigContent'))
     return
   }
   // 解析json
@@ -1010,7 +1012,7 @@ async function loadConfig(config = configData.value, reload = true) {
         config = JSON.parse(config)
       }
     } catch (error) {
-      ElMessage.error(t('error.load'), error)
+      error(t('error.load'), error)
       return
     } finally {
       setTimeout(() => {
@@ -1019,12 +1021,12 @@ async function loadConfig(config = configData.value, reload = true) {
     }
   }
   if (!config || typeof config !== 'object') {
-    ElMessage.error(t('error.loadFormat'))
+    error(t('error.loadFormat'))
     return
   }
   // 校验配置
   if (!config.globalStyle || !config.layout || !config.components) {
-    ElMessage.error(t('error.loadFormat'))
+    error(t('error.loadFormat'))
     return
   }
   // 保留配置锁
@@ -1067,7 +1069,7 @@ function handleConfigFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (!file || file.type !== 'application/json') {
-    ElMessage.error(t('error.uploadJson'))
+    error(t('error.uploadJson'))
     return
   }
   const reader = new FileReader()
@@ -1100,10 +1102,10 @@ function onDragIn(data) {
         loadConfig(data)
       })
     } else {
-      ElMessage.error(t('error.unknownContent'))
+      error(t('error.unknownContent'))
     }
   } else {
-    ElMessage.error(t('error.unknownContent'))
+    error(t('error.unknownContent'))
   }
 }
 
@@ -1214,7 +1216,9 @@ body {
 
 /* 菜单样式结束 */
 
-.componentItem {
+.componentItemPopover {
+  pointer-events: none;
+
   .componentName {
     font-weight: bold;
     font-size: 22px;
@@ -1377,13 +1381,14 @@ textarea {
     border-top: 2px dotted rgba(255, 255, 255, 0.6);
 
     .el-textarea__inner {
-      height: calc(100% - 8px);
-      width: calc(100% - 8px);
+      height: calc(100% - 4px);
+      width: calc(100% - 4px);
       border-radius: 24px;
-      border: 4px solid rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(255, 255, 255);
     }
   }
 }
+
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;
