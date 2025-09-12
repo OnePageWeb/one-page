@@ -184,10 +184,6 @@ defineExpose({
       .el-input-group__prepend {
         display: block;
       }
-
-      .el-input__wrapper {
-        padding: 1px 11px;
-      }
     }
   }
 

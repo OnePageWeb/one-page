@@ -16,6 +16,8 @@ import {Close, Download, Finished, Operation, Picture, Plus, Switch} from "@elem
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
+import commonDialog from "@/items/commonDialog.vue"
+
 const {t} = useI18n()
 
 const defaultLinks = [
@@ -189,16 +191,16 @@ defineExpose({
         @click="open(link)"
     >
       <el-tooltip
-        effect="light"
-        :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : t('component.link.dragTip')"
-        placement="top"
-        :show-after="800"
-        :hide-after="10"
+          effect="light"
+          :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : t('component.link.dragTip')"
+          placement="top"
+          :show-after="800"
+          :hide-after="10"
       >
         <div
-          :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
-          draggable="true"
-          @dragend="openNewWindow(link)"
+            :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
+            draggable="true"
+            @dragend="openNewWindow(link)"
         >
           <el-image :src="link.img" alt="favicon">
             <template #error>
@@ -210,7 +212,7 @@ defineExpose({
             </template>
           </el-image>
           <el-text v-if="nameVisible" tag="span">
-            <div v-html="link.name" />
+            <div v-html="link.name"/>
           </el-text>
         </div>
       </el-tooltip>
@@ -223,14 +225,12 @@ defineExpose({
     </div>
 
     <!-- 编辑快速链接弹窗 -->
-    <el-dialog
-        class="linkEditDialog commonDialog"
-        v-model="dialogVisible"
+    <common-dialog
+        class="linkEditDialog"
+        :visible="dialogVisible"
         :title="t('component.link.edit.title')"
         width="60%"
-        :append-to-body="true"
-        :close-on-press-escape="false"
-        align-center
+        @closed="dialogVisible = false"
     >
       <div class="linkEditContainer">
         <el-form ref="formRef" class="linkForm">
@@ -248,7 +248,7 @@ defineExpose({
                         </div>
                       </template>
                     </el-image>
-                    <h5tag v-else :text="t('common.name')" />
+                    <h5tag v-else :text="t('common.name')"/>
                   </template>
                 </el-input>
               </el-form-item>
@@ -270,16 +270,16 @@ defineExpose({
       <template #footer>
         <div class="dialog-footer">
           <el-popover
-            class="box-item"
-            :title="nameVisible ? t('common.showName') : t('common.hideName')"
-            :content="t('component.link.switchNameVisible')"
-            placement="top-end"
+              class="box-item"
+              :title="nameVisible ? t('common.showName') : t('common.hideName')"
+              :content="t('component.link.switchNameVisible')"
+              placement="top-end"
           >
             <template #reference>
               <el-icon
-                class="nameVisibleIcon"
-                :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
-                @click="changeNameVisible"
+                  class="nameVisibleIcon"
+                  :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
+                  @click="changeNameVisible"
               >
                 <Finished/>
               </el-icon>
@@ -310,7 +310,7 @@ defineExpose({
           </el-button>
         </div>
       </template>
-    </el-dialog>
+    </common-dialog>
   </div>
 </template>
 
@@ -483,14 +483,15 @@ defineExpose({
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 8px;
 
     /* 方向图标 */
+
     .directionIcon, .nameVisibleIcon {
       padding: 4px;
       background: #fba240;
       border-radius: 16px;
       color: white;
-      margin-right: 16px;
       cursor: pointer;
       font-size: large;
 

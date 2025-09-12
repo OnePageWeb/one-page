@@ -258,6 +258,7 @@ export default {
     d: 'Action Bar',
     r: 'Refresh Page',
     f: 'Receive Mode',
+    '~': 'User Mode',
   },
   itemType: {
     text: {

@@ -72,14 +72,13 @@
     </div>
 
     <!-- 配置加载弹窗 -->
-    <el-dialog
+    <common-dialog
         :title="$t('config.load')"
-        v-model="configLoaderVisible"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
+        :visible="configLoaderVisible"
+        class="globeConfigDialog"
+        @closed="configLoaderVisible = false"
     >
-      <template #header="{ close, titleId, titleClass }">
+      <template #title="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
           <div :id="titleId" :class="titleClass">{{ $t('config.load') }}</div>
           <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true">
@@ -99,7 +98,7 @@
             :hide-after="10"
             :enterable="false"
         >
-          <div style="display: flex;gap: 8px;">
+          <div class="syncConfigContainer">
             <el-switch
                 v-model="configUrlLock"
                 @change="saveUrlLock"
@@ -121,7 +120,7 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
+      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -138,7 +137,7 @@
             <el-button @click="configLoaderTipVisible = false">{{ $t('common.close') }}</el-button>
           </div>
         </template>
-      </el-dialog>
+      </common-dialog>
       <template #footer>
         <el-tooltip
             :content="$t('config.transfer')"
@@ -151,7 +150,7 @@
               draggable="true"
               @dragstart.stop="onConfigTransferStart"
           >
-            <Promotion />
+            <Promotion/>
           </el-icon>
         </el-tooltip>
         <el-button type="primary" @click="downloadConfig">{{ $t('common.download') }}</el-button>
@@ -180,16 +179,14 @@
           </template>
         </el-popconfirm>
       </template>
-    </el-dialog>
+    </common-dialog>
 
     <!-- 组件样式弹窗 -->
-    <el-dialog
-        title="组件样式"
-        v-model="isEditComponentStyle"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
-        :close-on-press-escape="false"
+    <common-dialog
+        :title="$t('style.component')"
+        :visible="isEditComponentStyle"
+        @opened="onComponentStyleOpened"
+        @closed="isEditComponentStyle = false"
     >
       <css-editor
           class="globeStyleInput"
@@ -201,7 +198,7 @@
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
       </template>
-    </el-dialog>
+    </common-dialog>
 
     <!-- 组件放大弹窗 -->
     <el-dialog
@@ -291,6 +288,13 @@
           </el-icon>
           <div class="shortcutKeysItemDesc">{{ $t('shortcut.f') }}</div>
         </div>
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">~</div>
+          <el-icon>
+            <View/>
+          </el-icon>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.~') }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -315,6 +319,7 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
+  ElDivider,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -332,7 +337,7 @@ import {
   Rank,
   RefreshRight,
   Top,
-  UploadFilled
+  UploadFilled, View
 } from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
@@ -356,6 +361,7 @@ import versionInfo from '@/items/versionInfo.vue'
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue";
 import DragInCover from "@/items/DragInCover.vue";
+import CommonDialog from "@/items/commonDialog.vue";
 
 const {t} = useI18n()
 
@@ -414,6 +420,9 @@ function keyListener(event) {
       window.location.reload()
     } else if (event.key === 'F' || event.key === 'f') {
       everyDrag.value = !everyDrag.value
+    } else if (event.key === '~' || event.key === '`') {
+      disabledEdit()
+      disabledMove()
     }
     event.preventDefault()
   } else {
@@ -722,12 +731,13 @@ const componentStyle = ref('')
 
 function editStyle(id) {
   curComponentId.value = id.value
-  // 获取组件样式
-  componentStyle.value = loadData(id.value + '-style')
   isEditComponentStyle.value = true
-  nextTick(() => {
-    componentStyleRef.value.load(componentStyle.value)
-  })
+}
+
+function onComponentStyleOpened () {
+  // 获取组件样式
+  componentStyle.value = loadData(curComponentId.value + '-style')
+  componentStyleRef.value.load(componentStyle.value)
 }
 
 function loadStyle(id, styleContent) {
@@ -1333,52 +1343,47 @@ textarea {
 }
 
 /* 组件弹窗样式结束 */
-
-/* 配置加载器弹窗样式开始 */
-.configDialog {
+.globeConfigDialog {
   .configLoaderHeader {
+    color: white;
     display: flex;
     align-items: center;
+  }
+
+  .syncConfigContainer {
+    display: flex;
+    gap: 8px;
+
+    .el-switch {
+      .el-switch__core {
+        height: calc(100% - 2px);
+        background: #494949;
+        padding: 0 4px;
+        border: none;
+      }
+
+      &.is-checked {
+        .el-switch__core {
+          background: #3a8091;
+        }
+      }
+    }
   }
 
   .globeConfigInput {
-    height: calc(100% - 40px) !important;
-    margin-top: 8px;
+    height: calc(100% - 60px) !important;
+    padding-top: 8px;
+    margin-top: 6px;
+    border-top: 2px dotted rgba(255, 255, 255, 0.6);
 
     .el-textarea__inner {
-      height: 100%;
+      height: calc(100% - 8px);
+      width: calc(100% - 8px);
+      border-radius: 24px;
+      border: 4px solid rgba(255, 255, 255, 0.8);
     }
-  }
-
-  .el-dialog__footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-
-    .transfer {
-      cursor: move;
-      font-size: 32px;
-      color: #ff5858;
-
-      svg {
-        padding: 4px;
-        border-radius: 24px;
-      }
-    }
-
-    .el-button+.el-button {
-      margin-left: 0;
-    }
-  }
-
-  .el-switch__core {
-    height: calc(100% - 2px);
   }
 }
-
-/* 配置加载器弹窗样式结束 */
-
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;

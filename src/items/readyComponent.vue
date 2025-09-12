@@ -15,6 +15,7 @@ import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
 import {Close, Search} from "@element-plus/icons-vue"
 import {useI18n} from "vue-i18n"
+import commonDialog from "@/items/commonDialog.vue"
 const {t} = useI18n()
 
 const emit = defineEmits(['addComponent'])
@@ -146,94 +147,89 @@ function handleFileDrop(e) {
 </script>
 
 <template>
-
-  <div>
-    <el-dialog
-      v-model="dialogVisible"
-      class="commonDialog readyComponentDialog"
+  <common-dialog
+      class="readyComponentDialog"
       :title="t('component.add')"
-      :close-on-press-escape="false"
-      align-center
-    >
-      <div>
-        <el-input
+      :visible="dialogVisible"
+      @closed="dialogVisible = false"
+  >
+    <div>
+      <el-input
           v-model="filterName"
           class="filterName"
           resize="none"
           :placeholder="t('placeholder.componentFilter')"
-        >
-          <template #prepend>
-            <el-icon>
-              <Search/>
-            </el-icon>
-          </template>
-        </el-input>
-        <div class="readyComponents">
+      >
+        <template #prepend>
+          <el-icon>
+            <Search/>
+          </el-icon>
+        </template>
+      </el-input>
+      <div class="readyComponents">
 
-          <el-popover
-              class="box-item"
-              v-for="name of Object.keys(filterComponents)"
-              width="300"
-              placement="bottom"
-              popper-class="componentItem"
-              :show-after="200"
-              :hide-after="10"
-          >
-            <template #reference>
-              <div
-                  class="componentItem"
-                  @click="addComponent(name)"
-              >
-                <div class="componentName">{{ name }}</div>
-                <div class="componentDesc">{{ components[name].desc }}</div>
-              </div>
-            </template>
-            <el-image :src="'imgs/ready/' + name + '.png'"/>
-          </el-popover>
-          <div class="componentAreaName">{{ t('component.defined') }}</div>
-        </div>
-        <div class="moduleComponents">
-          <div
+        <el-popover
+            class="box-item"
+            v-for="name of Object.keys(filterComponents)"
+            width="300"
+            placement="bottom"
+            popper-class="componentItem"
+            :show-after="200"
+            :hide-after="10"
+        >
+          <template #reference>
+            <div
+                class="componentItem"
+                @click="addComponent(name)"
+            >
+              <div class="componentName">{{ name }}</div>
+              <div class="componentDesc">{{ components[name].desc }}</div>
+            </div>
+          </template>
+          <el-image :src="'imgs/ready/' + name + '.png'"/>
+        </el-popover>
+        <div class="componentAreaName">{{ t('component.defined') }}</div>
+      </div>
+      <div class="moduleComponents">
+        <div
             v-for="name of Object.keys(filterModuleComponents)"
             class="componentItem"
             @click="addModuleComponent(name)"
-          >
-            <div class="componentName">{{ name }}</div>
-            <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
-            <el-popconfirm
+        >
+          <div class="componentName">{{ name }}</div>
+          <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
+          <el-popconfirm
               class="deleteItem"
               :title="t('component.delete.title')"
               placement="top-start"
               :confirm-button-text="t('common.confirm')"
               :cancel-button-text="t('common.cancel')"
               @confirm="deleteItem(name)"
-            >
-              <template #reference>
-                <el-icon class="deleteItem" @click.prevent.stop>
-                  <Close/>
-                </el-icon>
-              </template>
-            </el-popconfirm>
-          </div>
-          <div class="componentAreaName">{{ t('component.custom') }}</div>
+          >
+            <template #reference>
+              <el-icon class="deleteItem" @click.prevent.stop>
+                <Close/>
+              </el-icon>
+            </template>
+          </el-popconfirm>
         </div>
-
-        <div class="addComponentContainer">
-          <el-input
-              v-model="configData"
-              type="textarea"
-              resize="none"
-              :placeholder="t('placeholder.componentInput')"
-              @dragover.prevent
-              @drop.prevent="handleFileDrop"
-              @keydown.enter.ctrl="addComponent"
-          />
-          <el-button class="addComponent" type="primary" @click="addComponent(null)">{{t('common.add')}}</el-button>
-        </div>
+        <div class="componentAreaName">{{ t('component.custom') }}</div>
       </div>
-    </el-dialog>
-  </div>
 
+      <div class="addComponentContainer">
+        <el-input
+            v-model="configData"
+            type="textarea"
+            resize="none"
+            :placeholder="t('placeholder.componentInput')"
+            @dragover.prevent
+            @drop.prevent="handleFileDrop"
+            @keydown.enter.ctrl="addComponent"
+        />
+        <el-button class="addComponent" type="primary" @click="addComponent(null)">{{t('common.add')}}</el-button>
+      </div>
+    </div>
+  </common-dialog>
 </template>
 
 <style>
@@ -265,7 +261,7 @@ function handleFileDrop(e) {
     align-items: center;
     justify-content: center;
     z-index: -1;
-    color: #dddddd;
+    color: rgba(221, 221, 221, 0.1);
     user-select: none;
   }
 
@@ -282,7 +278,7 @@ function handleFileDrop(e) {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 8px;
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
     background-size: 200%;
     cursor: pointer;
 
@@ -327,15 +323,10 @@ function handleFileDrop(e) {
     }
   }
 
-
   .addComponentContainer {
     height: calc(30% - 8px);
     margin-top: 8px;
     position: relative;
-
-    .el-textarea {
-      height: 100%;
-    }
 
     .addComponent {
       position: absolute;

@@ -258,6 +258,7 @@ export default {
     d: '操作栏',
     r: '刷新页面',
     f: '接收模式',
+    '~': '用户模式',
   },
   itemType: {
     text: {

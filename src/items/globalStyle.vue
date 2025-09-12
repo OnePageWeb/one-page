@@ -5,6 +5,8 @@ import {loadData, removeData, saveData} from "@/js/data.js"
 import {CircleCheckFilled} from "@element-plus/icons-vue"
 import cssEditor from "@/items/cssEditor.vue"
 import {useI18n} from 'vue-i18n'
+import commonDialog from "@/items/commonDialog.vue"
+
 const { t, locale } = useI18n()
 
 const emit = defineEmits(['loadStyle'])
@@ -119,9 +121,9 @@ function deleteItem(tag) {
 }
 
 function refreshGlobalStyle() {
+  visible.value = false
   loadSelectedStyle()
   save()
-  visible.value = false
 }
 
 function saveTagStyle(value) {
@@ -220,14 +222,12 @@ defineExpose({
 
 <template>
   <!-- 全局样式弹窗 -->
-  <el-dialog
+  <common-dialog
       :title="t('style.global')"
-      v-model="visible"
+      :visible="visible"
       width="30%"
-      class="globeStyleDialog commonDialog"
-      align-center
-      :close-on-press-escape="false"
-      @close="refreshGlobalStyle"
+      class="globeStyleDialog"
+      @closed="refreshGlobalStyle"
   >
     <div style="position: relative;">
       <div class="tagContainer">
@@ -267,14 +267,12 @@ defineExpose({
       <el-button type="primary" @click="loadSelectedStyle">{{ t('common.apply') }}</el-button>
     </template>
 
-    <el-dialog
+    <common-dialog
         :title="selectedTagIndex > -1 ? t('style.edit') : t('style.add')"
-        v-model="tagNameDialogVisible"
-        @close="tagNameDialogVisible = false"
-        class="editTagDialog commonDialog"
+        :visible="tagNameDialogVisible"
+        @closed="tagNameDialogVisible = false"
+        class="editTagDialog"
         width="400px"
-        :close-on-press-escape="false"
-        align-center
     >
       <el-input
           v-model="curTagName"
@@ -284,14 +282,13 @@ defineExpose({
       >
         <template #prepend>{{ t('style.name') }}</template>
       </el-input>
-    </el-dialog>
+    </common-dialog>
 
-    <el-dialog
+    <common-dialog
         :title="t('style.delete.title')"
-        v-model="deleteConfirm"
+        :visible="deleteConfirm"
         width="400px"
-        class="deleteConfirm commonDialog"
-        align-center
+        class="deleteConfirm"
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
@@ -305,8 +302,8 @@ defineExpose({
         <el-button @click="deleteItem(deleteTagName)">{{ t('common.confirm') }}</el-button>
         <el-button type="primary" @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
       </template>
-    </el-dialog>
-  </el-dialog>
+    </common-dialog>
+  </common-dialog>
 
 </template>
 
@@ -316,8 +313,8 @@ defineExpose({
     height: calc(20% - 36px);
     border: 2px solid #dddddd;
     margin: 4px 0;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
     padding: 8px 12px;
     overflow: auto;
 
@@ -328,6 +325,7 @@ defineExpose({
       cursor: pointer;
       height: unset;
       user-select: none;
+      border-radius: 16px;
       border: 2px solid #ffffff;
 
       &:hover {
@@ -382,6 +380,7 @@ defineExpose({
 
   .globeStyleInput {
     height: 80%;
+    margin-top: 12px;
     display: block !important;
   }
 
@@ -393,19 +392,18 @@ defineExpose({
     }
   }
 
-  .editTagDialog {
-    height: 140px;
-
-    .el-dialog__body {
-      padding: 16px;
-      height: calc(100% - 80px);
-      max-height: calc(100% - 80px);
-    }
-  }
-
   .deleteConfirm {
     height: 200px;
   }
 }
 
+.editTagDialog {
+  height: 140px !important;
+
+  .el-dialog__body {
+    padding: 16px !important;
+    height: calc(100% - 80px) !important;
+    max-height: calc(100% - 80px) !important;
+  }
+}
 </style>

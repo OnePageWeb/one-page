@@ -5,6 +5,7 @@ import {Close, Plus, Tools} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
+import CommonDialog from "@/items/commonDialog.vue"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -217,14 +218,11 @@ defineExpose({
     </div>
 
     <!-- 编辑搜索引擎弹窗 -->
-    <el-dialog
-        class="commonDialog"
-        v-model="dialogVisible"
+    <common-dialog
+        :visible="dialogVisible"
         :title="t('component.search.edit.title')"
         width="60%"
-        align-center
-        :close-on-press-escape="false"
-        destroy-on-close
+        @closed="dialogVisible = false"
     >
       <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">
         <div class="appendContainer">
@@ -273,7 +271,7 @@ defineExpose({
           </el-button>
         </div>
       </template>
-    </el-dialog>
+    </common-dialog>
   </div>
 </template>
 
@@ -348,7 +346,7 @@ defineExpose({
           border-radius: 0 120px 120px 0;
 
           &:hover, &:focus {
-            box-shadow: inset 0 0 8px var(--el-color-primary);
+            box-shadow: inset 0 0 14px rgba(80, 80, 80, 0.5);
           }
         }
       }
@@ -379,7 +377,9 @@ defineExpose({
     width: 200px;
     border-radius: 48px 0 0 48px !important;
   }
+}
 
+.commonDialog {
   .searchForm {
 
     .appendContainer {
@@ -471,5 +471,11 @@ defineExpose({
 
   }
 
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
 }
 </style>
