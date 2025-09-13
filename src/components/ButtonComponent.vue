@@ -176,6 +176,7 @@ defineExpose({
     }
 
     .functionOnFocus {
+      display: none;
       width: 100%;
       height: 100%;
       opacity: 1;
@@ -197,7 +198,7 @@ defineExpose({
     width: 0;
     height: 100%;
     opacity: 0;
-    display: flex;
+    display: none;
     flex-direction: column;
     pointer-events: none;
 

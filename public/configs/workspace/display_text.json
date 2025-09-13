@@ -1,14 +1,17 @@
 {
   "globalStyle": {
-    "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\n\nbody {\n  margin: 0;\n\n  /* 背景渐变 */\n  background: radial-gradient(circle at center, #343496 0%, #372727 100%);\n  font-family: \"Segoe UI\", Arial, sans-serif;\n}\n\n/* 动态流光 */\nbody::before {\n  content: \"\";\n  position: absolute;\n  top: -50%; left: -50%;\n  width: 200%; height: 200%;\n  background: conic-gradient(from 0deg, #0ff, #7928ca, #2af598, #009efd, #0ff);\n  opacity: 0.5;\n  animation: flowRotate 30s linear infinite;\n  filter: blur(150px);\n}\n\n/* 流光旋转 */\n@keyframes flowRotate {\n  from { transform: rotate(0deg); }\n  to   { transform: rotate(360deg); }\n}\n",
+    "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\n\n",
     "globalStyle-tag-文本框边框": ".textContent {\n  border: 2px dashed white;\n  height: calc(100% - 4px);\n  width: calc(100% - 4px);\n}",
+    "globalStyle-tag-背景": "body {\n  margin: 0;\n  min-height: 100vh;\n  /* 基础渐变背景 */\n  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);\n  /* 防止背景滚动时重复 */\n  background-attachment: fixed;\n  overflow-x: hidden;\n  position: relative;\n}\n\n/* 动态几何图形装饰 */\nbody::before,\nbody::after,\nbody .bg-shape {\n  content: '';\n  position: absolute;\n  border-radius: 50%;\n  filter: blur(80px);\n  opacity: 0.6;\n  animation: float 15s infinite ease-in-out;\n}\n\n/* 大型紫色光晕 */\nbody::before {\n  width: 600px;\n  height: 600px;\n  background: #9d50bb;\n  top: -300px;\n  left: -100px;\n  animation-delay: 0s;\n}\n\n/* 蓝色光晕 */\nbody::after {\n  width: 500px;\n  height: 500px;\n  background: #6e48aa;\n  bottom: 250px;\n  right: 150px;\n  animation-delay: 2s;\n}\n\n/* 粉色光晕 */\nbody .bg-shape {\n  width: 400px;\n  height: 400px;\n  background: #ff5ead;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  animation-delay: 4s;\n}\n\n/* 浮动动画 */\n@keyframes float {\n  0%, 100% {\n    transform: translate(0, 0) rotate(0deg);\n  }\n  25% {\n    transform: translate(20px, -30px) rotate(5deg);\n  }\n  50% {\n    transform: translate(-10px, 20px) rotate(0deg);\n  }\n  75% {\n    transform: translate(-30px, 10px) rotate(-5deg);\n  }\n}\n\n/* 网格线条装饰 */\nbody {\n  background: #272727;\n}",
     "globalStyle-tags": [
       "默认",
-      "文本框边框"
+      "文本框边框",
+      "背景"
     ],
     "globalStyle-selectTags": [
       "默认",
-      "文本框边框"
+      "文本框边框",
+      "背景"
     ]
   },
   "layout": [
@@ -102,7 +105,9 @@
     }
   ],
   "configLock": false,
-  "configUrl": null,
+  "configUrl": "/configs/display_text.json",
+  "cellW": "48",
+  "cellH": "50%c",
   "components": [
     {
       "id": "4534b8df58f0-445d-b18a-32cfec047a5b",

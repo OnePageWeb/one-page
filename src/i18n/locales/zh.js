@@ -159,6 +159,36 @@ export default {
     lockUrl: '配置URL锁定，开启左侧同步后会在页面加载时自动同步配置地址参数',
     lock: '同步开启',
     unlock: '关闭同步',
+    gridstack: {
+      title: '布局设置',
+      reload: {
+        title: '是否重载页面',
+        desc: '重载页面以应用布局设置？'
+      },
+      columns: '列数',
+      width: '宽度',
+      widthMode: {
+        name: '宽度模式',
+        auto: '自动',
+        autoDesc: '根据窗口长度与列数自动计算格子宽度',
+        percentage: '百分比',
+        percentageDesc: '格子宽度等于窗口长度的百分比',
+        static: '固定值',
+        staticDesc: '手动定义格子的宽度',
+      },
+      widthParam: '宽度参数',
+      height: '高度',
+      heightMode: {
+        name: '高度模式',
+        window: '相对窗口',
+        windowDesc: '格子高度等于窗口高度的百分比',
+        cellWidth: '相对格子宽度',
+        cellWidthDesc: '格子高度等于格子自身宽度的百分比',
+        static: '固定值',
+        staticDesc: '手动定义格子的高度',
+      },
+      heightParam: '高度参数',
+    },
   },
   success: {
     add: '添加成功',

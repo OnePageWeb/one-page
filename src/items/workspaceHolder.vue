@@ -203,6 +203,10 @@ function deleteItem(workspace: string) {
     padding: 8px 16px;
     cursor: pointer;
     height: unset;
+
+    &:hover {
+      scale: 1.1;
+    }
   }
 
   .workspaceName {

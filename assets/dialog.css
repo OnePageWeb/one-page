@@ -64,6 +64,26 @@
     }
   }
 
+  .el-form {
+    .el-form-item__label {
+      border-left: 8px solid rgba(255, 162, 23, 0.5);
+      padding-left: 8px;
+      height: 22px;
+      line-height: 22px;
+      margin-bottom: 4px;
+    }
+
+    .el-form-item__label {
+      background-color: #eaf5ff;
+    }
+
+    .el-form-item {
+      padding: 8px;
+      margin-bottom: 0;
+    }
+
+  }
+
   .el-input {
     .el-input__wrapper {
       background-color: var(--background-opacity);

@@ -101,7 +101,7 @@ defineExpose({
 <template>
   <div class="inputContent">
     <div class="textContainer">
-      <div class="ioContainer">
+      <div :class="['ioContainer', isEditing ? 'ioContainerHidden' : '']">
         <el-input
             v-model="inputText"
             ref="input"
@@ -251,6 +251,17 @@ defineExpose({
       }
     }
 
+    .ioContainerHidden {
+      padding: 0;
+      width: 0;
+      overflow: hidden;
+
+      .executeIcon {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
     .executeIcon, .copyIcon, .clearIcon {
       border-radius: 18px;
       padding: 4px;
@@ -261,6 +272,7 @@ defineExpose({
       cursor: pointer;
       z-index: 1;
       position: absolute;
+      pointer-events: all;
 
       &:hover {
         scale: 1.4;

@@ -159,6 +159,36 @@ export default {
     lockUrl: 'Configure URL lock. After enabling left-side synchronization, the configuration address parameters will be automatically synchronized when the page loads.',
     lock: 'Enable',
     unlock: 'Disable',
+    gridstack: {
+      title: 'Layout Settings',
+      reload: {
+        title: 'Whether to reload the page',
+        desc: 'Reload the page to apply layout settings?'
+      },
+      columns: 'Number of Columns',
+      width: 'Width',
+      widthMode: {
+        name: 'Width Mode',
+        auto: 'Auto',
+        autoDesc: 'Automatically calculate grid width based on window length and number of columns',
+        percentage: 'Percentage',
+        percentageDesc: 'Grid width is equal to the percentage of window length',
+        static: 'Fixed Value',
+        staticDesc: 'Manually define grid width',
+      },
+      widthParam: 'Width Parameter',
+      height: 'Height',
+      heightMode: {
+        name: 'Height Mode',
+        window: 'Relative to Window',
+        windowDesc: 'Grid height is equal to the percentage of window height',
+        cellWidth: 'Relative to Grid Width',
+        cellWidthDesc: 'Grid height is equal to the percentage of its own width',
+        static: 'Fixed Value',
+        staticDesc: 'Manually define grid height',
+      },
+      heightParam: 'Height Parameter',
+    },
   },
   success: {
     add: 'Add successful',
