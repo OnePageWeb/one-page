@@ -157,7 +157,7 @@ const calcCellSize = () => {
    - 纯数字+百分比（48:10%）表示单个格子有当前窗口宽度的10%，并排列48个格子
    - 纯数字+宽度值（48:100px）表示单个格子的宽度是100px，排列48个格子
    */
-  const cellW = loadData('cellW')
+  const cellW = loadData('cellW') || '48'
   const wSplit = cellW.split(':', 2)
   const columns = Number(wSplit[0])
   let cellWNum
@@ -197,7 +197,7 @@ const calcCellSize = () => {
    - 百分比c（100%c）表示基于格子宽度，高度是宽度的100%
    - 高度值（100px）表示格子高度指定100px
    */
-  let cellH = loadData('cellH')
+  let cellH = loadData('cellH') || '50%c'
   const hSplit = cellH.split('%', 2)
   const cellHNum = Number(hSplit[0])
   let cellHMode
@@ -268,13 +268,13 @@ defineExpose({
       </el-form-item>
       <el-form-item :label="t('config.gridstack.widthMode.name')" prop="widthMode">
         <el-radio-group v-model="form.widthMode" @change="onWidthModeChanged">
-          <el-tooltip :content="t('config.gridstack.widthMode.autoDesc')" placement="top">
+          <el-tooltip :content="t('config.gridstack.widthMode.autoDesc')" placement="top" :hide-after="10" :enterable="false">
             <el-radio-button :label="t('config.gridstack.widthMode.auto')" value="auto"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.widthMode.percentageDesc')" placement="top">
+          <el-tooltip :content="t('config.gridstack.widthMode.percentageDesc')" placement="top" :hide-after="10" :enterable="false">
             <el-radio-button :label="t('config.gridstack.widthMode.percentage')" value="percent"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.widthMode.staticDesc')" placement="top">
+          <el-tooltip :content="t('config.gridstack.widthMode.staticDesc')" placement="top" :hide-after="10" :enterable="false">
             <el-radio-button :label="t('config.gridstack.widthMode.static')" value="static"/>
           </el-tooltip>
         </el-radio-group>
@@ -313,13 +313,13 @@ defineExpose({
       <div class="formTitle">{{ t('config.gridstack.height') }}</div>
       <el-form-item :label="t('config.gridstack.heightMode.name')" prop="heightMode">
         <el-radio-group v-model="form.heightMode" @change="onHeightModeChanged">
-          <el-tooltip :content="t('config.gridstack.heightMode.windowDesc')" placement="top">
+          <el-tooltip :content="t('config.gridstack.heightMode.windowDesc')" placement="top" :hide-after="10" :enterable="false">
             <el-radio-button :label="t('config.gridstack.heightMode.window')" value="window"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.heightMode.cellWidthDesc')" placement="top">
+          <el-tooltip :content="t('config.gridstack.heightMode.cellWidthDesc')" placement="top" :hide-after="10" :enterable="false">
             <el-radio-button :label="t('config.gridstack.heightMode.cellWidth')" value="cellWidth"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.heightMode.staticDesc')" placement="top">
+          <el-tooltip :content="t('config.gridstack.heightMode.staticDesc')" placement="top" :hide-after="10" :enterable="false">
             <el-radio-button :label="t('config.gridstack.heightMode.static')" value="static"/>
           </el-tooltip>
         </el-radio-group>

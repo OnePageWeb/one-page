@@ -1,0 +1,503 @@
+{
+  "globalStyle": {
+    "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\n.linkItem .el-text {\n    color: #efefef;\n}",
+    "globalStyle-tag-背景图": "body {\n  background-image: url('./imgs/starter/background_spring.png');\n}",
+    "globalStyle-tag-标题": ".title {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 8px;\n  color: white;\n  font-weight: bold;\n  font-size: 26px;\n  background-color: #00000014;\n  backdrop-filter: blur(1px);\n  height: 100%;\n}",
+    "globalStyle-tag-背景样式": "body {\n  margin: 0;\n  height: 100vh;\n  background: #212121;\n  overflow: hidden;\n  position: relative;\n}\n\n/* 扫描线伪元素 */\nbody::before {\n  content: \"\";\n  position: absolute;\n  top: -10%;\n  left: 0;\n  width: 100%;\n  height: 20%; /* 扫描线高度 */\n  background: linear-gradient(to bottom, #ffffff00, #ffffff1a, #ffffff2a, #ffffff3a);\n  animation: scan 10s linear infinite;\n}\n\n/* 扫描动画 */\n@keyframes scan {\n  0%   { top: -10%; }\n  100% { top: 100%; }\n}\n",
+    "globalStyle-tags": [
+      "默认",
+      "背景图",
+      "标题",
+      "背景样式"
+    ],
+    "globalStyle-selectTags": [
+      "默认",
+      "标题",
+      "背景样式"
+    ]
+  },
+  "layout": [
+    {
+      "type": "html",
+      "id": "ff2f40f96afe-4bc3-b908-ff5f406a97bd",
+      "x": 0,
+      "y": 0,
+      "w": 7,
+      "h": 5
+    },
+    {
+      "type": "text",
+      "id": "64128c920997-416f-87f6-d4c18f9ac29f",
+      "x": 17,
+      "y": 1,
+      "w": 14,
+      "h": 3
+    },
+    {
+      "type": "record",
+      "id": "3ec2a0783588-430d-9b7d-5441f57ff0d6",
+      "x": 9,
+      "y": 7,
+      "w": 12,
+      "h": 7
+    },
+    {
+      "type": "record",
+      "id": "451e227f238a-4b05-91ba-39529b9fc83e",
+      "x": 30,
+      "y": 7,
+      "w": 12,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "10ac39d4c087-4e4c-93cd-0312cc325c33",
+      "x": 4,
+      "y": 11,
+      "w": 4,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "ebd092591571-48c5-95b1-d885962a0fb3",
+      "x": 25,
+      "y": 11,
+      "w": 4,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "1eab55bf628c-4522-94fa-68001093154c",
+      "x": 9,
+      "y": 14,
+      "w": 12,
+      "h": 17
+    },
+    {
+      "type": "text",
+      "id": "9de94803b0be-4ab0-b7fa-885184c32560",
+      "x": 30,
+      "y": 14,
+      "w": 15,
+      "h": 17
+    },
+    {
+      "type": "text",
+      "id": "09d95f68a35c-47b2-871c-08eabb318dfb",
+      "x": 2,
+      "y": 32,
+      "w": 44,
+      "h": 1
+    },
+    {
+      "type": "record",
+      "id": "ed65c3ab6eeb-4f25-a0b1-97cb327bc352",
+      "x": 9,
+      "y": 34,
+      "w": 12,
+      "h": 7
+    },
+    {
+      "type": "record",
+      "id": "e62246570820-41eb-8dd6-f8deb4e7a700",
+      "x": 30,
+      "y": 34,
+      "w": 12,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "408d17d6cbc0-48a3-a52a-ff8975bb82b4",
+      "x": 4,
+      "y": 38,
+      "w": 4,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "e5e012b6c7ba-40a4-8929-d4baf537f4fe",
+      "x": 25,
+      "y": 38,
+      "w": 4,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "ca829b66e7c7-4f70-afa4-c5ca03644a7a",
+      "x": 9,
+      "y": 41,
+      "w": 12,
+      "h": 19
+    },
+    {
+      "type": "text",
+      "id": "9f7997435e20-460d-aede-5842b077e9ec",
+      "x": 30,
+      "y": 41,
+      "w": 15,
+      "h": 19
+    },
+    {
+      "type": "text",
+      "id": "2fb15c036790-4ddf-b3f4-a3641daf987f",
+      "x": 2,
+      "y": 62,
+      "w": 44,
+      "h": 1
+    },
+    {
+      "type": "text",
+      "id": "0fe70fdfbd16-4faa-bd0e-26463333f9d1",
+      "x": 17,
+      "y": 65,
+      "w": 14,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "df57d6c0d8c4-40bb-97bb-5a13ea0cc3b6",
+      "x": 25,
+      "y": 69,
+      "w": 17,
+      "h": 25
+    },
+    {
+      "type": "record",
+      "id": "e089266ebcee-4f18-a28c-bbdaf404e7da",
+      "x": 10,
+      "y": 72,
+      "w": 12,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "f5ea4ecd255f-49e6-9682-150a2d8cb9ee",
+      "x": 10,
+      "y": 79,
+      "w": 12,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "a3a67bc79c66-411e-91ef-623dd302e476",
+      "x": 10,
+      "y": 82,
+      "w": 12,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "1cfb0fc7919d-42b0-b529-e8e509f0afae",
+      "x": 2,
+      "y": 95,
+      "w": 44,
+      "h": 1
+    },
+    {
+      "type": "text",
+      "id": "9b3b81ff39db-46a3-ac4a-a5f6c5646e95",
+      "x": 17,
+      "y": 98,
+      "w": 14,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "44240a1028b4-4d0d-82fc-cc987b8ca111",
+      "x": 25,
+      "y": 102,
+      "w": 17,
+      "h": 25
+    },
+    {
+      "type": "record",
+      "id": "8c48bb2fc688-455d-96ec-5a682fc58d7b",
+      "x": 3,
+      "y": 104,
+      "w": 19,
+      "h": 10
+    },
+    {
+      "type": "text",
+      "id": "2037447db812-445f-9ee9-99e976506e9a",
+      "x": 2,
+      "y": 128,
+      "w": 44,
+      "h": 1
+    },
+    {
+      "type": "text",
+      "id": "f2e82853876b-490e-818f-2128850e8ee9",
+      "x": 17,
+      "y": 131,
+      "w": 14,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "e3d073138bc2-49c0-9de0-14e04f7b32b1",
+      "x": 6,
+      "y": 136,
+      "w": 12,
+      "h": 4
+    },
+    {
+      "type": "record",
+      "id": "2a8ed75e5e37-4f76-a50d-8a9bdc63bae4",
+      "x": 26,
+      "y": 139,
+      "w": 11,
+      "h": 7
+    },
+    {
+      "type": "text",
+      "id": "77ec95e81f46-43ba-8a78-a9b01347020b",
+      "x": 6,
+      "y": 140,
+      "w": 12,
+      "h": 4
+    },
+    {
+      "type": "record",
+      "id": "4ff8037c9638-47e2-bb52-4c442260a4c3",
+      "x": 6,
+      "y": 146,
+      "w": 12,
+      "h": 11
+    },
+    {
+      "type": "record",
+      "id": "ab03962a88f5-4b00-88b4-42909ca8c76e",
+      "x": 26,
+      "y": 147,
+      "w": 18,
+      "h": 8
+    },
+    {
+      "type": "text",
+      "id": "34e319f0b3b3-40c8-9eb6-7f40e02c145b",
+      "x": 4,
+      "y": 158,
+      "w": 40,
+      "h": 3
+    },
+    {
+      "type": "text",
+      "id": "a8f244a5c67f-4258-bd10-f0524bab6e30",
+      "x": 17,
+      "y": 163,
+      "w": 14,
+      "h": 3
+    }
+  ],
+  "configLock": false,
+  "configUrl": "/configs/display_text.json",
+  "cellW": "48",
+  "cellH": "50%c",
+  "components": [
+    {
+      "id": "ff2f40f96afe-4bc3-b908-ff5f406a97bd",
+      "style": null,
+      "data": "{\"text\":\"<!DOCTYPE html>\\n<html lang=\\\"zh-CN\\\">\\n<head>\\n    <meta charset=\\\"UTF-8\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\\n    <title>高精度纯净时钟</title>\\n    <style>\\n        * {\\n            margin: 0;\\n            padding: 0;\\n            box-sizing: border-box;\\n        }\\n        \\n        body, html {\\n            height: 100%;\\n            display: flex;\\n            justify-content: center;\\n            align-items: center;\\n        }\\n        \\n        .clock-container {\\n            width: 100%;\\n            text-align: center;\\n        }\\n        \\n        .time-display {\\n            color: @{时间颜色:输入颜色代码?white};\\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\\n            font-size: clamp(4rem, 14vw, 10rem);\\n            font-weight: 300;\\n            transition: transform 0.3s ease;\\n        }\\n        \\n        .clock-container:hover .time-display {\\n            transform: scale(1.1);\\n        }\\n        \\n        .time-separator {\\n            display: inline-block;\\n            animation: blink 1s step-end infinite;\\n        }\\n        \\n        @keyframes blink {\\n            from, to { opacity: 1; }\\n            50% { opacity: 0.5; }\\n        }\\n    </style>\\n</head>\\n<body>\\n    <div class=\\\"clock-container\\\">\\n        <div id=\\\"clock\\\" class=\\\"time-display\\\">\\n            <span id=\\\"hours\\\">00</span>\\n            <span class=\\\"time-separator\\\">:</span>\\n            <span id=\\\"minutes\\\">00</span>\\n            <span class=\\\"time-separator\\\">:</span>\\n            <span id=\\\"seconds\\\">00</span>\\n        </div>\\n    </div>\\n\\n    <script>\\n        // 高精度时间更新函数，减少定时器误差\\n        function updateClock() {\\n            const now = new Date();\\n            const hours = String(now.getHours()).padStart(2, '0');\\n            const minutes = String(now.getMinutes()).padStart(2, '0');\\n            const seconds = String(now.getSeconds()).padStart(2, '0');\\n            \\n            document.getElementById('hours').textContent = hours;\\n            document.getElementById('minutes').textContent = minutes;\\n            document.getElementById('seconds').textContent = seconds;\\n            \\n            // 计算下一次更新的精确时间点（下一毫秒）\\n            const nextUpdate = 1000 - now.getMilliseconds();\\n            setTimeout(updateClock, nextUpdate);\\n        }\\n        \\n        // 立即执行一次，然后开始精确更新\\n        updateClock();\\n    </script>\\n</body>\\n</html>\\n    \",\"params\":[{\"name\":\"时间颜色\",\"desc\":\"输入颜色代码\",\"value\":\"white\"}]}",
+      "type": "html"
+    },
+    {
+      "id": "64128c920997-416f-87f6-d4c18f9ac29f",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>基础分享 - 文件分享</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "3ec2a0783588-430d-9b7d-5441f57ff0d6",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 按下ALT + E开启编辑模式\",\"params\":[]},{\"text\":\"2. 将鼠标移到组件的右上角，展开操作按钮\\n\",\"params\":[]},{\"text\":\"3. 点击导出按钮生成组件配置文件\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "451e227f238a-4b05-91ba-39529b9fc83e",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 按下ALT + D开启操作栏\\n\",\"params\":[]},{\"text\":\"2. 点击【添加格子】以进入组件仓库\",\"params\":[]},{\"text\":\"3. 将导出的文件拖拽到组件框下方的编辑框中\\n\",\"params\":[]},{\"text\":\"4. 点击【添加】按钮即可完成导入\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "10ac39d4c087-4e4c-93cd-0312cc325c33",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>@{子标题}</div>\",\"params\":[{\"name\":\"子标题\",\"desc\":\"\",\"value\":\"1. 组件导出\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "ebd092591571-48c5-95b1-d885962a0fb3",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>@{子标题}</div>\",\"params\":[{\"name\":\"子标题\",\"desc\":\"\",\"value\":\"2. 组件导入\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "1eab55bf628c-4522-94fa-68001093154c",
+      "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/help/share/clickExportComponent.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "9de94803b0be-4ab0-b7fa-885184c32560",
+      "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/help/share/dragFileToDialog.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "09d95f68a35c-47b2-871c-08eabb318dfb",
+      "style": ".result {\n  border-top: 4px solid #ffffff52;\n}",
+      "data": null,
+      "type": "text"
+    },
+    {
+      "id": "ed65c3ab6eeb-4f25-a0b1-97cb327bc352",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 按下 ALT + D 开启操作栏\",\"params\":[]},{\"text\":\"2. 点击【加载配置】按钮打开配置数据窗口\\n\",\"params\":[]},{\"text\":\"3. 点击导出按钮生成组件配置文件\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "e62246570820-41eb-8dd6-f8deb4e7a700",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 按下 ALT + D 开启操作栏\",\"params\":[]},{\"text\":\"2. 点击【加载配置】按钮打开配置数据窗口\\n\",\"params\":[]},{\"text\":\"3. 将导出的文件拖拽到中间的输入框中\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "408d17d6cbc0-48a3-a52a-ff8975bb82b4",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>@{子标题}</div>\",\"params\":[{\"name\":\"子标题\",\"desc\":\"\",\"value\":\"1. 配置导出\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "e5e012b6c7ba-40a4-8929-d4baf537f4fe",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>@{子标题}</div>\",\"params\":[{\"name\":\"子标题\",\"desc\":\"\",\"value\":\"2. 配置导入\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "ca829b66e7c7-4f70-afa4-c5ca03644a7a",
+      "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/help/share/exportWorkspaceData.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "9f7997435e20-460d-aede-5842b077e9ec",
+      "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/help/share/dragConfigFileToDialog.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "2fb15c036790-4ddf-b3f4-a3641daf987f",
+      "style": ".result {\n  border-top: 4px solid #ffffff52;\n}",
+      "data": null,
+      "type": "text"
+    },
+    {
+      "id": "0fe70fdfbd16-4faa-bd0e-26463333f9d1",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>更好的接收模式</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "df57d6c0d8c4-40bb-97bb-5a13ea0cc3b6",
+      "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/help/share/receiveMode.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "e089266ebcee-4f18-a28c-bbdaf404e7da",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 按下 ALT + F 进入【接收模式】\",\"params\":[]},{\"text\":\"2. 将任何配置文件拖拽至其中即可自动识别并加载\",\"params\":[]},{\"text\":\"3. 完成接受后需要手动按下 ALT + F 来退出接收模式\\n\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "f5ea4ecd255f-49e6-9682-150a2d8cb9ee",
+      "style": ".result {\n  color: white;\n  font-weight: bold;\n  padding: 8px 8px;\n  background: #2d2d2dbf;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(100% - 16px);\n  height: calc(100% - 16px);\n  backdrop-filter: blur(4px);\n}",
+      "data": "{\"text\":\"接收模式比进入配置弹窗中拖拽文件更加方便。\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "a3a67bc79c66-411e-91ef-623dd302e476",
+      "style": ".result {\n  color: white;\n  font-weight: bold;\n  padding: 8px 8px;\n  background: #2d2d2dbf;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(100% - 16px);\n  height: calc(100% - 16px);\n  backdrop-filter: blur(4px);\n}",
+      "data": "{\"text\":\"接收模式更强大的一点在于跨页面分享\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "1cfb0fc7919d-42b0-b529-e8e509f0afae",
+      "style": ".result {\n  border-top: 4px solid #ffffff52;\n}",
+      "data": null,
+      "type": "text"
+    },
+    {
+      "id": "9b3b81ff39db-46a3-ac4a-a5f6c5646e95",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>跨页面分享 - 接收模式</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "44240a1028b4-4d0d-82fc-cc987b8ca111",
+      "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/help/share/transferButton.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "8c48bb2fc688-455d-96ec-5a682fc58d7b",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 接收页面按下 ALT + F 进入【接收模式】等待接收\",\"params\":[]},{\"text\":\"2. 分享页面按下 ALT + E进入编辑模式\",\"params\":[]},{\"text\":\"3. 分享页面用鼠标拖拽组件上的发送按钮到接收页面即可完成组件分享\",\"params\":[]},{\"text\":\"4. 操作栏的【加载配置】弹窗中同样有一个发送按钮，是用来分享整个页面配置的哦\",\"params\":[]},{\"text\":\"5. 发送按钮同样可以拖拽到文本框中完成粘贴，方便手动处理数据\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "2037447db812-445f-9ee9-99e976506e9a",
+      "style": ".result {\n  border-top: 4px solid #ffffff52;\n}",
+      "data": null,
+      "type": "text"
+    },
+    {
+      "id": "f2e82853876b-490e-818f-2128850e8ee9",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>在线分享与部分地址栏参数</div>\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "e3d073138bc2-49c0-9de0-14e04f7b32b1",
+      "style": ".result {\n  color: white;\n  font-weight: bold;\n  padding: 8px 8px;\n  background: #2d2d2dbf;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(100% - 16px);\n  height: calc(100% - 16px);\n  backdrop-filter: blur(4px);\n}",
+      "data": "{\"text\":\"一页采用了“平台”+ “配置”的模式，这表示，使用者只需要保留配置文件，即可在任何部署的【一页】站点上使用。\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "2a8ed75e5e37-4f76-a50d-8a9bdc63bae4",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"参数说明\\n\",\"params\":[]},{\"text\":\"config - 配置文件的网络地址\",\"params\":[]},{\"text\":\"workspace - 指定配置文件加载到哪个工作区\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "77ec95e81f46-43ba-8a78-a9b01347020b",
+      "style": ".result {\n  color: white;\n  font-weight: bold;\n  padding: 8px 8px;\n  background: #2d2d2dbf;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(100% - 16px);\n  height: calc(100% - 16px);\n  backdrop-filter: blur(4px);\n}",
+      "data": "{\"text\":\"除了基本的文件分享外，【一页】还支持了网络加载配置文件的方式，这使得分享者可以仅需要一个链接地址即可完成分享。\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "4ff8037c9638-47e2-bb52-4c442260a4c3",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"1. 导出需要分享的页面文件（目前仅支持页面分享）\",\"params\":[]},{\"text\":\"2. 将文件上传至允许跨域访问的服务器，例如Github\",\"params\":[]},{\"text\":\"3. 复制配置文件的下载地址或访问地址\",\"params\":[]},{\"text\":\"4. 选择任意一个【一页】站点，例如本站点\",\"params\":[]},{\"text\":\"5. 使用本站点的地址，并添加参数config，值即是配置文件的地址\",\"params\":[]},{\"text\":\"6. 例如下面这个地址\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "ab03962a88f5-4b00-88b4-42909ca8c76e",
+      "style": null,
+      "data": "{\"list\":[{\"text\":\"！！！注意！！！\",\"params\":[]},{\"text\":\"工作区指定temp是为了避免与使用者已有的工作区冲突\\n\",\"params\":[]},{\"text\":\"github上的文件由于DNS污染，可能导致无法打开，可能需要加速器帮助\\n\",\"params\":[]}],\"dbClick\":0}",
+      "type": "record"
+    },
+    {
+      "id": "34e319f0b3b3-40c8-9eb6-7f40e02c145b",
+      "style": ".result {\n  color: white;\n  font-weight: bold;\n  padding: 8px 8px;\n  background: #2d2d2dbf;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(100% - 16px);\n  height: calc(100% - 16px);\n  backdrop-filter: blur(4px);\n}",
+      "data": "{\"text\":\"http://another-homepage.pages.dev/?config=https://github.com/Verlif/one/blob/main/configs/display_text.json&workspace=temp\",\"params\":[]}",
+      "type": "text"
+    },
+    {
+      "id": "a8f244a5c67f-4258-bd10-f0524bab6e30",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>基础分享完成</div>\",\"params\":[]}",
+      "type": "text"
+    }
+  ]
+}

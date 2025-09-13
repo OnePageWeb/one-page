@@ -222,7 +222,7 @@
     <!-- 组件库 -->
     <readyComponent ref="readyComponentRef" @addComponent="addComponent"/>
 
-    <!-- 组件库 -->
+    <!-- 布局编辑 -->
     <grid-stack-config ref="gridStackConfigRef"/>
 
     <!-- 全局样式弹窗 -->
@@ -357,7 +357,7 @@ import {
   saveData,
   saveDataDirect,
 } from "@/js/data.js"
-import {setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
@@ -388,7 +388,7 @@ const components = ref([])
 for (let item of itemType) {
   item.label = t('itemType.' + item.value + '.name')
   item.desc = t('itemType.' + item.value + '.desc')
-  item.img = '/one/imgs/components/' + item.value + '.png'
+  item.img = './imgs/components/' + item.value + '.png'
 }
 components.value = itemType
 
@@ -442,14 +442,7 @@ function mouseDown(event) {
 
 const globalStyle = ref(null)
 
-const parseUrlParams = async (urlParams) => {
-  // 设定打开的工作区
-  const workspace = urlParams.get('workspace')
-  if (workspace) {
-    setWorkspace(workspace)
-  }
-  removeParams('workspace')
-
+const loadGridStackParam = async (urlParams) => {
   const initParam = (key, defaultValue) => {
     let value = urlParams.get(key)
     if (value === null || value === undefined) {
@@ -464,7 +457,9 @@ const parseUrlParams = async (urlParams) => {
   removeParams('cellW')
   initParam('cellH', '50%c')
   removeParams('cellH')
+}
 
+const loadUrlLock = (urlParams) => {
   // 初始化配置
   const urlLock = urlParams.get('lock')
   if (urlLock === 'true') {
@@ -473,6 +468,7 @@ const parseUrlParams = async (urlParams) => {
     configUrlLock.value = (loadData('lock') === 'true')
   }
   saveUrlLock()
+  removeParams('lock')
 }
 
 const setGridStackWidth = (width) => {
@@ -480,15 +476,23 @@ const setGridStackWidth = (width) => {
     gridEl.value.style.width = width
   })
 }
+
 // 初始化GridStack
 onMounted(async () => {
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
-  await parseUrlParams(urlParams)
+  // 设定打开的工作区
+  const workspace = urlParams.get('workspace')
+  if (workspace) {
+    setWorkspace(workspace)
+  }
+  removeParams('workspace')
+
   // 跳过刷新后的url同步
   removeDataDirect('skipReload')
 
+  await loadGridStackParam(urlParams)
   const cellSize = gridStackConfigRef.value.calcCellSize()
   setGridStackWidth(cellSize.totalWidth)
 
@@ -507,24 +511,48 @@ onMounted(async () => {
     column: cellSize.columns,
   })
 
-  // 移除config参数
-  removeParams('lock')
   configUrl.value = loadData('configUrl')
   // 不存在同步值时，从url参数加载
   if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
     if (configParam) {
-      info(t('config.loading'))
-      configUrl.value = decodeURIComponent(configParam)
-      if (!loadDataDirect('skipReload')) {
-        await loadConfig(configUrl.value, false)
-        reloadWithoutParams('config')
+      // 如果非临时工作区存在数据，则弹出警告
+      let access = false
+      if (getNowWorkspace() !== TEMP_WORKSPACE && loadData('layout'))  {
+        await ElMessageBox.confirm(
+            t('workspace.recover.desc', [getNowWorkspace()]),
+            t('workspace.recover.title'),
+            {
+              distinguishCancelAndClose: true,
+              confirmButtonText: t('common.confirm'),
+              cancelButtonText: t('common.cancel'),
+            }
+        ).then(() => {
+          access = true
+        }).catch(() => {
+          removeParams('config')
+        })
+      } else {
+        access = true
+      }
+      if (access) {
+        info(t('config.loading'))
+        configUrl.value = decodeURIComponent(configParam)
+        loadUrlLock(urlParams)
+        if (!loadDataDirect('skipReload')) {
+          await loadConfig(configUrl.value, false)
+          reloadWithoutParams('config')
+          return
+        }
+      } else {
+        removeParams('config')
       }
     }
   } else if (configUrlLock.value && !loadDataDirect('skipReload')) {
     info(t('config.loading'))
     await loadConfig(configUrl.value, false)
   }
+  loadUrlLock(urlParams)
 
   // 恢复布局
   const layout = loadData('layout')
@@ -672,7 +700,7 @@ function createItemComponent(type, componentItem) {
           enableEdit: enableEdit,
           enableMove: enableMove,
           ctrl: props.ctrl,
-          transferData: exportComponentData(props.id, type),
+          transferData: () => exportComponentData(props.id, type),
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
           onZoomIn: zoomIn,
@@ -884,11 +912,11 @@ function onZoomInClose() {
 
 // 复制
 function copy(id, type) {
-  const componentData = exportComponentData(id, type)
+  const componentData = exportComponentData(id, type, true)
   addComponent(componentData)
 }
 
-function exportComponentData(id, type) {
+function exportComponentData(id, type, containsXY = false) {
   const idValue = id.value || id
   const componentData = {}
   // 组件配置
@@ -906,6 +934,10 @@ function exportComponentData(id, type) {
     if (node.el.id === idValue) {
       componentData.w = node.w
       componentData.h = node.h
+      if (containsXY) {
+        componentData.x = node.x
+        componentData.y = node.y
+      }
     }
   }
   componentData.type = type.value || type
@@ -1259,11 +1291,8 @@ body {
 .menu-hide {
   height: 0;
   opacity: 0;
+  margin-top: -80px;
   border-bottom: unset;
-
-  * {
-    margin-top: -80px;
-  }
 }
 
 /* 菜单样式结束 */

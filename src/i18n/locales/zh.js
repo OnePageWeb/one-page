@@ -233,6 +233,10 @@ export default {
       content: '是否删除工作区',
       tip: '此工作区下的所有数据将被删除，不可恢复！',
     },
+    recover: {
+      title: '数据覆盖',
+      desc: '当前工作区 {0} 已存在数据，继续加载远端配置会覆盖当前工作区的所有数据，是否继续',
+    }
   },
   placeholder: {
     configInput: '请输入配置URL或拖拽JSON文件到此处',

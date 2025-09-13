@@ -1,6 +1,6 @@
 {
   "globalStyle": {
-    "globalStyle-tag-默认": null,
+    "globalStyle-tag-默认": "null",
     "globalStyle-tag-介绍文字样式": ".textContent {\n  .result {\n    display: flex;\n    flex-direction: column;\n\n    .title {\n      font-size: 24px;\n      font-weight: bold;\n      margin-bottom: 4px;\n      color: white;\n    }\n\n    .desc {\n      color: #e3e3e3;\n      font-size: 16px;\n    }\n  }\n}",
     "globalStyle-tag-图片样式": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
     "globalStyle-tags": [
@@ -191,8 +191,16 @@
       "h": 2
     },
     {
+      "type": "button",
+      "id": "4269ed6c00e9-4553-b501-e9f969f4ac40",
+      "x": 25,
+      "y": 51,
+      "w": 5,
+      "h": 2
+    },
+    {
       "type": "text",
-      "id": "a6da4a407616-444b-9848-5743c476401d",
+      "id": "a25256a9853e-4b30-a577-eeb6e1b91e91",
       "x": 3,
       "y": 53,
       "w": 12,
@@ -200,8 +208,24 @@
     },
     {
       "type": "text",
-      "id": "49e4b94f76c2-4662-ac11-d0b07209e8eb",
+      "id": "a6da4a407616-444b-9848-5743c476401d",
+      "x": 18,
+      "y": 53,
+      "w": 12,
+      "h": 4
+    },
+    {
+      "type": "text",
+      "id": "9dd540b0aecd-4296-b0c2-940d75a13a8e",
       "x": 3,
+      "y": 57,
+      "w": 12,
+      "h": 14
+    },
+    {
+      "type": "text",
+      "id": "49e4b94f76c2-4662-ac11-d0b07209e8eb",
+      "x": 18,
       "y": 57,
       "w": 12,
       "h": 14
@@ -212,7 +236,7 @@
       "x": 22,
       "y": 72,
       "w": 4,
-      "h": 4
+      "h": 2
     }
   ],
   "configLock": false,
@@ -353,15 +377,33 @@
       "type": "button"
     },
     {
-      "id": "a6da4a407616-444b-9848-5743c476401d",
+      "id": "4269ed6c00e9-4553-b501-e9f969f4ac40",
+      "style": ".button {\n  background-color: #ffffff1c !important;\n}",
+      "data": "{\"name\":\"如何分享组件与页面\",\"content\":{\"text\":\"function appendParam(config) {\\n    // 获取当前页面URL\\n    const currentUrl = window.location.href;\\n    // 创建URL对象以便操作参数\\n    const url = new URL(currentUrl);\\n    // 设置或更新workspace参数\\n    url.searchParams.set('config', config);\\n    // 跳转到新URL（刷新页面）\\n    window.location.href = url.toString();\\n}\\n\\nconst url = new URL(window.location.href);\\nconst config = url.origin + url.pathname + '@{样式地址}';\\n\\nappendParam(encodeURIComponent(config));\",\"params\":[{\"name\":\"样式地址\",\"desc\":\"\",\"value\":\"configs/workspace/help_share.json\"}]}}",
+      "type": "button"
+    },
+    {
+      "id": "a25256a9853e-4b30-a577-eeb6e1b91e91",
       "style": null,
       "data": "{\"text\":\"<div class='title'>@{标题}</div>\\n<div class='desc'>@{描述}</div>\",\"params\":[{\"name\":\"标题\",\"desc\":\"\",\"value\":\"网页组件教程\"},{\"name\":\"描述\",\"desc\":\"\",\"value\":\"比格子组件更复杂的网页组件，支持完整的网页代码，让你能够定制出属于自己的功能\"}]}",
       "type": "text"
     },
     {
-      "id": "49e4b94f76c2-4662-ac11-d0b07209e8eb",
+      "id": "a6da4a407616-444b-9848-5743c476401d",
+      "style": null,
+      "data": "{\"text\":\"<div class='title'>@{标题}</div>\\n<div class='desc'>@{描述}</div>\",\"params\":[{\"name\":\"标题\",\"desc\":\"\",\"value\":\"组件与页面数据的分享\"},{\"name\":\"描述\",\"desc\":\"\",\"value\":\"一页提供了多种0成本的页面分享方式，快来试试吧\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "9dd540b0aecd-4296-b0c2-940d75a13a8e",
       "style": null,
       "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/help_use_html.png\"}]}",
+      "type": "text"
+    },
+    {
+      "id": "49e4b94f76c2-4662-ac11-d0b07209e8eb",
+      "style": null,
+      "data": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"./imgs/display/help_share.png\"}]}",
       "type": "text"
     },
     {

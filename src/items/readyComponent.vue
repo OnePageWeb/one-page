@@ -1,22 +1,12 @@
 <script setup>
-import {
-  ElButton,
-  ElDialog,
-  ElIcon, ElImage,
-  ElInput,
-  ElLoading,
-  ElMessage,
-  ElOption,
-  ElPopconfirm,
-  ElPopover,
-  ElSelect
-} from "element-plus"
+import {ElButton, ElIcon, ElImage, ElInput, ElLoading, ElPopconfirm, ElPopover} from "element-plus"
 import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
 import {Close, Search} from "@element-plus/icons-vue"
 import {useI18n} from "vue-i18n"
 import commonDialog from "@/items/commonDialog.vue"
 import {error, success} from "@/js/message.js"
+
 const {t} = useI18n()
 
 const emit = defineEmits(['addComponent'])
@@ -42,7 +32,7 @@ const loadConfigFiles = async () => {
   for (const path in files) {
     try {
       const file = await files[path]()
-      components.value[file.name] = { desc: file.desc, path: path.replace('/public', prefix) }
+      components.value[file.name] = {desc: file.desc, path: path.replace('/public', prefix)}
     } catch (error) {
       console.error(t('error.load'), path, error)
     }
@@ -83,6 +73,7 @@ onMounted(() => {
 })
 
 const filterName = ref('')
+
 async function addComponent(name) {
   const loading = ElLoading.service({
     lock: true,
@@ -131,6 +122,7 @@ function deleteItem(name) {
 }
 
 const configData = ref('')
+
 // 处理文件拖拽
 function handleFileDrop(e) {
   e.preventDefault()
@@ -187,7 +179,7 @@ function handleFileDrop(e) {
               <div class="componentDesc">{{ components[name].desc }}</div>
             </div>
           </template>
-          <el-image :src="'imgs/ready/' + name + '.png'"/>
+          <el-image :src="'./imgs/ready/' + name + '.png'"/>
         </el-popover>
         <div class="componentAreaName">{{ t('component.defined') }}</div>
       </div>
@@ -227,7 +219,7 @@ function handleFileDrop(e) {
             @drop.prevent="handleFileDrop"
             @keydown.enter.ctrl="addComponent"
         />
-        <el-button class="addComponent" type="primary" @click="addComponent(null)">{{t('common.add')}}</el-button>
+        <el-button class="addComponent" type="primary" @click="addComponent(null)">{{ t('common.add') }}</el-button>
       </div>
     </div>
   </common-dialog>

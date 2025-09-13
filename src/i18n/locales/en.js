@@ -233,6 +233,10 @@ export default {
       content: 'Whether to delete the workspace',
       tip: 'All data under this workspace will be deleted and cannot be recovered!',
     },
+    recover: {
+      title: 'Data Overwrite',
+      desc: 'The current workspace {0} already has existing data. Continuing to load the remote configuration will overwrite all data in the current workspace. Proceed?',
+    }
   },
   placeholder: {
     configInput: 'Please enter configuration URL or drag JSON file here',
