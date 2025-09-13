@@ -5,6 +5,7 @@ import {Close, Plus, Tools} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
+import CommonDialog from "@/items/commonDialog.vue"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -217,16 +218,14 @@ defineExpose({
     </div>
 
     <!-- 编辑搜索引擎弹窗 -->
-    <el-dialog
-        class="commonDialog"
-        v-model="dialogVisible"
+    <common-dialog
+        :visible="dialogVisible"
         :title="t('component.search.edit.title')"
         width="60%"
-        align-center
-        :close-on-press-escape="false"
-        destroy-on-close
+        class="searchEditDialog"
+        @closed="dialogVisible = false"
     >
-      <el-form ref="formRef" label-width="100px" label-position="left" class="searchForm">
+      <el-form ref="formRef" label-position="left" class="searchForm">
         <div class="appendContainer">
           <el-form-item :label="t('component.search.edit.prefix')" prop="prefix" class="prefix">
             <el-input v-model="prefix" :placeholder="t('component.search.edit.prefixDesc')"/>
@@ -273,7 +272,7 @@ defineExpose({
           </el-button>
         </div>
       </template>
-    </el-dialog>
+    </common-dialog>
   </div>
 </template>
 
@@ -348,7 +347,7 @@ defineExpose({
           border-radius: 0 120px 120px 0;
 
           &:hover, &:focus {
-            box-shadow: inset 0 0 8px var(--el-color-primary);
+            box-shadow: inset 0 0 14px rgba(80, 80, 80, 0.5);
           }
         }
       }
@@ -379,7 +378,9 @@ defineExpose({
     width: 200px;
     border-radius: 48px 0 0 48px !important;
   }
+}
 
+.searchEditDialog {
   .searchForm {
 
     .appendContainer {
@@ -388,19 +389,29 @@ defineExpose({
       border-bottom: 1px dashed #aaaaaa;
 
       .prefix {
-        width: 45%;
+        width: 49%;
       }
 
       .suffix {
-        width: 45%;
+        width: 49%;
       }
 
       .el-form-item__label {
         border-left: 8px solid #1bc3b3;
+        margin-bottom: 0;
+        border-radius: 4px 4px 0 0;
       }
 
       .el-form-item {
         flex-direction: column;
+      }
+
+      .el-input__wrapper {
+        border-radius: 0 0 4px 4px;
+      }
+
+      .el-input__wrapper {
+        height: 32px;
       }
     }
 
@@ -467,9 +478,30 @@ defineExpose({
         display: block;
         width: 30%;
       }
+
+      .searchUrl, .searchPlaceholder {
+        .el-input__wrapper {
+          border-radius: 0 4px 4px 4px;
+        }
+
+        .el-form-item__label {
+          margin-bottom: 0;
+          border-radius: 4px 4px 0 0;
+        }
+
+        .el-input__wrapper {
+          height: 32px;
+        }
+      }
     }
 
   }
 
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
 }
 </style>

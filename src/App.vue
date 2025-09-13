@@ -12,7 +12,7 @@
         </el-icon>
       </el-tooltip>
       <el-text class="menuTitle" truncated>{{ $t('component.add') }}</el-text>
-      <el-button @click="readyComponent.open()" class="btn" :icon="CirclePlus" plain>{{
+      <el-button @click="readyComponentRef.open()" class="btn" :icon="CirclePlus" plain>{{
           $t('component.add')
         }}
       </el-button>
@@ -22,7 +22,7 @@
             v-for="item in components"
             width="400"
             placement="right-start"
-            popper-class="componentItem"
+            popper-class="componentItemPopover"
             :show-after="200"
             :hide-after="10"
         >
@@ -46,8 +46,14 @@
         </el-popover>
       </el-select>
       <el-text class="menuTitle" truncated>{{ $t('layout.edit') }}</el-text>
-      <el-checkbox v-model="enableMove" :label="$t('layout.enableMove')" border/>
-      <el-checkbox v-model="enableEdit" :label="$t('layout.enableEdit')" border/>
+      <el-button @click="openGridStackConfig" class="btn" :icon="Grid" plain>{{
+          $t('config.gridstack.title')
+        }}
+      </el-button>
+      <div class="modeContainer">
+        <el-checkbox v-model="enableMove" class="modeItem" :label="$t('layout.enableMove')" border/>
+        <el-checkbox v-model="enableEdit" class="modeItem" :label="$t('layout.enableEdit')" border/>
+      </div>
       <el-text class="menuTitle" truncated>{{ $t('style.title') }}</el-text>
       <el-button @click="editGlobalStyle" class="btn" :icon="Picture" plain>{{ $t('style.global') }}</el-button>
       <el-text class="menuTitle" truncated>{{ $t('config.title') }}</el-text>
@@ -72,14 +78,13 @@
     </div>
 
     <!-- 配置加载弹窗 -->
-    <el-dialog
+    <common-dialog
         :title="$t('config.load')"
-        v-model="configLoaderVisible"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
+        :visible="configLoaderVisible"
+        class="globeConfigDialog"
+        @closed="configLoaderVisible = false"
     >
-      <template #header="{ close, titleId, titleClass }">
+      <template #title="{ close, titleId, titleClass }">
         <div class="configLoaderHeader">
           <div :id="titleId" :class="titleClass">{{ $t('config.load') }}</div>
           <el-icon style="margin-left: 8px;cursor: pointer;" @click="configLoaderTipVisible = true">
@@ -99,7 +104,7 @@
             :hide-after="10"
             :enterable="false"
         >
-          <div style="display: flex;gap: 8px;">
+          <div class="syncConfigContainer">
             <el-switch
                 v-model="configUrlLock"
                 @change="saveUrlLock"
@@ -121,7 +126,7 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <el-dialog class="commonDialog" v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
+      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -138,7 +143,7 @@
             <el-button @click="configLoaderTipVisible = false">{{ $t('common.close') }}</el-button>
           </div>
         </template>
-      </el-dialog>
+      </common-dialog>
       <template #footer>
         <el-tooltip
             :content="$t('config.transfer')"
@@ -151,7 +156,7 @@
               draggable="true"
               @dragstart.stop="onConfigTransferStart"
           >
-            <Promotion />
+            <Promotion/>
           </el-icon>
         </el-tooltip>
         <el-button type="primary" @click="downloadConfig">{{ $t('common.download') }}</el-button>
@@ -180,16 +185,14 @@
           </template>
         </el-popconfirm>
       </template>
-    </el-dialog>
+    </common-dialog>
 
     <!-- 组件样式弹窗 -->
-    <el-dialog
-        title="组件样式"
-        v-model="isEditComponentStyle"
-        width="50%"
-        class="configDialog commonDialog"
-        align-center
-        :close-on-press-escape="false"
+    <common-dialog
+        :title="$t('style.component')"
+        :visible="isEditComponentStyle"
+        @opened="onComponentStyleOpened"
+        @closed="isEditComponentStyle = false"
     >
       <css-editor
           class="globeStyleInput"
@@ -201,7 +204,7 @@
       <template #footer>
         <el-button type="primary" @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
       </template>
-    </el-dialog>
+    </common-dialog>
 
     <!-- 组件放大弹窗 -->
     <el-dialog
@@ -217,10 +220,10 @@
     </el-dialog>
 
     <!-- 组件库 -->
-    <readyComponent
-        ref="readyComponent"
-        @addComponent="addComponent"
-    />
+    <readyComponent ref="readyComponentRef" @addComponent="addComponent"/>
+
+    <!-- 布局编辑 -->
+    <grid-stack-config ref="gridStackConfigRef"/>
 
     <!-- 全局样式弹窗 -->
     <globalStyle
@@ -291,6 +294,13 @@
           </el-icon>
           <div class="shortcutKeysItemDesc">{{ $t('shortcut.f') }}</div>
         </div>
+        <div class="shortcutKeysItem">
+          <div class="shortcutKeysItemTitle">~</div>
+          <el-icon>
+            <View/>
+          </el-icon>
+          <div class="shortcutKeysItemDesc">{{ $t('shortcut.~') }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -307,7 +317,7 @@ import {
   ElImage,
   ElInput,
   ElLoading,
-  ElMessage, ElMessageBox,
+  ElMessageBox,
   ElOption,
   ElPopconfirm,
   ElPopover,
@@ -325,14 +335,17 @@ import {fetchWithBase, parseBlobJson, reloadWithoutParams, removeParams} from "@
 import {
   CirclePlus,
   Edit,
+  Grid,
   InfoFilled,
   Monitor,
   Operation,
-  Picture, Promotion,
+  Picture,
+  Promotion,
   Rank,
   RefreshRight,
   Top,
-  UploadFilled
+  UploadFilled,
+  View,
 } from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
@@ -344,7 +357,7 @@ import {
   saveData,
   saveDataDirect,
 } from "@/js/data.js"
-import {setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
@@ -354,8 +367,11 @@ import {itemType} from "@/js/components.js"
 import versionInfo from '@/items/versionInfo.vue'
 
 import {useI18n} from 'vue-i18n'
-import CssEditor from "@/items/cssEditor.vue";
-import DragInCover from "@/items/DragInCover.vue";
+import CssEditor from "@/items/cssEditor.vue"
+import DragInCover from "@/items/DragInCover.vue"
+import CommonDialog from "@/items/commonDialog.vue"
+import {error, info, success} from "@/js/message.js"
+import GridStackConfig from "@/items/gridStackConfig.vue"
 
 const {t} = useI18n()
 
@@ -372,17 +388,13 @@ const components = ref([])
 for (let item of itemType) {
   item.label = t('itemType.' + item.value + '.name')
   item.desc = t('itemType.' + item.value + '.desc')
-  item.img = '/imgs/components/' + item.value + '.png'
+  item.img = './imgs/components/' + item.value + '.png'
 }
 components.value = itemType
 
 // 菜单是否显示
 let showMenu = ref(false)
 
-// 格子高度
-let itemHeight = 25
-// 总列数
-const columns = 48
 // GridStack实例
 let grid
 // 锁定状态
@@ -414,6 +426,9 @@ function keyListener(event) {
       window.location.reload()
     } else if (event.key === 'F' || event.key === 'f') {
       everyDrag.value = !everyDrag.value
+    } else if (event.key === '~' || event.key === '`') {
+      disabledEdit()
+      disabledMove()
     }
     event.preventDefault()
   } else {
@@ -426,30 +441,44 @@ function mouseDown(event) {
 }
 
 const globalStyle = ref(null)
-// 仅查看模式
-const viewMode = ref(false)
+
+const loadGridStackParam = async (urlParams) => {
+  const initParam = (key, defaultValue) => {
+    let value = urlParams.get(key)
+    if (value === null || value === undefined) {
+      value = loadData(key) || defaultValue
+    }
+    saveData(key, value)
+    return value
+  }
+
+  // 初始化布局参数
+  initParam('cellW', 48)
+  removeParams('cellW')
+  initParam('cellH', '50%c')
+  removeParams('cellH')
+}
+
+const loadUrlLock = (urlParams) => {
+  // 初始化配置
+  const urlLock = urlParams.get('lock')
+  if (urlLock === 'true') {
+    configUrlLock.value = true
+  } else {
+    configUrlLock.value = (loadData('lock') === 'true')
+  }
+  saveUrlLock()
+  removeParams('lock')
+}
+
+const setGridStackWidth = (width) => {
+  nextTick(() => {
+    gridEl.value.style.width = width
+  })
+}
 
 // 初始化GridStack
 onMounted(async () => {
-  // 获取浏览器窗口高度
-  const windowHeight = window.innerHeight
-  // 按照窗口宽度计算格子高度
-  itemHeight = Math.floor(windowHeight / columns)
-
-  // 初始化GridStack
-  grid = GridStack.init({
-    // 每个格子的高度（px）
-    cellHeight: itemHeight,
-    // 格子间距
-    margin: 0,
-    // 允许格子自由浮动
-    float: true,
-    // 最小行数
-    minRow: 2,
-    // 始终显示调整手柄
-    alwaysShowResizeHandle: false,
-    column: columns,
-  })
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
@@ -459,35 +488,71 @@ onMounted(async () => {
     setWorkspace(workspace)
   }
   removeParams('workspace')
-  // 初始化配置
+
+  // 跳过刷新后的url同步
+  removeDataDirect('skipReload')
+
+  await loadGridStackParam(urlParams)
+  const cellSize = gridStackConfigRef.value.calcCellSize()
+  setGridStackWidth(cellSize.totalWidth)
+
+  // 初始化GridStack
+  grid = GridStack.init({
+    // 每个格子的高度（px）
+    cellHeight: cellSize.cellH,
+    // 格子间距
+    margin: 0,
+    // 允许格子自由浮动
+    float: true,
+    // 最小行数
+    minRow: 2,
+    // 始终显示调整手柄
+    alwaysShowResizeHandle: false,
+    column: cellSize.columns,
+  })
+
   configUrl.value = loadData('configUrl')
-  const urlLock = urlParams.get('lock')
-  if (urlLock === 'true') {
-    configUrlLock.value = true
-  } else {
-    configUrlLock.value = (loadData('lock') === 'true')
-  }
-  saveUrlLock()
-  // 移除config参数
-  removeParams('lock')
   // 不存在同步值时，从url参数加载
   if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
     if (configParam) {
-      ElMessage.info(t('config.loading'))
-      configUrl.value = decodeURIComponent(configParam)
-      if (!loadDataDirect('skipReload')) {
-        await loadConfig(configUrl.value, false)
-        reloadWithoutParams('config')
-        return
+      // 如果非临时工作区存在数据，则弹出警告
+      let access = false
+      if (getNowWorkspace() !== TEMP_WORKSPACE && loadData('layout'))  {
+        await ElMessageBox.confirm(
+            t('workspace.recover.desc', [getNowWorkspace()]),
+            t('workspace.recover.title'),
+            {
+              distinguishCancelAndClose: true,
+              confirmButtonText: t('common.confirm'),
+              cancelButtonText: t('common.cancel'),
+            }
+        ).then(() => {
+          access = true
+        }).catch(() => {
+          removeParams('config')
+        })
+      } else {
+        access = true
+      }
+      if (access) {
+        info(t('config.loading'))
+        configUrl.value = decodeURIComponent(configParam)
+        loadUrlLock(urlParams)
+        if (!loadDataDirect('skipReload')) {
+          await loadConfig(configUrl.value, false)
+          reloadWithoutParams('config')
+          return
+        }
+      } else {
+        removeParams('config')
       }
     }
   } else if (configUrlLock.value && !loadDataDirect('skipReload')) {
-    ElMessage.info(t('config.loading'))
+    info(t('config.loading'))
     await loadConfig(configUrl.value, false)
   }
-  // 跳过刷新后的url同步
-  removeDataDirect('skipReload')
+  loadUrlLock(urlParams)
 
   // 恢复布局
   const layout = loadData('layout')
@@ -537,6 +602,7 @@ onUnmounted(() => {
   window.removeEventListener('mousedown', mouseDown)
 })
 
+// 编辑全局样式
 function editGlobalStyle() {
   globalStyle.value.open()
 }
@@ -591,6 +657,12 @@ function disabledMove() {
   enableMove.value = false
 }
 
+const gridStackConfigRef = ref(null)
+
+const openGridStackConfig = () => {
+  gridStackConfigRef.value.open()
+}
+
 // 添加空白格子
 function createItemComponent(type, componentItem) {
   return {
@@ -628,7 +700,7 @@ function createItemComponent(type, componentItem) {
           enableEdit: enableEdit,
           enableMove: enableMove,
           ctrl: props.ctrl,
-          transferData: exportComponentData(props.id, type),
+          transferData: () => exportComponentData(props.id, type),
           onOnDelete: deleteItem,
           onOnStyleEdit: editStyle,
           onZoomIn: zoomIn,
@@ -663,7 +735,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   // 挂载Vue组件到格子
   const component = itemType.find(item => item.value === type)?.component
   if (!component) {
-    ElMessage.error(t('error.noSuchComponent_') + type)
+    error(t('error.noSuchComponent_') + type)
     return
   }
   const app = createApp(createItemComponent(type, component), {
@@ -680,6 +752,8 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   grid.makeWidget(itemEl)
   return itemEl.id
 }
+
+const readyComponentRef = ref(null)
 
 function addComponent(data) {
   const id = addItemWithEdit(data.type, data.x, data.y, data.w, data.h, data.id)
@@ -698,7 +772,7 @@ function addComponent(data) {
         saveData(id + '-style', data.style)
       }
     } else {
-      ElMessage.error(t('error.noSuchComponent_') + data.type)
+      error(t('error.noSuchComponent_') + data.type)
     }
   }
 }
@@ -706,7 +780,11 @@ function addComponent(data) {
 // 删除格子
 function deleteItem(id) {
   nextTick(() => {
-    grid.removeWidget(document.getElementById(id.value))
+    // 卸载Vue组件
+    const elementById = document.getElementById(id.value)
+    elementById.element.unmount(elementById)
+    // 删除DOM元素
+    grid.removeWidget(elementById)
     // 删除本地存储
     removeData(id.value)
     // 保存布局
@@ -722,12 +800,13 @@ const componentStyle = ref('')
 
 function editStyle(id) {
   curComponentId.value = id.value
-  // 获取组件样式
-  componentStyle.value = loadData(id.value + '-style')
   isEditComponentStyle.value = true
-  nextTick(() => {
-    componentStyleRef.value.load(componentStyle.value)
-  })
+}
+
+function onComponentStyleOpened() {
+  // 获取组件样式
+  componentStyle.value = loadData(curComponentId.value + '-style')
+  componentStyleRef.value.load(componentStyle.value)
 }
 
 function loadStyle(id, styleContent) {
@@ -790,7 +869,7 @@ function createZoomIn(id, componentItem) {
 function zoomIn(id, type) {
   const find = itemType.find(item => item.value === type.value)
   if (!find) {
-    ElMessage.error(t('error.noSuchComponent_') + type.value)
+    error(t('error.noSuchComponent_') + type.value)
     return
   }
   zoomInId = id.value
@@ -833,11 +912,11 @@ function onZoomInClose() {
 
 // 复制
 function copy(id, type) {
-  const componentData = exportComponentData(id, type)
+  const componentData = exportComponentData(id, type, true)
   addComponent(componentData)
 }
 
-function exportComponentData(id, type) {
+function exportComponentData(id, type, containsXY = false) {
   const idValue = id.value || id
   const componentData = {}
   // 组件配置
@@ -855,6 +934,10 @@ function exportComponentData(id, type) {
     if (node.el.id === idValue) {
       componentData.w = node.w
       componentData.h = node.h
+      if (containsXY) {
+        componentData.x = node.x
+        componentData.y = node.y
+      }
     }
   }
   componentData.type = type.value || type
@@ -873,7 +956,7 @@ function addModuleConfirm(id, type) {
 
 function addModule({name, desc}) {
   if (!name) {
-    ElMessage.error(t('error.noName'))
+    error(t('error.noName'))
     return
   }
   const componentData = exportComponentData(moduleId, moduleType)
@@ -882,7 +965,7 @@ function addModule({name, desc}) {
     ...componentData
   }
   saveDataDirect('module-' + name, JSON.stringify(moduleData))
-  ElMessage.success(t('success.add'))
+  success(t('success.add'))
   nameDescDialog.value.cancel()
 }
 
@@ -891,8 +974,6 @@ function exportComponent(id, type) {
   const componentData = exportComponentData(id, type)
   exportData(componentData, id.value + '.json')
 }
-
-const readyComponent = ref(null)
 
 const configData = ref('')
 const configUrlLock = ref(false)
@@ -927,6 +1008,8 @@ function generateConfig() {
     layout: JSON.parse(loadData('layout')),
     configLock: configUrlLock.value,
     configUrl: configUrl.value,
+    cellW: loadData('cellW') || '48',
+    cellH: loadData('cellH') || '50%c',
     components: []
   }
   // 所有组件
@@ -964,6 +1047,8 @@ function clearConfig(reload = false) {
   removeData('configUrl')
   // 删除配置URL锁定
   removeData('lock')
+  removeData('cellH')
+  removeData('cellW')
   globalStyle.value.clearStyle()
   // 刷新页面
   if (reload) {
@@ -973,7 +1058,7 @@ function clearConfig(reload = false) {
 
 async function loadConfigFromUrl() {
   if (!configUrl.value) {
-    ElMessage.error(t('error.noConfigUrl'))
+    error(t('error.noConfigUrl'))
     return
   }
   await loadConfig(configUrl.value)
@@ -982,7 +1067,7 @@ async function loadConfigFromUrl() {
 // 加载配置
 async function loadConfig(config = configData.value, reload = true) {
   if (!config) {
-    ElMessage.error(t('error.noConfigContent'))
+    error(t('error.noConfigContent'))
     return
   }
   // 解析json
@@ -1000,7 +1085,7 @@ async function loadConfig(config = configData.value, reload = true) {
         config = JSON.parse(config)
       }
     } catch (error) {
-      ElMessage.error(t('error.load'), error)
+      error(t('error.load'), error)
       return
     } finally {
       setTimeout(() => {
@@ -1009,12 +1094,12 @@ async function loadConfig(config = configData.value, reload = true) {
     }
   }
   if (!config || typeof config !== 'object') {
-    ElMessage.error(t('error.loadFormat'))
+    error(t('error.loadFormat'))
     return
   }
   // 校验配置
   if (!config.globalStyle || !config.layout || !config.components) {
-    ElMessage.error(t('error.loadFormat'))
+    error(t('error.loadFormat'))
     return
   }
   // 保留配置锁
@@ -1028,6 +1113,9 @@ async function loadConfig(config = configData.value, reload = true) {
   saveData('layout', JSON.stringify(config.layout))
   saveUrlLock()
   saveUrl()
+  // 加载布局配置
+  saveData('cellW', config.cellW || '48')
+  saveData('cellH', config.cellH || '50%c')
   // 加载组件
   for (let component of config.components) {
     if (component.data) {
@@ -1057,7 +1145,7 @@ function handleConfigFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (!file || file.type !== 'application/json') {
-    ElMessage.error(t('error.uploadJson'))
+    error(t('error.uploadJson'))
     return
   }
   const reader = new FileReader()
@@ -1090,10 +1178,10 @@ function onDragIn(data) {
         loadConfig(data)
       })
     } else {
-      ElMessage.error(t('error.unknownContent'))
+      error(t('error.unknownContent'))
     }
   } else {
-    ElMessage.error(t('error.unknownContent'))
+    error(t('error.unknownContent'))
   }
 }
 
@@ -1154,6 +1242,18 @@ body {
     }
   }
 
+  .modeContainer {
+    .modeItem {
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+      }
+    }
+  }
+
   .menuTitle {
     color: #ececec;
     height: 30px;
@@ -1162,10 +1262,6 @@ body {
     border-right: 4px solid orange;
     padding: 0 7px 3px 0;
     min-width: 30px;
-  }
-
-  .addItemSelect {
-
   }
 
   .langSelect {
@@ -1195,16 +1291,15 @@ body {
 .menu-hide {
   height: 0;
   opacity: 0;
+  margin-top: -80px;
   border-bottom: unset;
-
-  * {
-    margin-top: -80px;
-  }
 }
 
 /* 菜单样式结束 */
 
-.componentItem {
+.componentItemPopover {
+  pointer-events: none;
+
   .componentName {
     font-weight: bold;
     font-size: 22px;
@@ -1285,26 +1380,6 @@ textarea {
 
 /* 删除图标样式结束 */
 
-/* 表单样式开始 */
-.el-form-item__label {
-  border-left: 8px solid #ffa217;
-  padding-left: 8px !important;
-  height: 22px !important;
-  line-height: 22px !important;
-  margin-bottom: 4px;
-}
-
-.el-form-item__label {
-  background-color: #eaf5ff;
-}
-
-.el-form-item {
-  padding: 8px;
-  margin-bottom: 0 !important;
-}
-
-/* 表单样式结束 */
-
 /* 组件弹窗样式开始 */
 .zoomInDialog {
   height: 95%;
@@ -1333,51 +1408,47 @@ textarea {
 }
 
 /* 组件弹窗样式结束 */
-
-/* 配置加载器弹窗样式开始 */
-.configDialog {
+.globeConfigDialog {
   .configLoaderHeader {
+    color: white;
     display: flex;
     align-items: center;
+  }
+
+  .syncConfigContainer {
+    display: flex;
+    gap: 8px;
+
+    .el-switch {
+      .el-switch__core {
+        height: calc(100% - 2px);
+        background: #494949;
+        padding: 0 4px;
+        border: none;
+      }
+
+      &.is-checked {
+        .el-switch__core {
+          background: #3a8091;
+        }
+      }
+    }
   }
 
   .globeConfigInput {
-    height: calc(100% - 40px) !important;
-    margin-top: 8px;
+    height: calc(100% - 84px) !important;
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 2px dotted rgba(255, 255, 255, 0.6);
 
     .el-textarea__inner {
-      height: 100%;
+      height: calc(100% - 4px);
+      width: calc(100% - 4px);
+      border-radius: 24px;
+      border: 2px solid rgba(255, 255, 255);
     }
-  }
-
-  .el-dialog__footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-
-    .transfer {
-      cursor: move;
-      font-size: 32px;
-      color: #ff5858;
-
-      svg {
-        padding: 4px;
-        border-radius: 24px;
-      }
-    }
-
-    .el-button+.el-button {
-      margin-left: 0;
-    }
-  }
-
-  .el-switch__core {
-    height: calc(100% - 2px);
   }
 }
-
-/* 配置加载器弹窗样式结束 */
 
 /* 快捷键样式 */
 .shortcutKeys {

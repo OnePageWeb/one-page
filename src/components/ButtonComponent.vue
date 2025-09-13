@@ -154,6 +154,7 @@ defineExpose({
       justify-content: center;
       height: 100%;
       width: 100%;
+      opacity: 1;
 
       .button {
         padding: 6px 12px;
@@ -180,13 +181,10 @@ defineExpose({
       height: 100%;
       opacity: 1;
       pointer-events: all;
+      overflow: auto;
 
       .el-input-group__prepend {
         display: block;
-      }
-
-      .el-input__wrapper {
-        padding: 1px 11px;
       }
     }
   }
@@ -201,9 +199,9 @@ defineExpose({
     width: 0;
     height: 100%;
     opacity: 0;
-    display: flex;
     flex-direction: column;
     pointer-events: none;
+    overflow: hidden;
 
     .functionName {
       height: 32px;

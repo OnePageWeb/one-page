@@ -12,7 +12,7 @@ const props = defineProps({
   enableEdit: Object,
   enableMove: Object,
   ctrl: Object,
-  transferData: Object,
+  transferData: Function,
 })
 const {id, type, enableEdit, enableMove, ctrl} = toRefs(props)
 
@@ -38,7 +38,7 @@ function zoomIn() {
 
 function onTransferStart(e) {
   e.stopPropagation()
-  const transferData = props.transferData
+  const transferData = props.transferData(id.value, type.value)
   e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
 }
 

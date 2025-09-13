@@ -8,6 +8,7 @@ import App from './App.vue'
 import 'element-plus/dist/index.css'
 import {initWorkspace} from "@/js/workspcae.js"
 import '../assets/style.css'
+import '../assets/dialog.css'
 import i18n from './i18n'
 
 // 初始化工作区

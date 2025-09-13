@@ -1,7 +1,7 @@
 {
   "globalStyle": {
     "globalStyle-tag-默认": ".grid-stack {\n  background-color: unset;\n}\n.linkItem .el-text {\n    color: #efefef;\n}",
-    "globalStyle-tag-背景图": "body {\n  background-image: url('https://cdn.jsdelivr.net/gh/Verlif/one@32a8991/imgs/starter/background_spring.png');\n}",
+    "globalStyle-tag-背景图": "body {\n  background-image: url('./imgs/starter/background_spring.png');\n}",
     "globalStyle-tags": [
       "默认",
       "背景图"
@@ -22,7 +22,9 @@
     }
   ],
   "configLock": false,
-  "configUrl": null,
+  "configUrl": "/configs/display_text.json",
+  "cellW": "48",
+  "cellH": "50%c",
   "components": [
     {
       "id": "4d28552a9a36-4f1e-a8a7-068768e15f1c",

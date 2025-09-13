@@ -3,6 +3,8 @@ import {ref} from 'vue'
 import {defineProps, defineExpose} from 'vue'
 import {ElButton, ElInput, ElDialog} from "element-plus"
 import {useI18n} from "vue-i18n"
+import commonDialog from "@/items/commonDialog.vue"
+
 const {t} = useI18n()
 
 const props = defineProps({
@@ -52,14 +54,12 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
+  <common-dialog
     :title="title"
-    v-model="visible"
-    class="commonDialog nameDescDialog"
+    :visible="visible"
+    class="nameDescDialog"
     width="30%"
-    align-center
-    :close-on-press-escape="false"
-    @close="close"
+    @closed="close"
   >
     <div>
       <el-input v-model="name" style="margin-bottom: 8px;">
@@ -77,7 +77,7 @@ defineExpose({
     <template #footer>
       <el-button type="primary" @click="save">{{ t('common.apply') }}</el-button>
     </template>
-  </el-dialog>
+  </common-dialog>
 </template>
 
 <style>

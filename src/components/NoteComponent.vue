@@ -20,6 +20,7 @@ import 'prismjs/components/prism-csharp'
 import {Picture, Upload, Edit, Download} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
+import {error, warning} from "@/js/message.js"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -77,7 +78,7 @@ function openNewWindow() {
   // 尝试打开新窗口
   const newWindow = window.open('', '_blank', features)
   if (!newWindow) {
-    ElMessage.warning(t('error.cannotOpenWindow'))
+    warning(t('error.cannotOpenWindow'))
     return
   }
   setTimeout(() => { newWindow.document.title = t('component.note.title'); }, 100);
@@ -115,7 +116,7 @@ function handleFileDrop(e) {
   const file = e.dataTransfer.files[0]
   // 检查文件名后缀是否是markdown文件
   if (!file.name.toLocaleLowerCase().endsWith('.md')) {
-    ElMessage.error(t('error.uploadMarkdown'))
+    error(t('error.uploadMarkdown'))
     return
   }
   const reader = new FileReader()

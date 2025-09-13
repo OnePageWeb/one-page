@@ -1,21 +1,12 @@
 <script setup>
-import {
-  ElButton,
-  ElDialog,
-  ElForm,
-  ElFormItem,
-  ElIcon,
-  ElImage,
-  ElInput,
-  ElOption,
-  ElPopover,
-  ElText, ElTooltip
-} from "element-plus"
+import {ElButton, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Download, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
+import commonDialog from "@/items/commonDialog.vue"
+
 const {t} = useI18n()
 
 const defaultLinks = [
@@ -91,7 +82,7 @@ function open(link) {
     curWindow[link.name].focus()
     return
   }
-  window.open(link.url, '_blank')
+  return window.open(link.url, '_blank')
 }
 
 // 打开弹窗
@@ -175,6 +166,30 @@ function getFaviconUrl(url) {
   }
 }
 
+let dragLink = null
+function onLinkDragStart(e, link) {
+  dragLink = link
+}
+
+function onLinkDragover(e) {
+  e.preventDefault()
+  e.target.classList.add('dragTarget')
+}
+
+function onLinkDragleave(e) {
+  e.preventDefault()
+  e.target.classList.remove('dragTarget')
+}
+
+function onLinkDrop(e, link) {
+  e.preventDefault()
+  e.target.classList.remove('dragTarget')
+  const dragIndex = tempLinks.value.indexOf(dragLink)
+  const dropIndex = tempLinks.value.indexOf(link)
+  tempLinks.value.splice(dragIndex, 1)
+  tempLinks.value.splice(dropIndex, 0, dragLink)
+}
+
 defineExpose({
   save, load
 })
@@ -188,19 +203,18 @@ defineExpose({
         class="linkContainer"
         @click="open(link)"
     >
-      <el-tooltip
-        effect="light"
-        :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : t('component.link.dragTip')"
-        placement="top"
-        :show-after="800"
-        :hide-after="10"
-      >
-        <div
+      <div
           :class="['linkItem', {'hasWindow': curOpenedWindow.includes(link.name)}]"
           draggable="true"
           @dragend="openNewWindow(link)"
+      >
+        <el-tooltip
+            effect="light"
+            :content="curOpenedWindow.includes(link.name) ? t('component.link.openFastWindow') : link.url"
+            placement="top"
+            :show-after="400"
         >
-          <el-image :src="link.img" alt="favicon">
+          <el-image :src="link.img" alt="favicon" fit="contain">
             <template #error>
               <div class="image-slot">
                 <el-icon>
@@ -209,11 +223,18 @@ defineExpose({
               </div>
             </template>
           </el-image>
+        </el-tooltip>
+        <el-tooltip
+            effect="light"
+            :content="link.name"
+            placement="bottom"
+            :show-after="400"
+        >
           <el-text v-if="nameVisible" tag="span">
-            <div v-html="link.name" />
+            <div v-html="link.name"/>
           </el-text>
-        </div>
-      </el-tooltip>
+        </el-tooltip>
+      </div>
     </div>
 
     <div v-show="enableEdit" class="editContainer" @click.stop="edit">
@@ -223,19 +244,23 @@ defineExpose({
     </div>
 
     <!-- 编辑快速链接弹窗 -->
-    <el-dialog
-        class="linkEditDialog commonDialog"
-        v-model="dialogVisible"
+    <common-dialog
+        class="linkEditDialog"
+        :visible="dialogVisible"
         :title="t('component.link.edit.title')"
         width="60%"
-        :append-to-body="true"
-        :close-on-press-escape="false"
-        align-center
+        @closed="dialogVisible = false"
     >
       <div class="linkEditContainer">
         <el-form ref="formRef" class="linkForm">
           <template v-for="(item, index) in tempLinks">
-            <div class="linkEditItem">
+            <div class="linkEditItem"
+                 draggable="true"
+                 @dragstart="onLinkDragStart($event, item)"
+                 @dragover="onLinkDragover"
+                 @dragleave="onLinkDragleave"
+                 @drop="onLinkDrop($event, item)"
+            >
               <el-form-item prop="name" :class="['linkName', {'imgLinkName': item.img}]">
                 <el-input v-model="item.name" :placeholder="t('component.link.edit.urlName')">
                   <template #prepend>
@@ -248,7 +273,7 @@ defineExpose({
                         </div>
                       </template>
                     </el-image>
-                    <h5tag v-else :text="t('common.name')" />
+                    <h5tag v-else :text="t('common.name')"/>
                   </template>
                 </el-input>
               </el-form-item>
@@ -270,16 +295,16 @@ defineExpose({
       <template #footer>
         <div class="dialog-footer">
           <el-popover
-            class="box-item"
-            :title="nameVisible ? t('common.showName') : t('common.hideName')"
-            :content="t('component.link.switchNameVisible')"
-            placement="top-end"
+              class="box-item"
+              :title="nameVisible ? t('common.showName') : t('common.hideName')"
+              :content="t('component.link.switchNameVisible')"
+              placement="top-end"
           >
             <template #reference>
               <el-icon
-                class="nameVisibleIcon"
-                :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
-                @click="changeNameVisible"
+                  class="nameVisibleIcon"
+                  :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
+                  @click="changeNameVisible"
               >
                 <Finished/>
               </el-icon>
@@ -310,7 +335,7 @@ defineExpose({
           </el-button>
         </div>
       </template>
-    </el-dialog>
+    </common-dialog>
   </div>
 </template>
 
@@ -421,6 +446,7 @@ defineExpose({
 .vertical {
   flex-direction: column;
   width: 100%;
+  max-height: unset;
 
   .linkContainer {
     width: 100%;
@@ -442,14 +468,20 @@ defineExpose({
   }
 
   .linkItem {
+    max-height: 120px;
     width: calc(100% - 24px);
     padding: 8px 8px;
 
-    span {
+    .el-text {
       width: 100%;
-      white-space: wrap;
       display: block;
-      text-align: center
+      text-align: center;
+
+      div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
@@ -483,14 +515,15 @@ defineExpose({
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 8px;
 
     /* 方向图标 */
+
     .directionIcon, .nameVisibleIcon {
       padding: 4px;
       background: #fba240;
       border-radius: 16px;
       color: white;
-      margin-right: 16px;
       cursor: pointer;
       font-size: large;
 
@@ -530,6 +563,16 @@ defineExpose({
 
       &:first-child {
         padding-top: 0;
+      }
+
+      &.dragTarget {
+        margin-top: 8px;
+
+        & > * {
+          pointer-events: none;
+          user-select: none;
+          opacity: 0.7;
+        }
       }
 
       .el-image {
@@ -580,12 +623,27 @@ defineExpose({
 
       .linkUrl {
         display: block !important;
-        width: calc(100% - 380px) !important;
+        width: calc(80% - 180px) !important;
       }
 
       .linkImg {
         display: block !important;
-        width: 200px !important;
+        width: 20% !important;
+      }
+
+      .linkUrl, .linkImg {
+        .el-input__wrapper {
+          border-radius: 0 8px 8px 8px;
+        }
+
+        .el-form-item__label {
+          margin-bottom: 0;
+          border-radius: 8px 8px 0 0;
+        }
+
+        .el-input__wrapper {
+          height: 32px;
+        }
       }
     }
   }

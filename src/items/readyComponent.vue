@@ -1,20 +1,12 @@
 <script setup>
-import {
-  ElButton,
-  ElDialog,
-  ElIcon, ElImage,
-  ElInput,
-  ElLoading,
-  ElMessage,
-  ElOption,
-  ElPopconfirm,
-  ElPopover,
-  ElSelect
-} from "element-plus"
+import {ElButton, ElIcon, ElImage, ElInput, ElLoading, ElPopconfirm, ElPopover} from "element-plus"
 import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
 import {Close, Search} from "@element-plus/icons-vue"
 import {useI18n} from "vue-i18n"
+import commonDialog from "@/items/commonDialog.vue"
+import {error, success} from "@/js/message.js"
+
 const {t} = useI18n()
 
 const emit = defineEmits(['addComponent'])
@@ -36,10 +28,11 @@ const filterComponents = computed(() => {
 const loadConfigFiles = async () => {
   const files = import.meta.glob('/public/configs/components/*.json')
 
+  const prefix = import.meta.env.BASE_URL === '/one/' ? '' : '/public'
   for (const path in files) {
     try {
       const file = await files[path]()
-      components.value[file.name] = { desc: file.desc, path: path.replace('/public', '') }
+      components.value[file.name] = {desc: file.desc, path: path.replace('/public', prefix)}
     } catch (error) {
       console.error(t('error.load'), path, error)
     }
@@ -80,6 +73,7 @@ onMounted(() => {
 })
 
 const filterName = ref('')
+
 async function addComponent(name) {
   const loading = ElLoading.service({
     lock: true,
@@ -90,7 +84,7 @@ async function addComponent(name) {
     if (name) {
       const component = components.value[name]
       if (!component) {
-        ElMessage.error(t('error.componentNotExist'))
+        error(t('error.componentNotExist'))
         return
       }
       // 加载path对应的组件
@@ -100,7 +94,7 @@ async function addComponent(name) {
       return
     }
     if (!configData.value) {
-      ElMessage.error(t('error.noConfigContent'))
+      error(t('error.noConfigContent'))
       return
     }
     emit('addComponent', JSON.parse(configData.value))
@@ -115,7 +109,7 @@ async function addComponent(name) {
 async function addModuleComponent(name) {
   const module = moduleComponents.value[name]
   if (!module) {
-    ElMessage.error(t('error.componentNotExist'))
+    error(t('error.componentNotExist'))
     return
   }
   emit('addComponent', module)
@@ -124,16 +118,17 @@ async function addModuleComponent(name) {
 function deleteItem(name) {
   delete moduleComponents.value[name]
   localStorage.removeItem('module-' + name)
-  ElMessage.success(t('success.delete'))
+  success(t('success.delete'))
 }
 
 const configData = ref('')
+
 // 处理文件拖拽
 function handleFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
   if (file.type !== 'application/json') {
-    ElMessage.error(t('error.uploadJson'))
+    error(t('error.uploadJson'))
     return
   }
   const reader = new FileReader()
@@ -145,94 +140,89 @@ function handleFileDrop(e) {
 </script>
 
 <template>
-
-  <div>
-    <el-dialog
-      v-model="dialogVisible"
-      class="commonDialog readyComponentDialog"
+  <common-dialog
+      class="readyComponentDialog"
       :title="t('component.add')"
-      :close-on-press-escape="false"
-      align-center
-    >
-      <div>
-        <el-input
+      :visible="dialogVisible"
+      @closed="dialogVisible = false"
+  >
+    <div>
+      <el-input
           v-model="filterName"
           class="filterName"
           resize="none"
           :placeholder="t('placeholder.componentFilter')"
-        >
-          <template #prepend>
-            <el-icon>
-              <Search/>
-            </el-icon>
-          </template>
-        </el-input>
-        <div class="readyComponents">
+      >
+        <template #prepend>
+          <el-icon>
+            <Search/>
+          </el-icon>
+        </template>
+      </el-input>
+      <div class="readyComponents">
 
-          <el-popover
-              class="box-item"
-              v-for="name of Object.keys(filterComponents)"
-              width="300"
-              placement="bottom"
-              popper-class="componentItem"
-              :show-after="200"
-              :hide-after="10"
-          >
-            <template #reference>
-              <div
-                  class="componentItem"
-                  @click="addComponent(name)"
-              >
-                <div class="componentName">{{ name }}</div>
-                <div class="componentDesc">{{ components[name].desc }}</div>
-              </div>
-            </template>
-            <el-image :src="'imgs/ready/' + name + '.png'"/>
-          </el-popover>
-          <div class="componentAreaName">{{ t('component.defined') }}</div>
-        </div>
-        <div class="moduleComponents">
-          <div
+        <el-popover
+            class="box-item"
+            v-for="name of Object.keys(filterComponents)"
+            width="300"
+            placement="bottom"
+            popper-class="componentItem"
+            :show-after="200"
+            :hide-after="10"
+        >
+          <template #reference>
+            <div
+                class="componentItem"
+                @click="addComponent(name)"
+            >
+              <div class="componentName">{{ name }}</div>
+              <div class="componentDesc">{{ components[name].desc }}</div>
+            </div>
+          </template>
+          <el-image :src="'./imgs/ready/' + name + '.png'"/>
+        </el-popover>
+        <div class="componentAreaName">{{ t('component.defined') }}</div>
+      </div>
+      <div class="moduleComponents">
+        <div
             v-for="name of Object.keys(filterModuleComponents)"
             class="componentItem"
             @click="addModuleComponent(name)"
-          >
-            <div class="componentName">{{ name }}</div>
-            <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
-            <el-popconfirm
+        >
+          <div class="componentName">{{ name }}</div>
+          <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
+          <el-popconfirm
               class="deleteItem"
               :title="t('component.delete.title')"
               placement="top-start"
               :confirm-button-text="t('common.confirm')"
               :cancel-button-text="t('common.cancel')"
               @confirm="deleteItem(name)"
-            >
-              <template #reference>
-                <el-icon class="deleteItem" @click.prevent.stop>
-                  <Close/>
-                </el-icon>
-              </template>
-            </el-popconfirm>
-          </div>
-          <div class="componentAreaName">{{ t('component.custom') }}</div>
+          >
+            <template #reference>
+              <el-icon class="deleteItem" @click.prevent.stop>
+                <Close/>
+              </el-icon>
+            </template>
+          </el-popconfirm>
         </div>
-
-        <div class="addComponentContainer">
-          <el-input
-              v-model="configData"
-              type="textarea"
-              resize="none"
-              :placeholder="t('placeholder.componentInput')"
-              @dragover.prevent
-              @drop.prevent="handleFileDrop"
-              @keydown.enter.ctrl="addComponent"
-          />
-          <el-button class="addComponent" type="primary" @click="addComponent(null)">{{t('common.add')}}</el-button>
-        </div>
+        <div class="componentAreaName">{{ t('component.custom') }}</div>
       </div>
-    </el-dialog>
-  </div>
 
+      <div class="addComponentContainer">
+        <el-input
+            v-model="configData"
+            type="textarea"
+            resize="none"
+            :placeholder="t('placeholder.componentInput')"
+            @dragover.prevent
+            @drop.prevent="handleFileDrop"
+            @keydown.enter.ctrl="addComponent"
+        />
+        <el-button class="addComponent" type="primary" @click="addComponent(null)">{{ t('common.add') }}</el-button>
+      </div>
+    </div>
+  </common-dialog>
 </template>
 
 <style>
@@ -264,7 +254,7 @@ function handleFileDrop(e) {
     align-items: center;
     justify-content: center;
     z-index: -1;
-    color: #dddddd;
+    color: rgba(221, 221, 221, 0.1);
     user-select: none;
   }
 
@@ -281,7 +271,7 @@ function handleFileDrop(e) {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 8px;
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
     background-size: 200%;
     cursor: pointer;
 
@@ -326,15 +316,10 @@ function handleFileDrop(e) {
     }
   }
 
-
   .addComponentContainer {
     height: calc(30% - 8px);
     margin-top: 8px;
     position: relative;
-
-    .el-textarea {
-      height: 100%;
-    }
 
     .addComponent {
       position: absolute;

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {onMounted, onUnmounted, ref} from "vue"
 import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/js/workspcae.js"
-import {saveDataDirect, loadDataDirect, removeDataDirect} from "@/js/data.js"
 import {
   ElButton,
   ElDialog,
@@ -17,6 +16,8 @@ import {Check, InfoFilled} from "@element-plus/icons-vue"
 import {reloadWithoutParams} from "@/js/url.js"
 import {useI18n} from "vue-i18n"
 import {TEMP_WORKSPACE} from "@/js/workspcae.js"
+import commonDialog from "@/items/commonDialog.vue"
+import {warning, success} from "@/js/message.js"
 
 const {t} = useI18n()
 
@@ -36,7 +37,7 @@ const workspaceList = ref([])
 onMounted(() => {
   workspaceList.value.push(...listWorkspace())
   if (getNowWorkspace() === TEMP_WORKSPACE) {
-    ElMessage.warning(t('workspace.temp.warning'))
+    warning(t('workspace.temp.warning'))
   }
 })
 
@@ -66,17 +67,11 @@ function newWorkspace(workspace: string) {
 
 function switchWorkspace(workspace: string) {
   if (!workspace || workspace.trim() === '') {
-    ElMessage({
-      message: t('error.workspaceEmpty'),
-      type: 'warning'
-    })
+    warning(t('error.workspaceEmpty'))
     return
   }
   if (nowWorkspace.value === workspace) {
-    ElMessage({
-      message: t('workspace.alreadyInThis'),
-      type: 'success'
-    })
+    success(t('workspace.alreadyInThis'))
     return
   }
   // 切换工作区
@@ -108,14 +103,13 @@ function deleteItem(workspace: string) {
 
 <template>
   <!-- 组件样式弹窗 -->
-  <el-dialog
-      v-model="dialogVisible"
+  <common-dialog
+      :visible="dialogVisible"
       width="30%"
-      class="workspaceDialog commonDialog"
-      align-center
-      :close-on-press-escape="false"
+      class="workspaceDialog"
+      @closed="dialogVisible = false"
   >
-    <template #header>
+    <template #title>
       <div style="display: flex;align-items: center;color: white;">
         <span style="font-size: 18px;font-weight: bolder">{{ t('workspace.title') }} - {{ nowWorkspace }}</span>
         <el-popover
@@ -164,27 +158,25 @@ function deleteItem(workspace: string) {
       </el-popconfirm>
     </div>
     <template #footer>
-      <div>
-        <el-input
-            v-model="newWorkspaceName"
-            class="workspaceName"
-            :placeholder="t('placeholder.newWorkspaceName')"
-            @keydown.ctrl.enter="newWorkspace(newWorkspaceName)"
-        />
-        <el-button type="primary" @click="newWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
-      </div>
+      <el-input
+          v-model="newWorkspaceName"
+          class="workspaceName"
+          :placeholder="t('placeholder.newWorkspaceName')"
+          @keydown.ctrl.enter="newWorkspace(newWorkspaceName)"
+      />
+      <el-button type="primary" @click="newWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
     </template>
 
-    <el-dialog
+    <common-dialog
         :title="t('workspace.delete.title')"
-        v-model="deleteConfirm"
+        :visible="deleteConfirm"
         width="400px"
-        class="deleteConfirm commonDialog"
-        align-center
+        class="deleteWorkspaceConfirm"
+        @closed="deleteConfirm = false"
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{ t('workspace.delete.content') }} <span style="font-size: 24px;font-weight: bolder">{{
+          {{ t('workspace.delete.content') }} <span style="color: white;font-size: 24px;font-weight: bolder">{{
             deleteWorkspaceName
           }}</span> ？
           <div>
@@ -193,11 +185,11 @@ function deleteItem(workspace: string) {
         </div>
       </div>
       <template #footer>
-        <el-button @click="deleteItem(deleteWorkspaceName)">{{ t('common.confirm') }}</el-button>
+        <el-button type="danger" @click="deleteItem(deleteWorkspaceName)">{{ t('common.confirm') }}</el-button>
         <el-button type="primary" @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
       </template>
-    </el-dialog>
-  </el-dialog>
+    </common-dialog>
+  </common-dialog>
 
 </template>
 
@@ -211,15 +203,23 @@ function deleteItem(workspace: string) {
     padding: 8px 16px;
     cursor: pointer;
     height: unset;
+
+    &:hover {
+      scale: 1.1;
+    }
   }
 
-  .el-input {
-    width: calc(100% - 70px);
-    margin-right: 10px;
-  }
+  .workspaceName {
+    height: 100%;
 
-  .deleteConfirm {
-    height: 200px !important;
+    .el-input {
+      width: calc(100% - 70px);
+      margin-right: 10px;
+    }
   }
+}
+
+.deleteWorkspaceConfirm {
+  height: 200px !important;
 }
 </style>
