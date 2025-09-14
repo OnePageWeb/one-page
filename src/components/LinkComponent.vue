@@ -248,7 +248,7 @@ defineExpose({
         class="linkEditDialog"
         :visible="dialogVisible"
         :title="t('component.link.edit.title')"
-        width="60%"
+        width="50%"
         @closed="dialogVisible = false"
     >
       <div class="linkEditContainer">
@@ -415,8 +415,8 @@ defineExpose({
     min-width: 40px;
     position: sticky;
     pointer-events: auto;
-    background-color: rgba(234, 234, 234, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 40px;
     right: 8px;
     display: flex;
@@ -433,7 +433,8 @@ defineExpose({
     }
 
     .editIcon {
-      color: #707070;
+      color: #ffffff;
+      font-size: 24px;
 
       svg {
         height: 20px;
@@ -511,6 +512,117 @@ defineExpose({
 }
 
 .linkEditDialog {
+  .el-dialog__body {
+    padding: 0 !important;
+  }
+
+  .linkEditContainer {
+    .linkForm {
+
+      .linkEditItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.2);
+        gap: 12px;
+
+        /* 对子元素每一个间隔一个来设置背景 */
+        &:nth-child(odd) {
+          background-color: transparent;
+
+          .recordText {
+            color: #cdcdcd;
+          }
+        }
+
+        &.dragTarget {
+          margin-top: 8px;
+
+          & > * {
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.7;
+          }
+        }
+
+        .el-image {
+          height: 100%;
+        }
+
+        .linkName {
+          width: 20%;
+          height: 60px;
+          align-items: center;
+          gap: 8px;
+          padding: 0;
+
+          .el-input-group__prepend {
+            background-color: #333333;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 0 12px;
+          }
+
+          .el-form-item__label {
+            padding: 0;
+            margin: 0;
+            font-size: 18px;
+          }
+
+          .el-input__inner {
+            font-size: 24px;
+            font-weight: bold;
+          }
+
+          .el-form-item__content {
+            margin-left: 0 !important;
+            height: 100%;
+          }
+
+          .el-input {
+            height: 100%;
+          }
+        }
+
+        .imgLinkName {
+          .el-input-group__prepend {
+            background-color: unset;
+          }
+        }
+
+        .linkUrl {
+          display: block !important;
+          width: calc(80% - 180px) !important;
+        }
+
+        .linkImg {
+          display: block !important;
+          width: 20% !important;
+        }
+
+        .linkUrl, .linkImg {
+          .el-input__wrapper {
+            border-radius: 0 8px 8px 8px;
+            height: 40px;
+            font-size: 18px;
+
+            .el-input__inner {
+              border-radius: 0 8px 8px 8px;
+            }
+          }
+
+          .el-form-item__label {
+            margin-bottom: 0;
+            border-radius: 8px 8px 0 0;
+          }
+
+        }
+      }
+    }
+  }
+
   .dialog-footer {
     display: flex;
     justify-content: flex-end;
@@ -520,12 +632,13 @@ defineExpose({
     /* 方向图标 */
 
     .directionIcon, .nameVisibleIcon {
-      padding: 4px;
+      padding: 6px;
       background: #fba240;
       border-radius: 16px;
       color: white;
       cursor: pointer;
       font-size: large;
+      border: 2px solid rgba(255, 255, 255, 0.3);
 
       &:hover {
         scale: 1.2;
@@ -544,108 +657,4 @@ defineExpose({
   }
 }
 
-.linkEditContainer {
-  .linkForm {
-    .linkEditItem {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 0;
-      border-bottom: 1px dashed #aaaaaa;
-      /* 最后一个不添加 */
-
-      &:last-child {
-        padding-bottom: 0;
-        border-bottom: unset;
-      }
-
-      /* 第一个不添加 */
-
-      &:first-child {
-        padding-top: 0;
-      }
-
-      &.dragTarget {
-        margin-top: 8px;
-
-        & > * {
-          pointer-events: none;
-          user-select: none;
-          opacity: 0.7;
-        }
-      }
-
-      .el-image {
-        height: 100%;
-      }
-
-      .linkName {
-        width: 20%;
-        height: 60px;
-        align-items: center;
-        gap: 8px;
-        padding: 0;
-
-        .el-input-group__prepend {
-          background-color: var(--el-color-primary);
-          color: white;
-          font-weight: bold;
-          font-size: 16px;
-          padding: 0 12px;
-        }
-
-        .el-form-item__label {
-          padding: 0;
-          margin: 0;
-          font-size: 18px;
-        }
-
-        .el-input__inner {
-          font-size: 24px;
-          font-weight: bold;
-        }
-
-        .el-form-item__content {
-          margin-left: 0 !important;
-          height: 100%;
-        }
-
-        .el-input {
-          height: 100%;
-        }
-      }
-
-      .imgLinkName {
-        .el-input-group__prepend {
-          background-color: unset;
-        }
-      }
-
-      .linkUrl {
-        display: block !important;
-        width: calc(80% - 180px) !important;
-      }
-
-      .linkImg {
-        display: block !important;
-        width: 20% !important;
-      }
-
-      .linkUrl, .linkImg {
-        .el-input__wrapper {
-          border-radius: 0 8px 8px 8px;
-        }
-
-        .el-form-item__label {
-          margin-bottom: 0;
-          border-radius: 8px 8px 0 0;
-        }
-
-        .el-input__wrapper {
-          height: 32px;
-        }
-      }
-    }
-  }
-}
 </style>

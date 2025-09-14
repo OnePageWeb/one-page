@@ -30,6 +30,7 @@ const name = ref('')
 const desc = ref('')
 const close = () => {
   emit('close')
+  visible.value = false
 }
 
 const open = () => {

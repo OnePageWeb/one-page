@@ -292,6 +292,7 @@ defineExpose({
 
 <style>
 .globeStyleDialog {
+  height: 60%;
   .tagContainer {
     height: calc(20% - 36px);
     border: 2px solid #dddddd;

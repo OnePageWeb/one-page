@@ -1,6 +1,4 @@
 .commonDialog {
-  height: calc(80% - 2px);
-  max-height: calc(80% - 2px);
   --el-dialog-padding-primary: 0;
   --el-dialog-border-radius: 0;
   --el-dialog-bg-color: rgba(209, 209, 209, 0.6);
@@ -40,13 +38,13 @@
 
   .el-dialog__body {
     height: calc(100% - 128px);
-    max-height: calc(100% - 128px);
+    max-height: 70vh;
     padding: 16px;
     overflow-x: hidden;
     /* 对其中的第一个子组件设置高度为100% */
 
     > *:first-child {
-      height: 100% !important;
+      height: 100%;
       overflow: auto;
     }
   }
@@ -78,7 +76,7 @@
     }
 
     .el-form-item {
-      padding: 8px;
+      padding: 8px 0;
       margin-bottom: 0;
     }
 
@@ -86,9 +84,11 @@
 
   .el-input {
     .el-input__wrapper {
-      background-color: var(--background-opacity);
+      background-color: #ffffff80;
 
       .el-input__inner {
+        color: #3b3b3b;
+
         &::placeholder {
           color: #888888;
         }
@@ -142,6 +142,15 @@
       background-color: rgba(0, 0, 0, 0.5);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  .el-button {
+    --el-button-bg-color: #919191;
+    --el-button-hover-bg-color: rgb(85 85 85);
+    --el-button-hover-text-color: #d9d9d999;
+    --el-button-hover-border-color: 0;
+    --el-button-border-color: 0;
+    --el-border: 0;
   }
 
   .cm-editor {

@@ -236,7 +236,7 @@ function handleFileDrop(e) {
   }
 
   .readyComponents, .moduleComponents {
-    height: calc(35% - 21px);
+    min-height: 10vh;
     overflow: auto;
     position: relative;
   }
