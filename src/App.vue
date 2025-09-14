@@ -310,7 +310,7 @@ import versionInfo from '@/items/versionInfo.vue'
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue"
-import DragInCover from "@/items/DragInCover.vue"
+import DragInCover from "@/items/dragInCover.vue"
 import CommonDialog from "@/items/commonDialog.vue"
 import {error, info, success} from "@/js/message.js"
 import GridStackConfig from "@/items/gridStackConfig.vue"
@@ -382,6 +382,10 @@ function keyListener(event) {
 function mouseDown(event) {
   ctrlDown.value = false
 }
+
+const onWindowBlur = () => {
+  ctrlDown.value = false
+  }
 
 const globalStyle = ref(null)
 
@@ -536,6 +540,7 @@ onMounted(async () => {
   window.addEventListener('keydown', keyListener)
   window.addEventListener('keyup', keyListener)
   window.addEventListener('mousedown', mouseDown)
+  window.addEventListener('blur', onWindowBlur)
 })
 
 // 注销按键监听
@@ -543,6 +548,7 @@ onUnmounted(() => {
   window.removeEventListener('keydown', keyListener)
   window.removeEventListener('keyup', keyListener)
   window.removeEventListener('mousedown', mouseDown)
+  window.removeEventListener('blur', onWindowBlur)
 })
 
 // 编辑全局样式
