@@ -126,7 +126,7 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="80%" align-center>
+      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="40%" align-center>
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -191,6 +191,7 @@
     <common-dialog
         :title="$t('style.component')"
         :visible="isEditComponentStyle"
+        class="componentStyleDialog"
         @opened="onComponentStyleOpened"
         @closed="isEditComponentStyle = false"
     >
@@ -257,52 +258,7 @@
     />
 
     <!-- 快捷键提示 -->
-    <div :class="['shortcutKeys', {'shortcutKeysHidden': !ctrlDown}]">
-      <div class="shortcutKeysList">
-        <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">Q</div>
-          <el-icon>
-            <Rank/>
-          </el-icon>
-          <div class="shortcutKeysItemDesc">{{ $t('shortcut.q') }}</div>
-        </div>
-        <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">E</div>
-          <el-icon>
-            <Edit/>
-          </el-icon>
-          <div class="shortcutKeysItemDesc">{{ $t('shortcut.e') }}</div>
-        </div>
-        <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">D</div>
-          <el-icon>
-            <Operation/>
-          </el-icon>
-          <div class="shortcutKeysItemDesc">{{ $t('shortcut.d') }}</div>
-        </div>
-        <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">R</div>
-          <el-icon>
-            <RefreshRight/>
-          </el-icon>
-          <div class="shortcutKeysItemDesc">{{ $t('shortcut.r') }}</div>
-        </div>
-        <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">F</div>
-          <el-icon>
-            <UploadFilled/>
-          </el-icon>
-          <div class="shortcutKeysItemDesc">{{ $t('shortcut.f') }}</div>
-        </div>
-        <div class="shortcutKeysItem">
-          <div class="shortcutKeysItemTitle">~</div>
-          <el-icon>
-            <View/>
-          </el-icon>
-          <div class="shortcutKeysItemDesc">{{ $t('shortcut.~') }}</div>
-        </div>
-      </div>
-    </div>
+    <shortcut-keys-tip style="z-index: 9999" :visible="ctrlDown"/>
   </div>
 </template>
 
@@ -332,21 +288,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams, removeParams} from "@/js/url.js"
-import {
-  CirclePlus,
-  Edit,
-  Grid,
-  InfoFilled,
-  Monitor,
-  Operation,
-  Picture,
-  Promotion,
-  Rank,
-  RefreshRight,
-  Top,
-  UploadFilled,
-  View,
-} from "@element-plus/icons-vue"
+import {CirclePlus, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Top,} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -368,10 +310,11 @@ import versionInfo from '@/items/versionInfo.vue'
 
 import {useI18n} from 'vue-i18n'
 import CssEditor from "@/items/cssEditor.vue"
-import DragInCover from "@/items/DragInCover.vue"
+import DragInCover from "@/items/dragInCover.vue"
 import CommonDialog from "@/items/commonDialog.vue"
 import {error, info, success} from "@/js/message.js"
 import GridStackConfig from "@/items/gridStackConfig.vue"
+import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
 
 const {t} = useI18n()
 
@@ -439,6 +382,10 @@ function keyListener(event) {
 function mouseDown(event) {
   ctrlDown.value = false
 }
+
+const onWindowBlur = () => {
+  ctrlDown.value = false
+  }
 
 const globalStyle = ref(null)
 
@@ -518,7 +465,7 @@ onMounted(async () => {
     if (configParam) {
       // 如果非临时工作区存在数据，则弹出警告
       let access = false
-      if (getNowWorkspace() !== TEMP_WORKSPACE && loadData('layout'))  {
+      if (getNowWorkspace() !== TEMP_WORKSPACE && loadData('layout')) {
         await ElMessageBox.confirm(
             t('workspace.recover.desc', [getNowWorkspace()]),
             t('workspace.recover.title'),
@@ -593,6 +540,7 @@ onMounted(async () => {
   window.addEventListener('keydown', keyListener)
   window.addEventListener('keyup', keyListener)
   window.addEventListener('mousedown', mouseDown)
+  window.addEventListener('blur', onWindowBlur)
 })
 
 // 注销按键监听
@@ -600,6 +548,7 @@ onUnmounted(() => {
   window.removeEventListener('keydown', keyListener)
   window.removeEventListener('keyup', keyListener)
   window.removeEventListener('mousedown', mouseDown)
+  window.removeEventListener('blur', onWindowBlur)
 })
 
 // 编辑全局样式
@@ -1380,6 +1329,10 @@ textarea {
 
 /* 删除图标样式结束 */
 
+.componentStyleDialog {
+  height: 60%;
+}
+
 /* 组件弹窗样式开始 */
 .zoomInDialog {
   height: 95%;
@@ -1409,6 +1362,8 @@ textarea {
 
 /* 组件弹窗样式结束 */
 .globeConfigDialog {
+  height: 60%;
+
   .configLoaderHeader {
     color: white;
     display: flex;
@@ -1447,88 +1402,6 @@ textarea {
       border-radius: 24px;
       border: 2px solid rgba(255, 255, 255);
     }
-  }
-}
-
-/* 快捷键样式 */
-.shortcutKeys {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  width: calc(20% - 56px);
-  bottom: 5%;
-  left: 40%;
-  opacity: 1;
-  padding: 24px;
-  border-radius: 24px;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: all 0.3s ease-in-out;
-  pointer-events: none;
-  border: 4px solid rgba(255, 255, 255, 0.6);
-
-  * {
-    user-select: none;
-    pointer-events: none;
-  }
-
-  .shortcutKeysList {
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    flex-direction: column;
-  }
-
-  .shortcutKeysItem {
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    justify-content: flex-start;
-    width: 100%;
-
-    .el-icon {
-      color: #ffffff;
-      height: 2vw;
-      width: 2vw;
-
-      svg {
-        height: 100%;
-        width: 100%;
-      }
-    }
-
-    .shortcutKeysItemTitle {
-      font-size: 3vw;
-      font-weight: bold;
-      width: 3vw;
-      color: #ffffff;
-    }
-
-    .shortcutKeysItemDesc {
-      font-size: 1.5vw;
-      font-weight: bold;
-      color: #e3e3e3;
-    }
-  }
-}
-
-.shortcutKeysHidden {
-  opacity: 0;
-  padding: 0;
-  bottom: 0;
-
-  * {
-    opacity: 0;
-    padding: 0;
   }
 }
 </style>

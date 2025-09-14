@@ -114,7 +114,7 @@ export default {
         prefixDesc: '在链接前的内容，通常是空',
         suffix: '后置内容',
         suffixDesc: '在链接后的内容，通常是高级搜索追加',
-        name: '搜索引擎名称',
+        name: '名称',
         nameDesc: '搜索引擎名称，用于显示',
         url: '搜索引擎URL',
         urlDesc: '搜索引擎URL，用于搜索',

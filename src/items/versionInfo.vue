@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import packageJson from '../../package.json'
 import {loadDataDirect, saveDataDirect} from "@/js/data.js"
-import {ref, onMounted, computed} from 'vue'
-import {ElLink, ElMessage, ElButton, ElTooltip} from "element-plus"
+import {onMounted, ref} from 'vue'
+import {ElButton, ElLink, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
-import {CircleClose, Close} from "@element-plus/icons-vue"
+import {Close} from "@element-plus/icons-vue"
 import {warning} from "@/js/message.js"
 
 const {t} = useI18n()
@@ -102,7 +102,7 @@ onMounted(() => {
 
     <div class="close-icon">
       <el-tooltip :content="t('common.close')" placement="top" effect="light">
-        <el-button type="danger" @click="isShow = false" :icon="Close" circle />
+        <el-button type="danger" @click="isShow = false" :icon="Close" circle/>
       </el-tooltip>
     </div>
   </div>

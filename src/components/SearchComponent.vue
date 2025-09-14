@@ -6,6 +6,7 @@ import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
 import CommonDialog from "@/items/commonDialog.vue"
+
 const {t} = useI18n()
 
 const props = defineProps({
@@ -60,6 +61,7 @@ function search(event) {
   const searchUrl = searchEngineMap[nowSearchEngine.value].url
   window.open(prefix.value || '' + searchUrl.replace('{query}', searchContent.value) + suffix.value || '', target)
 }
+
 // 上一个搜索引擎
 function previousSearchEngine() {
   const index = searchEngineList.value.map(item => item.name).indexOf(nowSearchEngine.value)
@@ -70,6 +72,7 @@ function previousSearchEngine() {
     nowSearchEngine.value = searchEngineList.value[index - 1].name
   }
 }
+
 // 下一个搜索引擎
 function nextSearchEngine(event) {
   if (event.shiftKey) {
@@ -196,10 +199,10 @@ defineExpose({
             :label="item.name"
             :value="item.name"
         >
-          <div v-html="item.name" />
+          <div v-html="item.name"/>
         </el-option>
         <template #label="{ value }">
-          <div v-html="value" />
+          <div v-html="value"/>
         </template>
       </el-select>
       <el-input
@@ -221,7 +224,7 @@ defineExpose({
     <common-dialog
         :visible="dialogVisible"
         :title="t('component.search.edit.title')"
-        width="60%"
+        width="50%"
         class="searchEditDialog"
         @closed="dialogVisible = false"
     >
@@ -239,7 +242,7 @@ defineExpose({
             <el-form-item prop="name" class="searchName">
               <el-input v-model="item.name" :placeholder="t('component.search.edit.nameDesc')">
                 <template #prepend>
-                  <h5tag :text="t('component.search.edit.name')" />
+                  <h5tag :text="t('component.search.edit.name')"/>
                 </template>
               </el-input>
             </el-form-item>
@@ -381,12 +384,18 @@ defineExpose({
 }
 
 .searchEditDialog {
+
+  .el-dialog__body {
+    padding: 0 !important;
+  }
+
   .searchForm {
 
     .appendContainer {
       display: flex;
       justify-content: space-between;
       border-bottom: 1px dashed #aaaaaa;
+      margin: 10px;
 
       .prefix {
         width: 49%;
@@ -408,29 +417,27 @@ defineExpose({
 
       .el-input__wrapper {
         border-radius: 0 0 4px 4px;
+        height: 40px;
+        font-size: 18px;
       }
 
-      .el-input__wrapper {
-        height: 32px;
-      }
     }
 
     .searchItem {
       display: flex;
       align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px dashed #aaaaaa;
-      /* 最后一个不添加 */
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      gap: 12px;
 
-      &:last-child {
-        padding-bottom: 0;
-        border-bottom: unset;
-      }
+      /* 对子元素每一个间隔一个来设置背景 */
 
-      /* 第一个不添加 */
+      &:nth-child(odd) {
+        background-color: transparent;
 
-      &:first-child {
-        padding-top: 0;
+        .recordText {
+          color: #cdcdcd;
+        }
       }
 
       .searchName {
@@ -441,7 +448,7 @@ defineExpose({
         padding: 0;
 
         .el-input-group__prepend {
-          background-color: var(--el-color-primary);
+          background-color: #333333;
           color: white;
           font-weight: bold;
           font-size: 16px;
@@ -481,16 +488,18 @@ defineExpose({
 
       .searchUrl, .searchPlaceholder {
         .el-input__wrapper {
-          border-radius: 0 4px 4px 4px;
+          border-radius: 0 8px 8px 8px;
+          height: 40px;
+          font-size: 18px;
+
+          .el-input__inner {
+            border-radius: 0 8px 8px 8px;
+          }
         }
 
         .el-form-item__label {
           margin-bottom: 0;
           border-radius: 4px 4px 0 0;
-        }
-
-        .el-input__wrapper {
-          height: 32px;
         }
       }
     }

@@ -114,7 +114,7 @@ export default {
         prefixDesc: 'Content before the link, usually empty',
         suffix: 'Suffix Content',
         suffixDesc: 'Content after the link, usually advanced search append',
-        name: 'Search Engine Name',
+        name: 'Name',
         nameDesc: 'Search engine name, used for display',
         url: 'Search Engine URL',
         urlDesc: 'Search engine URL, used for searching',
