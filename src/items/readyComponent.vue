@@ -28,11 +28,10 @@ const filterComponents = computed(() => {
 const loadConfigFiles = async () => {
   const files = import.meta.glob('/public/configs/components/*.json')
 
-  const prefix = import.meta.env.BASE_URL === '/one/' ? '' : '/public'
   for (const path in files) {
     try {
       const file = await files[path]()
-      components.value[file.name] = {desc: file.desc, path: path.replace('/public', prefix)}
+      components.value[file.name] = {desc: file.desc, path: path.replace('/public', '')}
     } catch (error) {
       console.error(t('error.load'), path, error)
     }
