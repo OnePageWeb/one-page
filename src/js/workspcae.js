@@ -1,13 +1,14 @@
 import {loadDataDirect, saveDataDirect} from "@/js/data.js"
 
 let nowWorkspace = ''
+export const DEFAULT_WORKSPACE = 'default'
 export const TEMP_WORKSPACE = 'temp'
 
 export function getWorkspacePrefix(workspace) {
     if (!workspace) {
         workspace = nowWorkspace
     }
-    if (!workspace || workspace === '' || workspace === 'default') {
+    if (!workspace || workspace === '' || workspace === DEFAULT_WORKSPACE) {
         return ''
     }
     return workspace + '-'
@@ -23,8 +24,8 @@ export function initWorkspace() {
 }
 
 export function setWorkspace(workspace) {
-    if (!workspace || workspace === '' || workspace === 'default') {
-        nowWorkspace = 'default'
+    if (!workspace || workspace === '' || workspace === DEFAULT_WORKSPACE) {
+        nowWorkspace = DEFAULT_WORKSPACE
     } else if (nowWorkspace === workspace) {
         return
     } else {
@@ -50,20 +51,20 @@ export function setWorkspace(workspace) {
 export function listWorkspace() {
     const ws = window.localStorage.getItem('workspace')
     if (!ws) {
-        return ['default']
+        return [DEFAULT_WORKSPACE]
     }
     const parse = JSON.parse(ws)
-    if (!parse.includes('default')) {
-        parse.push('default')
+    if (!parse.includes(DEFAULT_WORKSPACE)) {
+        parse.push(DEFAULT_WORKSPACE)
     }
     return parse
 }
 
 export function getNowWorkspace() {
-    return nowWorkspace ? nowWorkspace : 'default'
+    return nowWorkspace ? nowWorkspace : DEFAULT_WORKSPACE
 }
 
-export function deleteWorkspace(workspace) {
+export function clearWorkspace(workspace = nowWorkspace) {
     // 删除存储
     const workspacePrefix = getWorkspacePrefix(workspace)
     const needDeleteKeys = []
@@ -77,6 +78,10 @@ export function deleteWorkspace(workspace) {
     needDeleteKeys.forEach(key => {
         window.localStorage.removeItem(key)
     })
+}
+
+export function deleteWorkspace(workspace) {
+    clearWorkspace(workspace)
     // 删除工作空间
     const wsList = listWorkspace()
     if (wsList?.includes(workspace)) {
@@ -89,7 +94,7 @@ export function deleteWorkspace(workspace) {
         if (wsList.includes(last)) {
             setWorkspace(last)
         } else {
-            setWorkspace('default')
+            setWorkspace(DEFAULT_WORKSPACE)
         }
     }
 }

@@ -51,6 +51,11 @@ function save() {
   }))
 }
 
+const switchAutoExecute = () => {
+  autoExecute.value = !autoExecute.value
+  save()
+}
+
 // 执行方法
 let iframe
 
@@ -73,14 +78,12 @@ onUnmounted(() => {
 async function execute() {
   isEditing.value = false
   function executeCode() {
-    const setResult = (result) => {
+    const fn = new Function("setResult", functionContent.value)
+    return fn((res) => {
       nextTick(() => {
-        functionResult.value = result
+        functionResult.value = res
       })
-    }
-    return eval(`(function (setResult) {
-      ${functionContent.value}
-    })(setResult)`)
+    })
   }
 
   try {
@@ -108,7 +111,8 @@ function load(data) {
         execute()
       }
     })
-  } else if (autoExecute.value) {
+  }
+  if (autoExecute.value) {
     execute()
   }
 }
@@ -140,7 +144,7 @@ defineExpose({
           width="200"
       >
         <template #reference>
-          <el-icon :class="['paramItem', {'positive': !autoExecute}]" @click="autoExecute = !autoExecute">
+          <el-icon :class="['paramItem', {'positive': !autoExecute}]" @click="switchAutoExecute">
             <Finished/>
           </el-icon>
         </template>
@@ -190,7 +194,7 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
+<style>
 .functionContent {
   height: 100%;
   width: 100%;
@@ -202,6 +206,7 @@ defineExpose({
   .params.hide {
     height: 0;
     opacity: 0;
+    pointer-events: none;
   }
 
   .textContainer {
@@ -224,30 +229,29 @@ defineExpose({
       opacity: 0;
     }
 
-    .inputOnFocus {
+    .inputWithParams.input {
+      width: 0;
+      height: 100%;
+      opacity: 0;
+    }
+
+    .inputWithParams.inputOnFocus {
       width: 100%;
       height: 100%;
       opacity: 1;
     }
   }
 
-  :deep(.el-text) {
+  .el-text {
     width: 100%;
     height: 100%;
-    font-size: 18px;
-  }
-
-  .input {
-    width: 0;
-    height: 100%;
-    opacity: 0;
   }
 
   .result {
     cursor: pointer;
   }
 
-  .input :deep(.el-textarea__inner) {
+  .input .el-textarea__inner {
     width: 100%;
     height: 100%;
     opacity: 1;
@@ -282,6 +286,7 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    pointer-events: all;
 
     .paramItem {
       padding: 4px;

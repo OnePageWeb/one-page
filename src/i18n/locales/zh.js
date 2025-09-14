@@ -231,6 +231,7 @@ export default {
     delete: {
       title: '删除选中工作区',
       content: '是否删除工作区',
+      cannotDelete: '无法删除此工作区',
       tip: '此工作区下的所有数据将被删除，不可恢复！',
     },
     recover: {

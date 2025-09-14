@@ -15,7 +15,7 @@ import {
 import {Check, InfoFilled} from "@element-plus/icons-vue"
 import {reloadWithoutParams} from "@/js/url.js"
 import {useI18n} from "vue-i18n"
-import {TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {TEMP_WORKSPACE, DEFAULT_WORKSPACE} from "@/js/workspcae.js"
 import commonDialog from "@/items/commonDialog.vue"
 import {warning, success} from "@/js/message.js"
 
@@ -84,6 +84,10 @@ function switchWorkspace(workspace: string) {
 const deleteWorkspaceName = ref('')
 
 function showDeleteConfirm(tag: string) {
+  if (tag === DEFAULT_WORKSPACE) {
+    warning(t('workspace.delete.cannotDelete'))
+    return
+  }
   deleteWorkspaceName.value = tag
   deleteConfirm.value = true
 }
