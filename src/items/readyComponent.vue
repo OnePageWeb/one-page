@@ -265,10 +265,10 @@ function handleFileDrop(e) {
     display: flex;
     justify-content: space-between;;
     align-items: center;
-    padding: 8px;
+    padding: 8px 16px;
     float: left;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #ffffff;
+    border-radius: 24px;
     margin: 8px;
     background: rgba(255, 255, 255, 0.8);
     background-size: 200%;
@@ -305,7 +305,7 @@ function handleFileDrop(e) {
     &:hover {
       color: white;
       background: #404040;
-      border: 1px solid #454545;
+      border: 2px solid #454545;
 
       .componentDesc {
         font-size: 14px;

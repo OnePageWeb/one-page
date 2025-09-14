@@ -203,9 +203,18 @@ function deleteItem(workspace: string) {
     padding: 8px 16px;
     cursor: pointer;
     height: unset;
+    border-radius: 24px;
+    border-width: 2px;
+    --el-tag-border-color: #d6d6d6;
 
     &:hover {
       scale: 1.1;
+    }
+
+    &.el-tag--primary {
+      --el-tag-bg-color: #434343;
+      --el-tag-text-color: white;
+      box-shadow: 0 0 10px 0 rgb(255 255 255 / 50%);
     }
   }
 

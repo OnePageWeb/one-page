@@ -309,11 +309,11 @@ defineExpose({
       cursor: pointer;
       height: unset;
       user-select: none;
-      border-radius: 16px;
+      border-radius: 24px;
       border: 2px solid #ffffff;
 
       &:hover {
-        animation: shake 1s linear infinite;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
       }
     }
 

@@ -191,6 +191,7 @@
     <common-dialog
         :title="$t('style.component')"
         :visible="isEditComponentStyle"
+        class="componentStyleDialog"
         @opened="onComponentStyleOpened"
         @closed="isEditComponentStyle = false"
     >
@@ -1321,6 +1322,10 @@ textarea {
 }
 
 /* 删除图标样式结束 */
+
+.componentStyleDialog {
+  height: 60%;
+}
 
 /* 组件弹窗样式开始 */
 .zoomInDialog {
