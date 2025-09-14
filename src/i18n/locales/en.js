@@ -231,6 +231,7 @@ export default {
     delete: {
       title: 'Delete Selected Workspace',
       content: 'Whether to delete the workspace',
+      cannotDelete: 'Can not delete this workspace',
       tip: 'All data under this workspace will be deleted and cannot be recovered!',
     },
     recover: {

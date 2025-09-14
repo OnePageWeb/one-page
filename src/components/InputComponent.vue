@@ -49,15 +49,10 @@ function save() {
 
 async function execute() {
   function executeCode() {
-    const input = inputText.value
-    const setResult = (result) => {
-      functionResult.value = result
-    }
-    // input当成入参
-    // 方法内容中使用input变量
-    return eval(`(function (input, setResult) {
-      ${functionText.value}
-    })(input, setResult)`)
+    const fn = new Function("input", "setResult", functionText.value)
+    return fn(inputText.value, (res) => {
+      functionResult.value = res
+    })
   }
 
   try {

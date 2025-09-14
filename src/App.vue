@@ -299,7 +299,7 @@ import {
   saveData,
   saveDataDirect,
 } from "@/js/data.js"
-import {getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
+import {clearWorkspace, getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/js/workspcae.js"
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
@@ -983,22 +983,7 @@ function generateConfig() {
 
 // 清除旧配置
 function clearConfig(reload = false) {
-  const nodes = grid.engine.nodes; // 获取所有格子节点数据
-  const ids = nodes.map(node => node.el.id)
-  for (let id of ids) {
-    // 删除组件数据
-    removeData(id)
-    // 删除组件样式
-    removeData(id + '-style')
-  }
-  removeData('layout')
-  // 删除配置URL
-  removeData('configUrl')
-  // 删除配置URL锁定
-  removeData('lock')
-  removeData('cellH')
-  removeData('cellW')
-  globalStyle.value.clearStyle()
+  clearWorkspace()
   // 刷新页面
   if (reload) {
     window.location.reload()
@@ -1192,6 +1177,7 @@ body {
   }
 
   .modeContainer {
+    display: flex;
     .modeItem {
       &:first-child {
         border-radius: 8px 0 0 8px;
