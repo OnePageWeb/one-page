@@ -3,25 +3,28 @@ import {defineEmits, ref, toRefs} from 'vue'
 import {Close, Connection, CopyDocument, Download, Picture, Promotion, Rank, ZoomIn} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
+
 const {t} = useI18n()
 
-const emit = defineEmits(['onDelete', 'onStyleEdit', 'zoomIn', 'exportComponent', 'copy', 'module'])
+const emit = defineEmits(['delete', 'styleEdit', 'focus', 'exportComponent', 'copy', 'module', 'unFocus'])
 const props = defineProps({
   id: String,
   type: String,
   enableEdit: Object,
   enableMove: Object,
+  focusMode: Object,
+  focusId: String,
   ctrl: Object,
   transferData: Function,
 })
-const {id, type, enableEdit, enableMove, ctrl} = toRefs(props)
+const {id, type, enableEdit, enableMove, focusMode, focusId, ctrl} = toRefs(props)
 
 function deleteItem() {
-  setTimeout(() => emit('onDelete', id), 300)
+  setTimeout(() => emit('delete', id), 300)
 }
 
 function editStyle() {
-  emit('onStyleEdit', id)
+  emit('styleEdit', id)
 }
 
 function copy() {
@@ -32,8 +35,15 @@ function module() {
   emit('module', id, type)
 }
 
-function zoomIn() {
-  emit('zoomIn', id, type)
+function focus() {
+  console.log('focusMode', focusMode)
+  if (focusMode.value) {
+    emit('focus', id, type)
+  }
+}
+
+const unFocus = () => {
+  emit('unFocus', id, type)
 }
 
 function onTransferStart(e) {
@@ -50,11 +60,7 @@ const operatorContainer = ref(null)
 </script>
 
 <template>
-  <div
-      v-show="enableEdit || enableMove || ctrl"
-      ref="operatorContainer"
-      :class="['operatorContainer', {'visible': enableEdit || enableMove || ctrl, 'onlyMove': enableMove && !enableEdit && !ctrl}]"
-  >
+  <div ref="operatorContainer" class="operatorContainer">
     <div class="buttonContainer">
 
       <el-tooltip
@@ -71,7 +77,7 @@ const operatorContainer = ref(null)
             draggable="true"
             @dragstart.stop="onTransferStart"
         >
-          <Promotion />
+          <Promotion/>
         </el-icon>
       </el-tooltip>
       <el-tooltip
@@ -96,7 +102,7 @@ const operatorContainer = ref(null)
           :hide-after="10"
           :enterable="false"
       >
-        <el-icon class="exportComponent" @click="exportComponent">
+        <el-icon class="exportComponent" @click.prevent.stop="exportComponent">
           <Download/>
         </el-icon>
       </el-tooltip>
@@ -109,7 +115,7 @@ const operatorContainer = ref(null)
           :hide-after="10"
           :enterable="false"
       >
-        <el-icon class="module" @click="module">
+        <el-icon class="module" @click.prevent.stop="module">
           <Connection/>
         </el-icon>
       </el-tooltip>
@@ -122,20 +128,8 @@ const operatorContainer = ref(null)
           :hide-after="10"
           :enterable="false"
       >
-        <el-icon class="copy" @click="copy">
+        <el-icon class="copy" @click.prevent.stop="copy">
           <CopyDocument/>
-        </el-icon>
-      </el-tooltip>
-      <el-tooltip
-          effect="light"
-          :content="t('component.operate.zoomIn')"
-          placement="top-start"
-          :show-after="300"
-          :hide-after="10"
-          :enterable="false"
-      >
-        <el-icon class="zoomIn" @click="zoomIn">
-          <ZoomIn/>
         </el-icon>
       </el-tooltip>
       <el-tooltip
@@ -147,7 +141,7 @@ const operatorContainer = ref(null)
           :hide-after="10"
           :enterable="false"
       >
-        <el-icon class="editStyle" @click="editStyle">
+        <el-icon class="editStyle" @click.prevent.stop="editStyle">
           <Picture/>
         </el-icon>
       </el-tooltip>
@@ -162,28 +156,38 @@ const operatorContainer = ref(null)
           @confirm="deleteItem"
       >
         <template #reference>
-          <el-icon class="deleteItem">
+          <el-icon class="deleteItem" @click.prevent.stop>
             <Close/>
           </el-icon>
         </template>
       </el-popconfirm>
     </div>
+
+    <!-- 效果盖板 -->
+    <div :class="{
+      'operatorArea': true,
+      'focusClick': focusMode,
+      'onlyMoveMode': enableMove && !enableEdit && !ctrl,
+      'onEditMode': enableEdit || ctrl,
+      'onFocus': focusMode
+    }"
+      @click.prevent.stop="focus"
+    />
   </div>
 </template>
 
-<style scoped>
+<style>
 .operatorContainer {
-  height: calc(100% - 4px);
-  width: calc(100% - 4px);
-  opacity: 0;
+  height: 100%;
+  width: 100%;
   top: 0;
   left: 0;
   display: flex;
-  border: 2px dashed rgba(255, 255, 255, 0.6);
   justify-content: flex-end;
   pointer-events: none;
   transition: opacity 1s ease-in-out;
-  z-index: 20;
+  z-index: 3;
+  position: absolute;
 
   .buttonContainer {
     width: fit-content;
@@ -196,11 +200,12 @@ const operatorContainer = ref(null)
     gap: 4px;
     position: relative;
     pointer-events: auto;
-    top: -13px;
-    right: -8px;
+    top: -11px;
+    right: -6px;
+    z-index: 11;
 
     &:hover {
-      max-width: calc(100% + 8px);
+      max-width: calc(100% + 4px);
       top: -9px;
 
       .el-icon {
@@ -222,79 +227,102 @@ const operatorContainer = ref(null)
       &:hover {
         scale: 1.4;
       }
+
+      svg {
+        height: unset !important;
+        width: unset !important;
+        border-radius: 48px;
+        padding: 4px;
+      }
+    }
+
+    .deleteItem {
+      svg {
+        background-color: #ff5050;
+      }
+    }
+
+    .transfer {
+      cursor: move;
+
+      svg {
+        background-color: #ff5858;
+      }
+    }
+
+    .copy {
+      svg {
+        background-color: #dfa946;
+      }
+    }
+
+    .module {
+      svg {
+        background-color: #46a9df;
+      }
+    }
+
+    .exportComponent {
+      svg {
+        background-color: #4671df;
+      }
+    }
+
+    .editStyle {
+      svg {
+        background-color: #46a9df;
+      }
+    }
+
+    .dragHandle {
+      cursor: move;
+
+      svg {
+        background-color: #1d9333;
+      }
+    }
+
+  }
+
+  .operatorArea {
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
+
+  .focusClick {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    border: 2px dashed rgb(255, 255, 255);
+    z-index: 11;
+
+    &:hover {
+      opacity: 0;
+      backdrop-filter: unset;
     }
   }
 
-  .deleteItem {
-    svg {
-      background-color: #ff5050;
-    }
+  .onlyMoveMode {
+    background-color: rgba(255, 255, 255, 0.2);
+    pointer-events: auto;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .onEditMode {
+    border: 2px dashed rgba(255, 255, 255, 0.6);
   }
 
-  .el-icon svg {
-    height: unset !important;
-    width: unset !important;
-    border-radius: 48px;
-    padding: 4px;
+  .onFocus {
+    pointer-events: all;
   }
 
-  .transfer {
-    cursor: move;
-    svg {
-      background-color: #ff5858;
-    }
-  }
-
-  .zoomIn {
-    cursor: zoom-in;
-
-    svg {
-      background-color: #42c87a;
-    }
-  }
-
-  .copy {
-    svg {
-      background-color: #dfa946;
-    }
-  }
-
-  .module {
-    svg {
-      background-color: #46a9df;
-    }
-  }
-
-  .exportComponent {
-    svg {
-      background-color: #4671df;
-    }
-  }
-
-  .editStyle {
-    svg {
-      background-color: #46a9df;
-    }
-  }
-
-  .dragHandle {
-    cursor: move;
-
-    svg {
-      background-color: #1d9333;
-    }
-  }
-}
-
-.visible {
-  opacity: 1;
-}
-
-.onlyMove {
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-  pointer-events: all;
-  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 </style>

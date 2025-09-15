@@ -11,7 +11,7 @@ export const success = (msg) => {
   ElMessage({
     message: msg,
     type: 'success',
-    placement: 'top-right',
+    placement: 'top',
   })
 }
 export const warning = (msg) => {

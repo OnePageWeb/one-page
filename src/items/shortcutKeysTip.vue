@@ -6,6 +6,26 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  e: {
+    type: Boolean,
+    default: false,
+  },
+  d: {
+    type: Boolean,
+    default: false,
+  },
+  q: {
+    type: Boolean,
+    default: false,
+  },
+  w: {
+    type: Boolean,
+    default: false,
+  },
+  f: {
+    type: Boolean,
+    default: false,
   }
 })
 </script>
@@ -13,26 +33,33 @@ const props = defineProps({
 <template>
   <div :class="['shortcutKeys', {'shortcutKeysHidden': !visible}]">
     <div class="shortcutKeysList">
-      <div class="shortcutKeysItem">
+      <div :class="['shortcutKeysItem', q ? 'activeKey' : '']">
         <div class="shortcutKeysItemTitle">Q</div>
         <el-icon>
           <Rank/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.q') }}</div>
       </div>
-      <div class="shortcutKeysItem">
+      <div :class="['shortcutKeysItem', e ? 'activeKey' : '']">
         <div class="shortcutKeysItemTitle">E</div>
-        <el-icon>
+        <el-icon color="#ffffff">
           <Edit/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.e') }}</div>
       </div>
-      <div class="shortcutKeysItem">
+      <div :class="['shortcutKeysItem', d ? 'activeKey' : '']">
         <div class="shortcutKeysItemTitle">D</div>
         <el-icon>
           <Operation/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.d') }}</div>
+      </div>
+      <div :class="['shortcutKeysItem', w ? 'activeKey' : '']">
+        <div class="shortcutKeysItemTitle">W</div>
+        <el-icon>
+          <Operation/>
+        </el-icon>
+        <div class="shortcutKeysItemDesc">{{ $t('shortcut.w') }}</div>
       </div>
       <div class="shortcutKeysItem">
         <div class="shortcutKeysItemTitle">R</div>
@@ -41,7 +68,7 @@ const props = defineProps({
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.r') }}</div>
       </div>
-      <div class="shortcutKeysItem">
+      <div :class="['shortcutKeysItem', f ? 'activeKey' : '']">
         <div class="shortcutKeysItemTitle">F</div>
         <el-icon>
           <UploadFilled/>
@@ -65,9 +92,9 @@ const props = defineProps({
   position: fixed;
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  width: calc(20% - 56px);
+  width: calc(40% - 56px);
   bottom: 5%;
-  left: 40%;
+  left: calc(30% + 28px);
   opacity: 1;
   padding: 24px;
   border-radius: 24px;
@@ -78,7 +105,7 @@ const props = defineProps({
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
-  pointer-events: none;
+  pointer-events: all;
   border: 4px solid rgba(255, 255, 255, 0.6);
 
   * {
@@ -89,10 +116,6 @@ const props = defineProps({
   .shortcutKeysList {
     font-size: 24px;
     font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    flex-direction: column;
   }
 
   .shortcutKeysItem {
@@ -102,7 +125,8 @@ const props = defineProps({
     align-items: center;
     gap: 20px;
     justify-content: flex-start;
-    width: 100%;
+    width: 50%;
+    float: left;
 
     .el-icon {
       color: #ffffff;
@@ -127,6 +151,12 @@ const props = defineProps({
       font-weight: bold;
       color: #e3e3e3;
     }
+
+    &.activeKey {
+      .shortcutKeysItemTitle, .shortcutKeysItemDesc, .el-icon {
+        color: orange;
+      }
+    }
   }
 }
 
@@ -134,6 +164,7 @@ const props = defineProps({
   opacity: 0;
   padding: 0;
   bottom: 0;
+  pointer-events: none;
 
   * {
     opacity: 0;

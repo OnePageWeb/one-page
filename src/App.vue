@@ -207,19 +207,6 @@
       </template>
     </common-dialog>
 
-    <!-- 组件放大弹窗 -->
-    <el-dialog
-        v-model="zoomInDialogVisible"
-        class="zoomInDialog"
-        width="95%"
-        align-center
-        :show-close="false"
-        :close-on-press-escape="false"
-        @close="onZoomInClose"
-    >
-      <div id="zoomInElement" class="zoomInElement"></div>
-    </el-dialog>
-
     <!-- 组件库 -->
     <readyComponent ref="readyComponentRef" @addComponent="addComponent"/>
 
@@ -258,17 +245,17 @@
     />
 
     <!-- 快捷键提示 -->
-    <shortcut-keys-tip style="z-index: 9999" :visible="ctrlDown"/>
+    <shortcut-keys-tip style="z-index: 9999" :visible="ctrlDown" :e="enableEdit" :d="showMenu" :q="enableMove"
+                       :w="focusMode || focusId" :f="everyDrag"/>
   </div>
 </template>
 
 <script setup>
-import {createApp, defineComponent, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
+import {createApp, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
 import {
   ElButton,
   ElCheckbox,
-  ElDialog,
   ElIcon,
   ElImage,
   ElInput,
@@ -343,6 +330,7 @@ let grid
 // 锁定状态
 const enableEdit = ref(false)
 const enableMove = ref(false)
+const focusMode = ref(false)
 const ctrl = ref(false)
 watch(enableMove, b => {
   if (b) {
@@ -361,8 +349,18 @@ function keyListener(event) {
     ctrlDown.value = true
     if (event.key === 'q' || event.key === 'Q') {
       enableMove.value ? disabledMove() : enabledMove()
+      unFocus()
+      focusMode.value = false
     } else if (event.key === 'e' || event.key === 'E') {
       enableEdit.value ? disabledEdit() : enabledEdit()
+    } else if (event.key === 'w' || event.key === 'W') {
+      if (!unFocus()) {
+        focusMode.value = !focusMode.value
+        disabledMove()
+        if (focusMode.value) {
+          success(t('shortcut.wTip'))
+        }
+      }
     } else if (event.key === 'd' || event.key === 'D') {
       showMenu.value = !showMenu.value
     } else if (event.key === 'r' || event.key === 'R') {
@@ -374,7 +372,7 @@ function keyListener(event) {
       disabledMove()
     }
     event.preventDefault()
-  } else {
+  } else if (event.key === 'Alt' && event.type === 'keyup') {
     ctrlDown.value = false
   }
 }
@@ -385,7 +383,7 @@ function mouseDown(event) {
 
 const onWindowBlur = () => {
   ctrlDown.value = false
-  }
+}
 
 const globalStyle = ref(null)
 
@@ -637,22 +635,25 @@ function createItemComponent(type, componentItem) {
       }, [
         h(componentItem, {
           ref: componentItemRef,
-          style: {position: 'absolute'},
+          style: {position: 'absolute', zIndex: '10'},
           id: props.id,
           enableEdit: props.enableEdit,
           enableMove: props.enableMove
         }),
         h(operateButtons, {
-          style: {position: 'absolute',},
+          style: {zIndex: '11'},
           id: props.id,
           type: type,
           enableEdit: enableEdit,
           enableMove: enableMove,
+          focusMode: focusMode,
+          focusId: focusId.value,
           ctrl: props.ctrl,
           transferData: () => exportComponentData(props.id, type),
-          onOnDelete: deleteItem,
-          onOnStyleEdit: editStyle,
-          onZoomIn: zoomIn,
+          onDelete: deleteItem,
+          onStyleEdit: editStyle,
+          onFocus: focusIt,
+          onUnFocus: unFocus,
           onExportComponent: exportComponent,
           onCopy: copy,
           onModule: addModuleConfirm,
@@ -796,67 +797,54 @@ function refreshComponentStyle(id) {
 }
 
 // 放大组件
-let zoomInId = null
-let zoomApp = null
-const zoomInDialogVisible = ref(false)
+const focusId = ref(null)
 
-function createZoomIn(id, componentItem) {
-  return defineComponent({
-    props: ['enableEdit', 'enableMove'], // 移除id prop
-    setup(props) {
-      return () => h(componentItem, {
-        ref: 'componentItem',
-        style: {position: 'absolute'},
-        id: id.value + '-container', // 直接使用id.value
-        enableEdit: props.enableEdit,
-        enableMove: props.enableMove,
-      })
-    }
-  })
+function focusIt(id, type) {
+  let idValue = id.value || id
+  focusId.value && unFocus(focusId.value)
+  focusId.value = idValue
+  const eleId = idValue + '-container'
+  console.log('eleId', eleId)
+  const element = document.getElementById(eleId)
+  if (element) {
+    console.log('element', element)
+    const style = document.createElement('style')
+    style.id = eleId + '-focus'
+    style.innerHTML = `[id='${eleId}'] {
+      height: 90% !important;
+      width: 90% !important;
+      position: fixed !important;
+      top: calc(5% - 25px) !important;
+      left: calc(5% - 25px) !important;
+      z-index: 50 !important;
+      background-color: #00000060;
+      backdrop-filter: blur(10px);
+      border: 10px solid rgb(255 255 255 / 10%);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: inset 0 0 16px black;
+
+      & > * {
+        height: calc(100% - 40px);
+        width: calc(100% - 40px);
+        top: 20px;
+        left: 20px;
+      }
+    }`
+    document.head.appendChild(style)
+  }
+  focusMode.value = false
 }
 
-function zoomIn(id, type) {
-  const find = itemType.find(item => item.value === type.value)
-  if (!find) {
-    error(t('error.noSuchComponent_') + type.value)
-    return
+const unFocus = (id = focusId) => {
+  let idValue = id.value || id
+  const style = document.getElementById(idValue + '-container-focus')
+  focusId.value = null
+  if (style) {
+    document.head.removeChild(style)
+    return true
   }
-  zoomInId = id.value
-  // find.component是组件的vue对象
-  zoomInDialogVisible.value = true
-  nextTick(() => {
-    const elementById = document.getElementById('zoomInElement')
-    if (elementById) {
-      elementById.innerHTML = ''
-      if (zoomApp) {
-        zoomApp.unmount()
-      }
-      zoomApp = createApp(createZoomIn(id.value, find.component), {
-        id: id.value,
-        enableEdit: enableEdit,
-        enableMove: enableMove
-      })
-      zoomApp.use(i18n)
-      zoomApp.mount(elementById)
-      if (elementById.firstElementChild) {
-        elementById.firstElementChild.id = id.value
-      }
-    }
-  })
-}
-
-function onZoomInClose() {
-  if (zoomApp) {
-    zoomApp.unmount()
-    zoomApp = null
-  }
-  // 刷新组件数据
-  if (enableEdit) {
-    const element = elementMap[zoomInId]
-    if (element) {
-      element.load()
-    }
-  }
+  return false
 }
 
 // 复制
@@ -1178,6 +1166,7 @@ body {
 
   .modeContainer {
     display: flex;
+
     .modeItem {
       &:first-child {
         border-radius: 8px 0 0 8px;
@@ -1319,34 +1308,6 @@ textarea {
   height: 60%;
 }
 
-/* 组件弹窗样式开始 */
-.zoomInDialog {
-  height: 95%;
-  max-height: 95%;
-  --el-dialog-padding-primary: 0 !important;
-  --el-dialog-border-radius: 0 !important;
-  --el-dialog-bg-color: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(10px);
-
-  .el-dialog__body {
-    height: 100%;
-    color: #272727;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.zoomInElement {
-  height: 90%;
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-}
-
-/* 组件弹窗样式结束 */
 .globeConfigDialog {
   height: 60%;
 
