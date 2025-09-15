@@ -56,25 +56,6 @@ const switchAutoExecute = () => {
   save()
 }
 
-// 执行方法
-let iframe
-
-// 监听 iframe 的消息
-function listener(event) {
-  // 验证消息来源
-  if (!iframe || event.source !== iframe.contentWindow) return
-  functionResult.value = event.data?.data || event.data?.error
-  save()
-}
-
-onMounted(() => {
-  iframe = document.getElementById('sandbox' + id.value)
-  window.addEventListener('message', listener)
-})
-onUnmounted(() => {
-  window.removeEventListener('message', listener)
-})
-
 async function execute() {
   isEditing.value = false
   function executeCode() {
@@ -125,7 +106,6 @@ defineExpose({
 <template>
   <div class="functionContent" ref="functionRef" @dblclick="dbclick">
     <div class="textContainer">
-      <iframe :id="'sandbox' + id" sandbox="allow-scripts" style="display: none;"></iframe>
       <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
       <input-with-params
           ref="inputWithParamsRef"
