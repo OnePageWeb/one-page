@@ -869,8 +869,11 @@ function focusIt(id, type) {
   focusMode.value = false
 }
 
-const unFocus = (id = focusId) => {
-  let idValue = id.value || id
+const unFocus = (id = focusId.value) => {
+  const idValue = id?.value || id
+  if (!idValue) {
+    return false
+  }
   const style = document.getElementById(idValue + '-container-focus')
   focusId.value = null
   if (style) {

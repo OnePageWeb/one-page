@@ -171,8 +171,7 @@ const operatorContainer = ref(null)
       >
         <el-icon
             class="cancelFocus"
-            draggable="true"
-            @dragstart.stop="unFocus"
+            @click.stop="unFocus(id)"
         >
           <DArrowLeft/>
         </el-icon>
