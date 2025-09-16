@@ -36,7 +36,6 @@ function module() {
 }
 
 function focus() {
-  console.log('focusMode', focusMode)
   if (focusMode.value) {
     emit('focus', id, type)
   }
@@ -304,8 +303,12 @@ const operatorContainer = ref(null)
     z-index: 11;
 
     &:hover {
-      opacity: 0;
-      backdrop-filter: unset;
+      opacity: .2;
+      height: calc(100% + 4px);
+      width: calc(100% + 4px);
+      top: -4px;
+      left: -4px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
     }
   }
 

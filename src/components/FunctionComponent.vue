@@ -5,6 +5,7 @@ import {loadData, saveData} from "@/js/data.js"
 import {Finished, SwitchButton, VideoPlay, Edit, View} from "@element-plus/icons-vue"
 import InputWithParams from "@/items/inputWithParams.vue"
 import {useI18n} from "vue-i18n"
+import ComponentOperator from "@/items/componentOperator.vue"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -13,6 +14,7 @@ const props = defineProps({
   enableEdit: Object
 })
 const {id, text, enableEdit} = toRefs(props)
+const emit = defineEmits(['focus'])
 
 // 是否自动执行
 const autoExecute = ref(false)
@@ -54,6 +56,11 @@ function save() {
 const switchAutoExecute = () => {
   autoExecute.value = !autoExecute.value
   save()
+}
+
+const edit = () => {
+  isEditing.value = true
+  emit('focus', id)
 }
 
 async function execute() {
@@ -115,7 +122,7 @@ defineExpose({
           @update="onInputUpdate"
       />
     </div>
-    <div :class="['params', !enableEdit ? 'hide' : '']">
+    <component-operator :visible="enableEdit">
       <el-popover
           class="box-item"
           :title="autoExecute ? t('component.function.autoExecute') : t('component.function.clickExecute')"
@@ -151,7 +158,7 @@ defineExpose({
           width="200"
       >
         <template #reference>
-          <el-icon class="paramItem edit" @click="isEditing = true">
+          <el-icon class="paramItem edit" @click="edit">
             <Edit/>
           </el-icon>
         </template>
@@ -170,7 +177,7 @@ defineExpose({
           </el-icon>
         </template>
       </el-popover>
-    </div>
+    </component-operator>
   </div>
 </template>
 
@@ -183,15 +190,9 @@ defineExpose({
   justify-content: center;
   flex-direction: column;
 
-  .params.hide {
-    height: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-
   .textContainer {
     opacity: 1;
-    height: calc(100% - 32px);
+    height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
@@ -258,37 +259,5 @@ defineExpose({
     cursor: default;
   }
 
-  .params {
-    width: calc(100% - 8px);
-    height: 24px;
-    opacity: 1;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    pointer-events: all;
-
-    .paramItem {
-      padding: 4px;
-      margin: 0 4px;
-      border-radius: 4px;
-      color: #f1f1f1;
-      font-weight: bold;
-      background-color: #64b1ff;
-      cursor: pointer;
-
-      &:hover {
-        scale: 1.4;
-      }
-    }
-
-    .positive {
-      background-color: #aaaaaa;
-    }
-
-    .edit {
-      background-color: #b58a08;
-    }
-  }
 }
 </style>

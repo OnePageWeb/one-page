@@ -148,7 +148,7 @@ function deleteItem(workspace: string) {
               class="workspaceTag"
               :key="tag"
               :type="nowWorkspace === tag ? 'primary' : 'info'"
-              closable
+              :closable="tag !== DEFAULT_WORKSPACE"
               @close="showDeleteConfirm(tag)"
           >
             {{ tag }}

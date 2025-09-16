@@ -90,8 +90,7 @@ const props = defineProps({
 /* 快捷键样式 */
 .shortcutKeys {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.6);
   width: calc(40% - 56px);
   bottom: 5%;
   left: calc(30% + 28px);
@@ -105,8 +104,12 @@ const props = defineProps({
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
-  pointer-events: all;
   border: 4px solid rgba(255, 255, 255, 0.6);
+  pointer-events: all;
+
+  &:hover {
+    opacity: 0.4;
+  }
 
   * {
     user-select: none;

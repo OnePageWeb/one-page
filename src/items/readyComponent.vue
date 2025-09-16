@@ -237,6 +237,7 @@ function handleFileDrop(e) {
 
   .readyComponents, .moduleComponents {
     min-height: 10vh;
+    max-height: 25vh;
     overflow: auto;
     position: relative;
   }

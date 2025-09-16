@@ -22,13 +22,14 @@ import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
 import {error, warning} from "@/js/message.js"
 const {t} = useI18n()
+const emit = defineEmits(['focus'])
 
 const props = defineProps({
   id: String,
   text: String,
   enableEdit: Object
 })
-const {text, enableEdit} = toRefs(props)
+const {id, text, enableEdit} = toRefs(props)
 
 const isEditing = ref(false)
 // 默认文本内容
@@ -62,6 +63,7 @@ function edit() {
     input.value.focus()
   })
   isEditing.value = true
+  emit('focus', id)
 }
 
 function openNewWindow() {

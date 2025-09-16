@@ -245,8 +245,8 @@
     />
 
     <!-- 快捷键提示 -->
-    <shortcut-keys-tip style="z-index: 9999" :visible="ctrlDown" :e="enableEdit" :d="showMenu" :q="enableMove"
-                       :w="focusMode || focusId" :f="everyDrag"/>
+    <shortcut-keys-tip style="z-index: 9999" :visible="altDown" :e="enableEdit" :d="showMenu" :q="enableMove"
+                       :w="focusMode || focusId !== null" :f="everyDrag"/>
   </div>
 </template>
 
@@ -343,10 +343,13 @@ watch(enableMove, b => {
 const gridEl = ref(null)
 
 const ctrlDown = ref(false)
+const altDown = ref(false)
 
 function keyListener(event) {
-  if (event.altKey && event.type === 'keydown') {
-    ctrlDown.value = true
+  if (event.ctrlKey) {
+    ctrlDown.value = event.type === 'keydown'
+  } else if (event.altKey && event.type === 'keydown') {
+    altDown.value = true
     if (event.key === 'q' || event.key === 'Q') {
       enableMove.value ? disabledMove() : enabledMove()
       unFocus()
@@ -373,15 +376,17 @@ function keyListener(event) {
     }
     event.preventDefault()
   } else if (event.key === 'Alt' && event.type === 'keyup') {
-    ctrlDown.value = false
+    altDown.value = false
   }
 }
 
 function mouseDown(event) {
+  altDown.value = false
   ctrlDown.value = false
 }
 
 const onWindowBlur = () => {
+  altDown.value = false
   ctrlDown.value = false
 }
 
@@ -638,7 +643,8 @@ function createItemComponent(type, componentItem) {
           style: {position: 'absolute', zIndex: '10'},
           id: props.id,
           enableEdit: props.enableEdit,
-          enableMove: props.enableMove
+          enableMove: props.enableMove,
+          onFocus: requireFocus,
         }),
         h(operateButtons, {
           style: {zIndex: '11'},
@@ -799,15 +805,21 @@ function refreshComponentStyle(id) {
 // 放大组件
 const focusId = ref(null)
 
+const requireFocus = (id) => {
+  console.log('altDown', ctrlDown.value)
+  if (ctrlDown.value) {
+    const idValue = id.value || id
+    focusIt(idValue)
+  }
+}
+
 function focusIt(id, type) {
-  let idValue = id.value || id
+  const idValue = id.value || id
   focusId.value && unFocus(focusId.value)
   focusId.value = idValue
   const eleId = idValue + '-container'
-  console.log('eleId', eleId)
   const element = document.getElementById(eleId)
   if (element) {
-    console.log('element', element)
     const style = document.createElement('style')
     style.id = eleId + '-focus'
     style.innerHTML = `[id='${eleId}'] {
@@ -822,7 +834,7 @@ function focusIt(id, type) {
       border: 10px solid rgb(255 255 255 / 10%);
       border-radius: 8px;
       padding: 20px;
-      box-shadow: inset 0 0 16px black;
+      box-shadow: inset 0 0 16px black, 0 0 16px black;
 
       & > * {
         height: calc(100% - 40px);
@@ -832,6 +844,7 @@ function focusIt(id, type) {
       }
     }`
     document.head.appendChild(style)
+    disabledMove()
   }
   focusMode.value = false
 }

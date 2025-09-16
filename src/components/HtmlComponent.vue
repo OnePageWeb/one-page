@@ -6,6 +6,7 @@ import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
 import InputWithParams from "@/items/inputWithParams.vue"
+
 const {t} = useI18n()
 
 const props = defineProps({
@@ -13,7 +14,8 @@ const props = defineProps({
   text: String,
   enableEdit: Object
 })
-const {text, enableEdit} = toRefs(props)
+const {id, text, enableEdit} = toRefs(props)
+const emit = defineEmits(['focus'])
 
 // 默认文本内容
 const content = ref(text.value)
@@ -32,7 +34,7 @@ const webIframe = ref(null)
 const updateIframeContent = (value) => {
   if (!webIframe.value || value === undefined) return
   contentValue.value = value
-  const blob = new Blob([value], { type: 'text/html' })
+  const blob = new Blob([value], {type: 'text/html'})
   webIframe.value.src = URL.createObjectURL(blob)
   save()
 }
@@ -41,6 +43,7 @@ function edit() {
   isEditing.value = !isEditing.value
   if (isEditing.value) {
     inputRef.value.load(content.value)
+    emit('focus', id)
   }
 }
 
@@ -83,13 +86,11 @@ defineExpose({
         :class="['result', isEditing ? 'resultOnFocus' : '']"
         sandbox="allow-scripts allow-same-origin"
         frameborder="0"
-    ></iframe>
+    />
     <input-with-params
         :init-text="content"
         ref="inputRef"
-        :class="['input', isEditing ? 'inputOnFocus' : '']"
-        :rows="2"
-        type="textarea"
+        :class="['editContainer', isEditing ? 'editContainerOnFocus' : '']"
         :placeholder="t('placeholder.htmlInput')"
         @update="updateIframeContent"
         @change="save"
@@ -124,7 +125,7 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
+<style>
 .htmlContent {
   height: 100%;
   width: 100%;
@@ -135,51 +136,51 @@ defineExpose({
   .result {
     width: 100%;
     height: 100%;
+
+    &.resultOnFocus {
+      width: 50%;
+    }
   }
 
-  :deep(.el-text) {
+  .el-text {
     width: 100%;
     height: 100%;
     font-size: 18px;
   }
 
-  .input {
+  .editContainer {
     width: 0;
     height: 100%;
     opacity: 0;
-  }
 
-  .input :deep(.el-textarea__inner) {
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-    min-width: unset !important;
-    min-height: unset !important;
-    padding: 0;
-    border-radius: 0;
-    color: #3a3a3a;
-    font-weight: bold;
-    background: repeating-linear-gradient(
-        -45deg,
-        rgba(240, 240, 240, 0.9),
-        rgba(240, 240, 240, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 40px,
-        rgba(255, 255, 255, 0.9) 80px
-    );
-  }
+    .el-textarea__inner {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      min-width: unset !important;
+      min-height: unset !important;
+      padding: 0;
+      border-radius: 0;
+      color: #3a3a3a;
+      font-weight: bold;
+      background: repeating-linear-gradient(
+          -45deg,
+          rgba(240, 240, 240, 0.9),
+          rgba(240, 240, 240, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 40px,
+          rgba(255, 255, 255, 0.9) 80px
+      );
+    }
 
-  .resultOnFocus {
-    width: 40%;
-  }
+    &.editContainerOnFocus {
+      width: 50%;
+      height: 100%;
+      opacity: 1;
 
-  .inputOnFocus {
-    width: 60%;
-    height: 100%;
-    opacity: 1;
-  }
-
-  .inputOnFocus :deep(.el-textarea__inner) {
-    padding: 8px !important;
+      .el-textarea__inner {
+        padding: 8px !important;
+      }
+    }
   }
 }
 </style>

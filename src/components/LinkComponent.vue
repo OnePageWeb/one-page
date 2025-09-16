@@ -1,11 +1,12 @@
 <script setup>
 import {ElButton, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Edit, Finished, Picture, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
 import commonDialog from "@/items/commonDialog.vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const {t} = useI18n()
 
@@ -167,6 +168,7 @@ function getFaviconUrl(url) {
 }
 
 let dragLink = null
+
 function onLinkDragStart(e, link) {
   dragLink = link
 }
@@ -237,11 +239,19 @@ defineExpose({
       </div>
     </div>
 
-    <div v-show="enableEdit" class="editContainer" @click.stop="edit">
-      <el-icon class="editIcon">
-        <Operation/>
-      </el-icon>
-    </div>
+    <component-operator :visible="enableEdit">
+      <el-tooltip
+          effect="light"
+          :content="t('common.openEdit')"
+          placement="top"
+          :show-after="800"
+          :hide-after="10"
+      >
+        <el-icon @click="edit">
+          <Edit/>
+        </el-icon>
+      </el-tooltip>
+    </component-operator>
 
     <!-- 编辑快速链接弹窗 -->
     <common-dialog
@@ -528,6 +538,7 @@ defineExpose({
         gap: 12px;
 
         /* 对子元素每一个间隔一个来设置背景 */
+
         &:nth-child(odd) {
           background-color: transparent;
 

@@ -15,6 +15,7 @@ const props = defineProps({
   enableEdit: Object
 })
 const {id, text, enableEdit} = toRefs(props)
+const emit = defineEmits(['focus'])
 
 const nameText = ref('')
 // 方法内容
@@ -35,6 +36,11 @@ watch(enableEdit, (newValue) => {
 function onFunctionChange(value) {
   functionText.value = value
   save()
+}
+
+const edit = () => {
+  isEditing.value = true
+  emit('focus', id)
 }
 
 function save() {
@@ -188,7 +194,7 @@ defineExpose({
           :show-after="800"
           :hide-after="10"
       >
-        <el-icon @click="isEditing = true">
+        <el-icon @click="edit">
           <Edit/>
         </el-icon>
       </el-tooltip>

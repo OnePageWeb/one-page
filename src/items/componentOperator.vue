@@ -31,19 +31,19 @@ const {visible} = toRefs(props)
 
   &:hover {
     opacity: 0.8;
-    padding: 8px;
-    gap: 16px;
+    padding: 12px;
+    gap: 20px;
 
     .el-icon {
-      scale: 1.6;
+      scale: 2;
     }
   }
 
   .el-icon {
-    scale: 0.4;
+    scale: 0.6;
     cursor: pointer;
     &:hover {
-      scale: 2.0;
+      scale: 2.2;
       svg {
         color: var(--el-color-primary);
       }
