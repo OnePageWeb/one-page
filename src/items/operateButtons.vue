@@ -1,6 +1,6 @@
 <script setup>
 import {defineEmits, ref, toRefs} from 'vue'
-import {Close, Connection, CopyDocument, Download, Picture, Promotion, Rank, ZoomIn} from "@element-plus/icons-vue"
+import {Close, Connection, CopyDocument, DArrowLeft, Download, Picture, Promotion, Rank} from "@element-plus/icons-vue"
 import {ElIcon, ElPopconfirm, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
 
@@ -160,6 +160,23 @@ const operatorContainer = ref(null)
           </el-icon>
         </template>
       </el-popconfirm>
+      <el-tooltip
+          v-if="focusId === id"
+          effect="light"
+          :content="t('component.operate.cancelFocus')"
+          placement="top-start"
+          :show-after="300"
+          :hide-after="10"
+          :enterable="false"
+      >
+        <el-icon
+            class="cancelFocus"
+            draggable="true"
+            @dragstart.stop="unFocus"
+        >
+          <DArrowLeft/>
+        </el-icon>
+      </el-tooltip>
     </div>
 
     <!-- 效果盖板 -->
@@ -170,7 +187,7 @@ const operatorContainer = ref(null)
       'onEditMode': enableEdit || ctrl,
       'onFocus': focusMode
     }"
-      @click.prevent.stop="focus"
+         @click.prevent.stop="focus"
     />
   </div>
 </template>
@@ -205,7 +222,7 @@ const operatorContainer = ref(null)
 
     &:hover {
       max-width: calc(100% + 4px);
-      top: -9px;
+      top: -11px;
 
       .el-icon {
         width: 32px;
@@ -224,20 +241,32 @@ const operatorContainer = ref(null)
       color: white;
 
       &:hover {
-        scale: 1.4;
+        scale: 1.2;
       }
 
       svg {
-        height: unset !important;
-        width: unset !important;
+        height: unset;
+        width: unset;
         border-radius: 48px;
         padding: 4px;
+        border: 2px solid rgba(255, 255, 255);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
       }
     }
 
     .deleteItem {
       svg {
         background-color: #ff5050;
+      }
+    }
+
+    .cancelFocus {
+      width: 32px;
+      scale: 1.2;
+      margin-left: 8px;
+
+      svg {
+        background-color: rgba(0, 0, 0, 0.7);
       }
     }
 
@@ -304,10 +333,10 @@ const operatorContainer = ref(null)
 
     &:hover {
       opacity: .2;
-      height: calc(100% + 4px);
-      width: calc(100% + 4px);
-      top: -4px;
-      left: -4px;
+      height: calc(100% + 12px);
+      width: calc(100% + 12px);
+      top: -8px;
+      left: -8px;
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
     }
   }
@@ -317,7 +346,7 @@ const operatorContainer = ref(null)
     pointer-events: auto;
     border: 2px solid rgba(255, 255, 255, 0.2);
   }
-  
+
   .onEditMode {
     border: 2px dashed rgba(255, 255, 255, 0.6);
   }

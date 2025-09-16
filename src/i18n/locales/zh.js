@@ -57,6 +57,7 @@ export default {
       module: '添加到模板',
       copy: '复制此组件',
       focus: '聚焦组件',
+      cancelFocus: '取消聚焦组件',
       style: '编辑组件样式',
       deleteConfirm: '确定删除此组件？此组件数据将被永久删除',
     },
