@@ -12,47 +12,64 @@
         </el-icon>
       </el-tooltip>
       <el-text class="menuTitle" truncated>{{ $t('component.add') }}</el-text>
-      <el-button @click="readyComponentRef.open()" class="btn" :icon="CirclePlus" plain>{{
-          $t('component.add')
-        }}
-      </el-button>
-      <el-select class="addItemSelect" :placeholder="$t('component.addItem')" @change="addItemWithEdit">
-        <el-popover
-            class="box-item"
-            v-for="item in components"
-            width="400"
-            placement="right-start"
-            popper-class="componentItemPopover"
-            :show-after="200"
-            :hide-after="10"
-        >
-          <template #reference>
-            <div>
-              <el-option
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+      <el-dropdown split-button type="primary" popper-class="addItemDropPopper" @click="readyComponentRef.open()">
+        {{ $t('component.add') }}
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item
+                v-for="item in components"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @click="addItemWithEdit(item.value)">
+              <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
+              <el-popover
+                  class="box-item"
+                  width="400"
+                  placement="right-start"
+                  popper-class="componentItemPopover"
+                  :show-after="200"
+                  :hide-after="10"
               >
-                <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
-                {{ item.label }}
-              </el-option>
-            </div>
-          </template>
-          <div>
-            <div class="componentName">{{ item.label }}</div>
-            <div class="componentDesc">{{ item.desc }}</div>
-            <el-image :src="item.img"/>
-          </div>
-        </el-popover>
-      </el-select>
+                <template #reference>
+                  <div class="addItemName">{{ item.label }}</div>
+                </template>
+                <div>
+                  <div class="componentName">{{ item.label }}</div>
+                  <div class="componentDesc">{{ item.desc }}</div>
+                  <el-image :src="item.img"/>
+                </div>
+              </el-popover>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
       <el-text class="menuTitle" truncated>{{ $t('layout.edit') }}</el-text>
       <el-button @click="openGridStackConfig" class="btn" :icon="Grid" plain>{{
           $t('config.gridstack.title')
         }}
       </el-button>
       <div class="modeContainer">
-        <el-checkbox v-model="enableMove" class="modeItem" :label="$t('layout.enableMove')" border/>
-        <el-checkbox v-model="enableEdit" class="modeItem" :label="$t('layout.enableEdit')" border/>
+        <el-tooltip
+            :content="$t('layout.enableMove')"
+            placement="bottom"
+            effect="light">
+          <el-checkbox-button v-model="enableMove" class="modeItem" border>
+            <el-icon>
+              <Rank/>
+            </el-icon>
+          </el-checkbox-button>
+        </el-tooltip>
+        <el-tooltip
+            :content="$t('layout.enableEdit')"
+            placement="bottom"
+            effect="light">
+          <el-checkbox-button v-model="enableEdit" class="modeItem" :label="$t('layout.enableEdit')" border>
+            <el-icon>
+              <Edit/>
+            </el-icon>
+          </el-checkbox-button>
+        </el-tooltip>
       </div>
       <el-text class="menuTitle" truncated>{{ $t('style.title') }}</el-text>
       <el-button @click="editGlobalStyle" class="btn" :icon="Picture" plain>{{ $t('style.global') }}</el-button>
@@ -255,7 +272,7 @@ import {createApp, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
 import {
   ElButton,
-  ElCheckbox,
+  ElCheckboxButton,
   ElIcon,
   ElImage,
   ElInput,
@@ -268,6 +285,9 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -275,7 +295,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams, removeParams} from "@/js/url.js"
-import {CirclePlus, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Top,} from "@element-plus/icons-vue"
+import {CirclePlus, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank, Top,} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -1189,6 +1209,10 @@ body {
         border-radius: 0 8px 8px 0;
       }
     }
+
+    .el-checkbox-button__inner {
+      height: 32px;
+    }
   }
 
   .menuTitle {
@@ -1206,11 +1230,34 @@ body {
   }
 }
 
-.addItemIcon {
-  width: 20px;
-  height: 20px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-  border-radius: 20px;
+.addItemDropPopper {
+
+  &.el-popper.is-light {
+    background: transparent;
+  }
+  .el-dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.8);
+
+    .el-dropdown-menu__item {
+      &:hover {
+        background-color: rgb(207, 207, 207);
+      }
+    }
+  }
+
+  .addItemIcon {
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+  }
+
+  .addItemName {
+    margin: 2px 20px 2px 40px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #696969;
+  }
 }
 
 .el-select-dropdown__item {

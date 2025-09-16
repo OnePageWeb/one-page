@@ -277,9 +277,7 @@ defineExpose({
                     <el-image v-if="item.img" :src="item.img" fit="scale-down" alt="favicon">
                       <template #error>
                         <div class="image-slot">
-                          <el-icon>
-                            <Picture/>
-                          </el-icon>
+                          <el-text>{{ item.name }}</el-text>
                         </div>
                       </template>
                     </el-image>
@@ -356,7 +354,6 @@ defineExpose({
   max-height: 240px;
   display: flex;
   align-items: center;
-  gap: 4px;
   overflow: auto;
   scrollbar-width: none;
   flex-wrap: nowrap;
@@ -364,7 +361,6 @@ defineExpose({
   .linkContainer {
     position: relative;
     cursor: pointer;
-    padding: 2px;
     height: calc(100% - 8px);
   }
 
@@ -377,19 +373,26 @@ defineExpose({
 
   .linkItem {
     height: calc(100% - 16px);
-    padding: 8px 16px;
+    padding: 8px;
     user-select: none;
     margin: 2px;
 
     &:hover {
-      border-radius: 20px;
-      box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
-      background-color: rgba(255, 255, 255, 0.1);
+      .el-image {
+        transform: translateY(-4px);
+      }
+
+      .el-text {
+        text-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
+      }
     }
 
     .el-image {
       height: 60%;
-      margin-bottom: 8px;
+      padding: 12px;
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
+      border-radius: 16px;
 
       .el-image__error, .el-image__inner, .el-image__placeholder, .el-image__wrapper {
         width: unset;
@@ -412,9 +415,11 @@ defineExpose({
     );
     background-size: 200%;
     border-radius: 8px;
+    animation: gradientScroll 1s ease-in-out infinite;
+    animation-play-state: paused;
 
     &:hover {
-      animation: gradientScroll 1s ease-in-out infinite;
+      animation-play-state: running;
     }
   }
 

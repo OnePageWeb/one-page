@@ -7,8 +7,33 @@
   --cursor-text: url("./cursor/text.cur") 10 8;
 }
 
-.menu {
-  .el-button.is-plain {
+.el-select {
+  .el-select__wrapper {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(150, 150, 150, 0.3),
+        rgba(150, 150, 150, 0.3) 40px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.1) 80px
+    );
+    .el-select__input, .el-select__selected-item {
+      color: white;
+    }
+  }
+}
+
+.el-button {
+  margin-left: 0;
+  --el-border: unset;
+  --el-button-bg-color: rgba(0, 0, 0, 0.1);
+  --el-button-text-color: #ffffff;
+  --el-button-border-color: #ffffff5A;
+
+  &+.el-button {
+    margin-left: 0;
+  }
+
+  &.is-plain {
     --el-button-hover-text-color: #ffffff;
     background: repeating-linear-gradient(
         45deg,
@@ -25,20 +50,39 @@
     }
   }
 
-  .el-button {
-    margin-left: 0;
-    --el-border: unset;
-    --el-button-bg-color: rgba(0, 0, 0, 0.1);
-    --el-button-text-color: #ffffff;
-    --el-button-border-color: #ffffff5A;
+  &:hover {
+    border-color: transparent;
+    background-color: rgba(255, 165, 0, 0.4);
+  }
+}
 
-    &:hover {
-      --el-button-border-color: #ffffff;
-    }
+.el-button-group {
+  --el-select-border-color-hover: rgba(255, 255, 255, 0.35);
+  background: repeating-linear-gradient(
+      45deg,
+      rgba(150, 150, 150, 0.3),
+      rgba(150, 150, 150, 0.3) 40px,
+      rgba(255, 255, 255, 0.1) 40px,
+      rgba(255, 255, 255, 0.1) 80px
+  );
+  background-size: 200%;
+
+  &:hover {
+    animation: gradientScroll 1s ease-in-out infinite;
   }
 
-  .el-select__wrapper {
-    --el-select-border-color-hover: rgba(255, 255, 255, 0.35);
+  .el-select__input, .el-select__placeholder {
+    color: #ffffff;
+  }
+}
+
+.el-checkbox-button {
+  &:first-child .el-checkbox-button__inner {
+    border-color: rgba(255, 165, 0, 0.7);
+  }
+
+  .el-checkbox-button__inner {
+    border-color: rgba(255, 165, 0, 0.7);
     background: repeating-linear-gradient(
         45deg,
         rgba(150, 150, 150, 0.3),
@@ -47,50 +91,18 @@
         rgba(255, 255, 255, 0.1) 80px
     );
     background-size: 200%;
-
     &:hover {
       animation: gradientScroll 1s ease-in-out infinite;
     }
 
-    .el-select__input, .el-select__placeholder {
+    .el-icon {
       color: #ffffff;
     }
   }
 
-  .el-checkbox.is-bordered {
-    --el-border: 1px solid rgba(255, 255, 255, 0.35);
-    --el-checkbox-bg-color: rgba(0, 0, 0, 0.1);
-    --el-checkbox-checked-bg-color: rgba(255, 255, 255);
-    --el-checkbox-checked-input-border-color: #ffffff;
-    --el-checkbox-checked-icon-color: #fca76c;
-    margin-right: unset;
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(150, 150, 150, 0.3),
-        rgba(150, 150, 150, 0.3) 40px,
-        rgba(255, 255, 255, 0.1) 40px,
-        rgba(255, 255, 255, 0.1) 80px
-    );
-    background-size: 200%;
-
-    &:hover {
-      border-color: #ffffff;
-      background: repeating-linear-gradient(
-          45deg,
-          rgba(150, 150, 150, 0.5),
-          rgba(150, 150, 150, 0.5) 40px,
-          rgba(255, 255, 255, 0.3) 40px,
-          rgba(255, 255, 255, 0.3) 80px
-      );
-    }
-
-    &.is-checked {
-      border-color: #ffffff;
-      animation: gradientScroll 2s ease-in-out infinite;
-    }
-
-    .el-checkbox__label {
-      color: #ffffff;
+  &.is-checked {
+    .el-checkbox-button__inner {
+      background: rgba(255, 165, 0, 0.7);
     }
   }
 }

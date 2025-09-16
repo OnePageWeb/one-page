@@ -118,6 +118,7 @@ defineExpose({
             :title="t('common.execute')"
             :content="t('component.input.executeDesc')"
             placement="top-end"
+            width="200px"
         >
           <template #reference>
             <el-icon class="executeIcon" @click="execute">
@@ -130,6 +131,7 @@ defineExpose({
             :title="t('common.copy')"
             :content="t('component.input.copyDesc')"
             placement="bottom-end"
+            width="200px"
         >
           <template #reference>
             <el-icon class="copyIcon" @click="copyResult">
@@ -142,6 +144,7 @@ defineExpose({
             :title="t('common.clear')"
             :content="t('component.input.clearDesc')"
             placement="bottom-end"
+            width="200px"
         >
           <template #reference>
             <el-icon class="clearIcon" @click="functionResult = ''">
@@ -278,12 +281,15 @@ defineExpose({
       &:hover {
         scale: 1.4;
         opacity: 1;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
       }
     }
 
     .executeIcon {
       top: calc(50% - 14px);
+      opacity: 1;
       background-color: #eda63f;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     }
 
     .copyIcon {
@@ -315,7 +321,7 @@ defineExpose({
     }
   }
 
-  :deep(.el-text) {
+  .el-text {
     width: 100%;
     height: 100%;
     font-size: 18px;
