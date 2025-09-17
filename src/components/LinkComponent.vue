@@ -357,6 +357,7 @@ defineExpose({
   overflow: auto;
   scrollbar-width: none;
   flex-wrap: nowrap;
+  gap: 4px;
 
   .linkContainer {
     position: relative;
@@ -389,10 +390,6 @@ defineExpose({
 
     .el-image {
       height: 60%;
-      padding: 12px;
-      background-color: rgba(255, 255, 255, 0.8);
-      box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
-      border-radius: 16px;
 
       .el-image__error, .el-image__inner, .el-image__placeholder, .el-image__wrapper {
         width: unset;
@@ -539,13 +536,13 @@ defineExpose({
         align-items: center;
         justify-content: center;
         padding: 20px;
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgb(255, 255, 255);
         gap: 12px;
 
         /* 对子元素每一个间隔一个来设置背景 */
 
         &:nth-child(odd) {
-          background-color: transparent;
+          background-color: #e3e3e3;
 
           .recordText {
             color: #cdcdcd;
@@ -574,7 +571,6 @@ defineExpose({
           padding: 0;
 
           .el-input-group__prepend {
-            background-color: #333333;
             color: white;
             font-weight: bold;
             font-size: 16px;
@@ -599,12 +595,6 @@ defineExpose({
 
           .el-input {
             height: 100%;
-          }
-        }
-
-        .imgLinkName {
-          .el-input-group__prepend {
-            background-color: unset;
           }
         }
 

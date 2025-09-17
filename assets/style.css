@@ -1,108 +1,105 @@
 * {
-  --el-color-primary: rgba(21, 160, 255, 0.6);
+  --el-color-primary: rgb(15, 120, 191);
 }
 
 :root {
+  --primary-color: rgb(75, 167, 237);
   --background-opacity: rgba(255, 255, 255, 0.6);
+  --background-color: rgb(255, 255, 255);
+  --input-border-color: #7e7e7e;
+  --input-background-color: #fafafa;
+  --dialog-background-bar: #292929;
   --cursor-text: url("./cursor/text.cur") 10 8;
-}
-
-.el-select {
-  .el-select__wrapper {
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(150, 150, 150, 0.3),
-        rgba(150, 150, 150, 0.3) 40px,
-        rgba(255, 255, 255, 0.1) 40px,
-        rgba(255, 255, 255, 0.1) 80px
-    );
-    .el-select__input, .el-select__selected-item {
-      color: white;
-    }
-  }
 }
 
 .el-button {
   margin-left: 0;
-  --el-border: unset;
-  --el-button-bg-color: rgba(0, 0, 0, 0.1);
-  --el-button-text-color: #ffffff;
-  --el-button-border-color: #ffffff5A;
 
-  &+.el-button {
-    margin-left: 0;
+  &:not(.el-button--danger, .el-button--primary) {
+    border: 1px solid var(--primary-color);
   }
 
-  &.is-plain {
-    --el-button-hover-text-color: #ffffff;
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(150, 150, 150, 0.3),
-        rgba(150, 150, 150, 0.3) 40px,
-        rgba(255, 255, 255, 0.1) 40px,
-        rgba(255, 255, 255, 0.1) 80px
-    );
-    background-size: 200%;
-    --el-button-hover-border-color: rgba(255, 255, 255);
-
-    &:hover {
-      animation: gradientScroll 1s ease-in-out infinite;
-    }
+  &.el-button--primary:hover {
+    background-color: var(--dialog-background-bar);
+    border: 1px solid var(--dialog-background-bar);
   }
 
-  &:hover {
-    border-color: transparent;
-    background-color: rgba(255, 165, 0, 0.4);
+  &:not(.el-button--danger, .el-button--primary):hover {
+    background-color: #c1c1c1 !important;
+    border: 1px solid #c1c1c1;
+  }
+
+  &.el-button--danger:hover {
+    background-color: #ff5858;
   }
 }
 
-.el-button-group {
-  --el-select-border-color-hover: rgba(255, 255, 255, 0.35);
-  background: repeating-linear-gradient(
-      45deg,
-      rgba(150, 150, 150, 0.3),
-      rgba(150, 150, 150, 0.3) 40px,
-      rgba(255, 255, 255, 0.1) 40px,
-      rgba(255, 255, 255, 0.1) 80px
-  );
-  background-size: 200%;
+.el-input {
+  .el-textarea__inner {
+    &:hover {
+      cursor: var(--cursor-text), auto;
+    }
 
-  &:hover {
-    animation: gradientScroll 1s ease-in-out infinite;
+    &:focus {
+      animation: inputBlink 1s ease-in-out infinite;
+    }
   }
 
-  .el-select__input, .el-select__placeholder {
-    color: #ffffff;
+  .el-input-group__prepend {
+    padding: 0 8px;
+    background-color: var(--primary-color);
+    color: white;
+    height: calc(100% - 2px);
+    border-right: 1px solid #ffffff;
+    box-shadow: unset;
+  }
+
+  .el-input__wrapper {
+    padding: 0;
+    background-color: var(--input-background-color);
+
+    &.is-focus {
+      box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
+    }
+
+    .el-input__inner {
+      padding: 1px 12px;
+      height: 100%;
+      color: #232323;
+
+      &:hover {
+        cursor: var(--cursor-text), auto;
+      }
+
+      &:focus {
+        animation: inputBlink 1s ease-in-out infinite;
+      }
+
+      &::placeholder {
+        color: #919191;
+      }
+    }
   }
 }
 
-.el-checkbox-button {
-  &:first-child .el-checkbox-button__inner {
-    border-color: rgba(255, 165, 0, 0.7);
-  }
+.el-popper.is-light {
+  background: var(--background-color);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  border-top: 12px solid var(--dialog-background-bar);
+  border-bottom: 12px solid var(--dialog-background-bar);
+  border-right: unset;
+  border-left: unset;
+}
 
-  .el-checkbox-button__inner {
-    border-color: rgba(255, 165, 0, 0.7);
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(150, 150, 150, 0.3),
-        rgba(150, 150, 150, 0.3) 40px,
-        rgba(255, 255, 255, 0.1) 40px,
-        rgba(255, 255, 255, 0.1) 80px
-    );
-    background-size: 200%;
-    &:hover {
-      animation: gradientScroll 1s ease-in-out infinite;
-    }
+.el-textarea {
+  height: 100%;
 
-    .el-icon {
-      color: #ffffff;
-    }
-  }
+  .el-textarea__inner {
+    height: 100%;
+    background-color: var(--background-opacity);
 
-  &.is-checked {
-    .el-checkbox-button__inner {
-      background: rgba(255, 165, 0, 0.7);
+    &::placeholder {
+      color: #888888;
     }
   }
 }
@@ -111,7 +108,7 @@ el-tooltip {
   pointer-events: none;
 }
 
-.grid-stack-item>.ui-resizable-se {
+.grid-stack-item > .ui-resizable-se {
   border-radius: 24px;
   padding: 4px;
   bottom: -4px;
@@ -133,6 +130,7 @@ el-tooltip {
   .cm-content {
     background-color: rgba(255, 255, 255, 0.3);
     font-size: 18px;
+
     &:hover {
       cursor: var(--cursor-text), auto;
     }
@@ -144,46 +142,23 @@ el-tooltip {
   width: 8px; /* 竖直滚动条宽度 */
   height: 8px; /* 水平滚动条高度 */
 }
+
 /* 设置滚动条轨道样式 */
 ::-webkit-scrollbar-track {
 }
+
 /* 设置滚动条滑块样式 */
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2); /* 悬停时略微可见 */
   border-radius: 4px; /* 可根据需求设置滑块圆角 */
 }
+
 /* 可设置滑块悬停时的样式 */
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.4); /* 悬停时略微可见 */
 }
 
 .el-input {
-  .el-textarea__inner {
-    &:hover {
-      cursor: var(--cursor-text), auto;
-    }
-    &:focus {
-      animation: inputBlink 1s ease-in-out infinite;
-    }
-  }
-
-  .el-input__wrapper {
-    padding: 0;
-    &.is-focus {
-      box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
-    }
-
-    .el-input__inner {
-      padding: 1px 12px;
-      height: 100%;
-      &:hover {
-        cursor: var(--cursor-text), auto;
-      }
-      &:focus {
-        animation: inputBlink 1s ease-in-out infinite;
-      }
-    }
-  }
 }
 
 textarea {
@@ -202,6 +177,7 @@ textarea {
     &:not(:has(.el-input__suffix)) {
       padding-left: 30px;
       padding-right: 30px !important;
+
       .el-input-number {
         padding-left: 30px;
         padding-right: 30px;
@@ -215,15 +191,6 @@ textarea {
   font-size: 24px;
   opacity: 0.8;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
-}
-
-.el-message-box {
-  background-color: #ffffff5c;
-  backdrop-filter: blur(4px);
-
-  .el-message-box__content {
-    color: #353535;
-  }
 }
 
 /* 背景滚动动画 */

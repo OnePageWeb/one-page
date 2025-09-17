@@ -429,13 +429,13 @@ defineExpose({
       display: flex;
       align-items: center;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgb(255, 255, 255);
       gap: 12px;
 
       /* 对子元素每一个间隔一个来设置背景 */
 
       &:nth-child(odd) {
-        background-color: transparent;
+        background-color: #e3e3e3;
 
         .recordText {
           color: #cdcdcd;

@@ -32,7 +32,7 @@
                   :hide-after="10"
               >
                 <template #reference>
-                  <div class="addItemName">{{ item.label }}</div>
+                  <el-text class="addItemName">{{ item.label }}</el-text>
                 </template>
                 <div>
                   <div class="componentName">{{ item.label }}</div>
@@ -1184,10 +1184,9 @@ body {
   gap: 10px;
   padding: 0 10px;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: var(--background-color);
+  border-bottom: 12px solid var(--dialog-background-bar);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
 
   .hideMenu {
     cursor: pointer;
@@ -1219,7 +1218,7 @@ body {
   }
 
   .menuTitle {
-    color: #ececec;
+    color: #1e1e1e;
     height: 30px;
     line-height: 30px;
     margin-left: 36px;
@@ -1234,16 +1233,17 @@ body {
 }
 
 .addItemDropPopper {
+  max-height: 50%;
+  overflow: auto;
 
-  &.el-popper.is-light {
-    background: transparent;
-  }
   .el-dropdown-menu {
-    background-color: rgba(255, 255, 255, 0.8);
 
     .el-dropdown-menu__item {
+      margin: 4px;
+      border-radius: 8px;
+
       &:hover {
-        background-color: rgb(207, 207, 207);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
       }
     }
   }
@@ -1256,18 +1256,8 @@ body {
   }
 
   .addItemName {
-    margin: 2px 20px 2px 40px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #696969;
+    padding: 4px 20px 4px 40px;
   }
-}
-
-.el-select-dropdown__item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: space-between;
 }
 
 .menu-show {

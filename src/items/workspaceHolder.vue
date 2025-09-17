@@ -180,7 +180,7 @@ function deleteItem(workspace: string) {
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{ t('workspace.delete.content') }} <span style="color: white;font-size: 24px;font-weight: bolder">{{
+          {{ t('workspace.delete.content') }} <span style="color: #ff3737;font-size: 24px;font-weight: bolder">{{
             deleteWorkspaceName
           }}</span> ？
           <div>
