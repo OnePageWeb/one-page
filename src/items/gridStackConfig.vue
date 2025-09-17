@@ -17,6 +17,7 @@ import {
   ElRadioButton,
   ElRadioGroup,
   ElTooltip,
+  ElText,
 } from "element-plus"
 import {reload} from "@/js/url.js"
 
@@ -261,20 +262,23 @@ defineExpose({
       class="gridStackConfig"
       @closed="visible = false"
   >
-    <el-form :model="form" label-width="auto" class="configForm">
-      <div class="formTitle">{{ t('config.gridstack.width') }}</div>
+    <el-form :model="form" label-width="100px" label-position="left" class="configForm">
+      <el-text class="formTitle">{{ t('config.gridstack.width') }}</el-text>
       <el-form-item :label="t('config.gridstack.columns')" prop="columns">
         <el-input-number v-model="form.columns" @change="onColumnsChanged"/>
       </el-form-item>
       <el-form-item :label="t('config.gridstack.widthMode.name')" prop="widthMode">
         <el-radio-group v-model="form.widthMode" @change="onWidthModeChanged">
-          <el-tooltip :content="t('config.gridstack.widthMode.autoDesc')" placement="top" :hide-after="10" :enterable="false">
+          <el-tooltip :content="t('config.gridstack.widthMode.autoDesc')" placement="top" :hide-after="10"
+                      :enterable="false">
             <el-radio-button :label="t('config.gridstack.widthMode.auto')" value="auto"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.widthMode.percentageDesc')" placement="top" :hide-after="10" :enterable="false">
+          <el-tooltip :content="t('config.gridstack.widthMode.percentageDesc')" placement="top" :hide-after="10"
+                      :enterable="false">
             <el-radio-button :label="t('config.gridstack.widthMode.percentage')" value="percent"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.widthMode.staticDesc')" placement="top" :hide-after="10" :enterable="false">
+          <el-tooltip :content="t('config.gridstack.widthMode.staticDesc')" placement="top" :hide-after="10"
+                      :enterable="false">
             <el-radio-button :label="t('config.gridstack.widthMode.static')" value="static"/>
           </el-tooltip>
         </el-radio-group>
@@ -310,22 +314,26 @@ defineExpose({
       </el-form-item>
       <!-- 分割线 -->
       <el-divider/>
-      <div class="formTitle">{{ t('config.gridstack.height') }}</div>
+      <el-text class="formTitle">{{ t('config.gridstack.height') }}</el-text>
       <el-form-item :label="t('config.gridstack.heightMode.name')" prop="heightMode">
         <el-radio-group v-model="form.heightMode" @change="onHeightModeChanged">
-          <el-tooltip :content="t('config.gridstack.heightMode.windowDesc')" placement="top" :hide-after="10" :enterable="false">
+          <el-tooltip :content="t('config.gridstack.heightMode.windowDesc')" placement="top" :hide-after="10"
+                      :enterable="false">
             <el-radio-button :label="t('config.gridstack.heightMode.window')" value="window"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.heightMode.cellWidthDesc')" placement="top" :hide-after="10" :enterable="false">
+          <el-tooltip :content="t('config.gridstack.heightMode.cellWidthDesc')" placement="top" :hide-after="10"
+                      :enterable="false">
             <el-radio-button :label="t('config.gridstack.heightMode.cellWidth')" value="cellWidth"/>
           </el-tooltip>
-          <el-tooltip :content="t('config.gridstack.heightMode.staticDesc')" placement="top" :hide-after="10" :enterable="false">
+          <el-tooltip :content="t('config.gridstack.heightMode.staticDesc')" placement="top" :hide-after="10"
+                      :enterable="false">
             <el-radio-button :label="t('config.gridstack.heightMode.static')" value="static"/>
           </el-tooltip>
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="t('config.gridstack.heightParam')" prop="heightParam">
-        <el-input-number v-if="form.heightMode === 'window' || form.heightMode === 'cellWidth'" v-model="form.heightParam">
+        <el-input-number v-if="form.heightMode === 'window' || form.heightMode === 'cellWidth'"
+                         v-model="form.heightParam">
           <template #suffix>
             <span>%</span>
           </template>
@@ -357,16 +365,18 @@ defineExpose({
 
 <style>
 .gridStackConfig {
-  height: 50% !important;
+  height: 60%;
 
   .configForm {
     .formTitle {
       font-size: 24px;
+      height: 36px;
+      line-height: 36px;
+      color: #434343;
     }
 
     .el-form-item__label {
       height: 100% !important;
-      border-radius: 4px;
       margin-right: 8px;
       display: flex;
       align-items: center;
@@ -401,5 +411,8 @@ defineExpose({
     }
   }
 
+  .el-divider--horizontal {
+    margin: 16px 0;
+  }
 }
 </style>

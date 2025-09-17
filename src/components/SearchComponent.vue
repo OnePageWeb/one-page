@@ -381,7 +381,11 @@ defineExpose({
   .searchEngine {
     height: 100%;
     width: 200px;
-    border-radius: 48px 0 0 48px !important;
+    border-radius: 48px 0 0 48px;
+
+    .el-select__wrapper {
+      border: unset;
+    }
   }
 }
 
