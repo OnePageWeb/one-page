@@ -5,6 +5,7 @@ import {loadData, saveData} from "@/js/data.js"
 import {Finished, SwitchButton, VideoPlay, Edit, View} from "@element-plus/icons-vue"
 import InputWithParams from "@/items/inputWithParams.vue"
 import {useI18n} from "vue-i18n"
+import ComponentOperator from "@/items/componentOperator.vue"
 const {t} = useI18n()
 
 const props = defineProps({
@@ -13,6 +14,7 @@ const props = defineProps({
   enableEdit: Object
 })
 const {id, text, enableEdit} = toRefs(props)
+const emit = defineEmits(['focus'])
 
 // 是否自动执行
 const autoExecute = ref(false)
@@ -56,24 +58,10 @@ const switchAutoExecute = () => {
   save()
 }
 
-// 执行方法
-let iframe
-
-// 监听 iframe 的消息
-function listener(event) {
-  // 验证消息来源
-  if (!iframe || event.source !== iframe.contentWindow) return
-  functionResult.value = event.data?.data || event.data?.error
-  save()
+const edit = () => {
+  isEditing.value = true
+  emit('focus', id)
 }
-
-onMounted(() => {
-  iframe = document.getElementById('sandbox' + id.value)
-  window.addEventListener('message', listener)
-})
-onUnmounted(() => {
-  window.removeEventListener('message', listener)
-})
 
 async function execute() {
   isEditing.value = false
@@ -125,7 +113,6 @@ defineExpose({
 <template>
   <div class="functionContent" ref="functionRef" @dblclick="dbclick">
     <div class="textContainer">
-      <iframe :id="'sandbox' + id" sandbox="allow-scripts" style="display: none;"></iframe>
       <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
       <input-with-params
           ref="inputWithParamsRef"
@@ -135,13 +122,15 @@ defineExpose({
           @update="onInputUpdate"
       />
     </div>
-    <div :class="['params', !enableEdit ? 'hide' : '']">
+    <component-operator :visible="enableEdit">
       <el-popover
           class="box-item"
           :title="autoExecute ? t('component.function.autoExecute') : t('component.function.clickExecute')"
           :content="t('component.function.autoExecuteDesc')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon :class="['paramItem', {'positive': !autoExecute}]" @click="switchAutoExecute">
@@ -155,6 +144,8 @@ defineExpose({
           :content="t('component.function.executeDesc')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon class="paramItem execute" @click="execute">
@@ -169,9 +160,11 @@ defineExpose({
           :content="t('placeholder.functionContentEdit')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
-          <el-icon class="paramItem edit" @click="isEditing = true">
+          <el-icon class="paramItem edit" @click="edit">
             <Edit/>
           </el-icon>
         </template>
@@ -183,6 +176,8 @@ defineExpose({
           :content="t('component.function.functionContentView')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon class="paramItem edit" @click="isEditing = false">
@@ -190,7 +185,7 @@ defineExpose({
           </el-icon>
         </template>
       </el-popover>
-    </div>
+    </component-operator>
   </div>
 </template>
 
@@ -203,15 +198,9 @@ defineExpose({
   justify-content: center;
   flex-direction: column;
 
-  .params.hide {
-    height: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-
   .textContainer {
     opacity: 1;
-    height: calc(100% - 32px);
+    height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
@@ -278,37 +267,5 @@ defineExpose({
     cursor: default;
   }
 
-  .params {
-    width: calc(100% - 8px);
-    height: 24px;
-    opacity: 1;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    pointer-events: all;
-
-    .paramItem {
-      padding: 4px;
-      margin: 0 4px;
-      border-radius: 4px;
-      color: #f1f1f1;
-      font-weight: bold;
-      background-color: #64b1ff;
-      cursor: pointer;
-
-      &:hover {
-        scale: 1.4;
-      }
-    }
-
-    .positive {
-      background-color: #aaaaaa;
-    }
-
-    .edit {
-      background-color: #b58a08;
-    }
-  }
 }
 </style>

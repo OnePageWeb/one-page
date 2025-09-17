@@ -12,47 +12,64 @@
         </el-icon>
       </el-tooltip>
       <el-text class="menuTitle" truncated>{{ $t('component.add') }}</el-text>
-      <el-button @click="readyComponentRef.open()" class="btn" :icon="CirclePlus" plain>{{
-          $t('component.add')
-        }}
-      </el-button>
-      <el-select class="addItemSelect" :placeholder="$t('component.addItem')" @change="addItemWithEdit">
-        <el-popover
-            class="box-item"
-            v-for="item in components"
-            width="400"
-            placement="right-start"
-            popper-class="componentItemPopover"
-            :show-after="200"
-            :hide-after="10"
-        >
-          <template #reference>
-            <div>
-              <el-option
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+      <el-dropdown split-button type="primary" popper-class="addItemDropPopper" @click="readyComponentRef.open()">
+        {{ $t('component.add') }}
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item
+                v-for="item in components"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @click="addItemWithEdit(item.value)">
+              <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
+              <el-popover
+                  class="box-item"
+                  width="400"
+                  placement="right-start"
+                  popper-class="componentItemPopover"
+                  :show-after="200"
+                  :hide-after="10"
               >
-                <div class="addItemIcon" :style="{backgroundColor: item.color}"/>
-                {{ item.label }}
-              </el-option>
-            </div>
-          </template>
-          <div>
-            <div class="componentName">{{ item.label }}</div>
-            <div class="componentDesc">{{ item.desc }}</div>
-            <el-image :src="item.img"/>
-          </div>
-        </el-popover>
-      </el-select>
+                <template #reference>
+                  <el-text class="addItemName">{{ item.label }}</el-text>
+                </template>
+                <div>
+                  <div class="componentName">{{ item.label }}</div>
+                  <div class="componentDesc">{{ item.desc }}</div>
+                  <el-image :src="item.img"/>
+                </div>
+              </el-popover>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
       <el-text class="menuTitle" truncated>{{ $t('layout.edit') }}</el-text>
       <el-button @click="openGridStackConfig" class="btn" :icon="Grid" plain>{{
           $t('config.gridstack.title')
         }}
       </el-button>
       <div class="modeContainer">
-        <el-checkbox v-model="enableMove" class="modeItem" :label="$t('layout.enableMove')" border/>
-        <el-checkbox v-model="enableEdit" class="modeItem" :label="$t('layout.enableEdit')" border/>
+        <el-tooltip
+            :content="$t('layout.enableMove')"
+            placement="bottom"
+            effect="light">
+          <el-checkbox-button v-model="enableMove" class="modeItem" border>
+            <el-icon>
+              <Rank/>
+            </el-icon>
+          </el-checkbox-button>
+        </el-tooltip>
+        <el-tooltip
+            :content="$t('layout.enableEdit')"
+            placement="bottom"
+            effect="light">
+          <el-checkbox-button v-model="enableEdit" class="modeItem" :label="$t('layout.enableEdit')" border>
+            <el-icon>
+              <Edit/>
+            </el-icon>
+          </el-checkbox-button>
+        </el-tooltip>
       </div>
       <el-text class="menuTitle" truncated>{{ $t('style.title') }}</el-text>
       <el-button @click="editGlobalStyle" class="btn" :icon="Picture" plain>{{ $t('style.global') }}</el-button>
@@ -207,19 +224,6 @@
       </template>
     </common-dialog>
 
-    <!-- 组件放大弹窗 -->
-    <el-dialog
-        v-model="zoomInDialogVisible"
-        class="zoomInDialog"
-        width="95%"
-        align-center
-        :show-close="false"
-        :close-on-press-escape="false"
-        @close="onZoomInClose"
-    >
-      <div id="zoomInElement" class="zoomInElement"></div>
-    </el-dialog>
-
     <!-- 组件库 -->
     <readyComponent ref="readyComponentRef" @addComponent="addComponent"/>
 
@@ -258,17 +262,17 @@
     />
 
     <!-- 快捷键提示 -->
-    <shortcut-keys-tip style="z-index: 9999" :visible="ctrlDown"/>
+    <shortcut-keys-tip style="z-index: 9999" :visible="altDown" :e="enableEdit" :d="showMenu" :q="enableMove"
+                       :w="focusMode || focusId !== null" :f="everyDrag"/>
   </div>
 </template>
 
 <script setup>
-import {createApp, defineComponent, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
+import {createApp, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
 import {GridStack} from 'gridstack'
 import {
   ElButton,
-  ElCheckbox,
-  ElDialog,
+  ElCheckboxButton,
   ElIcon,
   ElImage,
   ElInput,
@@ -281,6 +285,9 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
@@ -288,7 +295,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reloadWithoutParams, removeParams} from "@/js/url.js"
-import {CirclePlus, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Top,} from "@element-plus/icons-vue"
+import {CirclePlus, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank, Top,} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -343,6 +350,7 @@ let grid
 // 锁定状态
 const enableEdit = ref(false)
 const enableMove = ref(false)
+const focusMode = ref(false)
 const ctrl = ref(false)
 watch(enableMove, b => {
   if (b) {
@@ -355,14 +363,24 @@ watch(enableMove, b => {
 const gridEl = ref(null)
 
 const ctrlDown = ref(false)
+const altDown = ref(false)
 
 function keyListener(event) {
-  if (event.altKey && event.type === 'keydown') {
-    ctrlDown.value = true
+  if (event.ctrlKey) {
+    ctrlDown.value = event.type === 'keydown'
+  } else if (event.altKey && event.type === 'keydown') {
+    altDown.value = true
     if (event.key === 'q' || event.key === 'Q') {
       enableMove.value ? disabledMove() : enabledMove()
+      unFocus()
+      focusMode.value = false
     } else if (event.key === 'e' || event.key === 'E') {
       enableEdit.value ? disabledEdit() : enabledEdit()
+    } else if (event.key === 'w' || event.key === 'W') {
+      if (!unFocus()) {
+        focusMode.value = !focusMode.value
+        disabledMove()
+      }
     } else if (event.key === 'd' || event.key === 'D') {
       showMenu.value = !showMenu.value
     } else if (event.key === 'r' || event.key === 'R') {
@@ -374,18 +392,20 @@ function keyListener(event) {
       disabledMove()
     }
     event.preventDefault()
-  } else {
-    ctrlDown.value = false
+  } else if (event.key === 'Alt' && event.type === 'keyup') {
+    altDown.value = false
   }
 }
 
 function mouseDown(event) {
+  altDown.value = false
   ctrlDown.value = false
 }
 
 const onWindowBlur = () => {
+  altDown.value = false
   ctrlDown.value = false
-  }
+}
 
 const globalStyle = ref(null)
 
@@ -637,22 +657,26 @@ function createItemComponent(type, componentItem) {
       }, [
         h(componentItem, {
           ref: componentItemRef,
-          style: {position: 'absolute'},
+          style: {position: 'absolute', zIndex: '10'},
           id: props.id,
           enableEdit: props.enableEdit,
-          enableMove: props.enableMove
+          enableMove: props.enableMove,
+          onFocus: requireFocus,
         }),
         h(operateButtons, {
-          style: {position: 'absolute',},
+          style: {zIndex: '11'},
           id: props.id,
           type: type,
           enableEdit: enableEdit,
           enableMove: enableMove,
+          focusMode: focusMode,
+          focusId: focusId.value,
           ctrl: props.ctrl,
           transferData: () => exportComponentData(props.id, type),
-          onOnDelete: deleteItem,
-          onOnStyleEdit: editStyle,
-          onZoomIn: zoomIn,
+          onDelete: deleteItem,
+          onStyleEdit: editStyle,
+          onFocus: focusIt,
+          onUnFocus: unFocus,
           onExportComponent: exportComponent,
           onCopy: copy,
           onModule: addModuleConfirm,
@@ -796,67 +820,62 @@ function refreshComponentStyle(id) {
 }
 
 // 放大组件
-let zoomInId = null
-let zoomApp = null
-const zoomInDialogVisible = ref(false)
+const focusId = ref(null)
 
-function createZoomIn(id, componentItem) {
-  return defineComponent({
-    props: ['enableEdit', 'enableMove'], // 移除id prop
-    setup(props) {
-      return () => h(componentItem, {
-        ref: 'componentItem',
-        style: {position: 'absolute'},
-        id: id.value + '-container', // 直接使用id.value
-        enableEdit: props.enableEdit,
-        enableMove: props.enableMove,
-      })
-    }
-  })
+const requireFocus = (id) => {
+  console.log('altDown', ctrlDown.value)
+  if (ctrlDown.value) {
+    const idValue = id.value || id
+    focusIt(idValue)
+  }
 }
 
-function zoomIn(id, type) {
-  const find = itemType.find(item => item.value === type.value)
-  if (!find) {
-    error(t('error.noSuchComponent_') + type.value)
-    return
+function focusIt(id, type) {
+  const idValue = id.value || id
+  focusId.value && unFocus(focusId.value)
+  focusId.value = idValue
+  const eleId = idValue + '-container'
+  const element = document.getElementById(eleId)
+  if (element) {
+    const style = document.createElement('style')
+    style.id = eleId + '-focus'
+    style.innerHTML = `[id='${eleId}'] {
+      height: calc(100% - 80px) !important;
+      width: calc(100% - 80px) !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 50 !important;
+      background-color: #00000060;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+
+      & > * {
+        height: calc(100% - 80px);
+        width: calc(100% - 80px);
+        top: 40px;
+        left: 40px;
+      }
+    }`
+    document.head.appendChild(style)
+    disabledMove()
   }
-  zoomInId = id.value
-  // find.component是组件的vue对象
-  zoomInDialogVisible.value = true
-  nextTick(() => {
-    const elementById = document.getElementById('zoomInElement')
-    if (elementById) {
-      elementById.innerHTML = ''
-      if (zoomApp) {
-        zoomApp.unmount()
-      }
-      zoomApp = createApp(createZoomIn(id.value, find.component), {
-        id: id.value,
-        enableEdit: enableEdit,
-        enableMove: enableMove
-      })
-      zoomApp.use(i18n)
-      zoomApp.mount(elementById)
-      if (elementById.firstElementChild) {
-        elementById.firstElementChild.id = id.value
-      }
-    }
-  })
+  focusMode.value = false
 }
 
-function onZoomInClose() {
-  if (zoomApp) {
-    zoomApp.unmount()
-    zoomApp = null
+const unFocus = (id = focusId.value) => {
+  const idValue = id?.value || id
+  if (!idValue) {
+    return false
   }
-  // 刷新组件数据
-  if (enableEdit) {
-    const element = elementMap[zoomInId]
-    if (element) {
-      element.load()
-    }
+  const style = document.getElementById(idValue + '-container-focus')
+  focusId.value = null
+  if (style) {
+    document.head.removeChild(style)
+    return true
   }
+  return false
 }
 
 // 复制
@@ -1143,10 +1162,6 @@ body {
   background-color: #343434;
 }
 
-* {
-  transition: all 0.3s ease-in-out;
-}
-
 /* 菜单样式开始 */
 .menu {
   position: fixed;
@@ -1160,10 +1175,9 @@ body {
   gap: 10px;
   padding: 0 10px;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: var(--background-color);
+  border-bottom: 12px solid var(--dialog-background-bar);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
 
   .hideMenu {
     cursor: pointer;
@@ -1178,19 +1192,39 @@ body {
 
   .modeContainer {
     display: flex;
+
     .modeItem {
+
+      .el-checkbox-button__inner {
+        border: 1px solid var(--primary-color);
+
+        &:hover {
+          border: 1px solid var(--dialog-background-bar);
+        }
+      }
+
       &:first-child {
         border-radius: 8px 0 0 8px;
+        .el-checkbox-button__inner {
+          border-radius: 8px 0 0 8px;
+        }
       }
 
       &:last-child {
         border-radius: 0 8px 8px 0;
+        .el-checkbox-button__inner {
+          border-radius: 0 8px 8px 0;
+        }
       }
+    }
+
+    .el-checkbox-button__inner {
+      height: 32px;
     }
   }
 
   .menuTitle {
-    color: #ececec;
+    color: #1e1e1e;
     height: 30px;
     line-height: 30px;
     margin-left: 36px;
@@ -1202,32 +1236,46 @@ body {
   .langSelect {
     width: 100px;
   }
+
+  &.menu-show {
+    height: 80px;
+    opacity: 1;
+  }
+
+  &.menu-hide {
+    height: 0;
+    opacity: 0;
+    margin-top: -81px;
+    border-bottom: 1px solid var(--dialog-background-bar);
+  }
 }
 
-.addItemIcon {
-  width: 20px;
-  height: 20px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-  border-radius: 20px;
-}
+.addItemDropPopper {
+  max-height: 50%;
+  overflow: auto;
 
-.el-select-dropdown__item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: space-between;
-}
+  .el-dropdown-menu {
 
-.menu-show {
-  height: 80px;
-  opacity: 1;
-}
+    .el-dropdown-menu__item {
+      margin: 4px;
+      border-radius: 8px;
 
-.menu-hide {
-  height: 0;
-  opacity: 0;
-  margin-top: -80px;
-  border-bottom: unset;
+      &:hover {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  .addItemIcon {
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+  }
+
+  .addItemName {
+    padding: 4px 20px 4px 40px;
+  }
 }
 
 /* 菜单样式结束 */
@@ -1292,8 +1340,8 @@ textarea {
   border-radius: 20px;
   padding: 8px !important;
   margin: 8px 8px 8px 16px;
-  background-color: #ffb6b6;
-  border: 2px solid #ffffff;
+  background-color: #ff6565;
+  border: 2px solid #ff8600;
 
   .el-form-item__content {
     width: 20px !important;
@@ -1310,7 +1358,7 @@ textarea {
 
 .deleteIcon:hover {
   transform: rotate(180deg);
-  border: 2px solid #ff8600;
+  border: 2px solid var(--dialog-background-bar);
 }
 
 /* 删除图标样式结束 */
@@ -1319,34 +1367,6 @@ textarea {
   height: 60%;
 }
 
-/* 组件弹窗样式开始 */
-.zoomInDialog {
-  height: 95%;
-  max-height: 95%;
-  --el-dialog-padding-primary: 0 !important;
-  --el-dialog-border-radius: 0 !important;
-  --el-dialog-bg-color: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(10px);
-
-  .el-dialog__body {
-    height: 100%;
-    color: #272727;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.zoomInElement {
-  height: 90%;
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-}
-
-/* 组件弹窗样式结束 */
 .globeConfigDialog {
   height: 60%;
 
@@ -1359,28 +1379,13 @@ textarea {
   .syncConfigContainer {
     display: flex;
     gap: 8px;
-
-    .el-switch {
-      .el-switch__core {
-        height: calc(100% - 2px);
-        background: #494949;
-        padding: 0 4px;
-        border: none;
-      }
-
-      &.is-checked {
-        .el-switch__core {
-          background: #3a8091;
-        }
-      }
-    }
   }
 
   .globeConfigInput {
-    height: calc(100% - 84px) !important;
-    padding-top: 24px;
-    margin-top: 24px;
-    border-top: 2px dotted rgba(255, 255, 255, 0.6);
+    height: calc(100% - 72px) !important;
+    padding-top: 18px;
+    margin-top: 18px;
+    border-top: 2px dashed var(--dialog-background-bar);
 
     .el-textarea__inner {
       height: calc(100% - 4px);

@@ -1,11 +1,12 @@
 <script setup>
-import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElOption, ElSelect} from "element-plus"
+import {ElButton, ElDialog, ElForm, ElFormItem, ElIcon, ElInput, ElOption, ElSelect, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs, watch} from "vue"
-import {Close, Plus, Tools} from "@element-plus/icons-vue"
+import {Close, Edit, Plus, Tools} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
 import CommonDialog from "@/items/commonDialog.vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const {t} = useI18n()
 
@@ -211,14 +212,22 @@ defineExpose({
           :placeholder="searchEngineMap[nowSearchEngine]?.pd || t('placeholder.searchInput')"
           @keydown.enter.prevent.stop="search"
           @keydown.tab.prevent="nextSearchEngine"
-      >
-        <template #prepend>
-          <el-icon class="editIcon" :class="{'hide': !enableEdit}" @click="editSearchEngine">
-            <Tools/>
-          </el-icon>
-        </template>
-      </el-input>
+      />
     </div>
+
+    <component-operator :visible="enableEdit">
+      <el-tooltip
+          effect="light"
+          :content="t('common.openEdit')"
+          placement="top"
+          :show-after="800"
+          :hide-after="10"
+      >
+        <el-icon @click="editSearchEngine">
+          <Edit/>
+        </el-icon>
+      </el-tooltip>
+    </component-operator>
 
     <!-- 编辑搜索引擎弹窗 -->
     <common-dialog
@@ -356,13 +365,6 @@ defineExpose({
       }
     }
 
-    .el-input-group__prepend {
-      box-shadow: unset !important;
-      cursor: pointer;
-      padding: unset !important;
-      border-radius: unset !important;
-    }
-
     .el-icon.editIcon {
       height: 100% !important;
       width: 100% !important;
@@ -408,7 +410,6 @@ defineExpose({
       .el-form-item__label {
         border-left: 8px solid #1bc3b3;
         margin-bottom: 0;
-        border-radius: 4px 4px 0 0;
       }
 
       .el-form-item {
@@ -416,7 +417,7 @@ defineExpose({
       }
 
       .el-input__wrapper {
-        border-radius: 0 0 4px 4px;
+        border-radius: 0 8px 8px 8px;
         height: 40px;
         font-size: 18px;
       }
@@ -427,13 +428,13 @@ defineExpose({
       display: flex;
       align-items: center;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgb(255, 255, 255);
       gap: 12px;
 
       /* 对子元素每一个间隔一个来设置背景 */
 
       &:nth-child(odd) {
-        background-color: transparent;
+        background-color: #e3e3e3;
 
         .recordText {
           color: #cdcdcd;
@@ -446,14 +447,6 @@ defineExpose({
         align-items: center;
         gap: 8px;
         padding: 0;
-
-        .el-input-group__prepend {
-          background-color: #333333;
-          color: white;
-          font-weight: bold;
-          font-size: 16px;
-          padding: 0 12px;
-        }
 
         .el-form-item__label {
           padding: 0;
@@ -499,11 +492,9 @@ defineExpose({
 
         .el-form-item__label {
           margin-bottom: 0;
-          border-radius: 4px 4px 0 0;
         }
       }
     }
-
   }
 
   .dialog-footer {

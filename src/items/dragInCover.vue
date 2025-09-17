@@ -83,7 +83,7 @@ const onDrop = (e) => {
 
   .text-center {
     font-size: 2vw;
-    color: #fff;
+    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -56,7 +56,8 @@ export default {
       export: 'Export this component data',
       module: 'Add to Template',
       copy: 'Copy this component',
-      zoomIn: 'Enlarge component',
+      focus: 'focus component',
+      cancelFocus: 'unFocus component',
       style: 'Edit component style',
       deleteConfirm: 'Are you sure to delete this component? The data of this component will be permanently deleted.',
     },
@@ -290,6 +291,8 @@ export default {
   shortcut: {
     q: 'Move Mode',
     e: 'Edit Mode',
+    w: 'Focus Mode',
+    wTip: 'Click the component to focus on it, and press ALT + W again to exit.',
     d: 'Action Bar',
     r: 'Refresh Page',
     f: 'Receive Mode',

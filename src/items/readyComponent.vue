@@ -237,6 +237,7 @@ function handleFileDrop(e) {
 
   .readyComponents, .moduleComponents {
     min-height: 10vh;
+    max-height: 25vh;
     overflow: auto;
     position: relative;
   }
@@ -267,12 +268,12 @@ function handleFileDrop(e) {
     align-items: center;
     padding: 8px 16px;
     float: left;
-    border: 2px solid #ffffff;
+    border: 2px solid var(--dialog-background-bar);
     border-radius: 24px;
     margin: 8px;
-    background: rgba(255, 255, 255, 0.8);
     background-size: 200%;
     cursor: pointer;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 
     * {
       transition: all 0.5s ease-in-out;
@@ -285,7 +286,7 @@ function handleFileDrop(e) {
 
     .componentDesc {
       font-size: 14px;
-      color: #666;
+      color: #5a5a5a;
       margin-left: 8px;
     }
 

@@ -1,11 +1,12 @@
 <script setup>
 import {ElButton, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Finished, Operation, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Edit, Finished, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
 import commonDialog from "@/items/commonDialog.vue"
+import ComponentOperator from "@/items/componentOperator.vue"
 
 const {t} = useI18n()
 
@@ -167,6 +168,7 @@ function getFaviconUrl(url) {
 }
 
 let dragLink = null
+
 function onLinkDragStart(e, link) {
   dragLink = link
 }
@@ -217,9 +219,7 @@ defineExpose({
           <el-image :src="link.img" alt="favicon" fit="contain">
             <template #error>
               <div class="image-slot">
-                <el-icon>
-                  <Picture/>
-                </el-icon>
+                <el-text>{{ link.name }}</el-text>
               </div>
             </template>
           </el-image>
@@ -237,11 +237,19 @@ defineExpose({
       </div>
     </div>
 
-    <div v-show="enableEdit" class="editContainer" @click.stop="edit">
-      <el-icon class="editIcon">
-        <Operation/>
-      </el-icon>
-    </div>
+    <component-operator :visible="enableEdit">
+      <el-tooltip
+          effect="light"
+          :content="t('common.openEdit')"
+          placement="top"
+          :show-after="800"
+          :hide-after="10"
+      >
+        <el-icon @click="edit">
+          <Edit/>
+        </el-icon>
+      </el-tooltip>
+    </component-operator>
 
     <!-- 编辑快速链接弹窗 -->
     <common-dialog
@@ -267,9 +275,7 @@ defineExpose({
                     <el-image v-if="item.img" :src="item.img" fit="scale-down" alt="favicon">
                       <template #error>
                         <div class="image-slot">
-                          <el-icon>
-                            <Picture/>
-                          </el-icon>
+                          <el-text>{{ item.name }}</el-text>
                         </div>
                       </template>
                     </el-image>
@@ -299,11 +305,13 @@ defineExpose({
               :title="nameVisible ? t('common.showName') : t('common.hideName')"
               :content="t('component.link.switchNameVisible')"
               placement="top-end"
+              :show-after="200"
+              :hide-after="10"
           >
             <template #reference>
               <el-icon
                   class="nameVisibleIcon"
-                  :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
+                  :style="{background: nameVisible ? 'var(--el-color-primary)' : 'black'}"
                   @click="changeNameVisible"
               >
                 <Finished/>
@@ -315,6 +323,8 @@ defineExpose({
               :title="layout === 0 ? t('component.link.layout.horizontal') : (layout === 1 ? t('component.link.layout.floating') : t('component.link.layout.vertical'))"
               :content="t('component.link.layout.switch')"
               placement="top-end"
+              :show-after="200"
+              :hide-after="10"
           >
             <template #reference>
               <el-icon class="directionIcon" @click="changeDirection">
@@ -346,15 +356,14 @@ defineExpose({
   max-height: 240px;
   display: flex;
   align-items: center;
-  gap: 4px;
   overflow: auto;
   scrollbar-width: none;
   flex-wrap: nowrap;
+  gap: 4px;
 
   .linkContainer {
     position: relative;
     cursor: pointer;
-    padding: 2px;
     height: calc(100% - 8px);
   }
 
@@ -367,19 +376,22 @@ defineExpose({
 
   .linkItem {
     height: calc(100% - 16px);
-    padding: 8px 16px;
+    padding: 8px;
     user-select: none;
     margin: 2px;
 
     &:hover {
-      border-radius: 20px;
-      box-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
-      background-color: rgba(255, 255, 255, 0.1);
+      .el-image {
+        transform: translateY(-4px);
+      }
+
+      .el-text {
+        text-shadow: 0 0 4px rgba(126, 126, 126, 0.5);
+      }
     }
 
     .el-image {
       height: 60%;
-      margin-bottom: 8px;
 
       .el-image__error, .el-image__inner, .el-image__placeholder, .el-image__wrapper {
         width: unset;
@@ -402,9 +414,11 @@ defineExpose({
     );
     background-size: 200%;
     border-radius: 8px;
+    animation: gradientScroll 1s ease-in-out infinite;
+    animation-play-state: paused;
 
     &:hover {
-      animation: gradientScroll 1s ease-in-out infinite;
+      animation-play-state: running;
     }
   }
 
@@ -428,7 +442,6 @@ defineExpose({
     &:hover {
       /* 旋转 */
       transform: rotate(0deg);
-      scale: 1.2;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
     }
 
@@ -524,12 +537,13 @@ defineExpose({
         align-items: center;
         justify-content: center;
         padding: 20px;
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgb(255, 255, 255);
         gap: 12px;
 
         /* 对子元素每一个间隔一个来设置背景 */
+
         &:nth-child(odd) {
-          background-color: transparent;
+          background-color: #e3e3e3;
 
           .recordText {
             color: #cdcdcd;
@@ -558,7 +572,6 @@ defineExpose({
           padding: 0;
 
           .el-input-group__prepend {
-            background-color: #333333;
             color: white;
             font-weight: bold;
             font-size: 16px;
@@ -586,12 +599,6 @@ defineExpose({
           }
         }
 
-        .imgLinkName {
-          .el-input-group__prepend {
-            background-color: unset;
-          }
-        }
-
         .linkUrl {
           display: block !important;
           width: calc(80% - 180px) !important;
@@ -615,7 +622,6 @@ defineExpose({
 
           .el-form-item__label {
             margin-bottom: 0;
-            border-radius: 8px 8px 0 0;
           }
 
         }

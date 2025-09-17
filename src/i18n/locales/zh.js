@@ -56,7 +56,8 @@ export default {
       export: '导出此组件数据',
       module: '添加到模板',
       copy: '复制此组件',
-      zoomIn: '放大组件',
+      focus: '聚焦组件',
+      cancelFocus: '取消聚焦组件',
       style: '编辑组件样式',
       deleteConfirm: '确定删除此组件？此组件数据将被永久删除',
     },
@@ -290,6 +291,8 @@ export default {
   shortcut: {
     q: '移动模式',
     e: '编辑模式',
+    w: '聚焦模式',
+    wTip: '点击组件即可聚焦组件，再次按下 ALT + W 即可退出',
     d: '操作栏',
     r: '刷新页面',
     f: '接收模式',

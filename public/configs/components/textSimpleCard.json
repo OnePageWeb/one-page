@@ -1,0 +1,9 @@
+{
+  "name": "简单卡片",
+  "desc": "展示标题与单行内容的简单卡片",
+  "config": "{\"text\":\"<div class=\\\"card-simple\\\">\\n  <div class=\\\"title\\\">@{标题?标题}</div>\\n  <div class=\\\"content\\\">@{内容?单行内容}</div>\\n</div>\",\"params\":[{\"name\":\"标题\",\"desc\":\"\",\"value\":\"标题\"},{\"name\":\"内容\",\"desc\":\"\",\"value\":\"单行内容\"}]}",
+  "style": ".card-simple {\n  background: #fff;\n  border-radius: 10px;\n  padding: 20px;\n  box-shadow: 0 4px 12px rgba(0,0,0,0.1);\n  margin: 15px 0;\n}\n\n.card-simple .title {\n  font-size: 18px;\n  font-weight: bold;\n  margin-bottom: 10px;\n}\n\n.card-simple .content {\n  font-size: 14px;\n  color: #555;\n}\n",
+  "w": 7,
+  "h": 8,
+  "type": "text"
+}
