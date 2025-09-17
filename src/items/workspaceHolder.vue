@@ -147,9 +147,8 @@ function deleteItem(workspace: string) {
       >
         <template #reference>
           <el-tag
-              class="workspaceTag"
+              :class="{'workspaceTag': true, 'activeTag': nowWorkspace === tag}"
               :key="tag"
-              :type="nowWorkspace === tag ? 'primary' : 'info'"
               :closable="tag !== DEFAULT_WORKSPACE"
               @close="showDeleteConfirm(tag)"
           >
@@ -182,7 +181,7 @@ function deleteItem(workspace: string) {
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{ t('workspace.delete.content') }} <span style="color: #ff3737;font-size: 24px;font-weight: bolder">{{
+          {{ t('workspace.delete.content') }} <span style="color: orange;font-size: 24px;font-weight: bolder">{{
             deleteWorkspaceName
           }}</span> ？
           <div>
@@ -202,30 +201,6 @@ function deleteItem(workspace: string) {
 <style>
 .workspaceDialog {
   height: 300px !important;
-
-  .workspaceTag {
-    margin: 10px;
-    font-size: large;
-    padding: 8px 16px;
-    cursor: pointer;
-    height: unset;
-    border-radius: 24px;
-    border-width: 2px;
-    color: black;
-    --el-tag-bg-color: var(--background-color) !important;
-    --el-tag-border-color: var(--dialog-background-bar) !important;
-
-    &:hover {
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-    }
-
-    &.el-tag--primary {
-      --el-tag-bg-color: var(--dialog-background-bar) !important;
-      --el-tag-border-color: var(--dialog-background-bar) !important;
-      color: white;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-    }
-  }
 
   .workspaceName {
     height: 100%;

@@ -143,7 +143,7 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="40%" align-center>
+      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="40%" align-center @closed="configLoaderTipVisible = false">
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -1182,10 +1182,11 @@ body {
   .hideMenu {
     cursor: pointer;
     padding: 4px;
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--dialog-background-bar);
     border-radius: 24px;
 
     &:hover {
+      color: white;
       animation: upAndDown 0.5s ease-in-out infinite;
     }
   }

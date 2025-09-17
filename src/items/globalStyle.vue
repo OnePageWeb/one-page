@@ -216,7 +216,7 @@ defineExpose({
       <div class="tagContainer">
         <el-tag
             v-for="(tag, index) in styleTags"
-            :class="['styleTag', selectTags.indexOf(tag) > -1 ? 'activeTag' : '', curTagName === tag ? 'curTag' : '']"
+            :class="[selectTags.indexOf(tag) > -1 ? 'activeTag' : '', curTagName === tag ? 'curTag' : '']"
             :key="tag"
             closable
             @click="showTagStyle(index)"
@@ -250,6 +250,7 @@ defineExpose({
       <el-button type="primary" @click="loadSelectedStyle">{{ t('common.apply') }}</el-button>
     </template>
 
+    <!-- 样式名称输入 -->
     <common-dialog
         :title="selectedTagIndex > -1 ? t('style.edit') : t('style.add')"
         :visible="tagNameDialogVisible"
@@ -267,15 +268,17 @@ defineExpose({
       </el-input>
     </common-dialog>
 
+    <!-- 删除确认弹窗 -->
     <common-dialog
         :title="t('style.delete.title')"
         :visible="deleteConfirm"
         width="400px"
         class="deleteStyleConfirmDialog"
+        @closed="deleteConfirm = false"
     >
       <div style="display: flex;justify-content: center;align-items: center;">
         <div>
-          {{ t('style.delete.content') }} <span style="font-size: 24px;font-weight: bolder; color: #ffffff">{{ deleteTagName }}</span>
+          {{ t('style.delete.content') }} <span style="font-size: 24px;font-weight: bolder; color: orange">{{ deleteTagName }}</span>
           <div>
             {{ t('style.delete.confirm') }}
           </div>
@@ -301,30 +304,8 @@ defineExpose({
     padding: 8px 12px;
     overflow: auto;
 
-    .styleTag, .addTag {
-      margin: 6px;
-      font-size: large;
-      padding: 8px 16px;
-      cursor: pointer;
-      height: unset;
-      user-select: none;
-      border-radius: 24px;
-      border: 2px solid #ffffff;
-
-      &:hover {
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-      }
-    }
-
-    .styleTag {
-      color: #ffffff;
-      background-color: #939393;
-    }
-
-    .activeTag {
-      color: #ffffff;
-      background-color: var(--el-color-primary);
-      font-weight: bold;
+    .addTag {
+      background-color: var(--dialog-background-bar);
     }
 
     .activeIcon {
@@ -354,11 +335,6 @@ defineExpose({
       animation: upAndDown 0.5s linear infinite;
     }
 
-    .el-tag__close {
-      height: 20px;
-      width: 20px;
-      color: white;
-    }
   }
 
   .globeStyleInput {
