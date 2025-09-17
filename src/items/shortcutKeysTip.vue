@@ -91,6 +91,7 @@ const props = defineProps({
 .shortcutKeys {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   width: calc(40% - 56px);
   bottom: 5%;
   left: calc(30% + 28px);
@@ -106,10 +107,6 @@ const props = defineProps({
   transition: all 0.3s ease-in-out;
   border: 4px solid rgba(255, 255, 255, 0.6);
   pointer-events: all;
-
-  &:hover {
-    opacity: 0.4;
-  }
 
   * {
     user-select: none;

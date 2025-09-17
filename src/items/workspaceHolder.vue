@@ -122,6 +122,8 @@ function deleteItem(workspace: string) {
             width="350"
             :content="t('text.workspaceDesc')"
             placement="top-start"
+            :show-after="200"
+            :hide-after="10"
         >
           <template #reference>
             <el-icon style="margin-left: 8px;cursor: pointer;">
@@ -209,16 +211,19 @@ function deleteItem(workspace: string) {
     height: unset;
     border-radius: 24px;
     border-width: 2px;
-    --el-tag-border-color: #d6d6d6;
+    color: black;
+    --el-tag-bg-color: var(--background-color) !important;
+    --el-tag-border-color: var(--dialog-background-bar) !important;
 
     &:hover {
-      scale: 1.1;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     }
 
     &.el-tag--primary {
-      --el-tag-bg-color: #434343;
-      --el-tag-text-color: white;
-      box-shadow: 0 0 10px 0 rgb(255 255 255 / 50%);
+      --el-tag-bg-color: var(--dialog-background-bar) !important;
+      --el-tag-border-color: var(--dialog-background-bar) !important;
+      color: white;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     }
   }
 

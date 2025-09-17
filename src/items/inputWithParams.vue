@@ -131,6 +131,8 @@ defineExpose({
               :content="t('input.paramsTip')"
               placement="top-start"
               width="400"
+              :show-after="200"
+              :hide-after="10"
             >
               <template #reference>
                 <el-icon class="header-icon">

@@ -1,9 +1,10 @@
 * {
   --el-color-primary: rgb(15, 120, 191);
+  transition: all 0.3s ease-in-out;
 }
 
 :root {
-  --primary-color: rgb(75, 167, 237);
+  --primary-color: rgb(15, 120, 191);
   --background-opacity: rgba(255, 255, 255, 0.6);
   --background-color: rgb(255, 255, 255);
   --input-border-color: #7e7e7e;
@@ -25,12 +26,65 @@
   }
 
   &:not(.el-button--danger, .el-button--primary):hover {
-    background-color: #c1c1c1 !important;
-    border: 1px solid #c1c1c1;
+    background-color: var(--dialog-background-bar) !important;
+    border: 1px solid var(--dialog-background-bar);
+    color: white;
   }
 
   &.el-button--danger:hover {
     background-color: #ff5858;
+  }
+}
+
+.el-switch {
+  .el-switch__core {
+    height: calc(100% - 2px);
+    background: #494949;
+    padding: 0 4px;
+    border: none;
+
+    .el-switch__action {
+      left: 4px;
+    }
+  }
+
+  &.is-checked {
+    .el-switch__core {
+      background: var(--primary-color);
+
+      .el-switch__action {
+        left: calc(100% - 20px);
+      }
+    }
+  }
+}
+
+.el-checkbox-button {
+  .el-checkbox-button__inner {
+    border: 1px solid var(--primary-color);
+
+    &:hover {
+      background-color: var(--dialog-background-bar);
+      border: 1px solid var(--dialog-background-bar);
+      color: white;
+    }
+  }
+}
+
+.el-select {
+  .el-select__wrapper {
+    border: 1px solid var(--primary-color);
+
+    &:hover {
+      border: 1px solid var(--dialog-background-bar);
+      background-color: var(--dialog-background-bar);
+      box-shadow: unset;
+
+      .el-select__selected-item {
+        color: white;
+      }
+    }
+
   }
 }
 
@@ -52,6 +106,7 @@
     height: calc(100% - 2px);
     border-right: 1px solid #ffffff;
     box-shadow: unset;
+    max-width: 40%;
   }
 
   .el-input__wrapper {

@@ -129,6 +129,8 @@ defineExpose({
           :content="t('component.function.autoExecuteDesc')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon :class="['paramItem', {'positive': !autoExecute}]" @click="switchAutoExecute">
@@ -142,6 +144,8 @@ defineExpose({
           :content="t('component.function.executeDesc')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon class="paramItem execute" @click="execute">
@@ -156,6 +160,8 @@ defineExpose({
           :content="t('placeholder.functionContentEdit')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon class="paramItem edit" @click="edit">
@@ -170,6 +176,8 @@ defineExpose({
           :content="t('component.function.functionContentView')"
           placement="bottom-end"
           width="200"
+          :show-after="200"
+          :hide-after="10"
       >
         <template #reference>
           <el-icon class="paramItem edit" @click="isEditing = false">

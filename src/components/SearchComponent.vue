@@ -410,7 +410,6 @@ defineExpose({
       .el-form-item__label {
         border-left: 8px solid #1bc3b3;
         margin-bottom: 0;
-        border-radius: 4px 4px 0 0;
       }
 
       .el-form-item {
@@ -418,7 +417,7 @@ defineExpose({
       }
 
       .el-input__wrapper {
-        border-radius: 0 0 4px 4px;
+        border-radius: 0 8px 8px 8px;
         height: 40px;
         font-size: 18px;
       }
@@ -493,7 +492,6 @@ defineExpose({
 
         .el-form-item__label {
           margin-bottom: 0;
-          border-radius: 4px 4px 0 0;
         }
       }
     }

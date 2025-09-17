@@ -1,7 +1,7 @@
 <script setup>
 import {ElButton, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Edit, Finished, Picture, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Edit, Finished, Plus, Switch} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
@@ -219,9 +219,7 @@ defineExpose({
           <el-image :src="link.img" alt="favicon" fit="contain">
             <template #error>
               <div class="image-slot">
-                <el-icon>
-                  <Picture/>
-                </el-icon>
+                <el-text>{{ link.name }}</el-text>
               </div>
             </template>
           </el-image>
@@ -307,11 +305,13 @@ defineExpose({
               :title="nameVisible ? t('common.showName') : t('common.hideName')"
               :content="t('component.link.switchNameVisible')"
               placement="top-end"
+              :show-after="200"
+              :hide-after="10"
           >
             <template #reference>
               <el-icon
                   class="nameVisibleIcon"
-                  :style="{background: nameVisible ? 'var(--el-color-primary)' : 'var(--el-color-primary-light-9)'}"
+                  :style="{background: nameVisible ? 'var(--el-color-primary)' : 'black'}"
                   @click="changeNameVisible"
               >
                 <Finished/>
@@ -323,6 +323,8 @@ defineExpose({
               :title="layout === 0 ? t('component.link.layout.horizontal') : (layout === 1 ? t('component.link.layout.floating') : t('component.link.layout.vertical'))"
               :content="t('component.link.layout.switch')"
               placement="top-end"
+              :show-after="200"
+              :hide-after="10"
           >
             <template #reference>
               <el-icon class="directionIcon" @click="changeDirection">
@@ -440,7 +442,6 @@ defineExpose({
     &:hover {
       /* 旋转 */
       transform: rotate(0deg);
-      scale: 1.2;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
     }
 
@@ -621,7 +622,6 @@ defineExpose({
 
           .el-form-item__label {
             margin-bottom: 0;
-            border-radius: 8px 8px 0 0;
           }
 
         }

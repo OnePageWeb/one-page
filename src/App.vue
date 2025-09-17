@@ -380,9 +380,6 @@ function keyListener(event) {
       if (!unFocus()) {
         focusMode.value = !focusMode.value
         disabledMove()
-        if (focusMode.value) {
-          success(t('shortcut.wTip'))
-        }
       }
     } else if (event.key === 'd' || event.key === 'D') {
       showMenu.value = !showMenu.value
@@ -843,24 +840,22 @@ function focusIt(id, type) {
     const style = document.createElement('style')
     style.id = eleId + '-focus'
     style.innerHTML = `[id='${eleId}'] {
-      height: 90% !important;
-      width: 90% !important;
+      height: calc(100% - 80px) !important;
+      width: calc(100% - 80px) !important;
       position: fixed !important;
-      top: calc(5% - 25px) !important;
-      left: calc(5% - 25px) !important;
+      top: 0 !important;
+      left: 0 !important;
       z-index: 50 !important;
       background-color: #00000060;
+      -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
-      border: 10px solid rgb(255 255 255 / 10%);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: inset 0 0 16px black, 0 0 16px black;
+      padding: 40px;
 
       & > * {
-        height: calc(100% - 40px);
-        width: calc(100% - 40px);
-        top: 20px;
-        left: 20px;
+        height: calc(100% - 80px);
+        width: calc(100% - 80px);
+        top: 40px;
+        left: 40px;
       }
     }`
     document.head.appendChild(style)
@@ -1167,10 +1162,6 @@ body {
   background-color: #343434;
 }
 
-* {
-  transition: all 0.3s ease-in-out;
-}
-
 /* 菜单样式开始 */
 .menu {
   position: fixed;
@@ -1203,12 +1194,27 @@ body {
     display: flex;
 
     .modeItem {
+
+      .el-checkbox-button__inner {
+        border: 1px solid var(--primary-color);
+
+        &:hover {
+          border: 1px solid var(--dialog-background-bar);
+        }
+      }
+
       &:first-child {
         border-radius: 8px 0 0 8px;
+        .el-checkbox-button__inner {
+          border-radius: 8px 0 0 8px;
+        }
       }
 
       &:last-child {
         border-radius: 0 8px 8px 0;
+        .el-checkbox-button__inner {
+          border-radius: 0 8px 8px 0;
+        }
       }
     }
 
@@ -1229,6 +1235,18 @@ body {
 
   .langSelect {
     width: 100px;
+  }
+
+  &.menu-show {
+    height: 80px;
+    opacity: 1;
+  }
+
+  &.menu-hide {
+    height: 0;
+    opacity: 0;
+    margin-top: -81px;
+    border-bottom: 1px solid var(--dialog-background-bar);
   }
 }
 
@@ -1258,18 +1276,6 @@ body {
   .addItemName {
     padding: 4px 20px 4px 40px;
   }
-}
-
-.menu-show {
-  height: 80px;
-  opacity: 1;
-}
-
-.menu-hide {
-  height: 0;
-  opacity: 0;
-  margin-top: -80px;
-  border-bottom: unset;
 }
 
 /* 菜单样式结束 */
@@ -1334,8 +1340,8 @@ textarea {
   border-radius: 20px;
   padding: 8px !important;
   margin: 8px 8px 8px 16px;
-  background-color: #ffb6b6;
-  border: 2px solid #ffffff;
+  background-color: #ff6565;
+  border: 2px solid #ff8600;
 
   .el-form-item__content {
     width: 20px !important;
@@ -1352,7 +1358,7 @@ textarea {
 
 .deleteIcon:hover {
   transform: rotate(180deg);
-  border: 2px solid #ff8600;
+  border: 2px solid var(--dialog-background-bar);
 }
 
 /* 删除图标样式结束 */
@@ -1373,28 +1379,13 @@ textarea {
   .syncConfigContainer {
     display: flex;
     gap: 8px;
-
-    .el-switch {
-      .el-switch__core {
-        height: calc(100% - 2px);
-        background: #494949;
-        padding: 0 4px;
-        border: none;
-      }
-
-      &.is-checked {
-        .el-switch__core {
-          background: #3a8091;
-        }
-      }
-    }
   }
 
   .globeConfigInput {
-    height: calc(100% - 84px) !important;
-    padding-top: 24px;
-    margin-top: 24px;
-    border-top: 2px dotted rgba(255, 255, 255, 0.6);
+    height: calc(100% - 72px) !important;
+    padding-top: 18px;
+    margin-top: 18px;
+    border-top: 2px dashed var(--dialog-background-bar);
 
     .el-textarea__inner {
       height: calc(100% - 4px);

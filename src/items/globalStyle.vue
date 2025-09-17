@@ -297,7 +297,6 @@ defineExpose({
     height: calc(20% - 36px);
     border: 2px solid #dddddd;
     margin: 4px 0;
-    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 24px;
     padding: 8px 12px;
     overflow: auto;
