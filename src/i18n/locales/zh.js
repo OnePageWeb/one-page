@@ -141,6 +141,17 @@ export default {
       content: '是否删除样式',
       confirm: '此样式内容将被删除，不可恢复！',
     },
+    pack: {
+      title: '样式包',
+      create: '创建样式包',
+      createTip: '选择样式标签来创建样式包',
+      name: '样式包名称',
+      desc: '样式包描述',
+    },
+    duplicate: {
+      title: '重复样式标签',
+      desc: '当前样式包已存在重复的样式标签 【{0}】',
+    },
   },
   config: {
     title: '配置',

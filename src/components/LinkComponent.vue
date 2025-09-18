@@ -332,7 +332,7 @@ defineExpose({
               </el-icon>
             </template>
           </el-popover>
-          <el-button type="primary" @click="() => tempLinks.push({name: '', url: '', img: ''})">
+          <el-button @click="() => tempLinks.push({name: '', url: '', img: ''})">
             <el-icon>
               <Plus/>
             </el-icon>
@@ -340,7 +340,7 @@ defineExpose({
           <el-button @click="cancelEdit">
             {{ t('common.cancel') }}
           </el-button>
-          <el-button type="primary" @click="saveEdit">
+          <el-button @click="saveEdit">
             {{ t('common.save') }}
           </el-button>
         </div>

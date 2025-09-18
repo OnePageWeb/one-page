@@ -141,6 +141,17 @@ export default {
       content: 'Whether to delete the style',
       confirm: 'This style content will be deleted and cannot be recovered!',
     },
+    pack: {
+      title: 'Style Pack',
+      create: 'Create Style Pack',
+      createTip: 'Select style tags to create style pack',
+      name: 'Style Pack Name',
+      desc: 'Style pack description',
+    },
+    duplicate: {
+      title: 'Duplicate Style Tag',
+      desc: 'Current style pack already exists duplicate style tag 【{0}】',
+    },
   },
   config: {
     title: 'Configuration',

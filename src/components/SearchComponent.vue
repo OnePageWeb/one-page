@@ -271,7 +271,7 @@ defineExpose({
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="() => tempSearchEngineList.push({name: '', url: ''})">
+          <el-button @click="() => tempSearchEngineList.push({name: '', url: ''})">
             <el-icon>
               <Plus/>
             </el-icon>
@@ -279,7 +279,7 @@ defineExpose({
           <el-button @click="cancelEdit">
             {{ t('common.cancel') }}
           </el-button>
-          <el-button type="primary" @click="saveEdit">
+          <el-button @click="saveEdit">
             {{ t('common.save') }}
           </el-button>
         </div>

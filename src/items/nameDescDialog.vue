@@ -1,9 +1,10 @@
 <script setup>
-import {ref} from 'vue'
+import {reactive, ref} from 'vue'
 import {defineProps, defineExpose} from 'vue'
-import {ElButton, ElInput, ElDialog} from "element-plus"
+import {ElButton, ElInput, ElForm, ElFormItem} from "element-plus"
 import {useI18n} from "vue-i18n"
 import commonDialog from "@/items/commonDialog.vue"
+import {error} from "@/js/message.js";
 
 const {t} = useI18n()
 
@@ -26,8 +27,19 @@ const visible = ref(false)
 
 const emit = defineEmits(['close', 'save'])
 
-const name = ref('')
-const desc = ref('')
+const formRef = ref(null)
+const form = reactive({
+  name: '',
+  desc: '',
+})
+
+const nameRules = {
+  required: true,
+  message: t('error.noName'),
+  trigger: 'blur',
+}
+
+
 const close = () => {
   emit('close')
   visible.value = false
@@ -42,9 +54,10 @@ const cancel = () => {
 }
 
 const save = () => {
-  emit('save', {
-    name: name.value,
-    desc: desc.value
+  formRef.value.validate((valid) => {
+    if (valid) {
+      emit('save', form)
+    }
   })
 }
 
@@ -56,33 +69,42 @@ defineExpose({
 
 <template>
   <common-dialog
-    :title="title"
-    :visible="visible"
-    class="nameDescDialog"
-    width="30%"
-    @closed="close"
+      :title="title"
+      :visible="visible"
+      class="nameDescDialog"
+      width="30%"
+      @closed="close"
   >
-    <div>
-      <el-input v-model="name" style="margin-bottom: 8px;">
-        <template #prepend>
-          {{ nameText }}
-        </template>
-      </el-input>
-      <el-input v-model="desc">
-        <template #prepend>
-          {{ descText }}
-        </template>
-      </el-input>
-    </div>
+    <el-form ref="formRef" :model="form">
+      <el-form-item key="name" prop="name" :rules="nameRules">
+        <el-input v-model="form.name">
+          <template #prepend>
+            {{ nameText }}
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item key="desc" prop="desc">
+        <el-input v-model="form.desc">
+          <template #prepend>
+            {{ descText }}
+          </template>
+        </el-input>
+      </el-form-item>
+    </el-form>
 
     <template #footer>
-      <el-button type="primary" @click="save">{{ t('common.apply') }}</el-button>
+      <el-button @click="save()">{{ t('common.confirm') }}</el-button>
     </template>
   </common-dialog>
 </template>
 
 <style>
 .nameDescDialog {
-  height: 200px !important;
+
+  .el-form-item__error {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 </style>

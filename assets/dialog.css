@@ -71,7 +71,7 @@
 
   .el-dialog__footer {
     padding: 8px;
-    background-color: var(--dialog-background-bar);
+    background-color: var(--dialog-background-footer);
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: flex-end;

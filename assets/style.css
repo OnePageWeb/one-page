@@ -1,39 +1,64 @@
 * {
-  --el-color-primary: rgb(15, 120, 191);
+  --el-color-primary: #292929;
   transition: all 0.3s ease-in-out;
 }
 
 :root {
-  --primary-color: rgb(15, 120, 191);
+  --primary-color: #292929;
   --background-opacity: rgba(255, 255, 255, 0.6);
   --background-color: rgb(255, 255, 255);
   --input-border-color: #7e7e7e;
   --input-background-color: #fafafa;
+  --color-black: #292929;
   --dialog-background-bar: #292929;
+  --dialog-background-footer: #292929;
   --cursor-text: url("./cursor/text.cur") 10 8;
+  --button-border-top: unset;
+  --button-border-left: 2px solid #292929;
 }
 
 .el-button {
   margin-left: 0;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  --el-button-outline-color: unset;
+
+  &:hover {
+    border-color: #535353;
+  }
+
+  &:active {
+    background-color: var(--color-black);
+    border-color: var(--color-black);
+  }
 
   &:not(.el-button--danger, .el-button--primary) {
-    border: 1px solid var(--primary-color);
+    border-left: var(--button-border-left);
+    border-right: var(--button-border-left);
+    border-top: var(--button-border-top);
+    border-bottom: var(--button-border-top);
   }
 
   &.el-button--primary:hover {
-    background-color: var(--dialog-background-bar);
-    border: 1px solid var(--dialog-background-bar);
+    background-color: var(--background-color);
+    color: var(--color-black);
   }
 
   &:not(.el-button--danger, .el-button--primary):hover {
-    background-color: var(--dialog-background-bar) !important;
-    border: 1px solid var(--dialog-background-bar);
+    background-color: var(--color-black) !important;
     color: white;
   }
 
   &.el-button--danger:hover {
     background-color: #ff5858;
   }
+}
+
+.el-divider--horizontal {
+  margin: 16px 0;
+}
+
+.el-button-group {
+  display: flex;
 }
 
 .el-switch {
@@ -64,8 +89,8 @@
     border: 1px solid var(--primary-color);
 
     &:hover {
-      background-color: var(--dialog-background-bar);
-      border: 1px solid var(--dialog-background-bar);
+      background-color: var(--color-black);
+      border: 1px solid var(--color-black);
       color: white;
     }
   }
@@ -119,8 +144,8 @@
     border: 1px solid var(--primary-color);
 
     &:hover {
-      border: 1px solid var(--dialog-background-bar);
-      background-color: var(--dialog-background-bar);
+      border: 1px solid var(--color-black);
+      background-color: var(--color-black);
       box-shadow: unset;
 
       .el-select__selected-item {
@@ -184,7 +209,7 @@
   background: var(--background-color);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   border-top: 12px solid var(--dialog-background-bar);
-  border-bottom: 12px solid var(--dialog-background-bar);
+  border-bottom: 12px solid var(--dialog-background-footer);
   border-right: unset;
   border-left: unset;
   border-radius: 8px;
@@ -233,6 +258,36 @@ el-tooltip {
     &:hover {
       cursor: var(--cursor-text), auto;
     }
+  }
+}
+
+
+.deleteIcon {
+  cursor: pointer;
+  pointer-events: auto;
+  height: 16px;
+  width: 16px;
+  border-radius: 20px;
+  padding: 8px !important;
+  margin: 8px 8px 8px 16px;
+  background-color: #ff6565;
+  border: 2px solid #ff8600;
+
+  &:hover {
+    transform: rotate(180deg);
+    border: 2px solid var(--color-black);
+  }
+
+  .el-form-item__content {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+    justify-content: center;
+  }
+
+  path {
+    fill: #fff;
   }
 }
 
@@ -292,10 +347,10 @@ textarea {
   border-radius: 8px;
   background-color: var(--background-color);
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
-  border-top: 12px solid var(--dialog-background-bar);
-  border-bottom: 12px solid var(--dialog-background-bar);
-  border-left: unset;
-  border-right: unset;
+  border-left: var(--button-border-left);
+  border-right: var(--button-border-left);
+  border-top: var(--button-border-top);
+  border-bottom: var(--button-border-top);
 }
 
 /* 背景滚动动画 */

@@ -169,7 +169,7 @@ function deleteItem(workspace: string) {
           :placeholder="t('placeholder.newWorkspaceName')"
           @keydown.ctrl.enter="newWorkspace(newWorkspaceName)"
       />
-      <el-button type="primary" @click="newWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
+      <el-button @click="newWorkspace(newWorkspaceName)">{{ t('common.add') }}</el-button>
     </template>
 
     <common-dialog
@@ -191,7 +191,7 @@ function deleteItem(workspace: string) {
       </div>
       <template #footer>
         <el-button type="danger" @click="deleteItem(deleteWorkspaceName)">{{ t('common.confirm') }}</el-button>
-        <el-button type="primary" @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
+        <el-button @click="deleteConfirm = false">{{ t('common.cancel') }}</el-button>
       </template>
     </common-dialog>
   </common-dialog>

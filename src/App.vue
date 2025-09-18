@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; width: 100%; position: relative;">
+  <div class="contianer">
     <div
         :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
     >
@@ -130,7 +130,7 @@
                 :inactive-text="$t('config.unlock')"
             />
             <el-input v-model="configUrl" @change="saveUrl" :placeholder="$t('config.configUrl')"/>
-            <el-button @click="loadConfigFromUrl" type="primary">{{ $t('common.sync') }}</el-button>
+            <el-button @click="loadConfigFromUrl">{{ $t('common.sync') }}</el-button>
           </div>
         </el-tooltip>
         <el-input
@@ -143,7 +143,8 @@
       </div>
 
       <!-- 配置提示弹窗 -->
-      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="40%" align-center @closed="configLoaderTipVisible = false">
+      <common-dialog v-model="configLoaderTipVisible" title="Tips" width="40%" align-center
+                     @closed="configLoaderTipVisible = false">
         <div>
           <div style="font-size:large;font-weight: bold;margin-bottom: 4px">
             {{ $t('text.configTip1') }}
@@ -176,7 +177,7 @@
             <Promotion/>
           </el-icon>
         </el-tooltip>
-        <el-button type="primary" @click="downloadConfig">{{ $t('common.download') }}</el-button>
+        <el-button @click="downloadConfig">{{ $t('common.download') }}</el-button>
         <el-popconfirm
             :title="$t('config.loadConfirm')"
             placement="top-end"
@@ -186,7 +187,7 @@
             @confirm="loadConfig(configData)"
         >
           <template #reference>
-            <el-button type="primary">{{ $t('config.load') }}</el-button>
+            <el-button>{{ $t('config.load') }}</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -220,7 +221,7 @@
           @update="value => componentStyle = value"
       />
       <template #footer>
-        <el-button type="primary" @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
+        <el-button @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
       </template>
     </common-dialog>
 
@@ -232,7 +233,7 @@
 
     <!-- 全局样式弹窗 -->
     <globalStyle
-        ref="globalStyle"
+        ref="globalStyleRef"
         @load-style="loadStyle"
     />
 
@@ -256,7 +257,7 @@
     <!-- 拖动数据进入弹窗 -->
     <dragInCover
         ref="dragInCover"
-        style="z-index: 30;"
+        style="z-index: 110;"
         :active="everyDrag"
         @onDragIn="onDragIn"
     />
@@ -322,6 +323,7 @@ import CommonDialog from "@/items/commonDialog.vue"
 import {error, info, success} from "@/js/message.js"
 import GridStackConfig from "@/items/gridStackConfig.vue"
 import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
+import {STYLE, STYLE_PACK, WORKSPACE} from "@/js/configType.js";
 
 const {t} = useI18n()
 
@@ -407,7 +409,7 @@ const onWindowBlur = () => {
   ctrlDown.value = false
 }
 
-const globalStyle = ref(null)
+const globalStyleRef = ref(null)
 
 const loadGridStackParam = async (urlParams) => {
   const initParam = (key, defaultValue) => {
@@ -573,7 +575,7 @@ onUnmounted(() => {
 
 // 编辑全局样式
 function editGlobalStyle() {
-  globalStyle.value.open()
+  globalStyleRef.value.open()
 }
 
 const loadJsonData = async () => {
@@ -972,7 +974,7 @@ function openLoadConfig() {
 function generateConfig() {
   // 汇总所有配置为一个json
   let config = {
-    globalStyle: globalStyle.value.generateStyleConfig(),
+    globalStyle: globalStyleRef.value.generateStyleConfig(),
     layout: JSON.parse(loadData('layout')),
     configLock: configUrlLock.value,
     configUrl: configUrl.value,
@@ -1061,7 +1063,7 @@ async function loadConfig(config = configData.value, reload = true) {
   // 清除旧配置
   clearConfig()
   // 加载全局样式
-  globalStyle.value.initStyleConfig(config.globalStyle)
+  globalStyleRef.value.initStyleConfig(config.globalStyle)
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
   saveUrlLock()
@@ -1086,6 +1088,10 @@ async function loadConfig(config = configData.value, reload = true) {
   // 跳过刷新后的url同步
   saveDataDirect('skipReload', true)
   return true
+}
+
+const loadStylePack = async (stylePack) => {
+  globalStyleRef.value.loadStylePackConfirm(stylePack)
 }
 
 // 下载配置
@@ -1114,10 +1120,7 @@ const everyDrag = ref(false)
 function onDragIn(data) {
   // 判断data是否是json对象
   if (typeof data === 'object') {
-    if (data.type) {
-      // 组件配置
-      addComponent(data)
-    } else if (data.globalStyle || data.layout) {
+    if (data.type === WORKSPACE || data.globalStyle || data.layout) {
       // 全局样式或布局
       ElMessageBox.confirm(
           t('config.transferReceive.desc'),
@@ -1130,6 +1133,12 @@ function onDragIn(data) {
       ).then(() => {
         loadConfig(data)
       })
+    } else if (data.type === STYLE_PACK) {
+      // 主题包加载
+      loadStylePack(data)
+    } else if (data.type) {
+      // 组件配置
+      addComponent(data)
     } else {
       error(t('error.unknownContent'))
     }
@@ -1162,33 +1171,50 @@ body {
   background-color: #343434;
 }
 
+.contianer {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* 菜单样式开始 */
 .menu {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: calc(100% - 20px);
+  bottom: 8px;
+  max-width: calc(100% - 80px);
   display: flex;
   align-items: center;
   overflow: auto;
   scrollbar-width: none;
   gap: 10px;
-  padding: 0 10px;
+  padding: 0 20px;
   z-index: 100;
+  border-radius: 8px;
   background-color: var(--background-color);
-  border-bottom: 12px solid var(--dialog-background-bar);
+  border-top: 12px solid var(--dialog-background-bar);
+  border-bottom: 12px solid var(--dialog-background-footer);
+  border-right: unset;
+  border-left: unset;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
 
   .hideMenu {
     cursor: pointer;
     padding: 4px;
-    background: var(--dialog-background-bar);
     border-radius: 24px;
+    background-color: var(--color-black);
+    color: var(--background-color);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
 
     &:hover {
-      color: white;
       animation: upAndDown 0.5s ease-in-out infinite;
     }
+  }
+
+  .modeContainer>* {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
   }
 
   .modeContainer {
@@ -1200,12 +1226,14 @@ body {
         border: 1px solid var(--primary-color);
 
         &:hover {
-          border: 1px solid var(--dialog-background-bar);
+          border: 1px solid var(--color-black);
         }
       }
 
       &:first-child {
         border-radius: 8px 0 0 8px;
+        z-index: 2;
+
         .el-checkbox-button__inner {
           border-radius: 8px 0 0 8px;
         }
@@ -1213,6 +1241,8 @@ body {
 
       &:last-child {
         border-radius: 0 8px 8px 0;
+        z-index: 2;
+
         .el-checkbox-button__inner {
           border-radius: 0 8px 8px 0;
         }
@@ -1236,6 +1266,18 @@ body {
 
   .langSelect {
     width: 100px;
+
+    .el-select__wrapper {
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+      border-left: var(--button-border-left);
+      border-right: var(--button-border-left);
+      border-top: var(--button-border-top);
+      border-bottom: var(--button-border-top);
+
+      &:hover {
+        border: 2px solid var(--color-black);
+      }
+    }
   }
 
   &.menu-show {
@@ -1246,8 +1288,7 @@ body {
   &.menu-hide {
     height: 0;
     opacity: 0;
-    margin-top: -81px;
-    border-bottom: 1px solid var(--dialog-background-bar);
+    margin-bottom: -81px;
   }
 }
 
@@ -1332,38 +1373,6 @@ textarea {
   cursor: pointer;
 }
 
-/* 删除图标样式开始 */
-.deleteIcon {
-  cursor: pointer;
-  pointer-events: auto;
-  height: 20px !important;
-  width: 20px !important;
-  border-radius: 20px;
-  padding: 8px !important;
-  margin: 8px 8px 8px 16px;
-  background-color: #ff6565;
-  border: 2px solid #ff8600;
-
-  .el-form-item__content {
-    width: 20px !important;
-    height: 20px !important;
-    margin: 0 !important;
-    cursor: pointer;
-    justify-content: center;
-  }
-
-  path {
-    fill: #fff;
-  }
-}
-
-.deleteIcon:hover {
-  transform: rotate(180deg);
-  border: 2px solid var(--dialog-background-bar);
-}
-
-/* 删除图标样式结束 */
-
 .componentStyleDialog {
   height: 60%;
 }
@@ -1386,7 +1395,7 @@ textarea {
     height: calc(100% - 72px) !important;
     padding-top: 18px;
     margin-top: 18px;
-    border-top: 2px dashed var(--dialog-background-bar);
+    border-top: 2px dashed var(--color-black);
 
     .el-textarea__inner {
       height: calc(100% - 4px);

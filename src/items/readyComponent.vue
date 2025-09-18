@@ -218,7 +218,7 @@ function handleFileDrop(e) {
             @drop.prevent="handleFileDrop"
             @keydown.enter.ctrl="addComponent"
         />
-        <el-button class="addComponent" type="primary" @click="addComponent(null)">{{ t('common.add') }}</el-button>
+        <el-button class="addComponent" @click="addComponent(null)">{{ t('common.add') }}</el-button>
       </div>
     </div>
   </common-dialog>
@@ -268,7 +268,7 @@ function handleFileDrop(e) {
     align-items: center;
     padding: 8px 16px;
     float: left;
-    border: 2px solid var(--dialog-background-bar);
+    border: 2px solid var(--color-black);
     border-radius: 24px;
     margin: 8px;
     background-size: 200%;

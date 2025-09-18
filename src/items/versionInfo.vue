@@ -2,7 +2,7 @@
 import packageJson from '../../package.json'
 import {loadDataDirect, saveDataDirect} from "@/js/data.js"
 import {onMounted, ref} from 'vue'
-import {ElButton, ElLink, ElTooltip} from "element-plus"
+import {ElButton, ElFormItem, ElIcon, ElLink, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
 import {Close} from "@element-plus/icons-vue"
 import {warning} from "@/js/message.js"
@@ -100,9 +100,11 @@ onMounted(() => {
       <div class="versionContent" v-html="version.content"/>
     </div>
 
-    <div class="close-icon">
+    <div class="deleteIcon close-icon">
       <el-tooltip :content="t('common.close')" placement="top" effect="light">
-        <el-button type="danger" @click="isShow = false" :icon="Close" circle/>
+        <el-icon @click="isShow = false">
+          <Close/>
+        </el-icon>
       </el-tooltip>
     </div>
   </div>
@@ -117,14 +119,15 @@ onMounted(() => {
   max-height: 30%;
   padding: 16px;
   border-radius: 8px;
-  background-color: rgba(236, 236, 236, 0.8);
+  background-color: var(--background-color);
   backdrop-filter: blur(4px);
   display: flex;
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
   scrollbar-width: none;
-  border: 4px solid rgba(255, 255, 255, 0.6);
+  border-top: 12px solid var(--dialog-background-bar);
+  border-bottom: 12px solid var(--dialog-background-footer);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.45);
   animation: upAndDown 1s ease-in-out infinite;
 
@@ -152,10 +155,15 @@ onMounted(() => {
     }
   }
 
-  .close-icon {
+  .deleteIcon.close-icon {
     position: fixed;
-    top: 8px;
-    right: 8px;
+    top: 0;
+    right: 0;
+
+    svg {
+      height: 18px;
+      width: 18px;
+    }
   }
 }
 </style>

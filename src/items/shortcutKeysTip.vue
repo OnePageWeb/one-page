@@ -93,7 +93,7 @@ const props = defineProps({
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   width: calc(40% - 56px);
-  bottom: 5%;
+  bottom: 120px;
   left: calc(30% + 28px);
   opacity: 1;
   padding: 24px;

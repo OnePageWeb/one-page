@@ -358,7 +358,7 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="save">{{ t('common.save') }}</el-button>
+      <el-button @click="save">{{ t('common.save') }}</el-button>
     </template>
   </common-dialog>
 </template>
@@ -411,8 +411,5 @@ defineExpose({
     }
   }
 
-  .el-divider--horizontal {
-    margin: 16px 0;
-  }
 }
 </style>
