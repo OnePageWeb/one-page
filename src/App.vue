@@ -403,7 +403,7 @@ function keyListener(event) {
     }
     event.preventDefault()
   } else if (event.key === 'Alt' && event.type === 'keyup') {
-    // altDown.value = false
+    altDown.value = false
   }
 }
 
@@ -428,12 +428,12 @@ const userMode = () => {
 }
 
 function mouseDown(event) {
-  // altDown.value = false
+  altDown.value = false
   ctrlDown.value = false
 }
 
 const onWindowBlur = () => {
-  // altDown.value = false
+  altDown.value = false
   ctrlDown.value = false
 }
 
