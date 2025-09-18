@@ -24,7 +24,5 @@ export const error = (msg) => {
   ElMessage({
     message: msg,
     type: 'error',
-    duration: 0,
-    autoClose: false,
   })
 }
