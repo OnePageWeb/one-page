@@ -1,8 +1,8 @@
 <script setup>
-import {ElButton, ElIcon, ElInput, ElTag, ElText, ElDivider} from "element-plus"
+import {ElButton, ElIcon, ElInput, ElTag, ElText, ElDivider, ElTooltip} from "element-plus"
 import {nextTick, onMounted, ref, shallowRef} from "vue"
 import {exportData, loadData, removeData, saveData} from "@/js/data.js"
-import {CircleCheckFilled} from "@element-plus/icons-vue"
+import {CircleCheckFilled, Promotion} from "@element-plus/icons-vue"
 import cssEditor from "@/items/cssEditor.vue"
 import {useI18n} from 'vue-i18n'
 import commonDialog from "@/items/commonDialog.vue"
@@ -126,12 +126,35 @@ const selectTag = (tag) => {
   }
 }
 
+// 全局配置拖拽导出
+const onConfigTransferStart = (e, {name, desc}) => {
+  e.stopPropagation()
+  const transferData = generateStylePack(name, desc)
+  console.log('transferData', transferData)
+  e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
+}
+
 const preSelectTags = () => {
   if (selectTags.value.length === 0) {
     warning(t('error.noSelectStyle'))
     return
   }
   nameDescDialogRef.value.open()
+}
+
+const generateStylePack = (name, desc) => {
+  const exportStyle = {}
+  exportStyle['name'] = name
+  exportStyle['desc'] = desc
+  exportStyle.type = STYLE_PACK
+  exportStyle.styles = []
+  for (let tag of selectTags.value) {
+    const style = loadData('globalStyle-tag-' + tag) || ''
+    if (style) {
+      exportStyle.styles.push({tag, style})
+    }
+  }
+  return exportStyle
 }
 
 const exportStylePack = ({name, desc}) => {
@@ -144,17 +167,7 @@ const exportStylePack = ({name, desc}) => {
     return
   }
   // 导出选中的样式
-  const exportStyle = {}
-  exportStyle['name'] = name
-  exportStyle['desc'] = desc
-  exportStyle.type = STYLE_PACK
-  exportStyle.styles = []
-  for (let tag of selectTags.value) {
-    const style = loadData('globalStyle-tag-' + tag) || ''
-    if (style) {
-      exportStyle.styles.push({tag, style})
-    }
-  }
+  const exportStyle = generateStylePack(name, desc)
   nameDescDialogRef.value.cancel()
   // 导出为文件
   exportData(exportStyle, name + '.json')
@@ -432,6 +445,20 @@ defineExpose({
       </div>
 
       <template #footer>
+        <el-tooltip
+            :content="$t('config.transfer')"
+            placement="top"
+            width="240"
+            effect="dark"
+        >
+          <el-icon
+              class="transfer"
+              draggable="true"
+              @dragstart.stop="onConfigTransferStart($event, {name: $t('style.pack.title'), desc: ''})"
+          >
+            <Promotion/>
+          </el-icon>
+        </el-tooltip>
         <el-button @click="preSelectTags">{{ t('common.export') }}</el-button>
       </template>
 
