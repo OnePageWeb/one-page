@@ -28,54 +28,56 @@ const props = defineProps({
     default: false,
   }
 })
+
+const emit = defineEmits(['e', 'd', 'q', 'w', 'f', 'r', '~'])
 </script>
 
 <template>
   <div :class="['shortcutKeys', {'shortcutKeysHidden': !visible}]">
     <div class="shortcutKeysList">
-      <div :class="['shortcutKeysItem', q ? 'activeKey' : '']">
+      <div :class="['shortcutKeysItem', 'enabledActive', q ? 'activeKey' : '']" @click="emit('q')">
         <div class="shortcutKeysItemTitle">Q</div>
         <el-icon>
           <Rank/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.q') }}</div>
       </div>
-      <div :class="['shortcutKeysItem', e ? 'activeKey' : '']">
+      <div :class="['shortcutKeysItem', 'enabledActive', e ? 'activeKey' : '']" @click="emit('e')">
         <div class="shortcutKeysItemTitle">E</div>
         <el-icon color="#ffffff">
           <Edit/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.e') }}</div>
       </div>
-      <div :class="['shortcutKeysItem', d ? 'activeKey' : '']">
+      <div :class="['shortcutKeysItem', 'enabledActive', d ? 'activeKey' : '']" @click="emit('d')">
         <div class="shortcutKeysItemTitle">D</div>
         <el-icon>
           <Operation/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.d') }}</div>
       </div>
-      <div :class="['shortcutKeysItem', w ? 'activeKey' : '']">
+      <div :class="['shortcutKeysItem', 'enabledActive', w ? 'activeKey' : '']" @click="emit('w')">
         <div class="shortcutKeysItemTitle">W</div>
         <el-icon>
           <Operation/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.w') }}</div>
       </div>
-      <div class="shortcutKeysItem">
+      <div class="shortcutKeysItem enabledActive" @click="emit('r')">
         <div class="shortcutKeysItemTitle">R</div>
         <el-icon>
           <RefreshRight/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.r') }}</div>
       </div>
-      <div :class="['shortcutKeysItem', f ? 'activeKey' : '']">
+      <div :class="['shortcutKeysItem', 'enabledActive', f ? 'activeKey' : '']" @click="emit('f')">
         <div class="shortcutKeysItemTitle">F</div>
         <el-icon>
           <UploadFilled/>
         </el-icon>
         <div class="shortcutKeysItemDesc">{{ $t('shortcut.f') }}</div>
       </div>
-      <div class="shortcutKeysItem">
+      <div class="shortcutKeysItem enabledActive" @click="emit('~')">
         <div class="shortcutKeysItemTitle">~</div>
         <el-icon>
           <View/>
@@ -96,8 +98,8 @@ const props = defineProps({
   bottom: 120px;
   left: calc(30% + 28px);
   opacity: 1;
-  padding: 24px;
-  border-radius: 24px;
+  padding: 24px 48px;
+  border-radius: 8px;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
   user-select: none;
   display: flex;
@@ -105,12 +107,18 @@ const props = defineProps({
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
-  border: 4px solid rgba(255, 255, 255, 0.6);
+  border-top: 12px solid var(--dialog-background-bar);
+  border-bottom: 12px solid var(--dialog-background-footer);
+  border-right: unset;
+  border-left: unset;
   pointer-events: all;
 
   * {
     user-select: none;
-    pointer-events: none;
+  }
+
+  .enabledActive {
+    cursor: pointer;
   }
 
   .shortcutKeysList {
@@ -124,9 +132,17 @@ const props = defineProps({
     display: flex;
     align-items: center;
     gap: 20px;
+    padding-left: 1vw;
     justify-content: flex-start;
-    width: 50%;
+    width: calc(50% - 2vw);
     float: left;
+    border-radius: 8px;
+    border-left: 1vw solid transparent;
+
+    &:hover {
+      gap: 40px;
+      border-left: 1vw solid orange;
+    }
 
     .el-icon {
       color: #ffffff;

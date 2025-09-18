@@ -263,8 +263,22 @@
     />
 
     <!-- 快捷键提示 -->
-    <shortcut-keys-tip style="z-index: 9999" :visible="altDown" :e="enableEdit" :d="showMenu" :q="enableMove"
-                       :w="focusMode || focusId !== null" :f="everyDrag"/>
+    <shortcut-keys-tip
+        style="z-index: 9999"
+        :visible="altDown"
+        :e="enableEdit"
+        @e="changeEditMode"
+        :d="showMenu"
+        @d="showMenu = !showMenu"
+        :q="enableMove"
+        @q="changeMoveMode"
+        :w="focusMode || focusId !== null"
+        @w="changeFocus"
+        :f="everyDrag"
+        @f="everyDrag = !everyDrag"
+        @r="reload"
+        @~="userMode"
+    />
   </div>
 </template>
 
@@ -274,6 +288,9 @@ import {GridStack} from 'gridstack'
 import {
   ElButton,
   ElCheckboxButton,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
   ElIcon,
   ElImage,
   ElInput,
@@ -286,17 +303,14 @@ import {
   ElSwitch,
   ElText,
   ElTooltip,
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
 } from 'element-plus'
 import 'gridstack/dist/gridstack.min.css'
 import operateButtons from './items/operateButtons.vue'
 import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
-import {fetchWithBase, parseBlobJson, reloadWithoutParams, removeParams} from "@/js/url.js"
-import {CirclePlus, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank, Top,} from "@element-plus/icons-vue"
+import {fetchWithBase, parseBlobJson, reload, reloadWithoutParams, removeParams} from "@/js/url.js"
+import {Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank, Top,} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -323,7 +337,7 @@ import CommonDialog from "@/items/commonDialog.vue"
 import {error, info, success} from "@/js/message.js"
 import GridStackConfig from "@/items/gridStackConfig.vue"
 import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
-import {STYLE, STYLE_PACK, WORKSPACE} from "@/js/configType.js";
+import {STYLE_PACK, WORKSPACE} from "@/js/configType.js";
 
 const {t} = useI18n()
 
@@ -373,39 +387,53 @@ function keyListener(event) {
   } else if (event.altKey && event.type === 'keydown') {
     altDown.value = true
     if (event.key === 'q' || event.key === 'Q') {
-      enableMove.value ? disabledMove() : enabledMove()
-      unFocus()
-      focusMode.value = false
+      changeMoveMode()
     } else if (event.key === 'e' || event.key === 'E') {
-      enableEdit.value ? disabledEdit() : enabledEdit()
+      changeEditMode()
     } else if (event.key === 'w' || event.key === 'W') {
-      if (!unFocus()) {
-        focusMode.value = !focusMode.value
-        disabledMove()
-      }
+      changeFocus()
     } else if (event.key === 'd' || event.key === 'D') {
       showMenu.value = !showMenu.value
     } else if (event.key === 'r' || event.key === 'R') {
-      window.location.reload()
+      reload()
     } else if (event.key === 'F' || event.key === 'f') {
       everyDrag.value = !everyDrag.value
     } else if (event.key === '~' || event.key === '`') {
-      disabledEdit()
-      disabledMove()
+      userMode()
     }
     event.preventDefault()
   } else if (event.key === 'Alt' && event.type === 'keyup') {
-    altDown.value = false
+    // altDown.value = false
   }
 }
 
+const changeEditMode = () => {
+  enableEdit.value ? disabledEdit() : enabledEdit()
+}
+
+const changeMoveMode = () => {
+  enableMove.value ? disabledMove() : enabledMove()
+}
+
+const changeFocus = () => {
+  if (!unFocus()) {
+    focusMode.value = !focusMode.value
+    disabledMove()
+  }
+}
+
+const userMode = () => {
+  disabledEdit()
+  disabledMove()
+}
+
 function mouseDown(event) {
-  altDown.value = false
+  // altDown.value = false
   ctrlDown.value = false
 }
 
 const onWindowBlur = () => {
-  altDown.value = false
+  // altDown.value = false
   ctrlDown.value = false
 }
 
@@ -614,6 +642,8 @@ function enabledMove() {
   grid.enableMove(true)
   grid.enableResize(true)
   enableMove.value = true
+  unFocus()
+  focusMode.value = false
 }
 
 // 解锁布局
@@ -1213,7 +1243,7 @@ body {
     }
   }
 
-  .modeContainer>* {
+  .modeContainer > * {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
   }
 
