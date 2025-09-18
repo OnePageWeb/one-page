@@ -468,20 +468,19 @@ defineExpose({
 
   .componentOperatorContainer {
     .dbClickIcon {
-      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.45);
       border-radius: 4px;
       padding: 2px;
 
       &:hover {
         padding: 2px;
         scale: 1.6;
-        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.45);
       }
     }
 
     &:hover {
       .dbClickIcon {
-        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.45);
+        color: white;
+        background-color: var(--color-black);
       }
     }
   }

@@ -42,10 +42,10 @@ const {visible} = toRefs(props)
   .el-icon {
     scale: 0.6;
     cursor: pointer;
+
     &:hover {
-      scale: 2.2;
       svg {
-        color: var(--el-color-primary);
+        color: orange;
       }
     }
   }

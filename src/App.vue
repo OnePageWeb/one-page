@@ -1303,7 +1303,12 @@ body {
       border-radius: 8px;
 
       &:hover {
+        background-color: var(--color-black);
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+
+        .addItemName {
+          color: white;
+        }
       }
     }
   }

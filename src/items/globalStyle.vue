@@ -130,7 +130,6 @@ const selectTag = (tag) => {
 const onConfigTransferStart = (e, {name, desc}) => {
   e.stopPropagation()
   const transferData = generateStylePack(name, desc)
-  console.log('transferData', transferData)
   e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
 }
 
