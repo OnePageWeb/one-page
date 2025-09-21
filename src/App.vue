@@ -265,11 +265,11 @@
     <!-- 快捷键提示 -->
     <shortcut-keys-tip
         style="z-index: 9999"
-        :visible="altDown"
+        :visible="shortCutTipVisible"
         :e="enableEdit"
         @e="changeEditMode"
         :d="showMenu"
-        @d="showMenu = !showMenu"
+        @d="changeMenu"
         :q="enableMove"
         @q="changeMoveMode"
         :w="focusMode || focusId !== null"
@@ -337,7 +337,8 @@ import CommonDialog from "@/items/commonDialog.vue"
 import {error, info, success} from "@/js/message.js"
 import GridStackConfig from "@/items/gridStackConfig.vue"
 import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
-import {STYLE_PACK, WORKSPACE} from "@/js/configType.js";
+import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
+import {Delayer} from "@/js/delayer.js"
 
 const {t} = useI18n()
 
@@ -380,6 +381,20 @@ const gridEl = ref(null)
 
 const ctrlDown = ref(false)
 const altDown = ref(false)
+const shortCutTipVisible = ref(false)
+const shortCutDelayer = new Delayer(500)
+
+// 监听alt键，延迟显示提示框
+watch(altDown, b => {
+  if (b) {
+    shortCutDelayer.delay(() => {
+      shortCutTipVisible.value = true
+    })
+  } else {
+    shortCutDelayer.clear()
+    shortCutTipVisible.value = false
+  }
+})
 
 function keyListener(event) {
   if (event.ctrlKey) {
@@ -393,7 +408,7 @@ function keyListener(event) {
     } else if (event.key === 'w' || event.key === 'W') {
       changeFocus()
     } else if (event.key === 'd' || event.key === 'D') {
-      showMenu.value = !showMenu.value
+      changeMenu()
     } else if (event.key === 'r' || event.key === 'R') {
       reload()
     } else if (event.key === 'F' || event.key === 'f') {
@@ -405,6 +420,10 @@ function keyListener(event) {
   } else if (event.key === 'Alt' && event.type === 'keyup') {
     altDown.value = false
   }
+}
+
+const changeMenu = () => {
+  showMenu.value = !showMenu.value
 }
 
 const changeEditMode = () => {
@@ -427,10 +446,11 @@ const userMode = () => {
   disabledMove()
 }
 
-function mouseDown(event) {
-  altDown.value = false
-  ctrlDown.value = false
-}
+window.changeMenu = changeMenu
+window.changeEditMode = changeEditMode
+window.changeMoveMode = changeMoveMode
+window.changeFocus = changeFocus
+window.userMode = userMode
 
 const onWindowBlur = () => {
   altDown.value = false
@@ -589,7 +609,6 @@ onMounted(async () => {
   // 监听按键
   window.addEventListener('keydown', keyListener)
   window.addEventListener('keyup', keyListener)
-  window.addEventListener('mousedown', mouseDown)
   window.addEventListener('blur', onWindowBlur)
 })
 
@@ -597,7 +616,6 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('keydown', keyListener)
   window.removeEventListener('keyup', keyListener)
-  window.removeEventListener('mousedown', mouseDown)
   window.removeEventListener('blur', onWindowBlur)
 })
 
@@ -855,7 +873,6 @@ function refreshComponentStyle(id) {
 const focusId = ref(null)
 
 const requireFocus = (id) => {
-  console.log('altDown', ctrlDown.value)
   if (ctrlDown.value) {
     const idValue = id.value || id
     focusIt(idValue)

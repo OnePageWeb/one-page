@@ -255,7 +255,7 @@ const operatorContainer = ref(null)
 
     .deleteItem {
       svg {
-        background-color: #ff5050;
+        background-color: var(--color-delete);
       }
     }
 
@@ -273,31 +273,31 @@ const operatorContainer = ref(null)
       cursor: move;
 
       svg {
-        background-color: #ff5858;
+        background-color: var(--color-transfer);
       }
     }
 
     .copy {
       svg {
-        background-color: #dfa946;
+        background-color: var(--color-copy);
       }
     }
 
     .module {
       svg {
-        background-color: #46a9df;
+        background-color: var(--color-module);
       }
     }
 
     .exportComponent {
       svg {
-        background-color: #4671df;
+        background-color: var(--color-export);
       }
     }
 
     .editStyle {
       svg {
-        background-color: #46a9df;
+        background-color: var(--color-edit);
       }
     }
 
@@ -305,7 +305,7 @@ const operatorContainer = ref(null)
       cursor: move;
 
       svg {
-        background-color: #1d9333;
+        background-color: var(--color-drag);
       }
     }
 

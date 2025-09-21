@@ -85,7 +85,7 @@
     .transfer {
       cursor: move;
       font-size: 32px;
-      color: #ff5858;
+      color: var(--color-transfer);
 
       &:hover {
         svg {

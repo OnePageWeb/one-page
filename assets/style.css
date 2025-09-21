@@ -15,6 +15,15 @@
   --cursor-text: url("./cursor/text.cur") 10 8;
   --button-border-top: unset;
   --button-border-left: 2px solid #292929;
+
+  --color-delete: #ff5050;
+  --color-transfer: #ff5858;
+  --color-copy: #dfa946;
+  --color-module: #46a9df;
+  --color-export: #4671df;
+  --color-edit: #46a9df;
+  --color-drag: #1d9333;
+
 }
 
 .el-button {
@@ -261,7 +270,6 @@ el-tooltip {
   }
 }
 
-
 .deleteIcon {
   cursor: pointer;
   pointer-events: auto;
@@ -269,7 +277,6 @@ el-tooltip {
   width: 16px;
   border-radius: 20px;
   padding: 8px !important;
-  margin: 8px 8px 8px 16px;
   background-color: #ff6565;
   border: 2px solid #ff8600;
 
@@ -346,9 +353,9 @@ textarea {
   opacity: 1;
   border-radius: 8px;
   background-color: var(--background-color);
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
-  border-left: var(--button-border-left);
-  border-right: var(--button-border-left);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.4);
+  border-left: 6px solid var(--color-black);
+  border-right: 6px solid var(--color-black);
   border-top: var(--button-border-top);
   border-bottom: var(--button-border-top);
 }

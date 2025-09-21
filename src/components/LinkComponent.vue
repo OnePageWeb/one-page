@@ -1,7 +1,7 @@
 <script setup>
 import {ElButton, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElPopover, ElText, ElTooltip} from "element-plus"
 import {onMounted, ref, toRefs} from "vue"
-import {Close, Edit, Finished, Plus, Switch} from "@element-plus/icons-vue"
+import {Close, Edit, Finished, Plus, Switch, Rank} from "@element-plus/icons-vue"
 import {loadData, saveData} from "@/js/data.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
@@ -263,12 +263,9 @@ defineExpose({
         <el-form ref="formRef" class="linkForm">
           <template v-for="(item, index) in tempLinks">
             <div class="linkEditItem"
-                 draggable="true"
-                 @dragstart="onLinkDragStart($event, item)"
                  @dragover="onLinkDragover"
                  @dragleave="onLinkDragleave"
-                 @drop="onLinkDrop($event, item)"
-            >
+                 @drop="onLinkDrop($event, item)">
               <el-form-item prop="name" :class="['linkName', {'imgLinkName': item.img}]">
                 <el-input v-model="item.name" :placeholder="t('component.link.edit.urlName')">
                   <template #prepend>
@@ -288,6 +285,14 @@ defineExpose({
               </el-form-item>
               <el-form-item :label="t('component.link.img')" prop="img" class="linkImg">
                 <el-input v-model="item.img" :placeholder="t('component.link.edit.img')"/>
+              </el-form-item>
+              <el-form-item
+                  class="moveIcon deleteIcon"
+                  draggable="true"
+                  @dragstart="onLinkDragStart($event, item)">
+                <el-icon>
+                  <Rank/>
+                </el-icon>
               </el-form-item>
               <el-form-item class="deleteIcon" @click="deleteLink(index)">
                 <el-icon>
@@ -624,6 +629,11 @@ defineExpose({
             margin-bottom: 0;
           }
 
+        }
+
+        .moveIcon {
+          background-color: var(--color-drag);
+          border: 2px solid #ffffff;
         }
       }
     }
