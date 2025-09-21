@@ -1,6 +1,7 @@
 {
   "name": "JSON转义",
   "desc": "转义JSON字符串",
+  "tags": ["input", "json"],
   "config": "{\"name\":\"JSON转义\",\"content\":\"if (input.includes('\\\\\\\\\\\"')) {\\n  return JSON.parse(input)\\n} else {\\n  return JSON.stringify(input, null, 2)\\n}\"}",
   "type": "input"
 }

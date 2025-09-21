@@ -1,5 +1,5 @@
 <script setup>
-import {ElButton, ElIcon, ElImage, ElInput, ElLoading, ElPopconfirm, ElPopover} from "element-plus"
+import {ElButton, ElIcon, ElImage, ElInput, ElLoading, ElPopconfirm, ElPopover, ElText} from "element-plus"
 import {computed, defineEmits, onMounted, ref} from "vue"
 import {fetchWithBase} from "@/js/url.js"
 import {Close, Search} from "@element-plus/icons-vue"
@@ -22,6 +22,7 @@ defineExpose({
 })
 
 const components = ref({})
+const tagComponents = {}
 const filterComponents = computed(() => {
   return filterComponentName(filterName.value, components.value)
 })
@@ -31,7 +32,22 @@ const loadConfigFiles = async () => {
   for (const path in files) {
     try {
       const file = await files[path]()
-      components.value[file.name] = {desc: file.desc, path: path.replace('/public', '')}
+      // 标签分类
+      if (file.tags) {
+        const i18nTags = []
+        file.tags.forEach(tag => {
+          const tagName = t('component.tags.' + tag)
+          if (!tagComponents[tagName]) {
+            tagComponents[tagName] = []
+          }
+          i18nTags.push(tagName)
+          tagComponents[tagName].push(file.name)
+          console.log(i18nTags)
+        })
+        components.value[file.name] = {desc: file.desc, tags: i18nTags, path: path.replace('/public', '')}
+      } else {
+        components.value[file.name] = {desc: file.desc, tags: [], path: path.replace('/public', '')}
+      }
     } catch (error) {
       console.error(t('error.load'), path, error)
     }
@@ -45,7 +61,7 @@ const filterComponentName = (name, components) => {
   const filter = filterName.value.toLowerCase()
   const result = {}
   for (const name in components) {
-    if (name.toLowerCase().includes(filter) || components[name].desc?.includes(filter)) {
+    if (name.toLowerCase().includes(filter) || components[name].desc?.includes(filter) || components[name].tags?.some(tag => tag.toLowerCase().includes(filter))) {
       result[name] = components[name]
     }
   }
@@ -159,27 +175,60 @@ function handleFileDrop(e) {
         </template>
       </el-input>
       <div class="readyComponents">
-
-        <el-popover
-            class="box-item"
-            v-for="name of Object.keys(filterComponents)"
-            width="300"
-            placement="bottom"
-            popper-class="componentItem"
-            :show-after="200"
-            :hide-after="10"
-        >
-          <template #reference>
-            <div
-                class="componentItem"
-                @click="addComponent(name)"
+        <!-- 标签分类 -->
+        <div v-if="filterName === ''" style="overflow: auto; height: 100%;">
+          <div v-for="tag of Object.keys(tagComponents)" class="tagGroup">
+            <el-text class="tagTitle">{{ tag }}</el-text>
+            <el-popover
+                class="box-item"
+                v-for="name of tagComponents[tag]"
+                width="300"
+                placement="bottom"
+                popper-class="componentItem"
+                :show-after="200"
+                :hide-after="10"
             >
-              <div class="componentName">{{ name }}</div>
-              <div class="componentDesc">{{ components[name].desc }}</div>
-            </div>
-          </template>
-          <el-image :src="'./imgs/ready/' + name + '.png'"/>
-        </el-popover>
+            <template #reference>
+              <div
+                  class="componentItem"
+                  @click="addComponent(name)"
+              >
+                <div>
+                  <div class="componentName">{{ name }}</div>
+                  <div class="componentDesc">{{ components[name].desc }}</div>
+                </div>
+                <el-image :src="'./imgs/ready/' + name + '.png'" fit="cover"/>
+              </div>
+            </template>
+            <el-image :src="'./imgs/ready/' + name + '.png'"/>
+          </el-popover>
+          </div>
+        </div>
+        <div v-else>
+          <el-popover
+              class="box-item"
+              v-for="name of Object.keys(filterComponents)"
+              width="300"
+              placement="bottom"
+              popper-class="componentItem"
+              :show-after="200"
+              :hide-after="10"
+          >
+            <template #reference>
+              <div
+                  class="componentItem"
+                  @click="addComponent(name)"
+              >
+                <div>
+                  <div class="componentName">{{ name }}</div>
+                  <div class="componentDesc">{{ components[name].desc }}</div>
+                </div>
+                <el-image :src="'./imgs/ready/' + name + '.png'" fit="cover"/>
+              </div>
+            </template>
+            <el-image :src="'./imgs/ready/' + name + '.png'"/>
+          </el-popover>
+        </div>
         <div class="componentAreaName">{{ t('component.defined') }}</div>
       </div>
       <div class="moduleComponents">
@@ -226,6 +275,7 @@ function handleFileDrop(e) {
 
 <style>
 .readyComponentDialog {
+  max-height: 80%;
 
   .filterName {
     width: 100%;
@@ -233,6 +283,20 @@ function handleFileDrop(e) {
     font-size: 16px;
     font-weight: bold;
     padding: 0 8px;
+  }
+
+  .tagGroup {
+    width: 100%;
+    position: relative;
+    overflow: auto;
+
+    .tagTitle {
+      width: calc(100% - 18px);
+      font-size: 24px;
+      float: left;
+      padding-left: 18px;
+      margin-top: 18px;
+    }
   }
 
   .readyComponents, .moduleComponents {
@@ -254,21 +318,22 @@ function handleFileDrop(e) {
     align-items: center;
     justify-content: center;
     z-index: -1;
-    color: rgba(221, 221, 221, 0.1);
+    color: rgba(221, 221, 221, 0.4);
     user-select: none;
   }
 
   .readyComponents {
     border-bottom: 2px dashed;
+    position: relative;
   }
 
   .componentItem {
     display: flex;
-    justify-content: space-between;;
-    align-items: center;
-    padding: 8px 16px;
+    width: calc(50% - 52px);
+    max-height: 5%;
+    justify-content: space-between;
+    padding: 8px 8px 8px 16px;
     float: left;
-    border: 2px solid var(--color-black);
     border-radius: 24px;
     margin: 8px;
     background-size: 200%;
@@ -282,12 +347,26 @@ function handleFileDrop(e) {
     .componentName {
       font-size: 16px;
       font-weight: bold;
+      margin-top: 8px;
+      min-width: 15%;
     }
 
     .componentDesc {
       font-size: 14px;
       color: #5a5a5a;
-      margin-left: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .el-image {
+      max-height: 5vw;
+      max-width: 40%;
+      border-radius: 24px;
+
+      img {
+        height: unset;
+        border-radius: 24px;
+      }
     }
 
     .deleteItem {
@@ -306,7 +385,6 @@ function handleFileDrop(e) {
     &:hover {
       color: white;
       background: #404040;
-      border: 2px solid #454545;
 
       .componentDesc {
         font-size: 14px;
@@ -317,7 +395,7 @@ function handleFileDrop(e) {
   }
 
   .addComponentContainer {
-    height: calc(30% - 8px);
+    height: calc(30% - 24px);
     margin-top: 8px;
     position: relative;
 

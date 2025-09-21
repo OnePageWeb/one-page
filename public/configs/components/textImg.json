@@ -1,6 +1,7 @@
 {
   "name": "图片显示",
   "desc": "配置图片地址来显示一张图片",
+  "tags": ["text", "image"],
   "config": "{\"text\":\"<img \\n    src=\\\"@{图片地址?https://picsum.photos/800/600}\\\" \\n    alt=\\\"响应式图片示例\\\" \\n    class=\\\"responsive-image\\\"\\n>\",\"params\":[{\"name\":\"图片地址\",\"desc\":\"\",\"value\":\"https://picsum.photos/800/600\"}]}",
   "style": ".image-container {\n    width: 100%;\n    max-width: 800px;\n    margin: 0 auto;\n    padding: 10px;\n    box-sizing: border-box;\n}\n\n.responsive-image {\n    width: 100%;\n    height: auto;\n    object-fit: contain;\n    max-height: 80vh;\n    display: block;\n    margin: 0 auto;\n}",
   "w": 11,

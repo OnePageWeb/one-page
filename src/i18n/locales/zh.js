@@ -1,3 +1,5 @@
+import {itemType} from "@/js/components.js";
+
 export default {
   common: {
     confirm: '确认',
@@ -125,6 +127,31 @@ export default {
     },
     record: {
       dbClickType: '双击',
+    },
+    tags: {
+      button: '按钮',
+      themes: '主题',
+      language: '语言',
+      menu: '菜单',
+      link: '链接',
+      workspace: '工作区',
+      html: '网页格子',
+      calender: '日历',
+      function: '计算方法',
+      click: '点击',
+      mouse: '鼠标',
+      keyboard: '键盘',
+      input: '输入转换',
+      countdown: '倒计时',
+      json: 'JSON',
+      code: '代码',
+      news: '新闻',
+      random: '随机',
+      text: '文本',
+      image: '图片',
+      card: '卡片',
+      clock: '时钟',
+      title: '标题',
     }
   },
   style: {
