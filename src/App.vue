@@ -8,7 +8,7 @@
           placement="right"
       >
         <el-icon class="hideMenu" @click="showMenu = false">
-          <Top/>
+          <Bottom/>
         </el-icon>
       </el-tooltip>
       <el-text class="menuTitle" truncated>{{ $t('component.add') }}</el-text>
@@ -310,7 +310,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reload, reloadWithoutParams, removeParams} from "@/js/url.js"
-import {Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank, Top,} from "@element-plus/icons-vue"
+import {Bottom, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank,} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -1441,10 +1441,11 @@ textarea {
   .syncConfigContainer {
     display: flex;
     gap: 8px;
+    padding: 4px;
   }
 
   .globeConfigInput {
-    height: calc(100% - 72px) !important;
+    height: calc(100% - 80px) !important;
     padding-top: 18px;
     margin-top: 18px;
     border-top: 2px dashed var(--color-black);

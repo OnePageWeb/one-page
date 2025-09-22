@@ -182,7 +182,6 @@ const loadStylePackConfirm = (data) => {
   if (typeof data === 'string') {
     data = JSON.parse(data)
   }
-  console.log('loadStylePackConfirm')
   stylePackName.value = data.name
   stylePackDesc.value = data.desc
   stylePackItems.value = data.styles || []

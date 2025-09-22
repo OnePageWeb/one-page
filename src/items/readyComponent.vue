@@ -42,7 +42,6 @@ const loadConfigFiles = async () => {
           }
           i18nTags.push(tagName)
           tagComponents[tagName].push(file.name)
-          console.log(i18nTags)
         })
         components.value[file.name] = {desc: file.desc, tags: i18nTags, path: path.replace('/public', '')}
       } else {
@@ -161,7 +160,7 @@ function handleFileDrop(e) {
       :visible="dialogVisible"
       @closed="dialogVisible = false"
   >
-    <div>
+    <div class="readyComponentContainer">
       <el-input
           v-model="filterName"
           class="filterName"
@@ -204,7 +203,7 @@ function handleFileDrop(e) {
           </el-popover>
           </div>
         </div>
-        <div v-else>
+        <div v-else style="overflow: auto; height: 100%">
           <el-popover
               class="box-item"
               v-for="name of Object.keys(filterComponents)"
@@ -275,7 +274,7 @@ function handleFileDrop(e) {
 
 <style>
 .readyComponentDialog {
-  max-height: 80%;
+  height: 80%;
 
   .filterName {
     width: 100%;
@@ -300,8 +299,7 @@ function handleFileDrop(e) {
   }
 
   .readyComponents, .moduleComponents {
-    min-height: 10vh;
-    max-height: 25vh;
+    height: 40%;
     overflow: auto;
     position: relative;
   }
@@ -330,7 +328,6 @@ function handleFileDrop(e) {
   .componentItem {
     display: flex;
     width: calc(50% - 52px);
-    max-height: 5%;
     justify-content: space-between;
     padding: 8px 8px 8px 16px;
     float: left;
@@ -395,7 +392,7 @@ function handleFileDrop(e) {
   }
 
   .addComponentContainer {
-    height: calc(30% - 24px);
+    height: calc(20% - 50px);
     margin-top: 8px;
     position: relative;
 
