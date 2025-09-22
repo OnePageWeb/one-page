@@ -60,7 +60,7 @@ const operatorContainer = ref(null)
 
 <template>
   <div ref="operatorContainer" class="operatorContainer">
-    <div class="buttonContainer">
+    <div v-if="enableEdit || enableMove || ctrl || focusId === id" class="buttonContainer">
 
       <el-tooltip
           v-if="enableEdit && !enableMove"

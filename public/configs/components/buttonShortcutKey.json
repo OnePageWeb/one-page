@@ -1,0 +1,10 @@
+{
+  "name": "快捷键按钮",
+  "desc": "模拟快捷键按下，ALT + 【设定值】",
+  "tags": ["button", "shortcutKey"],
+  "config": "{\"name\":\"Q\",\"content\":{\"text\":\"const key = '@{快捷按键值:小写字母?q}'\\n\\n// 创建键盘按下事件\\nconst keydownEvent = new KeyboardEvent('keydown', {\\n  key: key,\\n  keyCode: 'KeyD',\\n  altKey: true,\\n  code: key\\n});\\n\\n// 创建键盘释放事件\\nconst keyupEvent = new KeyboardEvent('keyup', {\\n  key: key,\\n  keyCode: 'KeyD',\\n  altKey: true,\\n  code: key\\n});\\n\\n// 创建键盘释放事件\\nconst altKeyupEvent = new KeyboardEvent('keyup', {\\n  key: 'Alt',\\n  keyCode: 'alt',\\n  altKey: true,\\n  code: 'Alt'\\n});\\n\\n// 向文档或特定元素触发事件\\nwindow.dispatchEvent(keydownEvent);\\n// 模拟按下后释放\\nsetTimeout(() => {\\n  window.dispatchEvent(keyupEvent);\\n  window.dispatchEvent(altKeyupEvent);\\n}, 100);\",\"params\":[{\"name\":\"快捷按键值\",\"desc\":\"小写字母\",\"value\":\"q\"}]}}",
+  "style": ".button {\n\n  svg {\n    width: 60%;\n    fill: white;\n\n    &:hover {\n       transform: rotate(180deg);\n    }\n  }\n}\n",
+  "w": 2,
+  "h": 3,
+  "type": "button"
+}

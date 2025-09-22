@@ -1,0 +1,10 @@
+{
+  "name": "简单文章块",
+  "desc": "简单的文章块，用于展示文章内容",
+  "tags": ["text", "article"],
+  "config": "{\"text\":\"<div class=\\\"article article-minimal\\\">\\n  <div class=\\\"title\\\">极简主义的美学</div>\\n  <div class=\\\"content\\\">\\n    极简不仅是一种设计风格，更是一种生活态度。  \\n    去掉冗余，只留下最本质的表达。  \\n    在有限的空间中，留给读者无限的想象。\\n  </div>\\n</div>\",\"params\":[]}",
+  "style": ".article-minimal {\n  margin: 20px;\n  height: calc(100% - 100px);\n  width: calc(100% - 100px);\n  padding: 30px;\n  background: #fff;\n  border-radius: 12px;\n  box-shadow: 0 6px 20px rgba(0,0,0,0.08);\n  line-height: 1.8;\n  overflow: auto;\n  font-family: \"Helvetica Neue\", sans-serif;\n}\n\n.article-minimal .title {\n  font-size: 26px;\n  font-weight: bold;\n  margin-bottom: 20px;\n  color: #222;\n}\n\n.article-minimal .content {\n  font-size: 16px;\n  color: #444;\n  white-space: pre-line;\n}\n",
+  "w": 8,
+  "h": 13,
+  "type": "text"
+}

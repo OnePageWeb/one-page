@@ -108,10 +108,10 @@ defineExpose({
             ref="input"
             type="textarea"
             :placeholder="nameText || t('placeholder.inputDataInput')"
-            :class="['input', isEditing ? 'inputOnFocus' : '']"
+            :class="['input', 'one-button', isEditing ? 'inputOnFocus' : '']"
             @keydown.ctrl.enter="execute"
         />
-        <el-text :class="['result', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
+        <el-text :class="['result', 'one-button', isEditing ? 'resultOnFocus' : '']" v-html="functionResult"/>
 
         <el-popover
             class="box-item"
@@ -253,8 +253,8 @@ defineExpose({
       }
 
       .input, .result {
-        width: calc(100% - 16px);
-        height: calc(50% - 18px);
+        width: calc(100% - 22px);
+        height: calc(50% - 20px);
         border-radius: 8px;
         padding: 8px;
         background-color: white;
@@ -275,10 +275,10 @@ defineExpose({
     .executeIcon, .copyIcon, .clearIcon {
       border-radius: 18px;
       padding: 4px;
-      color: white;
+      color: var(--color-black);
       margin: 1px;
       opacity: 0.4;
-      border: 2px solid white;
+      border: 2px solid var(--color-black);
       cursor: pointer;
       z-index: 1;
       position: absolute;
@@ -286,13 +286,14 @@ defineExpose({
 
       &:hover {
         opacity: 1;
+        scale: 1.2;
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
       }
     }
 
     .executeIcon {
       top: calc(50% - 14px);
-      opacity: 1;
+      opacity: 0.8;
       background-color: #eda63f;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     }

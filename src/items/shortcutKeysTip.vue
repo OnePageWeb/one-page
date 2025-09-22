@@ -94,9 +94,9 @@ const emit = defineEmits(['e', 'd', 'q', 'w', 'f', 'r', '~'])
   position: fixed;
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
-  width: calc(40% - 56px);
+  width: calc(50% - 56px);
   bottom: 120px;
-  left: calc(30% + 28px);
+  left: calc(25% - 20px);
   opacity: 1;
   padding: 24px 48px;
   border-radius: 8px;

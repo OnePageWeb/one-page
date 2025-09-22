@@ -1211,7 +1211,6 @@ function openWorkspaceHolder() {
 
 <style>
 html {
-  scrollbar-width: none;
 }
 
 body {
@@ -1334,8 +1333,10 @@ body {
 
   &.menu-hide {
     height: 0;
-    opacity: 0;
-    margin-bottom: -81px;
+    padding: 0;
+    bottom: 0;
+    border-width: 0;
+    box-shadow: unset;
   }
 }
 

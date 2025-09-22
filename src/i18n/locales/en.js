@@ -150,6 +150,8 @@ export default {
       card: 'Card',
       clock: 'Clock',
       title: 'Title',
+      shortcutKey: 'Shortcut Key',
+      article: 'Article',
     }
   },
   style: {

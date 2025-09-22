@@ -74,7 +74,7 @@ defineExpose({
   <div class="buttonContent">
     <div class="textContainer">
       <div :class="['buttonContainer', isEditing ? 'buttonContainerOnFocus' : '']">
-        <div class="button" @click="execute" v-html="nameText"/>
+        <div class="button one-button" @click="execute" v-html="nameText"/>
       </div>
 
       <div
@@ -165,7 +165,7 @@ defineExpose({
       .button {
         padding: 6px 12px;
         border-radius: 8px;
-        background-color: #3f94ed;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
         color: white;
         font-size: 18px;
         font-weight: bold;
@@ -173,6 +173,10 @@ defineExpose({
         display: flex;
         justify-content: center;
         align-items: center;
+
+        &:hover {
+          scale: 1.1;
+        }
       }
     }
 

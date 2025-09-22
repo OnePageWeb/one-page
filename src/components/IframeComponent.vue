@@ -111,7 +111,7 @@ defineExpose({
     }
 
     :deep(.el-input-group__append button.el-button) {
-      padding: 0 30px !important;
+      margin: 0;
       cursor: pointer;
     }
   }

@@ -510,7 +510,7 @@ defineExpose({
   height: 60%;
 
   .tagContainer {
-    height: calc(20% - 36px);
+    height: calc(40% - 36px);
     border: 2px solid #dddddd;
     margin: 4px 0;
     border-radius: 24px;
@@ -553,7 +553,7 @@ defineExpose({
   }
 
   .globeStyleInput {
-    height: 80%;
+    height: 60%;
     margin-top: 12px;
     display: block !important;
   }

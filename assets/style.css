@@ -14,7 +14,7 @@
   --dialog-background-footer: #292929;
   --cursor-text: url("./cursor/text.cur") 10 8;
   --button-border-top: unset;
-  --button-border-left: 2px solid #292929;
+  --button-border-left: 3px solid #292929;
 
   --color-delete: #ff5050;
   --color-transfer: #ff5858;
@@ -180,7 +180,6 @@
     padding: 0 8px;
     background-color: var(--primary-color);
     color: white;
-    height: calc(100% - 2px);
     border-right: 1px solid #ffffff;
     box-shadow: unset;
     max-width: 40%;
@@ -239,6 +238,13 @@
 
 el-tooltip {
   pointer-events: none;
+}
+
+.one-button {
+  border-left: var(--button-border-left);
+  border-right: var(--button-border-left);
+  border-top: var(--button-border-top);
+  border-bottom: var(--button-border-top);
 }
 
 .grid-stack-item > .ui-resizable-se {
@@ -310,7 +316,7 @@ el-tooltip {
 
 /* 设置滚动条滑块样式 */
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2); /* 悬停时略微可见 */
+  background: rgba(0, 0, 0, 0.15); /* 悬停时略微可见 */
   border-radius: 4px; /* 可根据需求设置滑块圆角 */
 }
 

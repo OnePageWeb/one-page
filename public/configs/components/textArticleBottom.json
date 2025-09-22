@@ -1,0 +1,10 @@
+{
+  "name": "底部标题文章",
+  "desc": "简单的文章块，用于展示文章内容，标题在底部",
+  "tags": ["text", "article"],
+  "config": "{\"text\":\"<div class=\\\"article-bottom\\\">\\n  <div class=\\\"content\\\">\\n    这是一种把标题放在底部的设计。  \\n    内容展示为主，标题更像一个收尾点睛。  \\n    适合长文本或叙事类文章。\\n  </div>\\n  <div class=\\\"title\\\">底部标题</div>\\n</div>\\n\",\"params\":[]}",
+  "style": ".article-bottom {\n  border-radius: 12px;\n  overflow: hidden;\n  background: #fff;\n  height: 100%;\n}\n\n.article-bottom .content {\n  padding: 25px;\n  font-size: 15px;\n  line-height: 1.9;\n  color: #444;\n  white-space: pre-line;\n  overflow: auto;\n  height: calc(100% - 98px);\n}\n\n.article-bottom .title {\n  background: #2ecc71;\n  color: #fff;\n  font-weight: bold;\n  font-size: 18px;\n  text-align: center;\n  padding: 12px;\n}\n",
+  "w": 7,
+  "h": 9,
+  "type": "text"
+}

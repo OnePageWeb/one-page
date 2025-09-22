@@ -152,6 +152,8 @@ export default {
       card: '卡片',
       clock: '时钟',
       title: '标题',
+      shortcutKey: '快捷键',
+      article: '文章',
     }
   },
   style: {

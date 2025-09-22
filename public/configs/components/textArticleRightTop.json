@@ -1,0 +1,10 @@
+{
+  "name": "右上角标题文章",
+  "desc": "简单的文章块，用于展示文章内容，标题在右上角",
+  "tags": ["text", "article"],
+  "config": "{\"text\":\"<div class=\\\"article-corner\\\">\\n  <div class=\\\"title\\\">右上角标题</div>\\n  <div class=\\\"content\\\">\\n    这是一个标题在右上角的示例。  \\n    适合小短文或者强调内容开头。  \\n    让排版更有层次感和现代感。\\n  </div>\\n</div>\\n\",\"params\":[]}",
+  "style": ".article-corner {\n  position: relative;\n  background: #fafafa;\n  border-radius: 10px;\n  padding: 25px;\n  margin: 25px;\n  height: calc(100% - 100px);\n  width: calc(100% - 100px);\n  overflow: auto;\n  box-shadow: 0 4px 12px rgba(0,0,0,0.05);\n}\n\n.article-corner .title {\n  position: absolute;\n  top: 10px;\n  right: 15px;\n  font-size: 14px;\n  font-weight: bold;\n  color: #3498db;\n}\n\n.article-corner .content {\n  font-size: 15px;\n  color: #333;\n  line-height: 1.8;\n  white-space: pre-line;\n}\n",
+  "w": 7,
+  "h": 11,
+  "type": "text"
+}
