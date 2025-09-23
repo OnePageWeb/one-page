@@ -79,15 +79,8 @@
           $t('workspace.settings')
         }}
       </el-button>
-      <el-text class="menuTitle" truncated>{{ $t('lang.title') }}</el-text>
-      <el-select class="langSelect" v-model="currentLang">
-        <el-option
-            v-for="item in langList"
-            :key="item"
-            :label="t(`lang.${item}`)"
-            :value="item"
-        />
-      </el-select>
+      <el-text class="menuTitle" truncated>{{ $t('common.settings') }}</el-text>
+      <el-button @click="settingDialogRef.openDialog()" class="btn" :icon="Setting" plain>{{ $t('common.settings') }}</el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
     <div ref="gridContainer" style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
@@ -262,6 +255,12 @@
         @onDragIn="onDragIn"
     />
 
+    <setting-dialog
+      ref="settingDialogRef"
+      :title="t('common.settings')"
+      :visible="settingDialogVisible"
+    />
+
     <!-- 快捷键提示 -->
     <shortcut-keys-tip
         style="z-index: 9999"
@@ -310,7 +309,7 @@ import ReadyComponent from "@/items/readyComponent.vue"
 import {v4} from 'uuid'
 import {startsWith} from "@/js/string.js"
 import {fetchWithBase, parseBlobJson, reload, reloadWithoutParams, removeParams} from "@/js/url.js"
-import {Bottom, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank,} from "@element-plus/icons-vue"
+import {Bottom, Edit, Grid, InfoFilled, Monitor, Picture, Promotion, Rank, Setting,} from "@element-plus/icons-vue"
 import WorkspaceHolder from "@/items/workspaceHolder.vue"
 import {
   exportData,
@@ -326,7 +325,6 @@ import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
 import i18n from './i18n'
-import {changeLanguage, getCurrentLanguage} from "./i18n/utils.js"
 import {itemType} from "@/js/components.js"
 import versionInfo from '@/items/versionInfo.vue'
 
@@ -339,17 +337,9 @@ import GridStackConfig from "@/items/gridStackConfig.vue"
 import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
 import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
 import {Delayer} from "@/js/delayer.js"
+import SettingDialog from "@/items/settingDialog.vue";
 
 const {t} = useI18n()
-
-const currentLang = ref(getCurrentLanguage())
-watch(currentLang, (newLang) => {
-  changeLanguage(newLang)
-})
-const langList = [
-  'zh',
-  'en'
-]
 
 const components = ref([])
 for (let item of itemType) {
@@ -879,7 +869,7 @@ const requireFocus = (id) => {
   }
 }
 
-function focusIt(id, type) {
+const focusIt = (id, type) => {
   const idValue = id.value || id
   focusId.value && unFocus(focusId.value)
   focusId.value = idValue
@@ -1194,6 +1184,10 @@ function onDragIn(data) {
   }
 }
 
+// 设置窗口
+const settingDialogVisible = ref(false)
+const settingDialogRef = ref(null)
+
 // 全局配置拖拽导出
 function onConfigTransferStart(e) {
   e.stopPropagation()
@@ -1308,22 +1302,6 @@ body {
     border-right: 4px solid orange;
     padding: 0 7px 3px 0;
     min-width: 30px;
-  }
-
-  .langSelect {
-    width: 100px;
-
-    .el-select__wrapper {
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
-      border-left: var(--button-border-left);
-      border-right: var(--button-border-left);
-      border-top: var(--button-border-top);
-      border-bottom: var(--button-border-top);
-
-      &:hover {
-        border: 2px solid var(--color-black);
-      }
-    }
   }
 
   &.menu-show {

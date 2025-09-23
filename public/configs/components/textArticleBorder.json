@@ -1,7 +1,7 @@
 {
   "name": "装饰线标题文章",
   "desc": "简单的文章块，用于展示文章内容，左侧装饰线",
-  "tags": ["text", "article"],
+  "tags": ["text", "article", "card"],
   "config": "{\"text\":\"<div class=\\\"article article-magazine\\\">\\n  <div class=\\\"title\\\">设计的边界</div>\\n  <div class=\\\"content\\\">\\n    设计并不是无限扩张的，它需要边界来塑造秩序。  \\n    边界不仅是限制，也是指引。  \\n    在边界中，创意才得以真正发挥。\\n  </div>\\n</div>\",\"params\":[]}",
   "style": ".article-magazine {\n  height: calc(100% - 100px);\n  width: calc(100% - 100px);\n  margin: 20px auto;\n  padding: 30px;\n  border-left: 6px solid #3498db;\n  background: #fff;\n  box-shadow: 0 4px 12px rgba(0,0,0,0.05);\n}\n\n.article-magazine .title {\n  font-size: 24px;\n  font-weight: bold;\n  margin-bottom: 15px;\n  color: #2c3e50;\n}\n\n.article-magazine .content {\n  font-size: 15px;\n  color: #555;\n  white-space: pre-line;\n}\n",
   "w": 8,
