@@ -33,6 +33,7 @@ export default {
     pinToTop: '置顶',
     sync: '同步',
     export: '导出',
+    settings: '设置',
   },
   status: {
     enabledMove: '已开启移动',

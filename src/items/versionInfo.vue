@@ -2,7 +2,7 @@
 import packageJson from '../../package.json'
 import {loadDataDirect, saveDataDirect} from "@/js/data.js"
 import {onMounted, ref} from 'vue'
-import {ElButton, ElFormItem, ElIcon, ElLink, ElTooltip} from "element-plus"
+import {ElIcon, ElLink, ElTooltip} from "element-plus"
 import {useI18n} from "vue-i18n"
 import {Close} from "@element-plus/icons-vue"
 import {warning} from "@/js/message.js"
@@ -157,8 +157,8 @@ onMounted(() => {
 
   .deleteIcon.close-icon {
     position: fixed;
-    top: 0;
-    right: 0;
+    top: 4px;
+    right: 4px;
 
     svg {
       height: 18px;

@@ -1,7 +1,7 @@
 {
   "name": "左侧标题文章",
   "desc": "简单的文章块，用于展示文章内容，标题在左侧",
-  "tags": ["text", "article"],
+  "tags": ["text", "article", "card"],
   "config": "{\"text\":\"<div class=\\\"article-sideblock\\\">\\n  <div class=\\\"title\\\">侧边块标题</div>\\n  <div class=\\\"content\\\">\\n    标题单独放在左侧彩色块中，  \\n    内容放在右侧白底块中。  \\n    类似于书籍章节或报告摘要的排版。\\n  </div>\\n</div>\\n\",\"params\":[]}",
   "style": ".article-sideblock {\n  display: grid;\n  grid-template-columns: 100px 1fr;\n  border-radius: 10px;\n  overflow: hidden;\n  min-width: 200px;\n  height: 100%;\n}\n\n.article-sideblock .title {\n  background: #2575fc;\n  color: #fff;\n  font-size: 18px;\n  font-weight: bold;\n  padding: 20px;\n  writing-mode: vertical-rl;\n  height: calc(100% - 40px);\n  overflow: auto;\n  letter-spacing: 2px;\n}\n\n.article-sideblock .content {\n  background: #fff;\n  font-size: 15px;\n  color: #333;\n  line-height: 1.8;\n  padding: 25px;\n  white-space: pre-line;\n  height: 100%;\n  overflow: auto;\n}\n",
   "w": 8,

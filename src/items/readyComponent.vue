@@ -175,49 +175,47 @@ function handleFileDrop(e) {
       </el-input>
       <div class="readyComponents">
         <!-- 标签分类 -->
-        <div v-if="filterName === ''" style="overflow: auto; height: 100%;">
-          <div v-for="tag of Object.keys(tagComponents)" class="tagGroup">
+        <div v-if="filterName === ''" class="componentContainer">
+          <div v-for="tag of Object.keys(tagComponents)" class="tagGroup waterfall-item">
             <el-text class="tagTitle">{{ tag }}</el-text>
             <el-popover
-                class="box-item"
                 v-for="name of tagComponents[tag]"
                 width="300"
                 placement="bottom"
                 popper-class="componentItem"
                 :show-after="200"
                 :hide-after="10"
+                :enterable="false"
             >
-            <template #reference>
-              <div
-                  class="componentItem"
-                  @click="addComponent(name)"
-              >
-                <div>
-                  <div class="componentName">{{ name }}</div>
-                  <div class="componentDesc">{{ components[name].desc }}</div>
+              <template #reference>
+                <div
+                    class="componentItem waterfall-item"
+                    @click="addComponent(name)">
+                  <div>
+                    <div class="componentName">{{ name }}</div>
+                    <div class="componentDesc">{{ components[name].desc }}</div>
+                  </div>
+                  <el-image :src="'./imgs/ready/' + name + '.png'" fit="cover"/>
                 </div>
-                <el-image :src="'./imgs/ready/' + name + '.png'" fit="cover"/>
-              </div>
-            </template>
-            <el-image :src="'./imgs/ready/' + name + '.png'"/>
-          </el-popover>
+              </template>
+              <el-image :src="'./imgs/ready/' + name + '.png'"/>
+            </el-popover>
           </div>
         </div>
-        <div v-else style="overflow: auto; height: 100%">
+        <div v-else class="componentContainer filterComponentContainer">
           <el-popover
-              class="box-item"
               v-for="name of Object.keys(filterComponents)"
               width="300"
               placement="bottom"
-              popper-class="componentItem"
+              popper-class="componentItemDetail"
               :show-after="200"
               :hide-after="10"
+              :enterable="false"
           >
             <template #reference>
               <div
-                  class="componentItem"
-                  @click="addComponent(name)"
-              >
+                  class="componentItem waterfall-item"
+                  @click="addComponent(name)">
                 <div>
                   <div class="componentName">{{ name }}</div>
                   <div class="componentDesc">{{ components[name].desc }}</div>
@@ -228,32 +226,32 @@ function handleFileDrop(e) {
             <el-image :src="'./imgs/ready/' + name + '.png'"/>
           </el-popover>
         </div>
-        <div class="componentAreaName">{{ t('component.defined') }}</div>
       </div>
       <div class="moduleComponents">
-        <div
-            v-for="name of Object.keys(filterModuleComponents)"
-            class="componentItem"
-            @click="addModuleComponent(name)"
-        >
-          <div class="componentName">{{ name }}</div>
-          <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
-          <el-popconfirm
-              class="deleteItem"
-              :title="t('component.delete.title')"
-              placement="top-start"
-              :confirm-button-text="t('common.confirm')"
-              :cancel-button-text="t('common.cancel')"
-              @confirm="deleteItem(name)"
+        <div class="moduleComponentContainer">
+          <div
+              v-for="name of Object.keys(filterModuleComponents)"
+              class="componentItem waterfall-item"
+              @click="addModuleComponent(name)"
           >
-            <template #reference>
-              <el-icon class="deleteItem" @click.prevent.stop>
-                <Close/>
-              </el-icon>
-            </template>
-          </el-popconfirm>
+            <div class="componentName">{{ name }}</div>
+            <div class="componentDesc">{{ moduleComponents[name].desc }}</div>
+            <el-popconfirm
+                class="deleteItem"
+                :title="t('component.delete.title')"
+                placement="top-start"
+                :confirm-button-text="t('common.confirm')"
+                :cancel-button-text="t('common.cancel')"
+                @confirm="deleteItem(name)"
+            >
+              <template #reference>
+                <el-icon class="deleteItem" @click.prevent.stop>
+                  <Close/>
+                </el-icon>
+              </template>
+            </el-popconfirm>
+          </div>
         </div>
-        <div class="componentAreaName">{{ t('component.custom') }}</div>
       </div>
 
       <div class="addComponentContainer">
@@ -277,31 +275,52 @@ function handleFileDrop(e) {
   height: 80%;
 
   .filterName {
-    width: 100%;
+    width: calc(100% - 20px);
     height: 40px;
     font-size: 16px;
     font-weight: bold;
-    padding: 0 8px;
+    margin: 10px 10px 0 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   }
 
   .tagGroup {
-    width: 100%;
+    width: calc(100% - 16px);
     position: relative;
     overflow: auto;
+    margin: 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
 
     .tagTitle {
-      width: calc(100% - 18px);
+      width: calc(100% - 36px);
       font-size: 24px;
       float: left;
-      padding-left: 18px;
-      margin-top: 18px;
+      margin: 18px;
     }
+  }
+
+  .waterfall-item {
+    break-inside: avoid;
+    display: inline-block;
+    box-sizing: border-box;
   }
 
   .readyComponents, .moduleComponents {
     height: 40%;
+    width: 100%;
     overflow: auto;
     position: relative;
+  }
+
+  .moduleComponents {
+    column-count: unset;
+  }
+
+  .componentContainer, .moduleComponentContainer {
+    width: calc(100% - 20px);
+    column-count: 3;
+    padding: 10px;
   }
 
   .componentAreaName {
@@ -325,16 +344,22 @@ function handleFileDrop(e) {
     position: relative;
   }
 
+  .moduleComponentContainer, .filterComponentContainer {
+    .componentItem {
+      display: inline-block;
+    }
+  }
+
   .componentItem {
     display: flex;
-    width: calc(50% - 52px);
+    width: calc(100% - 16px);
     justify-content: space-between;
     padding: 8px 8px 8px 16px;
-    float: left;
-    border-radius: 24px;
+    border-radius: 12px;
     margin: 8px;
-    background-size: 200%;
+    background-color: #ffffff;
     cursor: pointer;
+    position: relative;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 
     * {
@@ -345,7 +370,7 @@ function handleFileDrop(e) {
       font-size: 16px;
       font-weight: bold;
       margin-top: 8px;
-      min-width: 15%;
+      min-width: 30%;
     }
 
     .componentDesc {
@@ -358,11 +383,12 @@ function handleFileDrop(e) {
     .el-image {
       max-height: 5vw;
       max-width: 40%;
-      border-radius: 24px;
+      border-radius: 12px;
+      margin-left: 8px;
 
       img {
         height: unset;
-        border-radius: 24px;
+        border-radius: 12px;
       }
     }
 
@@ -370,7 +396,9 @@ function handleFileDrop(e) {
       color: #ff4d4f;
       font-size: 14px;
       cursor: pointer;
-      margin-left: 8px;
+      position: absolute;
+      top: 8px;
+      right: 8px;
 
       &:hover {
         color: white;
@@ -392,14 +420,14 @@ function handleFileDrop(e) {
   }
 
   .addComponentContainer {
-    height: calc(20% - 50px);
+    height: calc(20% - 60px);
     margin-top: 8px;
     position: relative;
 
     .addComponent {
       position: absolute;
-      bottom: 4px;
-      right: 4px;
+      bottom: 8px;
+      right: 8px;
     }
   }
 

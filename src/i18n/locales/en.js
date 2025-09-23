@@ -31,6 +31,7 @@ export default {
     pinToTop: 'Pin to Top',
     sync: 'Sync',
     export: 'Export',
+    settings: 'Settings',
   },
   status: {
     enabledMove: 'Enabled Move',
