@@ -160,7 +160,6 @@ defineExpose({
       ref="inputRef"
       class="input"
       :init-content="content"
-      @blur="update"
       @focus="onInputFocus"
       @update="update"
       @enter="enter"

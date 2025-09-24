@@ -126,6 +126,12 @@ const selectTag = (tag) => {
   }
 }
 
+const onTagTransferStart = (e, tag) => {
+  selectTags.value = [tag]
+  const transferData = generateStylePack(tag, '')
+  e.dataTransfer.setData('text/plain', JSON.stringify(transferData))
+}
+
 // 全局配置拖拽导出
 const onConfigTransferStart = (e, {name, desc}) => {
   e.stopPropagation()
@@ -347,9 +353,9 @@ defineExpose({
             v-for="(tag, index) in styleTags"
             :class="[activeTags.indexOf(tag) > -1 ? 'activeTag' : '', curTagName === tag ? 'curTag' : '']"
             :key="tag"
-            closable
             @click="showTagStyle(index)"
             @close="showDeleteConfirm(tag)"
+            closable
         >
           <div style="display: flex; align-items: center;gap: 8px">
             <el-icon :class="[activeTags.indexOf(tag) > -1 ? 'activeIcon' : 'inactiveIcon']"
@@ -357,6 +363,20 @@ defineExpose({
               <CircleCheckFilled/>
             </el-icon>
             {{ tag }}
+            <el-tooltip
+                :content="$t('config.transfer')"
+                placement="top"
+                width="240"
+                effect="dark"
+            >
+              <el-icon
+                  class="transfer"
+                  draggable="true"
+                  @dragstart="onTagTransferStart($event, tag)"
+              >
+                <Promotion/>
+              </el-icon>
+            </el-tooltip>
           </div>
         </el-tag>
 
@@ -550,6 +570,16 @@ defineExpose({
       animation: upAndDown 0.5s linear infinite;
     }
 
+    .transfer {
+      width: 24px;
+      height: 24px;
+      cursor: move;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
   }
 
   .globeStyleInput {

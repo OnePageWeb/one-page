@@ -2,7 +2,7 @@
 import CommonDialog from "@/items/commonDialog.vue"
 import {ref, watch} from "vue"
 import {changeLanguage, getCurrentLanguage} from "@/i18n/utils.js"
-import {ElOption, ElSelect, ElText} from "element-plus"
+import {ElOption, ElSelect, ElTag, ElText} from "element-plus"
 import {useI18n} from 'vue-i18n'
 const {t} = useI18n()
 
@@ -17,6 +17,10 @@ const currentLang = ref(getCurrentLanguage())
 watch(currentLang, (newLang) => {
   changeLanguage(newLang)
 })
+const selectLanguage = (lang) => {
+  changeLanguage(lang)
+  currentLang.value = lang
+}
 const langList = [
   'zh',
   'en'
@@ -42,14 +46,16 @@ defineExpose({
       </div>
 
       <div class="project">
-        <el-select v-if="projectItem === projectList.LANG" class="langSelect" v-model="currentLang">
-          <el-option
+        <div v-if="projectItem === projectList.LANG">
+          <el-tag
               v-for="item in langList"
               :key="item"
-              :label="t(`lang.${item}`)"
-              :value="item"
-          />
-        </el-select>
+              :class="{'activeTag': item === currentLang, 'curTag': item === currentLang}"
+              @click="selectLanguage(item)"
+          >
+            {{ t(`lang.${item}`) }}
+          </el-tag>
+        </div>
       </div>
     </div>
   </common-dialog>
@@ -98,8 +104,12 @@ defineExpose({
     float: left;
     padding: 24px;
 
-    .langSelect {
+    &>* {
       width: 100%;
+      height: 100%;
+    }
+
+    .langSelect {
 
       .el-select__wrapper {
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);

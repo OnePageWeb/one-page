@@ -258,6 +258,24 @@ el-tooltip {
   }
 }
 
+.transfer {
+  cursor: move;
+  font-size: 32px;
+  color: var(--color-transfer);
+
+  &:hover {
+    svg {
+      scale: 1.4;
+    }
+  }
+
+  svg {
+    padding: 4px;
+    border-radius: 24px;
+  }
+}
+
+
 /* 代码编辑器 */
 .v-codemirror {
 

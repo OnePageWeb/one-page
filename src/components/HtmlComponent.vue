@@ -84,7 +84,7 @@ defineExpose({
     <iframe
         ref="webIframe"
         :class="['result', isEditing ? 'resultOnFocus' : '']"
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts allow-same-origin allow-downloads"
         frameborder="0"
     />
     <input-with-params
