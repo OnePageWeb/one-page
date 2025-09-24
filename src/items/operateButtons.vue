@@ -269,14 +269,6 @@ const operatorContainer = ref(null)
       }
     }
 
-    .transfer {
-      cursor: move;
-
-      svg {
-        background-color: var(--color-transfer);
-      }
-    }
-
     .copy {
       svg {
         background-color: var(--color-copy);
