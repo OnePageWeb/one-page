@@ -1,135 +1,110 @@
-# 一页 - 高度可定制的仪表盘应用
+# 一页 - 高度自定义的个人主页
 
-![一页](https://img.shields.io/badge/Version-1.4.1-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![SPA](https://img.shields.io/badge/SPA-Yes-success) ![Self-Hosted](https://img.shields.io/badge/Self--Hosted-Yes-important)
+![GitHub release](https://img.shields.io/github/v/release/OnePageWeb/one) ![License](https://img.shields.io/github/license/OnePageWeb/one-page) ![Self-Hosted](https://img.shields.io/badge/Self--Hosted-Yes-important)
 
-一页 是一个轻量、可高度自定义的本地化起始页，专为安全、隐私和零成本部署设计。
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/OnePageWeb/one-page/main.yml) [![Vercel Deploy Status](https://vercelbadge.vercel.app/api/verlif/one)](https://vercel.com/verlif/one) [![Netlify Status](https://api.netlify.com/api/v1/badges/503f775c-8035-4212-9785-b0954adcff3c/deploy-status)](https://app.netlify.com/projects/one-page-verlif/deploys)
 
-## ✨ 核心特性
+<center><a href="https://one.verlif.top/"><img width="200px" src="https://one.verlif.top/favicon.ico"></a></center>
+<center><strong>一页 · ONE</strong></center>
 
-### 🎯 1. 完全自定义的仪表盘布局
+**一页 · ONE** 是一个无服务器的纯前端主页，专为个性化和私有化设计。
 
-本项目采用了仪表盘式布局设计，为您提供极致的布局自由度：
+不同于传统的个人主页，**一页 · ONE** 采用 **组件 + 网格** 的形式，用户可以自由组合、定制和分享自己的页面或是组件。
 
-- **🖱️ 自由拖放定位**：每个组件都可以通过简单的拖放操作放置在页面的任意位置
-- **📏 灵活尺寸调整**：所有组件支持动态调整大小，满足不同内容的展示需求
-- **👀 实时预览**：所有布局调整即时可见，无需刷新页面即可查看最终效果
-
-------
-
-极简配置
-
-![quick-config.png](./docs/images/screenshots/quick-config.png)
-
-自定义配置
-
-![component-config.png](./docs/images/screenshots/component-config.png)
-
-------
-
-### 🧩 2. 模块化组件设计
-
-通过组件化架构实现高度可定制的导航体验：
-
-- **📦 丰富组件库**：内置多种实用组件（链接卡片、搜索框、网页格子、时钟、笔记等）
-- **🎨 组件自定义**：每个组件都支持独立配置，打造个性化的工作台体验
-
-### 🎨 3. 深度样式自定义
-
-同时支持全局样式和组件级样式的精细控制：
-
-- **🌍 全局样式系统**：通过CSS变量定义全局主题颜色、字体、间距、动画等设计元素
-- **📤 全局样式标签**：全局样式以标签的方式保存，自由组合标签来快速便捷地调整工作台风格
-- **🎯 组件独立样式**：每个组件支持单独设置CSS样式，甚至于两个相同组件应用不同的样式内容
-
-### 🌐 4. 单页面静态设计
-
-采用现代前端技术构建的单页面应用：
-
-- **📄 纯静态架构**：无需服务器支持，仅需浏览器即可运行
-- **🐙 Github Pages友好**：完美适配Github Pages、Cloudflare Pages等静态网站托管服务
-
-### ⚡ 5. 一键快速部署
-
-简化部署流程，让每个人都能轻松拥有个性化导航页：
-
-- **🔱 Fork即用**：只需Fork项目到自己的GitHub账户，无需复杂配置
-- **🚀 自动部署**：开启GitHub Pages后自动构建并部署到互联网
-- **🌐 自定义域名**：支持绑定自己的域名，打造专属导航门户
-- **🔄 多版本管理**：通过Git进行版本控制，方便回溯和管理不同版本的配置
-- **💾 自动备份**：所有配置自动保存到浏览器本地存储，防止意外丢失
-
-### 📤 6. 便捷的配置分享
-
-轻松分享您的精心配置，与他人共享工作台：
-
-- **💾 完整配置导出**：一键导出所有布局、组件和样式的完整配置
-- **📥 快速导入**：通过上传配置文件或输入分享链接即可复现他人工作台
-- **🔍 一条链接完成分享**：在链接中加入配置方案与样式设定，直接访问即可轻松载入
-
-------
-
-### 快速体验不同的配置
-
-- 试试极简页面：[Quick](https://another-homepage.pages.dev/?config=https%3A%2F%2Fcdn.jsdmirror.cn%2Fgh%2FVerlif%2Fone%40main%2Fquick-config.json&workspace=temp)
-- 试试样式演示：[Introduction](https://another-homepage.pages.dev/?config=config=https%3A%2F%2Fcdn.jsdmirror.com%2Fgh%2FVerlif%2Fone%40main%2Fintroduction-config.json&workspace=temp)
-
-*以上为临时工作区，重载页面后会被清空。*
-
-------
-
-### 🗂️ 7. 多工作区支持
-
-引入多工作区概念，满足多样化场景需求：
-
-- **🏢 独立工作区**：创建多个完全独立的工作区，每个拥有自己的布局、组件和样式
-- **🎭 场景化设计**：为不同用途创建专属工作区（如工作、学习、娱乐、项目等）
-- **🔄 快速切换**：一键切换不同工作区，适应不同使用场景
-
-## 🚀 快速开始
-
-### 直接访问网址
-
-- GithubPage: [one](https://verlif.github.io/one)
-- CloudflarePage: [another-page](https://another-homepage.pages.dev/)
-
-### 部署自己的Page页面
-
-1. 找到仓库地址[one](https://github.com/Verlif/one)
-2. 点击`Fork`按钮，将仓库复制到您的 GitHub 账号下。
-3. 进入您的仓库设置，将`gh-pages`分支设为默认分支。
-4. 进入您的仓库设置，使用`gh-pages`分支作为page分支即可。
-
-### 本地打包部署
-
-1. Fork 或下载本项目代码。
-2. 运行`npm install & npm run build`
-3. 打包完成后，在项目根目录下会生成一个`dist`文件夹，将其上传到您的服务器即可。
-
-### 高级技巧
-
-跳转到 [高级技巧](./docs/Advanced.md)
-
-## 🛠️ 技术栈
-
-- **前端框架**: Vue 3
-- **构建工具**: Vite
-- **布局库**: Gridstack.js
-- **样式库**: Element Plus
-
-## 📜 许可证
-
-本项目采用 [MIT](https://opensource.org/licenses/MIT) 许可证。请查看 `LICENSE` 文件了解更多详情。
-
-## 🤝 贡献
-
-我们欢迎任何形式的贡献！
-
-## ⚠️ 注意事项
-
-- 当使用 HTML 组件功能时，请仅嵌入您信任的代码，因为恶意脚本可能会带来安全风险。
-- 导出的配置文件包含您的所有布局和设置，请注意在导出时隐藏您的隐私信息。
-- 部署在 GitHub Pages 上时，由于是纯前端应用，所有配置和数据都存储在您的浏览器本地（LocalStorage），清空浏览器数据会导致配置丢失，请记得定期导出备份。
+👉 [点击进入站点](https://one.verlif.top/)
 
 ---
 
-**享受打造您专属仪表盘的乐趣吧！**
+## 🛠️ 你可以用它做什么？
+
+### 网站导航
+
+### 个人主页
+
+### 游戏教程
+
+### 产品介绍
+
+---
+
+## ✨ 特点介绍
+
+### 🧩 自由的组件系统
+
+- 内置 **10 个基础组件** 与 **数十个预设组件**
+- 支持自由拖拽、排列组合
+- 每个组件都可以 **单独修改内容和 CSS 样式**
+- <details>
+    <summary>
+      <b>基础组件列表</b>
+    </summary>
+    <section>
+      <li>文本格子：文本输入框，支持H5标签</li>
+      <li>便签格子：markdown文本域，双击即可快速编辑</li>
+      <li>搜索栏：通过自定义搜索引擎进行搜索</li>
+      <li>网址格子：输入网址来在组件中直接显示网页</li>
+      <li>网页格子：将网页代码放入格子中，即可在页面中显示其内容</li>
+      <li>快速链接：自定义链接标签，点击打开网页</li>
+      <li>按钮格子：提供可点击的按钮，自定义点击后执行脚本内容</li>
+      <li>输入转换：提供输入框与输出框，通过编写转换方法自定义输出内容</li>
+      <li>计算函数：自定义js脚本，支持加载时运行和双击运行两种方式</li>
+      <li>记录格子：分条目的文本记录组件</li>
+    </section>
+  </details>
+
+### 🎨 全局样式标签
+
+- 用户可创建多个 **样式标签**
+- 每个标签包含一段 CSS，可灵活组合使用
+- 一次启用多个标签，快速切换不同主题
+
+### 📐 灵活的网格布局
+
+- 自定义网格数量与单元格大小
+- 组件可自由排放、调整大小
+- 满足不同场景的页面需求
+
+### 🗂️ 工作区分离
+
+- 支持定义多个工作区
+- 不同工作区数据互相隔离
+- 快速切换不同的使用场景（如学习 / 工作 / 展示）
+
+### 🚀 轻量化部署
+
+- 纯前端 **单页面应用（SPA）**
+- 无需服务器，支持一键部署到：
+    - GitHub Pages
+    - Cloudflare Pages
+    - Vercel 等平台
+
+### 🔄 配置分享
+
+- 任意组件都能 **导出配置** 或 **拖拽到其他网格**
+- 支持分享 **单个组件** 或 **整个工作区**
+- 数据复用与共享更加方便
+
+### 🧑‍🎨 个性化组件模板
+
+- 每个组件可保存为 **模板**
+- 模板保存了内容和独立样式
+- 新建时可直接使用，支持 **跨工作区复用**
+
+---
+
+## 📦 快速开始
+
+```bash
+# 克隆项目
+git clone https://github.com/OnePageWeb/one-page.git
+
+# 安装依赖
+cd one-page
+npm install
+
+# 启动开发环境
+npm run dev
+
+# 构建生产版本
+npm run build
+```

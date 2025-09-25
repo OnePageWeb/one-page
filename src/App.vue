@@ -489,12 +489,12 @@ onMounted(async () => {
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
+  console.log('url', window.location)
   // 设定打开的工作区
   const workspace = urlParams.get('workspace')
   if (workspace) {
     setWorkspace(workspace)
   }
-  removeParams('workspace')
 
   // 跳过刷新后的url同步
   removeDataDirect('skipReload')
@@ -518,10 +518,12 @@ onMounted(async () => {
     column: cellSize.columns,
   })
 
+  loadUrlLock(urlParams)
   configUrl.value = loadData('configUrl')
   // 不存在同步值时，从url参数加载
   if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
+    console.log('configParam', configParam)
     if (configParam) {
       // 如果非临时工作区存在数据，则弹出警告
       let access = false
@@ -559,7 +561,6 @@ onMounted(async () => {
     info(t('config.loading'))
     await loadConfig(configUrl.value, false)
   }
-  loadUrlLock(urlParams)
 
   // 恢复布局
   const layout = loadData('layout')

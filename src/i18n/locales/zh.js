@@ -155,6 +155,12 @@ export default {
       title: '标题',
       shortcutKey: '快捷键',
       article: '文章',
+      game: '小游戏',
+      draw: '绘图',
+      time: '时间',
+      music: '音乐',
+      earth: '地球',
+      model: '模型',
     }
   },
   style: {
@@ -323,6 +329,20 @@ export default {
     zh: '中文',
     en: 'English',
     switch: '切换语言',
+  },
+  about: {
+    title: '关于',
+    content: `
+      <h1>一页·ONE</h1>
+      <p>这是一个基于 Vue3 + Vite 的个人主页项目，你可以在这个项目中自定义你的个人首页，添加你喜欢的组件。</p>
+      <h2>项目链接</h2>
+      <p><a href="https://github.com/OnePageWeb/one-page" target="_blank">one-page项目地址</a></p>
+      <p><a href="https://github.com/OnePageWeb/one" target="_blank">已编译的项目地址</a></p>
+      <h2>项目说明</h2>
+      <p><strong>一页</strong>采用了 <strong>组件</strong> + <strong>网格</strong> 的布局方式，极大地提升了个性化程度。</p>
+      <p><strong>全局样式</strong> + <strong>组件样式</strong>，更自由更灵活地定制你的个人主页。</p>
+      <p><strong>一页</strong>支持在两个页面间通过拖拽的方式进行<strong>组件</strong>、<strong>样式</strong>和<strong>工作台</strong>的复制，极大提升了分享效率。</p>
+    `,
   },
   version: {
     currentVersion: '当前版本',

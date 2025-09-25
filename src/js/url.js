@@ -85,16 +85,19 @@ export function reloadWithoutParams(paramsToRemove) {
 }
 
 export function changeUrlParams(params) {
-  // 当前URL的路径部分
-  const path = window.location.pathname;
+  const url = new URL(window.location.href)
 
-  // 将参数对象转换为查询字符串
-  const queryString = new URLSearchParams(params).toString()
+  // 遍历对象，更新或新增参数
+  Object.keys(params).forEach(key => {
+    if (params[key] === null || params[key] === undefined) {
+      url.searchParams.delete(key) // 传入 null/undefined 表示删除该参数
+    } else {
+      url.searchParams.set(key, params[key])
+    }
+  })
 
-  // 新的URL
-  const newUrl = queryString ? `${path}?${queryString}` : path
-
-  history.replaceState({params}, '', newUrl)
+  // 不刷新页面，替换地址栏
+  window.history.replaceState({}, "", url.toString())
 }
 
 export function removeParams(paramToRemove) {
@@ -105,7 +108,7 @@ export function removeParams(paramToRemove) {
   params.delete(paramToRemove)
 
   // 构建新的URL
-  const path = window.location.pathname;
+  const path = window.location.pathname
   const newUrl = params.toString() ? `${path}?${params.toString()}` : path
 
   // 更新地址栏

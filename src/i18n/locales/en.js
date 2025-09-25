@@ -153,6 +153,12 @@ export default {
       title: 'Title',
       shortcutKey: 'Shortcut Key',
       article: 'Article',
+      game: 'Game',
+      draw: 'Draw',
+      time: 'Time',
+      music: 'Music',
+      earth: 'Earth',
+      model: 'Model',
     }
   },
   style: {
@@ -321,6 +327,20 @@ export default {
     zh: '中文',
     en: 'English',
     switch: 'Switch Language',
+  },
+  about: {
+    title: 'About',
+    content: `
+      <h1>One Page</h1>
+      <p>One Page is a personal homepage project based on Vue3 + Vite. You can customize your personal homepage by adding components.</p>
+      <h2>Project Links</h2>
+      <p><a href="https://github.com/OnePageWeb/one-page" target="_blank">one-page project address</a></p>
+      <p><a href="https://github.com/OnePageWeb/one" target="_blank">Compiled project address</a></p>
+      <h2>Project Description</h2>
+      <p>One Page adopts a <strong>component</strong> + <strong>grid</strong> layout, greatly enhancing personalization.</p>
+      <p><strong>Global styles</strong> + <strong>component styles</strong> provide greater freedom and flexibility in customizing your personal homepage.</p>
+      <p><strong>One Page</strong> supports copying <strong>component groups</strong>, <strong>styles</strong>, and <strong>workspaces</strong> between two pages through drag-and-drop, greatly improving sharing efficiency.</p>
+    `,
   },
   version: {
     currentVersion: 'Current version',

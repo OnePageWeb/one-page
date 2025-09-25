@@ -238,6 +238,11 @@ const operatorContainer = ref(null)
       width: 8px;
       pointer-events: auto;
       color: white;
+      font-size: inherit;
+
+      &.transfer {
+        color: var(--color-transfer);
+      }
 
       &:hover {
         scale: 1.2;

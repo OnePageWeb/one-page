@@ -490,7 +490,7 @@
     {
       "id": "34e319f0b3b3-40c8-9eb6-7f40e02c145b",
       "style": ".result {\n  color: white;\n  font-weight: bold;\n  padding: 8px 8px;\n  background: #2d2d2dbf;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: calc(100% - 16px);\n  height: calc(100% - 16px);\n  backdrop-filter: blur(4px);\n}",
-      "data": "{\"text\":\"http://another-homepage.pages.dev/?config=https://github.com/Verlif/one/blob/main/configs/display_text.json&workspace=temp\",\"params\":[]}",
+      "data": "{\"text\":\"http://one.verlif.top/?config=https://github.com/Verlif/one/blob/main/configs/display_text.json&workspace=temp\",\"params\":[]}",
       "type": "text"
     },
     {
