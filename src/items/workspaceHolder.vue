@@ -1,23 +1,19 @@
 <script lang="ts" setup>
-import {onMounted, onUnmounted, ref} from "vue"
-import {deleteWorkspace, getNowWorkspace, listWorkspace, setWorkspace} from "@/js/workspcae.js"
+import {onMounted, ref} from "vue"
 import {
-  ElButton,
-  ElDialog,
-  ElInput,
-  ElTag,
-  ElPopconfirm,
-  ElMessage,
-  ElPopover,
-  ElIcon,
-  ElMessageBox,
-} from "element-plus"
+  DEFAULT_WORKSPACE,
+  deleteWorkspace,
+  getNowWorkspace,
+  listWorkspace,
+  setWorkspace,
+  TEMP_WORKSPACE
+} from "@/js/workspcae.js"
+import {ElButton, ElIcon, ElInput, ElMessageBox, ElPopconfirm, ElPopover, ElTag,} from "element-plus"
 import {Check, InfoFilled} from "@element-plus/icons-vue"
-import {reloadWithoutParams} from "@/js/url.js"
+import {reload, changeUrlParams} from "@/js/url.js"
 import {useI18n} from "vue-i18n"
-import {TEMP_WORKSPACE, DEFAULT_WORKSPACE} from "@/js/workspcae.js"
 import commonDialog from "@/items/commonDialog.vue"
-import {warning, success} from "@/js/message.js"
+import {success, warning} from "@/js/message.js"
 
 const {t} = useI18n()
 
@@ -39,6 +35,7 @@ onMounted(() => {
   if (getNowWorkspace() === TEMP_WORKSPACE) {
     warning(t('workspace.temp.warning'))
   }
+  changeUrlParams({workspace: getNowWorkspace()})
 })
 
 // 工作区设定
@@ -76,8 +73,9 @@ function switchWorkspace(workspace: string) {
   }
   // 切换工作区
   setWorkspace(workspace)
+  changeUrlParams({workspace})
   // 刷新页面
-  reloadWithoutParams('workspace')
+  reload()
 }
 
 // 删除工作区
@@ -96,7 +94,8 @@ function deleteItem(workspace: string) {
   deleteWorkspace(workspace)
   if (nowWorkspace.value === workspace) {
     // 刷新页面
-    reloadWithoutParams('workspace')
+    changeUrlParams({workspace: getNowWorkspace()})
+    reload()
   } else {
     workspaceList.value.length = 0
     workspaceList.value.push(...listWorkspace())

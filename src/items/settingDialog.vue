@@ -2,16 +2,18 @@
 import CommonDialog from "@/items/commonDialog.vue"
 import {ref, watch} from "vue"
 import {changeLanguage, getCurrentLanguage} from "@/i18n/utils.js"
-import {ElOption, ElSelect, ElTag, ElText} from "element-plus"
+import {ElEmpty, ElTag, ElText} from "element-plus"
 import {useI18n} from 'vue-i18n'
+
 const {t} = useI18n()
 
 const dialogVisible = ref(false)
 
 const projectList = {
-  LANG: 'LANG'
+  LANG: t('lang.title'),
+  ABOUT: t('about.title')
 }
-const projectItem = ref(projectList.LANG)
+const projectItem = ref('LANG')
 
 const currentLang = ref(getCurrentLanguage())
 watch(currentLang, (newLang) => {
@@ -42,11 +44,18 @@ defineExpose({
   >
     <div>
       <div class="title">
-        <el-text :class="{'active': projectItem === projectList.LANG}" class="titleText" @click="projectItem = projectList.LANG">{{ $t('lang.title') }}</el-text>
+        <el-text
+            v-for="key in Object.keys(projectList)"
+            :key="key"
+            :class="{'active': projectItem === key}"
+            class="titleText"
+            tag="div"
+            @click="projectItem = key">{{ projectList[key] }}
+        </el-text>
       </div>
 
       <div class="project">
-        <div v-if="projectItem === projectList.LANG">
+        <div v-if="projectItem === 'LANG'">
           <el-tag
               v-for="item in langList"
               :key="item"
@@ -55,6 +64,9 @@ defineExpose({
           >
             {{ t(`lang.${item}`) }}
           </el-tag>
+        </div>
+        <div v-else-if="projectItem === 'ABOUT'">
+          <div v-html="t('about.content')"/>
         </div>
       </div>
     </div>
@@ -76,24 +88,27 @@ defineExpose({
     float: left;
     border-right: 4px solid var(--color-black);
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 8px;
 
     .titleText {
-      border-left: 8px solid orange;
+      border-left: 4px solid rgba(255, 165, 0, 0.5);
       padding: 4px 24px;
       font-size: 24px;
+      align-self: unset;
 
       &:hover {
         cursor: pointer;
         padding-left: 36px;
         padding-right: 36px;
         background-color: #eaeaea;
+        border-left: 8px solid orange;
       }
 
       &.active {
         background-color: #eaeaea;
+        border-left: 8px solid orange;
       }
     }
   }
@@ -103,8 +118,9 @@ defineExpose({
     height: calc(100% - 48px);
     float: left;
     padding: 24px;
+    overflow: auto;
 
-    &>* {
+    & > * {
       width: 100%;
       height: 100%;
     }

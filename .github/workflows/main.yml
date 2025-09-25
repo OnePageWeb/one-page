@@ -1,4 +1,4 @@
-name: Build and Deploy to Another Repo
+name: GithubPageDeploy
 
 on:
   push:
