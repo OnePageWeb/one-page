@@ -1,8 +1,6 @@
 <template>
-  <div class="contianer">
-    <div
-        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
-    >
+  <div class="container">
+    <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
       <el-tooltip
           :content="$t('common.close')"
           placement="right"
@@ -83,6 +81,7 @@
       <el-button @click="settingDialogRef.openDialog()" class="btn" :icon="Setting" plain>{{ $t('common.settings') }}</el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
+    <div class="appBackground" ref="appBackgroundRef"><iframe v-if="backgroundWebUrl" style="border: none;display: block;" height="100%" width="100%" frameborder="0" :src="backgroundWebUrl"/></div>
     <div ref="gridContainer" style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
       <div ref="gridEl" class="grid-stack"></div>
     </div>
@@ -259,6 +258,7 @@
       ref="settingDialogRef"
       :title="t('common.settings')"
       :visible="settingDialogVisible"
+      @background-changed="onBackgroundChanged"
     />
 
     <!-- 快捷键提示 -->
@@ -337,7 +337,8 @@ import GridStackConfig from "@/items/gridStackConfig.vue"
 import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
 import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
 import {Delayer} from "@/js/delayer.js"
-import SettingDialog from "@/items/settingDialog.vue";
+import SettingDialog from "@/items/settingDialog.vue"
+import {BackgroundType, splitBackgroundData} from "@/js/background.js"
 
 const {t} = useI18n()
 
@@ -523,7 +524,6 @@ onMounted(async () => {
   // 不存在同步值时，从url参数加载
   if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
-    console.log('configParam', configParam)
     if (configParam) {
       // 如果非临时工作区存在数据，则弹出警告
       let access = false
@@ -583,6 +583,8 @@ onMounted(async () => {
       // 存在则删除
       removeDataDirect(TEMP_WORKSPACE)
     }
+    // 加载背景
+    handleAppBackground(loadData('appBackground'))
   } else {
     // 首次加载
     configData.value = await loadJsonData()
@@ -1018,7 +1020,8 @@ function generateConfig() {
     configUrl: configUrl.value,
     cellW: loadData('cellW') || '48',
     cellH: loadData('cellH') || '50%c',
-    components: []
+    components: [],
+    appBackground: loadData('appBackground') || ''
   }
   // 所有组件
   const nodes = grid.engine.nodes // 获取所有格子节点数据
@@ -1102,6 +1105,8 @@ async function loadConfig(config = configData.value, reload = true) {
   clearConfig()
   // 加载全局样式
   globalStyleRef.value.initStyleConfig(config.globalStyle)
+  appBackground.value = config.appBackground || loadData('appBackground') || ''
+  handleAppBackground()
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
   saveUrlLock()
@@ -1189,6 +1194,41 @@ function onDragIn(data) {
 const settingDialogVisible = ref(false)
 const settingDialogRef = ref(null)
 
+// 背景
+const appBackground = ref('')
+const backgroundWebUrl = ref('')
+const appBackgroundRef = ref(null)
+
+const onBackgroundChanged = (background) => {
+  appBackground.value = background || ''
+  saveData('appBackground', appBackground.value)
+  handleAppBackground()
+}
+
+const handleAppBackground = (background = appBackground.value) => {
+  const split = splitBackgroundData(background)
+  if (split.length === 2) {
+    const type = split[0]
+    const value = split[1]
+    console.log(appBackgroundRef.value.style.background)
+    switch (type) {
+      case BackgroundType.IMG:
+        appBackgroundRef.value.style.background = `url('${value}')`
+        backgroundWebUrl.value = ''
+        break
+      case BackgroundType.CSS:
+        appBackgroundRef.value.style.background = value
+        backgroundWebUrl.value = ''
+        break
+      default:
+        appBackgroundRef.value.style.background = ''
+        backgroundWebUrl.value = value
+        break
+    }
+    console.log(appBackgroundRef.value.style.background)
+  }
+}
+
 // 全局配置拖拽导出
 function onConfigTransferStart(e) {
   e.stopPropagation()
@@ -1212,7 +1252,16 @@ body {
   background-color: #343434;
 }
 
-.contianer {
+.appBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.container {
   height: 100%;
   width: 100%;
   position: relative;

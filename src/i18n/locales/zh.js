@@ -344,6 +344,15 @@ export default {
       <p><strong>一页</strong>支持在两个页面间通过拖拽的方式进行<strong>组件</strong>、<strong>样式</strong>和<strong>工作台</strong>的复制，极大提升了分享效率。</p>
     `,
   },
+  background: {
+    title: '背景',
+    desc: '设置背景图片，支持网络地址或文件库图片',
+    type: {
+      img: '图片地址',
+      css: '背景样式代码',
+      html: '网页地址',
+    },
+  },
   version: {
     currentVersion: '当前版本',
     updateInfo: '更新说明',

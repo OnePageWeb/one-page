@@ -342,6 +342,15 @@ export default {
       <p><strong>One Page</strong> supports copying <strong>component groups</strong>, <strong>styles</strong>, and <strong>workspaces</strong> between two pages through drag-and-drop, greatly improving sharing efficiency.</p>
     `,
   },
+  background: {
+    title: 'Background',
+    desc: 'Set the background image, support network address or file library image',
+    type: {
+      img: 'Image URL',
+      css: 'Background Style Code',
+      html: 'Web Page URL',
+    },
+  },
   version: {
     currentVersion: 'Current version',
     updateInfo: 'Update notes',
