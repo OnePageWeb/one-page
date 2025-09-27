@@ -258,7 +258,8 @@ export default {
     componentNotExist: '组件不存在',
     workspaceEmpty: '工作区名称不能为空',
     cannotOpenWindow: '弹出窗口被阻止了！请允许此站点的弹出窗口。',
-    unknownContent: '未知内容'
+    unknownContent: '未知内容',
+    onlyUploadImageFile: '仅允许上传图片',
   },
   layout: {
     edit: '布局编辑',
@@ -368,9 +369,11 @@ export default {
     f: '接收模式',
     '~': '用户模式',
   },
-  fileLibrary: {
-    title: '文件库',
-    desc: '用于存储和管理文件的库',
+  imageLibrary: {
+    title: '图片库',
+    desc: '用于存储和管理图片的库，复制的图片代码可以用于样式的图片地址',
+    deleteConfirm: '确认删除此张图片？',
+    preview: '预览',
   },
   itemType: {
     text: {

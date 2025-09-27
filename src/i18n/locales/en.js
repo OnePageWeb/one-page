@@ -256,7 +256,8 @@ export default {
     componentNotExist: 'Component does not exist',
     workspaceEmpty: 'Workspace name cannot be empty',
     cannotOpenWindow: 'Pop-up window is blocked! Please allow pop-ups for this site.',
-    unknownContent: 'Unknown content'
+    unknownContent: 'Unknown content',
+    onlyUploadImageFile: 'Only image uploads are allowed.',
   },
   layout: {
     edit: 'Layout Edit',
@@ -343,7 +344,7 @@ export default {
     `,
   },
   background: {
-    title: 'Web Page Background',
+    title: 'Background',
     desc: 'Set the background image, support network address or file library image',
     type: {
       img: 'Image URL',
@@ -366,9 +367,11 @@ export default {
     f: 'Receive Mode',
     '~': 'User Mode',
   },
-  fileLibrary: {
-    title: 'File Library',
-    desc: 'File library for storing and managing files',
+  imageLibrary: {
+    title: 'Image Library',
+    desc: 'A library for storing and managing images. The copied image code can be used as the image URL for styles.',
+    deleteConfirm: 'Confirm delete this image ?',
+    preview: 'Preview',
   },
   itemType: {
     text: {

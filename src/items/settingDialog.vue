@@ -6,7 +6,7 @@ import {ElButton, ElInput, ElSegmented, ElTag, ElText} from "element-plus"
 import {useI18n} from 'vue-i18n'
 import {loadData} from "@/js/data.js"
 import {BackgroundType, splitBackgroundData} from "@/js/background.js"
-import FileLibrary from "@/items/fileLibrary.vue"
+import ImageLibrary from "@/items/imageLibrary.vue"
 
 const {t} = useI18n()
 
@@ -17,7 +17,7 @@ const dialogVisible = ref(false)
 const projectList = {
   LANG: t('lang.title'),
   BACKGROUND: t('background.title'),
-  FILE_LIBRARY: t('fileLibrary.title'),
+  FILE_LIBRARY: t('imageLibrary.title'),
   ABOUT: t('about.title')
 }
 const projectItem = ref('LANG')
@@ -90,7 +90,7 @@ defineExpose({
   <common-dialog
       :model-value="dialogVisible"
       class="settingDialog"
-      width="800px"
+      width="40%"
       @closed="dialogVisible = false"
   >
     <div>
@@ -138,7 +138,7 @@ defineExpose({
         </div>
         <!-- 文件库 -->
         <div v-else-if="projectItem === 'FILE_LIBRARY'">
-          <file-library ref="fileLibraryDialogRef" />
+          <image-library ref="imageLibraryDialogRef" />
         </div>
         <div v-else-if="projectItem === 'ABOUT'">
           <div v-html="t('about.content')"/>
@@ -158,37 +158,40 @@ defineExpose({
   }
 
   .title {
-    width: 30%;
+    width: 25%;
     height: 100%;
     float: left;
     border-right: 4px solid var(--color-black);
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 8px;
+    gap: 12px;
 
     .titleText {
       border-left: 4px solid rgba(255, 165, 0, 0.5);
       max-width: calc(100% - 80px);
-      padding: 4px 24px;
+      padding: 12px 24px;
       font-size: 24px;
       align-self: unset;
+      background-color: #f3f3f3;
 
       &:hover {
         cursor: pointer;
       }
 
       &.active, &:hover {
+        color: white;
         padding-left: 36px;
         padding-right: 36px;
-        background-color: #eaeaea;
+        background-color: var(--color-black);
         border-left: 8px solid orange;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       }
     }
   }
 
   .project {
-    width: calc(70% - 56px);
+    width: calc(75% - 56px);
     height: calc(100% - 48px);
     float: left;
     padding: 24px;

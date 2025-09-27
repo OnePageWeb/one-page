@@ -339,6 +339,7 @@ import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
 import {Delayer} from "@/js/delayer.js"
 import SettingDialog from "@/items/settingDialog.vue"
 import {BackgroundType, splitBackgroundData} from "@/js/background.js"
+import {tryReplace} from "@/js/imageFileWrapper.js"
 
 const {t} = useI18n()
 
@@ -490,7 +491,6 @@ onMounted(async () => {
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
-  console.log('url', window.location)
   // 设定打开的工作区
   const workspace = urlParams.get('workspace')
   if (workspace) {
@@ -833,7 +833,7 @@ function loadStyle(id, styleContent) {
   }
   const style = document.createElement('style')
   style.id = id
-  style.innerHTML = styleContent
+  style.innerHTML = tryReplace(styleContent)
   document.head.appendChild(style)
 }
 
@@ -849,7 +849,7 @@ function loadComponentStyle(id, styleContent) {
   const style = document.createElement('style')
   style.id = id + '-style'
   style.innerHTML = `[id='${id}'] {
-    ${styleContent}
+    ${tryReplace(styleContent)}
   }`
   document.head.appendChild(style)
 }
@@ -1205,12 +1205,12 @@ const onBackgroundChanged = (background) => {
   handleAppBackground()
 }
 
+// 处理网页背景参数
 const handleAppBackground = (background = appBackground.value) => {
   const split = splitBackgroundData(background)
   if (split.length === 2) {
     const type = split[0]
-    const value = split[1]
-    console.log(appBackgroundRef.value.style.background)
+    const value = tryReplace(split[1])
     switch (type) {
       case BackgroundType.IMG:
         appBackgroundRef.value.style.background = `url('${value}')`
@@ -1225,7 +1225,6 @@ const handleAppBackground = (background = appBackground.value) => {
         backgroundWebUrl.value = value
         break
     }
-    console.log(appBackgroundRef.value.style.background)
   }
 }
 

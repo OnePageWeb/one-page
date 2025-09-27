@@ -1,8 +1,3 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-import Promise from 'core-js/stable/promise'
-window.Promise = Promise
-
 import { createApp } from 'vue'
 import App from './App.vue'
 import 'element-plus/dist/index.css'
