@@ -343,7 +343,7 @@ export default {
     `,
   },
   background: {
-    title: 'Background',
+    title: 'Web Page Background',
     desc: 'Set the background image, support network address or file library image',
     type: {
       img: 'Image URL',
@@ -365,6 +365,10 @@ export default {
     r: 'Refresh Page',
     f: 'Receive Mode',
     '~': 'User Mode',
+  },
+  fileLibrary: {
+    title: 'File Library',
+    desc: 'File library for storing and managing files',
   },
   itemType: {
     text: {

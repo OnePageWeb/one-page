@@ -6,6 +6,7 @@ import {ElButton, ElInput, ElSegmented, ElTag, ElText} from "element-plus"
 import {useI18n} from 'vue-i18n'
 import {loadData} from "@/js/data.js"
 import {BackgroundType, splitBackgroundData} from "@/js/background.js"
+import FileLibrary from "@/items/fileLibrary.vue"
 
 const {t} = useI18n()
 
@@ -16,6 +17,7 @@ const dialogVisible = ref(false)
 const projectList = {
   LANG: t('lang.title'),
   BACKGROUND: t('background.title'),
+  FILE_LIBRARY: t('fileLibrary.title'),
   ABOUT: t('about.title')
 }
 const projectItem = ref('LANG')
@@ -134,6 +136,10 @@ defineExpose({
             <el-button style="float: right" @click="saveBackground">{{ t('common.apply') }}</el-button>
           </div>
         </div>
+        <!-- 文件库 -->
+        <div v-else-if="projectItem === 'FILE_LIBRARY'">
+          <file-library ref="fileLibraryDialogRef" />
+        </div>
         <div v-else-if="projectItem === 'ABOUT'">
           <div v-html="t('about.content')"/>
         </div>
@@ -145,14 +151,14 @@ defineExpose({
 
 <style>
 .settingDialog {
-  height: 40%;
+  height: 50%;
 
   .el-dialog__body {
     height: calc(100% - 80px) !important;
   }
 
   .title {
-    width: 200px;
+    width: 30%;
     height: 100%;
     float: left;
     border-right: 4px solid var(--color-black);
@@ -163,19 +169,18 @@ defineExpose({
 
     .titleText {
       border-left: 4px solid rgba(255, 165, 0, 0.5);
+      max-width: calc(100% - 80px);
       padding: 4px 24px;
       font-size: 24px;
       align-self: unset;
 
       &:hover {
         cursor: pointer;
-        padding-left: 36px;
-        padding-right: 36px;
-        background-color: #eaeaea;
-        border-left: 8px solid orange;
       }
 
-      &.active {
+      &.active, &:hover {
+        padding-left: 36px;
+        padding-right: 36px;
         background-color: #eaeaea;
         border-left: 8px solid orange;
       }
@@ -183,7 +188,7 @@ defineExpose({
   }
 
   .project {
-    width: calc(100% - 256px);
+    width: calc(70% - 56px);
     height: calc(100% - 48px);
     float: left;
     padding: 24px;
@@ -191,7 +196,6 @@ defineExpose({
 
     & > * {
       width: 100%;
-      height: 100%;
     }
 
     .backgroundInput {

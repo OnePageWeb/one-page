@@ -345,7 +345,7 @@ export default {
     `,
   },
   background: {
-    title: '背景',
+    title: '网页背景',
     desc: '设置背景图片，支持网络地址或文件库图片',
     type: {
       img: '图片地址',
@@ -367,6 +367,10 @@ export default {
     r: '刷新页面',
     f: '接收模式',
     '~': '用户模式',
+  },
+  fileLibrary: {
+    title: '文件库',
+    desc: '用于存储和管理文件的库',
   },
   itemType: {
     text: {
