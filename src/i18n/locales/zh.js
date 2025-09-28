@@ -34,6 +34,7 @@ export default {
     sync: '同步',
     export: '导出',
     settings: '设置',
+    preview: '预览',
   },
   status: {
     enabledMove: '已开启移动',
@@ -374,6 +375,7 @@ export default {
     desc: '用于存储和管理图片的库，复制的图片代码可以用于样式的图片地址',
     deleteConfirm: '确认删除此张图片？',
     preview: '预览',
+    colorPickerTip: '点击颜色选择器即可选择纯色背景颜色',
   },
   itemType: {
     text: {

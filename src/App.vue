@@ -213,6 +213,7 @@
           @update="value => componentStyle = value"
       />
       <template #footer>
+        <el-button class="previewButton">{{ t('common.preview') }}</el-button>
         <el-button @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
       </template>
     </common-dialog>
@@ -339,7 +340,7 @@ import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
 import {Delayer} from "@/js/delayer.js"
 import SettingDialog from "@/items/settingDialog.vue"
 import {BackgroundType, splitBackgroundData} from "@/js/background.js"
-import {tryReplace} from "@/js/imageFileWrapper.js"
+import {tryReplace} from "@/js/indexedDB/imageFileWrapper.js"
 
 const {t} = useI18n()
 
@@ -859,7 +860,6 @@ function refreshComponentStyle(id) {
   loadComponentStyle(idValue, componentStyle.value)
   // 保存组件样式
   saveData(idValue + '-style', componentStyle.value)
-  isEditComponentStyle.value = false
 }
 
 // 放大组件

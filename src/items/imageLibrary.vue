@@ -1,6 +1,6 @@
 <script setup>
 import {useI18n} from 'vue-i18n'
-import {getFileMap, addImage, removeImage, generateUrlKey} from "@/js/imageFileWrapper.js"
+import {getFileMap, addImage, removeImage, generateUrlKey} from "@/js/indexedDB/imageFileWrapper.js"
 import {onMounted, ref, shallowRef} from "vue"
 import {ElButton, ElEmpty, ElPopconfirm, ElText} from "element-plus"
 import {success, warning} from "@/js/message"

@@ -32,6 +32,7 @@ export default {
     sync: 'Sync',
     export: 'Export',
     settings: 'Settings',
+    preview: 'Preview',
   },
   status: {
     enabledMove: 'Enabled Move',
@@ -372,6 +373,7 @@ export default {
     desc: 'A library for storing and managing images. The copied image code can be used as the image URL for styles.',
     deleteConfirm: 'Confirm delete this image ?',
     preview: 'Preview',
+    colorPickerTip: 'Click the color picker to select a solid color background',
   },
   itemType: {
     text: {

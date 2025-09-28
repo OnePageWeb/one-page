@@ -1,6 +1,7 @@
-import {IndexedDBWrapper} from "@/js/indexedDBWrapper.js"
+import {IndexedDBWrapper} from "@/js/indexedDB/indexedDBWrapper.js"
+import {v4} from "uuid"
 
-const db = new IndexedDBWrapper('imageLibrary', 1, [{name: 'files', options: {keyPath: "id", autoIncrement: true}}])
+const db = new IndexedDBWrapper('imageLibrary', 1, [{name: 'files', options: {keyPath: "id"}}])
 await db.open()
 
 let fileMap = {}
@@ -39,13 +40,15 @@ const refreshUrlMap = async () => {
 
 export const addImage = async (file) => {
   const record = {
+    id: v4(),
     name: file.name,
     type: file.type,
     size: file.size,
     file: file,
     created: Date.now()
   }
-  file.id = await db.add("files", record)
+  await db.add("files", record)
+  file.id = record.id
   fileMap[file.id] = {
     id: file.id,
     name: file.name,
@@ -72,7 +75,7 @@ export const generateUrlKey = (id) => {
 }
 
 export const tryReplace = (content) => {
-  const pattern = /@img\{(\d+)}/g
+  const pattern = /@img\{(.*?)}/g
   const map = getFileMap()
   // 用 replace + 回调，逐个替换
   return content.replace(pattern, (match, id) => {

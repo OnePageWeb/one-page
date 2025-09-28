@@ -2,7 +2,7 @@
 import CommonDialog from "@/items/commonDialog.vue"
 import {ref, watch} from "vue"
 import {changeLanguage, getCurrentLanguage} from "@/i18n/utils.js"
-import {ElButton, ElInput, ElSegmented, ElTag, ElText} from "element-plus"
+import {ElButton, ElInput, ElSegmented, ElTag, ElText, ElColorPicker, ElTooltip} from "element-plus"
 import {useI18n} from 'vue-i18n'
 import {loadData} from "@/js/data.js"
 import {BackgroundType, splitBackgroundData} from "@/js/background.js"
@@ -119,7 +119,7 @@ defineExpose({
         </div>
         <!-- 背景设置 -->
         <div v-else-if="projectItem === 'BACKGROUND'">
-          <div>
+          <div class="backgroundContainer">
             <el-segmented
                 v-model="backgroundType"
                 :options="backgroundOptions"
@@ -131,14 +131,21 @@ defineExpose({
                 :rows="8"
                 type="textarea"
             />
+            <el-color-picker
+                v-if="backgroundType === BackgroundType.CSS"
+                class="colorPicker"
+                color-format="rgb"
+                :show-alpha="true"
+                @change="(color:string) => appBackground = color"/>
           </div>
-          <div style="margin-top: 8px">
-            <el-button style="float: right" @click="saveBackground">{{ t('common.apply') }}</el-button>
+          <div class="buttonContainer">
+            <el-button class="previewButton">{{ t('common.preview') }}</el-button>
+            <el-button class="applyButton" @click="saveBackground">{{ t('common.apply') }}</el-button>
           </div>
         </div>
         <!-- 文件库 -->
         <div v-else-if="projectItem === 'FILE_LIBRARY'">
-          <image-library ref="imageLibraryDialogRef" />
+          <image-library ref="imageLibraryDialogRef"/>
         </div>
         <div v-else-if="projectItem === 'ABOUT'">
           <div v-html="t('about.content')"/>
@@ -201,12 +208,38 @@ defineExpose({
       width: 100%;
     }
 
-    .backgroundInput {
-      .el-input__inner {
-        padding: 4px 12px;
-        font-size: 18px;
+    .backgroundContainer {
+      position: relative;
+      margin-bottom: 12px;
+
+      .colorPicker {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        opacity: 0.2;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+
+      .backgroundInput {
+        .el-input__inner {
+          padding: 4px 12px;
+          font-size: 18px;
+        }
       }
     }
+
+    .buttonContainer {
+      float: right;
+      height: fit-content;
+
+      & > * {
+        margin-left: 16px;
+      }
+    }
+
   }
 }
 </style>

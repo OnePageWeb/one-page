@@ -7,7 +7,7 @@ export const BackgroundType = {
 
 export const splitBackgroundData = (data) => {
   // 找到第一个冒号的位置
-  const firstColonIndex = data.indexOf(':')
+  const firstColonIndex = data?.indexOf(':')
   if (firstColonIndex !== -1) {
     // 分割成两部分
     const part1 = data.substring(0, firstColonIndex)
