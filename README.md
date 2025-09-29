@@ -2,7 +2,7 @@
 
 ![GitHub release](https://img.shields.io/github/v/release/OnePageWeb/one) ![License](https://img.shields.io/github/license/OnePageWeb/one-page) ![Self-Hosted](https://img.shields.io/badge/Self--Hosted-Yes-important)
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/OnePageWeb/one-page/main.yml) [![Vercel Deploy Status](https://vercelbadge.vercel.app/api/verlif/one)](https://vercel.com/verlif/one) [![Netlify Status](https://api.netlify.com/api/v1/badges/503f775c-8035-4212-9785-b0954adcff3c/deploy-status)](https://app.netlify.com/projects/one-page-verlif/deploys)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/OnePageWeb/one-page/main.yml) [![Vercel Deploy Status](https://vercelbadge.vercel.app/api/verlif/one)](https://vercel.com/verlif/one) [![Netlify Status](https://api.netlify.com/api/v1/badges/f0bc9a99-ca31-4c88-833f-34a41ea390d3/deploy-status)](https://app.netlify.com/projects/one-nav/deploys)
 
 <center><a href="https://one.verlif.top/"><img width="200px" src="https://one.verlif.top/favicon.ico"></a></center>
 <center><strong>一页 · ONE</strong></center>
