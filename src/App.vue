@@ -487,6 +487,29 @@ const setGridStackWidth = (width) => {
   })
 }
 
+const getConfigFromString = async (str) => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  try {
+    if (startsWith(str, 'http')) {
+      // 从网络加载
+      return await parseBlobJson(str)
+    } else {
+      return JSON.parse(str)
+    }
+  } catch (error) {
+    error(t('error.load'), error)
+    return {}
+  } finally {
+    setTimeout(() => {
+      loading.close()
+    }, 500)
+  }
+}
+
 // 初始化GridStack
 onMounted(async () => {
 
@@ -550,7 +573,7 @@ onMounted(async () => {
         configUrl.value = decodeURIComponent(configParam)
         loadUrlLock(urlParams)
         if (!loadDataDirect('skipReload')) {
-          await loadConfig(configUrl.value, false)
+          await loadConfigFromUrl(false)
           reloadWithoutParams('config')
           return
         }
@@ -560,7 +583,7 @@ onMounted(async () => {
     }
   } else if (configUrlLock.value && !loadDataDirect('skipReload')) {
     info(t('config.loading'))
-    await loadConfig(configUrl.value, false)
+    await loadConfigFromUrl(false)
   }
 
   // 恢复布局
@@ -1052,12 +1075,13 @@ function clearConfig(reload = false) {
   }
 }
 
-async function loadConfigFromUrl() {
+async function loadConfigFromUrl(reload = true) {
   if (!configUrl.value) {
     error(t('error.noConfigUrl'))
     return
   }
-  await loadConfig(configUrl.value)
+  const config = await getConfigFromString(configUrl.value)
+  await loadConfig(config, reload)
 }
 
 // 加载配置
@@ -1065,29 +1089,6 @@ async function loadConfig(config = configData.value, reload = true) {
   if (!config) {
     error(t('error.noConfigContent'))
     return
-  }
-  // 解析json
-  if (typeof config === 'string') {
-    const loading = ElLoading.service({
-      lock: true,
-      text: 'Loading...',
-      background: 'rgba(0, 0, 0, 0.7)',
-    })
-    try {
-      if (startsWith(config, 'http')) {
-        // 从网络加载
-        config = await parseBlobJson(config)
-      } else {
-        config = JSON.parse(config)
-      }
-    } catch (error) {
-      error(t('error.load'), error)
-      return
-    } finally {
-      setTimeout(() => {
-        loading.close()
-      }, 500)
-    }
   }
   if (!config || typeof config !== 'object') {
     error(t('error.loadFormat'))
