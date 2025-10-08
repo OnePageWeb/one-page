@@ -253,6 +253,7 @@ export default {
     noConfigContent: '无配置内容',
     noConfigUrl: '无配置URL',
     loadFormat: '格式错误',
+    uploadFile: '请上传文件',
     uploadJson: '请上传JSON文件',
     uploadMarkdown: '请上传Markdown文件',
     noSelectStyle: '请选择样式',

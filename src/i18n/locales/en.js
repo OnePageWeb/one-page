@@ -251,6 +251,7 @@ export default {
     noConfigContent: 'No configuration content',
     noConfigUrl: 'No configuration URL',
     loadFormat: 'Format error',
+    uploadFile: 'Please upload a file',
     uploadJson: 'Please upload a JSON file',
     uploadMarkdown: 'Please upload a Markdown file',
     noSelectStyle: 'Please select a style',

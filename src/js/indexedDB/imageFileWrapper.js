@@ -40,7 +40,7 @@ const refreshUrlMap = async () => {
 
 export const addImage = async (file) => {
   const record = {
-    id: v4(),
+    id: file.id || v4(),
     name: file.name,
     type: file.type,
     size: file.size,
@@ -56,6 +56,27 @@ export const addImage = async (file) => {
     size: file.size,
     created: file.created,
     url: URL.createObjectURL(file)
+  }
+}
+
+export const addImageFile = async (file) => {
+  const record = {
+    id: file.id || v4(),
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    file: file.file,
+    created: Date.now()
+  }
+  await db.add("files", record)
+  file.id = record.id
+  fileMap[file.id] = {
+    id: file.id,
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    created: file.created,
+    url: URL.createObjectURL(file.file)
   }
 }
 
@@ -81,6 +102,15 @@ export const tryReplace = (content) => {
   return content.replace(pattern, (match, id) => {
     return map[id]?.url || match
   })
+}
+
+export const getFile = async (id) => {
+  const data = await db.get('files', id)
+  if (data) {
+    console.log('getFile', id, data)
+    return data.file
+  }
+  return null
 }
 
 export const getFileMap = () => {

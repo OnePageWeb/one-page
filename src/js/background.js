@@ -6,6 +6,9 @@ export const BackgroundType = {
 }
 
 export const splitBackgroundData = (data) => {
+  if (!data) {
+    return [data]
+  }
   // 找到第一个冒号的位置
   const firstColonIndex = data?.indexOf(':')
   if (firstColonIndex !== -1) {

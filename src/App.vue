@@ -252,7 +252,8 @@
         ref="dragInCover"
         style="z-index: 110;"
         :active="everyDrag"
-        @onDragIn="onDragIn"
+        @on-drag-in="onDragIn"
+        @on-zip-drag-in="onZipDragIn"
     />
 
     <setting-dialog
@@ -296,10 +297,8 @@ import {
   ElInput,
   ElLoading,
   ElMessageBox,
-  ElOption,
   ElPopconfirm,
   ElPopover,
-  ElSelect,
   ElSwitch,
   ElText,
   ElTooltip,
@@ -340,7 +339,9 @@ import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
 import {Delayer} from "@/js/delayer.js"
 import SettingDialog from "@/items/settingDialog.vue"
 import {BackgroundType, splitBackgroundData} from "@/js/background.js"
-import {tryReplace} from "@/js/indexedDB/imageFileWrapper.js"
+import {addImage, addImageFile, getFile, getFileMap, tryReplace} from "@/js/indexedDB/imageFileWrapper.js"
+import {ZipItem} from "@/js/zip/zipItem.ts"
+import JSZip from "jszip";
 
 const {t} = useI18n()
 
@@ -1139,22 +1140,74 @@ const loadStylePack = async (stylePack) => {
 }
 
 // 下载配置
-function downloadConfig() {
-  exportData(generateConfig(), 'config.json')
+const downloadConfig = async () => {
+  const config = generateConfig()
+  const zip = new ZipItem()
+  zip.json("config.json", config)
+  const imgFolder = zip.folder('img')
+
+  // 寻找使用过的文件
+  const pattern = /@img\{(.*?)}/g
+  const configText = JSON.stringify(config)
+  let idList = [...configText.matchAll(pattern)].map(m => m[1])
+  // idList过滤重复
+  idList = [...new Set(idList)]
+  const fileMap = getFileMap()
+  const fileInfoList = []
+  // 加载使用过的文件
+  for (let id of idList) {
+    const file = fileMap[id]
+    if (file) {
+      fileInfoList.push(file)
+      imgFolder.file(id, await getFile(id))
+    }
+  }
+  imgFolder.json('imgInfo.json', fileInfoList)
+  await zip.build("config.zip")
 }
 
 // 处理文件拖拽
 function handleConfigFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
-  if (!file || file.type !== 'application/json') {
-    error(t('error.uploadJson'))
+  if (!file) {
+    error(t('error.uploadFile'))
     return
   }
-  const reader = new FileReader()
-  reader.readAsText(file, 'utf-8')
-  reader.onload = () => {
-    configData.value = reader.result
+  if (file.type === 'application/json') {
+    const reader = new FileReader()
+    reader.readAsText(file, 'utf-8')
+    reader.onload = () => {
+      configData.value = reader.result
+    }
+  } else {
+    loadZip(file)
+  }
+}
+
+const loadZip = async (zipFile) => {
+  const arrayBuffer = await zipFile.arrayBuffer()
+  const zip = await JSZip.loadAsync(arrayBuffer)
+  // 加载图片
+  const imgInfoFile = zip.file('img/imgInfo.json')
+  if (imgInfoFile) {
+    const text = await imgInfoFile.async("text")
+    const imgInfo = JSON.parse(text)
+    // 加载图片
+    for (let img of imgInfo) {
+      // 获取file文件
+      const file = zip.file('img/' + img.id)
+      if (file) {
+        img.file = await file.async('blob')
+        await addImageFile(img)
+      }
+    }
+  }
+  // 加载配置
+  const configFile = zip.file('config.json')
+  if (configFile) {
+    const text = await configFile.async("text")
+    await loadConfig(JSON.parse(text))
   }
 }
 
@@ -1189,6 +1242,10 @@ function onDragIn(data) {
   } else {
     error(t('error.unknownContent'))
   }
+}
+
+const onZipDragIn = (zipFile) => {
+  loadZip(zipFile)
 }
 
 // 设置窗口
