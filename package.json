@@ -21,6 +21,7 @@
     "core-js": "^3.45.1",
     "element-plus": "2.11.3",
     "gridstack": "^12.3.3",
+    "jszip": "^3.10.1",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "markdown-it-task-lists": "^2.1.1",
