@@ -6,7 +6,7 @@ import {useI18n} from "vue-i18n"
 import {warning} from "@/js/message.js"
 const {t} = useI18n()
 
-const emit = defineEmits(['onDragIn'])
+const emit = defineEmits(['onDragIn', 'onZipDragIn'])
 
 const props = defineProps({
   active: Boolean
@@ -26,12 +26,16 @@ const onDrop = (e) => {
   e.preventDefault()
   dragInCoverRef.value.classList.remove('active')
   const file = e.dataTransfer.files[0]
-  if (file && file.type === 'application/json') {
-    const reader = new FileReader()
-    reader.readAsText(file, 'utf-8')
-    reader.onload = () => {
-      const value = JSON.parse(reader.result)
-      emit('onDragIn', value)
+  if (file) {
+    if (file.type === 'application/json') {
+      const reader = new FileReader()
+      reader.readAsText(file, 'utf-8')
+      reader.onload = () => {
+        const value = JSON.parse(reader.result)
+        emit('onDragIn', value)
+      }
+    } else if (file.type === 'application/x-zip-compressed') {
+      emit('onZipDragIn', file)
     }
   } else {
     const data = e.dataTransfer.getData('text/plain')

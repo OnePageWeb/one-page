@@ -100,9 +100,9 @@ onMounted(() => {
       <div class="versionContent" v-html="version.content"/>
     </div>
 
-    <div class="deleteIcon close-icon">
+    <div class="deleteIcon close-icon" @click="isShow = false">
       <el-tooltip :content="t('common.close')" placement="top" effect="light">
-        <el-icon @click="isShow = false">
+        <el-icon>
           <Close/>
         </el-icon>
       </el-tooltip>

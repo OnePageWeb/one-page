@@ -200,10 +200,10 @@ defineExpose({
             :label="item.name"
             :value="item.name"
         >
-          <div v-html="item.name"/>
+          <div class="searchTag" v-html="item.name"/>
         </el-option>
-        <template #label="{ value }">
-          <div v-html="value"/>
+        <template #tag>
+          <div v-html="nowSearchEngine"/>
         </template>
       </el-select>
       <el-input

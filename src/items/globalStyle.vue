@@ -397,6 +397,7 @@ defineExpose({
       />
     </div>
     <template #footer>
+      <el-button class="previewButton">{{ t('common.preview') }}</el-button>
       <el-button @click="exportDialogVisible = true">{{ t('style.pack.create') }}</el-button>
       <el-button @click="loadSelectedStyle">{{ t('common.apply') }}</el-button>
     </template>
