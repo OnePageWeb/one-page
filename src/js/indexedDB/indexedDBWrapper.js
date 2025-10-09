@@ -1,7 +1,5 @@
 export class IndexedDBWrapper {
 
-  urls = {}
-
   constructor(dbName, version, stores = []) {
     this.dbName = dbName
     this.version = version

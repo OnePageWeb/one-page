@@ -12,7 +12,6 @@ const {t} = useI18n()
 console.log('当前版本:', packageJson.version)
 const currentVersion = ref(packageJson.version)
 const lastVersion = loadDataDirect('app-version') || currentVersion.value
-saveDataDirect('app-version', currentVersion.value)
 
 // 状态管理
 const isShow = ref(true)
@@ -74,6 +73,11 @@ const fetchReleases = async () => {
   }
 }
 
+const close = () => {
+  isShow.value = false
+  saveDataDirect('app-version', currentVersion.value)
+}
+
 // 打开GitHub Release页面
 const openReleasePage = () => {
   window.open(`${repoUrl}/releases/latest`, '_blank')
@@ -100,9 +104,9 @@ onMounted(() => {
       <div class="versionContent" v-html="version.content"/>
     </div>
 
-    <div class="deleteIcon close-icon" @click="isShow = false">
+    <div class="deleteIcon close-icon">
       <el-tooltip :content="t('common.close')" placement="top" effect="light">
-        <el-icon>
+        <el-icon @click="close">
           <Close/>
         </el-icon>
       </el-tooltip>
