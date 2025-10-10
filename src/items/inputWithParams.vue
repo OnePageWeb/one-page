@@ -4,6 +4,7 @@ import {InfoFilled} from "@element-plus/icons-vue"
 import {ref, watch} from "vue"
 import {useI18n} from "vue-i18n"
 import HtmlEditor from "@/items/htmlEditor.vue"
+import {tryReplace} from "@/js/indexedDB/imageFileWrapper.js";
 
 const {t} = useI18n()
 
@@ -81,7 +82,7 @@ function onInputFocus() {
 function update(value) {
   content.value = value
   calcParams()
-  emit('update', contentValue.value, params.value)
+  emit('update', tryReplace(content.value), params.value)
 }
 
 function updateParam() {
@@ -89,7 +90,7 @@ function updateParam() {
 }
 
 function enter() {
-  emit('enter', contentValue.value, params.value)
+  emit('enter', tryReplace(content.value), params.value)
 }
 
 function load(data) {
@@ -98,7 +99,7 @@ function load(data) {
     inputRef.value.load(content.value)
     params.value = data.params || []
     calcParams()
-    emit('update', contentValue.value, params.value)
+    emit('update', tryReplace(contentValue.value), params.value)
   }
 }
 

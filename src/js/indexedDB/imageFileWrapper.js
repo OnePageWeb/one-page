@@ -1,13 +1,13 @@
 import {IndexedDBWrapper} from "@/js/indexedDB/indexedDBWrapper.js"
 import {v4} from "uuid"
 
-const db = new IndexedDBWrapper('imageLibrary', 1, [{name: 'files', options: {keyPath: "id"}}])
+const db = new IndexedDBWrapper('imageLibrary', 1, [{name: 'images', options: {keyPath: "id"}}])
 await db.open()
 
 let fileMap = {}
 
 // 初始化
-const files = await db.getAll('files')
+const files = await db.getAll('images')
 files.forEach(file => {
   fileMap[file.id] = {
     id: file.id,
@@ -25,7 +25,7 @@ const refreshUrlMap = async () => {
     URL.revokeObjectURL(file.url)
   })
   fileMap = {}
-  const files = await db.getAll('files')
+  const files = await db.getAll('images')
   files.forEach(file => {
     fileMap[file.id] = {
       id: file.id,
@@ -47,7 +47,7 @@ export const addImage = async (file) => {
     file: file,
     created: Date.now()
   }
-  await db.add("files", record)
+  await db.add('images', record)
   file.id = record.id
   fileMap[file.id] = {
     id: file.id,
@@ -68,7 +68,7 @@ export const addImageFile = async (file) => {
     file: file.file,
     created: Date.now()
   }
-  await db.add("files", record)
+  await db.add('images', record)
   file.id = record.id
   fileMap[file.id] = {
     id: file.id,
@@ -81,7 +81,7 @@ export const addImageFile = async (file) => {
 }
 
 export const removeImage = async (id) => {
-  await db.delete('files', id)
+  await db.delete('images', id)
   const file = fileMap[id]
   delete fileMap[id]
   URL.revokeObjectURL(file.url)
@@ -105,9 +105,8 @@ export const tryReplace = (content) => {
 }
 
 export const getFile = async (id) => {
-  const data = await db.get('files', id)
+  const data = await db.get('images', id)
   if (data) {
-    console.log('getFile', id, data)
     return data.file
   }
   return null

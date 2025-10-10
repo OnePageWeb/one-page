@@ -33,6 +33,7 @@ export default {
     export: 'Export',
     settings: 'Settings',
     preview: 'Preview',
+    update: 'Update',
   },
   status: {
     enabledMove: 'Enabled Move',

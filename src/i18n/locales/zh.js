@@ -35,6 +35,7 @@ export default {
     export: '导出',
     settings: '设置',
     preview: '预览',
+    update: '更新',
   },
   status: {
     enabledMove: '已开启移动',

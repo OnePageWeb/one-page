@@ -1198,6 +1198,9 @@ const loadZip = async (zipFile) => {
       // 获取file文件
       const file = zip.file('img/' + img.id)
       if (file) {
+        if (getFile(img.id)) {
+          continue
+        }
         img.file = await file.async('blob')
         await addImageFile(img)
       }
