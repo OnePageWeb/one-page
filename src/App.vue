@@ -1,8 +1,6 @@
 <template>
-  <div class="contianer">
-    <div
-        :class="['menu', showMenu ? 'menu-show' : 'menu-hide']"
-    >
+  <div class="container">
+    <div :class="['menu', showMenu ? 'menu-show' : 'menu-hide']">
       <el-tooltip
           :content="$t('common.close')"
           placement="right"
@@ -83,6 +81,7 @@
       <el-button @click="settingDialogRef.openDialog()" class="btn" :icon="Setting" plain>{{ $t('common.settings') }}</el-button>
     </div>
     <crosshair-background v-if="enableMove"></crosshair-background>
+    <div class="appBackground" ref="appBackgroundRef"><iframe v-if="backgroundWebUrl" style="border: none;display: block;" height="100%" width="100%" frameborder="0" :src="backgroundWebUrl"/></div>
     <div ref="gridContainer" style="height: 100%;width: 100%;overflow-y: auto;scrollbar-width: none">
       <div ref="gridEl" class="grid-stack"></div>
     </div>
@@ -214,6 +213,7 @@
           @update="value => componentStyle = value"
       />
       <template #footer>
+        <el-button class="previewButton">{{ t('common.preview') }}</el-button>
         <el-button @click="refreshComponentStyle(curComponentId)">{{ $t('common.refresh') }}</el-button>
       </template>
     </common-dialog>
@@ -252,13 +252,15 @@
         ref="dragInCover"
         style="z-index: 110;"
         :active="everyDrag"
-        @onDragIn="onDragIn"
+        @on-drag-in="onDragIn"
+        @on-zip-drag-in="onZipDragIn"
     />
 
     <setting-dialog
       ref="settingDialogRef"
       :title="t('common.settings')"
       :visible="settingDialogVisible"
+      @background-changed="onBackgroundChanged"
     />
 
     <!-- 快捷键提示 -->
@@ -295,10 +297,8 @@ import {
   ElInput,
   ElLoading,
   ElMessageBox,
-  ElOption,
   ElPopconfirm,
   ElPopover,
-  ElSelect,
   ElSwitch,
   ElText,
   ElTooltip,
@@ -337,7 +337,11 @@ import GridStackConfig from "@/items/gridStackConfig.vue"
 import ShortcutKeysTip from "@/items/shortcutKeysTip.vue"
 import {STYLE_PACK, WORKSPACE} from "@/js/configType.js"
 import {Delayer} from "@/js/delayer.js"
-import SettingDialog from "@/items/settingDialog.vue";
+import SettingDialog from "@/items/settingDialog.vue"
+import {BackgroundType, splitBackgroundData} from "@/js/background.js"
+import {addImage, addImageFile, getFile, getFileMap, tryReplace} from "@/js/indexedDB/imageFileWrapper.js"
+import {ZipItem} from "@/js/zip/zipItem.ts"
+import JSZip from "jszip";
 
 const {t} = useI18n()
 
@@ -484,12 +488,51 @@ const setGridStackWidth = (width) => {
   })
 }
 
+const loadConfigWithString = async (str, reload = true) => {
+  if (startsWith(str, 'http')) {
+    // 从网络加载
+    await loadFromUrl(str, reload)
+  } else {
+    await loadConfig(JSON.parse(str), reload)
+  }
+}
+
+const loadFromUrl = async (url, reload = true) => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  try {
+    // 判断文件类型
+    const response = await fetch(url, { method: 'HEAD' }) // 只请求头，不下载整个文件
+    const contentType = response.headers.get('content-type')
+    if (contentType.includes('application/zip')) {
+      const res = await fetch(url)
+      const blob = await res.blob()
+      const arrayBuffer = await blob.arrayBuffer()
+      const zip = await JSZip.loadAsync(arrayBuffer)
+      await loadZip(zip, reload)
+    } else if (contentType.includes('application/json')) {
+      const config = await parseBlobJson(url)
+      await loadConfig(config, reload)
+    } else {
+      error(t('error.loadUnknownType', [url]))
+    }
+  } catch (error) {
+    error(t('error.load'), error)
+  } finally {
+    setTimeout(() => {
+      loading.close()
+    }, 500)
+  }
+}
+
 // 初始化GridStack
 onMounted(async () => {
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
-  console.log('url', window.location)
   // 设定打开的工作区
   const workspace = urlParams.get('workspace')
   if (workspace) {
@@ -523,7 +566,6 @@ onMounted(async () => {
   // 不存在同步值时，从url参数加载
   if (!configUrlLock.value || !configUrl.value) {
     const configParam = urlParams.get('config')
-    console.log('configParam', configParam)
     if (configParam) {
       // 如果非临时工作区存在数据，则弹出警告
       let access = false
@@ -549,7 +591,7 @@ onMounted(async () => {
         configUrl.value = decodeURIComponent(configParam)
         loadUrlLock(urlParams)
         if (!loadDataDirect('skipReload')) {
-          await loadConfig(configUrl.value, false)
+          await loadConfigFromUrl(false)
           reloadWithoutParams('config')
           return
         }
@@ -559,7 +601,7 @@ onMounted(async () => {
     }
   } else if (configUrlLock.value && !loadDataDirect('skipReload')) {
     info(t('config.loading'))
-    await loadConfig(configUrl.value, false)
+    await loadConfigFromUrl(false)
   }
 
   // 恢复布局
@@ -583,6 +625,8 @@ onMounted(async () => {
       // 存在则删除
       removeDataDirect(TEMP_WORKSPACE)
     }
+    // 加载背景
+    handleAppBackground(loadData('appBackground'))
   } else {
     // 首次加载
     configData.value = await loadJsonData()
@@ -741,7 +785,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
   itemEl.type = type // 自定义类型
-  itemEl.id = id || v4().replace('-', '')
+  itemEl.id = id || v4().replaceAll('-', '')
   itemEl.setAttribute('gs-w', w)
   itemEl.setAttribute('gs-h', h)
   if (x !== undefined) itemEl.setAttribute('gs-x', x)
@@ -831,7 +875,7 @@ function loadStyle(id, styleContent) {
   }
   const style = document.createElement('style')
   style.id = id
-  style.innerHTML = styleContent
+  style.innerHTML = tryReplace(styleContent)
   document.head.appendChild(style)
 }
 
@@ -847,7 +891,7 @@ function loadComponentStyle(id, styleContent) {
   const style = document.createElement('style')
   style.id = id + '-style'
   style.innerHTML = `[id='${id}'] {
-    ${styleContent}
+    ${tryReplace(styleContent)}
   }`
   document.head.appendChild(style)
 }
@@ -857,7 +901,6 @@ function refreshComponentStyle(id) {
   loadComponentStyle(idValue, componentStyle.value)
   // 保存组件样式
   saveData(idValue + '-style', componentStyle.value)
-  isEditComponentStyle.value = false
 }
 
 // 放大组件
@@ -1018,7 +1061,8 @@ function generateConfig() {
     configUrl: configUrl.value,
     cellW: loadData('cellW') || '48',
     cellH: loadData('cellH') || '50%c',
-    components: []
+    components: [],
+    appBackground: loadData('appBackground') || ''
   }
   // 所有组件
   const nodes = grid.engine.nodes // 获取所有格子节点数据
@@ -1049,12 +1093,12 @@ function clearConfig(reload = false) {
   }
 }
 
-async function loadConfigFromUrl() {
+async function loadConfigFromUrl(reload = true) {
   if (!configUrl.value) {
     error(t('error.noConfigUrl'))
     return
   }
-  await loadConfig(configUrl.value)
+  const config = await loadConfigWithString(configUrl.value)
 }
 
 // 加载配置
@@ -1062,29 +1106,6 @@ async function loadConfig(config = configData.value, reload = true) {
   if (!config) {
     error(t('error.noConfigContent'))
     return
-  }
-  // 解析json
-  if (typeof config === 'string') {
-    const loading = ElLoading.service({
-      lock: true,
-      text: 'Loading...',
-      background: 'rgba(0, 0, 0, 0.7)',
-    })
-    try {
-      if (startsWith(config, 'http')) {
-        // 从网络加载
-        config = await parseBlobJson(config)
-      } else {
-        config = JSON.parse(config)
-      }
-    } catch (error) {
-      error(t('error.load'), error)
-      return
-    } finally {
-      setTimeout(() => {
-        loading.close()
-      }, 500)
-    }
   }
   if (!config || typeof config !== 'object') {
     error(t('error.loadFormat'))
@@ -1102,6 +1123,8 @@ async function loadConfig(config = configData.value, reload = true) {
   clearConfig()
   // 加载全局样式
   globalStyleRef.value.initStyleConfig(config.globalStyle)
+  appBackground.value = config.appBackground || loadData('appBackground') || ''
+  handleAppBackground()
   // 加载布局
   saveData('layout', JSON.stringify(config.layout))
   saveUrlLock()
@@ -1133,23 +1156,82 @@ const loadStylePack = async (stylePack) => {
 }
 
 // 下载配置
-function downloadConfig() {
-  exportData(generateConfig(), 'config.json')
+const downloadConfig = async () => {
+  const config = generateConfig()
+  const zip = new ZipItem()
+  zip.json("config.json", config)
+  const imgFolder = zip.folder('img')
+
+  // 寻找使用过的文件
+  const pattern = /@img\{(.*?)}/g
+  const configText = JSON.stringify(config)
+  let idList = [...configText.matchAll(pattern)].map(m => m[1])
+  // idList过滤重复
+  idList = [...new Set(idList)]
+  const fileMap = getFileMap()
+  const fileInfoList = []
+  // 加载使用过的文件
+  for (let id of idList) {
+    const file = fileMap[id]
+    if (file) {
+      fileInfoList.push(file)
+      imgFolder.file(id, await getFile(id))
+    }
+  }
+  imgFolder.json('imgInfo.json', fileInfoList)
+  await zip.build("config.zip")
 }
 
 // 处理文件拖拽
 function handleConfigFileDrop(e) {
   e.preventDefault()
   const file = e.dataTransfer.files[0]
-  if (!file || file.type !== 'application/json') {
-    error(t('error.uploadJson'))
+  if (!file) {
+    error(t('error.uploadFile'))
     return
   }
-  const reader = new FileReader()
-  reader.readAsText(file, 'utf-8')
-  reader.onload = () => {
-    configData.value = reader.result
+  if (file.type === 'application/json') {
+    const reader = new FileReader()
+    reader.readAsText(file, 'utf-8')
+    reader.onload = () => {
+      configData.value = reader.result
+    }
+  } else {
+    loadZipFile(file)
   }
+}
+
+const loadZip = async (zip, reload = true) => {
+  // 加载图片
+  const imgInfoFile = zip.file('img/imgInfo.json')
+  if (imgInfoFile) {
+    const text = await imgInfoFile.async("text")
+    const imgInfo = JSON.parse(text)
+    // 加载图片
+    for (let img of imgInfo) {
+      // 获取file文件
+      const file = zip.file('img/' + img.id)
+      if (file) {
+        if (await getFile(img.id)) {
+          continue
+        }
+        img.file = await file.async('blob')
+        await addImageFile(img)
+      }
+    }
+  }
+  // 加载配置
+  const configFile = zip.file('config.json')
+  if (configFile) {
+    const text = await configFile.async("text")
+    await loadConfig(JSON.parse(text), reload)
+  }
+}
+
+const loadZipFile = async (zipFile) => {
+  const arrayBuffer = await zipFile.arrayBuffer()
+  const zip = await JSZip.loadAsync(arrayBuffer)
+  await loadZip(zip)
 }
 
 // 处理文件拖拽
@@ -1185,9 +1267,47 @@ function onDragIn(data) {
   }
 }
 
+const onZipDragIn = (zipFile) => {
+  loadZipFile(zipFile)
+}
+
 // 设置窗口
 const settingDialogVisible = ref(false)
 const settingDialogRef = ref(null)
+
+// 背景
+const appBackground = ref('')
+const backgroundWebUrl = ref('')
+const appBackgroundRef = ref(null)
+
+const onBackgroundChanged = (background) => {
+  appBackground.value = background || ''
+  saveData('appBackground', appBackground.value)
+  handleAppBackground()
+}
+
+// 处理网页背景参数
+const handleAppBackground = (background = appBackground.value) => {
+  const split = splitBackgroundData(background)
+  if (split.length === 2) {
+    const type = split[0]
+    const value = tryReplace(split[1])
+    switch (type) {
+      case BackgroundType.IMG:
+        appBackgroundRef.value.style.background = `url('${value}')`
+        backgroundWebUrl.value = ''
+        break
+      case BackgroundType.CSS:
+        appBackgroundRef.value.style.background = value
+        backgroundWebUrl.value = ''
+        break
+      default:
+        appBackgroundRef.value.style.background = ''
+        backgroundWebUrl.value = value
+        break
+    }
+  }
+}
 
 // 全局配置拖拽导出
 function onConfigTransferStart(e) {
@@ -1212,7 +1332,16 @@ body {
   background-color: #343434;
 }
 
-.contianer {
+.appBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.container {
   height: 100%;
   width: 100%;
   position: relative;

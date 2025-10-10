@@ -34,6 +34,8 @@ export default {
     sync: '同步',
     export: '导出',
     settings: '设置',
+    preview: '预览',
+    update: '更新',
   },
   status: {
     enabledMove: '已开启移动',
@@ -252,13 +254,16 @@ export default {
     noConfigContent: '无配置内容',
     noConfigUrl: '无配置URL',
     loadFormat: '格式错误',
+    uploadFile: '请上传文件',
     uploadJson: '请上传JSON文件',
     uploadMarkdown: '请上传Markdown文件',
+    loadUnknownType: '未知文件类型 - ',
     noSelectStyle: '请选择样式',
     componentNotExist: '组件不存在',
     workspaceEmpty: '工作区名称不能为空',
     cannotOpenWindow: '弹出窗口被阻止了！请允许此站点的弹出窗口。',
-    unknownContent: '未知内容'
+    unknownContent: '未知内容',
+    onlyUploadImageFile: '仅允许上传图片',
   },
   layout: {
     edit: '布局编辑',
@@ -344,6 +349,15 @@ export default {
       <p><strong>一页</strong>支持在两个页面间通过拖拽的方式进行<strong>组件</strong>、<strong>样式</strong>和<strong>工作台</strong>的复制，极大提升了分享效率。</p>
     `,
   },
+  background: {
+    title: '网页背景',
+    desc: '设置背景图片，支持网络地址或文件库图片',
+    type: {
+      img: '图片地址',
+      css: '背景样式代码',
+      html: '网页地址',
+    },
+  },
   version: {
     currentVersion: '当前版本',
     updateInfo: '更新说明',
@@ -358,6 +372,13 @@ export default {
     r: '刷新页面',
     f: '接收模式',
     '~': '用户模式',
+  },
+  imageLibrary: {
+    title: '图片库',
+    desc: '用于存储和管理图片的库，复制的图片代码可以用于样式的图片地址',
+    deleteConfirm: '确认删除此张图片？',
+    preview: '预览',
+    colorPickerTip: '点击颜色选择器即可选择纯色背景颜色',
   },
   itemType: {
     text: {

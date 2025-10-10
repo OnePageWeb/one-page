@@ -12,7 +12,7 @@
   --color-black: #292929;
   --dialog-background-bar: #292929;
   --dialog-background-footer: #292929;
-  --cursor-text: url("./cursor/text.cur") 10 8;
+  --cursor-text: unset;
   --button-border-top: unset;
   --button-border-left: 3px solid #292929;
 
@@ -278,6 +278,10 @@ el-tooltip {
 
 /* 代码编辑器 */
 .v-codemirror {
+
+  * {
+    transition: none;
+  }
 
   .cm-gutters-before {
     background-color: #f5f5f56e !important;

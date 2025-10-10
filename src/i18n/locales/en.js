@@ -32,6 +32,8 @@ export default {
     sync: 'Sync',
     export: 'Export',
     settings: 'Settings',
+    preview: 'Preview',
+    update: 'Update',
   },
   status: {
     enabledMove: 'Enabled Move',
@@ -250,13 +252,16 @@ export default {
     noConfigContent: 'No configuration content',
     noConfigUrl: 'No configuration URL',
     loadFormat: 'Format error',
+    uploadFile: 'Please upload a file',
     uploadJson: 'Please upload a JSON file',
     uploadMarkdown: 'Please upload a Markdown file',
+    loadUnknownType: 'Unknown file type - ',
     noSelectStyle: 'Please select a style',
     componentNotExist: 'Component does not exist',
     workspaceEmpty: 'Workspace name cannot be empty',
     cannotOpenWindow: 'Pop-up window is blocked! Please allow pop-ups for this site.',
-    unknownContent: 'Unknown content'
+    unknownContent: 'Unknown content',
+    onlyUploadImageFile: 'Only image uploads are allowed.',
   },
   layout: {
     edit: 'Layout Edit',
@@ -342,6 +347,15 @@ export default {
       <p><strong>One Page</strong> supports copying <strong>component groups</strong>, <strong>styles</strong>, and <strong>workspaces</strong> between two pages through drag-and-drop, greatly improving sharing efficiency.</p>
     `,
   },
+  background: {
+    title: 'Background',
+    desc: 'Set the background image, support network address or file library image',
+    type: {
+      img: 'Image URL',
+      css: 'Background Style Code',
+      html: 'Web Page URL',
+    },
+  },
   version: {
     currentVersion: 'Current version',
     updateInfo: 'Update notes',
@@ -356,6 +370,13 @@ export default {
     r: 'Refresh Page',
     f: 'Receive Mode',
     '~': 'User Mode',
+  },
+  imageLibrary: {
+    title: 'Image Library',
+    desc: 'A library for storing and managing images. The copied image code can be used as the image URL for styles.',
+    deleteConfirm: 'Confirm delete this image ?',
+    preview: 'Preview',
+    colorPickerTip: 'Click the color picker to select a solid color background',
   },
   itemType: {
     text: {
