@@ -257,6 +257,7 @@ export default {
     uploadFile: '请上传文件',
     uploadJson: '请上传JSON文件',
     uploadMarkdown: '请上传Markdown文件',
+    loadUnknownType: '未知文件类型 - ',
     noSelectStyle: '请选择样式',
     componentNotExist: '组件不存在',
     workspaceEmpty: '工作区名称不能为空',

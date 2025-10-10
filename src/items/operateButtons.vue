@@ -207,6 +207,7 @@ const operatorContainer = ref(null)
   .buttonContainer {
     width: fit-content;
     max-width: calc(100% - 8px);
+    min-width: 160%;
     height: fit-content;
     padding: 4px;
     display: flex;

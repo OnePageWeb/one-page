@@ -279,6 +279,10 @@ el-tooltip {
 /* 代码编辑器 */
 .v-codemirror {
 
+  * {
+    transition: none;
+  }
+
   .cm-gutters-before {
     background-color: #f5f5f56e !important;
     backdrop-filter: blur(4px);

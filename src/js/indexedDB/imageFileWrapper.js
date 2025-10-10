@@ -40,7 +40,7 @@ const refreshUrlMap = async () => {
 
 export const addImage = async (file) => {
   const record = {
-    id: file.id || v4(),
+    id: file.id || v4().replaceAll('-', ''),
     name: file.name,
     type: file.type,
     size: file.size,
@@ -61,7 +61,7 @@ export const addImage = async (file) => {
 
 export const addImageFile = async (file) => {
   const record = {
-    id: file.id || v4(),
+    id: file.id || v4().replaceAll('-', ''),
     name: file.name,
     type: file.type,
     size: file.size,

@@ -255,6 +255,7 @@ export default {
     uploadFile: 'Please upload a file',
     uploadJson: 'Please upload a JSON file',
     uploadMarkdown: 'Please upload a Markdown file',
+    loadUnknownType: 'Unknown file type - ',
     noSelectStyle: 'Please select a style',
     componentNotExist: 'Component does not exist',
     workspaceEmpty: 'Workspace name cannot be empty',

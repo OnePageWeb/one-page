@@ -488,22 +488,39 @@ const setGridStackWidth = (width) => {
   })
 }
 
-const getConfigFromString = async (str) => {
+const loadConfigWithString = async (str, reload = true) => {
+  if (startsWith(str, 'http')) {
+    // 从网络加载
+    await loadFromUrl(str, reload)
+  } else {
+    await loadConfig(JSON.parse(str), reload)
+  }
+}
+
+const loadFromUrl = async (url, reload = true) => {
   const loading = ElLoading.service({
     lock: true,
     text: 'Loading...',
     background: 'rgba(0, 0, 0, 0.7)',
   })
   try {
-    if (startsWith(str, 'http')) {
-      // 从网络加载
-      return await parseBlobJson(str)
+    // 判断文件类型
+    const response = await fetch(url, { method: 'HEAD' }) // 只请求头，不下载整个文件
+    const contentType = response.headers.get('content-type')
+    if (contentType.includes('application/zip')) {
+      const res = await fetch(url)
+      const blob = await res.blob()
+      const arrayBuffer = await blob.arrayBuffer()
+      const zip = await JSZip.loadAsync(arrayBuffer)
+      await loadZip(zip, reload)
+    } else if (contentType.includes('application/json')) {
+      const config = await parseBlobJson(url)
+      await loadConfig(config, reload)
     } else {
-      return JSON.parse(str)
+      error(t('error.loadUnknownType', [url]))
     }
   } catch (error) {
     error(t('error.load'), error)
-    return {}
   } finally {
     setTimeout(() => {
       loading.close()
@@ -768,7 +785,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
   itemEl.type = type // 自定义类型
-  itemEl.id = id || v4().replace('-', '')
+  itemEl.id = id || v4().replaceAll('-', '')
   itemEl.setAttribute('gs-w', w)
   itemEl.setAttribute('gs-h', h)
   if (x !== undefined) itemEl.setAttribute('gs-x', x)
@@ -1081,8 +1098,7 @@ async function loadConfigFromUrl(reload = true) {
     error(t('error.noConfigUrl'))
     return
   }
-  const config = await getConfigFromString(configUrl.value)
-  await loadConfig(config, reload)
+  const config = await loadConfigWithString(configUrl.value)
 }
 
 // 加载配置
@@ -1181,13 +1197,11 @@ function handleConfigFileDrop(e) {
       configData.value = reader.result
     }
   } else {
-    loadZip(file)
+    loadZipFile(file)
   }
 }
 
-const loadZip = async (zipFile) => {
-  const arrayBuffer = await zipFile.arrayBuffer()
-  const zip = await JSZip.loadAsync(arrayBuffer)
+const loadZip = async (zip, reload = true) => {
   // 加载图片
   const imgInfoFile = zip.file('img/imgInfo.json')
   if (imgInfoFile) {
@@ -1198,7 +1212,7 @@ const loadZip = async (zipFile) => {
       // 获取file文件
       const file = zip.file('img/' + img.id)
       if (file) {
-        if (getFile(img.id)) {
+        if (await getFile(img.id)) {
           continue
         }
         img.file = await file.async('blob')
@@ -1210,8 +1224,14 @@ const loadZip = async (zipFile) => {
   const configFile = zip.file('config.json')
   if (configFile) {
     const text = await configFile.async("text")
-    await loadConfig(JSON.parse(text))
+    await loadConfig(JSON.parse(text), reload)
   }
+}
+
+const loadZipFile = async (zipFile) => {
+  const arrayBuffer = await zipFile.arrayBuffer()
+  const zip = await JSZip.loadAsync(arrayBuffer)
+  await loadZip(zip)
 }
 
 // 处理文件拖拽
@@ -1248,7 +1268,7 @@ function onDragIn(data) {
 }
 
 const onZipDragIn = (zipFile) => {
-  loadZip(zipFile)
+  loadZipFile(zipFile)
 }
 
 // 设置窗口

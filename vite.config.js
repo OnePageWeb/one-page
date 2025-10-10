@@ -11,7 +11,7 @@ export default defineConfig(({mode}) => {
       vue(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png', 'imgs/**/*.{png,jpg,jpeg,gif,svg}', 'configs/**/*.{json,zip}'],
+        includeAssets: ['first-config.json', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png', 'imgs/**/*.{png,jpg,jpeg,gif,svg}', 'configs/**/*.{json,zip}'],
         manifest: {
           name: 'one',
           short_name: 'one',
