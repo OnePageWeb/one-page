@@ -768,7 +768,7 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
   const itemEl = document.createElement('div')
   itemEl.className = 'grid-stack-item'
   itemEl.type = type // 自定义类型
-  itemEl.id = id || v4().replace('-', '')
+  itemEl.id = id || v4().replaceAll('-', '')
   itemEl.setAttribute('gs-w', w)
   itemEl.setAttribute('gs-h', h)
   if (x !== undefined) itemEl.setAttribute('gs-x', x)
@@ -1198,7 +1198,7 @@ const loadZip = async (zipFile) => {
       // 获取file文件
       const file = zip.file('img/' + img.id)
       if (file) {
-        if (getFile(img.id)) {
+        if (await getFile(img.id)) {
           continue
         }
         img.file = await file.async('blob')
