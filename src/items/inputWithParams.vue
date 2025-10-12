@@ -62,7 +62,14 @@ function getParams(value) {
           desc = nameDesc[1]
         }
       } else {
-        name = strings[0]
+        // 没有预设值则判断有没有描述
+        const nameDesc = paramContent.split(':', 2)
+        if (nameDesc.length > 1) {
+          name = nameDesc[0]
+          desc = nameDesc[1]
+        } else {
+          name = strings[0]
+        }
       }
       tempParams.push({
         name,
@@ -82,7 +89,7 @@ function onInputFocus() {
 function update(value) {
   content.value = value
   calcParams()
-  emit('update', tryReplace(content.value), params.value)
+  emit('update', tryReplace(contentValue.value), params.value)
 }
 
 function updateParam() {
@@ -90,7 +97,7 @@ function updateParam() {
 }
 
 function enter() {
-  emit('enter', tryReplace(content.value), params.value)
+  emit('enter', tryReplace(contentValue.value), params.value)
 }
 
 function load(data) {

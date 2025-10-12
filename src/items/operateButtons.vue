@@ -204,10 +204,14 @@ const operatorContainer = ref(null)
   z-index: 3;
   position: absolute;
 
+  &:hover {
+    .buttonContainer {
+      opacity: 1;
+    }
+  }
+
   .buttonContainer {
     width: fit-content;
-    max-width: calc(100% - 8px);
-    min-width: 160%;
     height: fit-content;
     padding: 4px;
     display: flex;
@@ -219,10 +223,13 @@ const operatorContainer = ref(null)
     top: -11px;
     right: -6px;
     z-index: 11;
+    opacity: 0;
 
     &:hover {
-      max-width: calc(100% + 4px);
-      top: -11px;
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: 24px;
+      z-index: 12;
 
       .el-icon {
         width: 32px;
