@@ -1519,6 +1519,15 @@ body {
 .grid-stack-item {
   padding: 10px;
   margin: 1px;
+
+  &:hover {
+    z-index: 10;
+
+    /* 鼠标悬停时显示操作按钮 */
+    .buttonContainer {
+      opacity: 1;
+    }
+  }
 }
 
 textarea {
