@@ -1,3 +1,10 @@
+.el-overlay {
+
+  &:has(.previewButton:hover) {
+    background: none;
+  }
+}
+
 .commonDialog {
   --el-dialog-padding-primary: 0;
   --el-dialog-border-radius: 0;

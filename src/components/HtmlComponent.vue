@@ -42,7 +42,11 @@ const updateIframeContent = (value) => {
 function edit() {
   isEditing.value = !isEditing.value
   if (isEditing.value) {
-    inputRef.value.load(content.value)
+    const data = {
+      text: content.value,
+      params: params
+    }
+    inputRef.value.load(data)
     emit('focus', id)
   }
 }
