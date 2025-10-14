@@ -41,6 +41,7 @@ const updateIframeContent = (value) => {
 
 function edit() {
   isEditing.value = !isEditing.value
+  console.log('params', params)
   if (isEditing.value) {
     const data = {
       text: content.value,
@@ -57,6 +58,8 @@ function view() {
 
 function save() {
   const save = inputRef.value.save()
+  params = save.params || []
+  content.value = save.text
   saveData(props.id, JSON.stringify(save))
 }
 

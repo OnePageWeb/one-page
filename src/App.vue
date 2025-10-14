@@ -737,7 +737,8 @@ function createItemComponent(type, componentItem) {
         style: {
           height: '100%',
           width: '100%',
-          position: 'relative'
+          position: 'relative',
+          zIndex: '1',
         },
       }, [
         h(componentItem, {
