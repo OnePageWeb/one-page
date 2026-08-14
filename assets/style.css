@@ -285,7 +285,6 @@ el-tooltip {
 
   .cm-gutters-before {
     background-color: #f5f5f56e !important;
-    backdrop-filter: blur(4px);
   }
 
   .cm-content {

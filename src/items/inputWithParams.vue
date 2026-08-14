@@ -1,7 +1,7 @@
 <script setup>
 import {ElCollapse, ElCollapseItem, ElIcon, ElInput, ElPopover} from "element-plus"
 import {InfoFilled} from "@element-plus/icons-vue"
-import {ref, watch} from "vue"
+import {nextTick, ref, watch} from "vue"
 import {useI18n} from "vue-i18n"
 import HtmlEditor from "@/items/htmlEditor.vue"
 import {tryReplace} from "@/js/indexedDB/imageFileWrapper.js";
@@ -10,7 +10,9 @@ const {t} = useI18n()
 
 const props = defineProps({
   initText: String,
-  placeholder: String
+  placeholder: String,
+  // 是否处于编辑态：仅在编辑态才挂载 CodeMirror 编辑器，避免组件多时常驻大量编辑器实例
+  active: Boolean
 })
 const emit = defineEmits(['update', 'enter'])
 
@@ -27,6 +29,17 @@ const calcContentValue = (value = content.value, params = params.value, paramIte
 const content = ref('')
 const inputRef = ref(null)
 const params = ref([])
+
+// 进入编辑态时编辑器才挂载，挂载后同步内容
+watch(() => props.active, (active) => {
+  if (active) {
+    nextTick(() => {
+      if (inputRef.value) {
+        inputRef.value.load(content.value)
+      }
+    })
+  }
+})
 
 function calcParams(value) {
   value = value || content.value
@@ -103,10 +116,13 @@ function enter() {
 function load(data) {
   if (data !== undefined && data !== null) {
     content.value = data.text || content.value
-    inputRef.value.load(content.value)
     params.value = data.params || []
     calcParams()
     emit('update', tryReplace(contentValue.value), params.value)
+    // 编辑器可能尚未挂载（懒加载），挂载后由 active 监听同步内容
+    if (inputRef.value) {
+      inputRef.value.load(content.value)
+    }
   }
 }
 
@@ -118,7 +134,7 @@ defineExpose({
   save, load, clear() {
     content.value = ''
     params.value = []
-    inputRef.value.clear()
+    inputRef.value?.clear()
   }, calcValue(value, params) {
     const { params: tempParams, paramItems } = getParams(value)
     return calcContentValue(value, params || tempParams, paramItems)
@@ -165,6 +181,7 @@ defineExpose({
       </el-collapse-item>
     </el-collapse>
     <html-editor
+      v-if="active"
       ref="inputRef"
       class="input"
       :init-content="content"

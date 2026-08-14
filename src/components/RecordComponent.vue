@@ -1,10 +1,11 @@
 <script setup>
 import {ElIcon, ElMessage, ElTooltip} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {CopyDocument, Delete, Edit, Plus, Upload, View} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {debounce} from "@/js/delayer.js"
 import {useI18n} from "vue-i18n"
 import {success} from "@/js/message.js"
 
@@ -56,7 +57,7 @@ function onInputUpdate(value, params) {
   contentList.value[currentIndex].text = value
   contentList.value[currentIndex].params = params
   resultList.value[currentIndex] = value
-  save()
+  debouncedSave()
 }
 
 function closeEdit() {
@@ -165,12 +166,18 @@ const isEditing = ref(false)
 
 const inputWithParamsRef = ref(null)
 
+const debouncedSave = debounce(save, 300)
+
 function save() {
   saveData(props.id, JSON.stringify({ list: contentList.value, dbClick: dbClickType.value }))
 }
 
 onMounted(() => {
   load()
+})
+
+onUnmounted(() => {
+  debouncedSave.cancel()
 })
 
 watch(enableEdit, (newVal) => {
@@ -279,6 +286,7 @@ defineExpose({
     <input-with-params
         ref="inputWithParamsRef"
         :class="['editContainer', isEditing ? 'editOnFocus' : '']"
+        :active="isEditing"
         :placeholder="t('placeholder.recordInput')"
         @update="onInputUpdate"
         @enter="closeEdit"

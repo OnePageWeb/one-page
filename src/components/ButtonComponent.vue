@@ -1,10 +1,11 @@
 <script setup>
 import {ElIcon, ElInput, ElTooltip} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {debounce} from "@/js/delayer.js"
 import H5tag from "@/items/h5tag.vue"
 import {useI18n} from "vue-i18n"
 const {t} = useI18n()
@@ -29,9 +30,11 @@ watch(enableEdit, (newValue) => {
 
 const inputWithParamsRef = ref(null)
 
+const debouncedSave = debounce(save, 300)
+
 function onInputUpdate(value) {
   functionText.value = value
-  save()
+  debouncedSave()
 }
 
 const edit = () => {
@@ -52,6 +55,10 @@ async function execute() {
 
 onMounted(() => {
   load()
+})
+
+onUnmounted(() => {
+  debouncedSave.cancel()
 })
 
 function load(data) {
@@ -93,6 +100,7 @@ defineExpose({
         <input-with-params
             ref="inputWithParamsRef"
             class="inputWithParams"
+            :active="isEditing"
             @update="onInputUpdate"/>
       </div>
     </div>

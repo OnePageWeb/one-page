@@ -1,11 +1,12 @@
 <script setup>
 import {ElIcon, ElInput, ElMessage, ElPopover, ElText, ElTooltip} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {CloseBold, CopyDocument, Edit, SortDown, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {debounce} from "@/js/delayer.js"
 import {success} from "@/js/message.js"
 const {t} = useI18n()
 
@@ -27,6 +28,8 @@ const inputText = ref('')
 const functionResult = ref('')
 const isEditing = ref(false)
 
+const debouncedSave = debounce(save, 300)
+
 watch(enableEdit, (newValue) => {
   if (!newValue) {
     isEditing.value = false
@@ -35,7 +38,7 @@ watch(enableEdit, (newValue) => {
 
 function onFunctionChange(value) {
   functionText.value = value
-  save()
+  debouncedSave()
 }
 
 const edit = () => {
@@ -79,6 +82,10 @@ function copyResult() {
 
 onMounted(() => {
   load()
+})
+
+onUnmounted(() => {
+  debouncedSave.cancel()
 })
 
 function load(data) {
@@ -174,6 +181,7 @@ defineExpose({
         <input-with-params
             ref="functionTextRef"
             class="functionContent"
+            :active="isEditing"
             :rows="2"
             type="textarea"
             :placeholder="t('placeholder.inputFunctionInput')"

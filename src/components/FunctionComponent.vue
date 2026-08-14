@@ -4,6 +4,7 @@ import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Finished, SwitchButton, VideoPlay, Edit, View} from "@element-plus/icons-vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {debounce} from "@/js/delayer.js"
 import {useI18n} from "vue-i18n"
 import ComponentOperator from "@/items/componentOperator.vue"
 const {t} = useI18n()
@@ -40,9 +41,11 @@ const functionRef = ref(null)
 
 const inputWithParamsRef = ref(null)
 
+const debouncedSave = debounce(save, 300)
+
 function onInputUpdate(value) {
   functionContent.value = value
-  save()
+  debouncedSave()
 }
 
 function save() {
@@ -118,6 +121,7 @@ defineExpose({
           ref="inputWithParamsRef"
           :class="['input', isEditing ? 'inputOnFocus' : '']"
           :initText="functionContent"
+          :active="isEditing"
           :placeholder="t('placeholder.functionContentInput')"
           @update="onInputUpdate"
       />

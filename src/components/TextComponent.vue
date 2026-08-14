@@ -1,10 +1,11 @@
 <script setup>
 import {ElIcon, ElTooltip} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from '@element-plus/icons-vue'
 import ComponentOperator from "@/items/componentOperator.vue"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {debounce} from "@/js/delayer.js"
 import {useI18n} from "vue-i18n"
 const {t} = useI18n()
 
@@ -17,9 +18,11 @@ const {text, enableEdit} = toRefs(props)
 
 const contentValue = ref('')
 
+const debouncedSave = debounce(save, 300)
+
 function onInputUpdate(value) {
   contentValue.value = value
-  save()
+  debouncedSave()
 }
 
 const isEditing = ref(false)
@@ -33,6 +36,10 @@ function save() {
 
 onMounted(() => {
   load()
+})
+
+onUnmounted(() => {
+  debouncedSave.cancel()
 })
 
 watch(enableEdit, (newVal) => {
@@ -62,6 +69,7 @@ defineExpose({
     <input-with-params
         ref="inputWithParamsRef"
         :class="['editContainer', isEditing ? 'editOnFocus' : '']"
+        :active="isEditing"
         @update="onInputUpdate"/>
     <component-operator :visible="enableEdit">
       <el-tooltip

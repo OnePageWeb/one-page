@@ -1,11 +1,12 @@
 <script setup>
 import {ElIcon, ElInput, ElTooltip, ElSwitch} from "element-plus"
-import {nextTick, onMounted, ref, toRefs, watch} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, toRefs, watch} from "vue"
 import {loadData, saveData} from "@/js/data.js"
 import {Edit, View} from "@element-plus/icons-vue"
 import ComponentOperator from "@/items/componentOperator.vue"
 import {useI18n} from "vue-i18n"
 import InputWithParams from "@/items/inputWithParams.vue"
+import {debounce} from "@/js/delayer.js"
 
 const {t} = useI18n()
 
@@ -31,12 +32,21 @@ watch(enableEdit, (newVal) => {
 const inputRef = ref(null)
 
 const webIframe = ref(null)
-const updateIframeContent = (value) => {
-  if (!webIframe.value || value === undefined) return
-  contentValue.value = value
+let lastBlobUrl = null
+const updateIframeDebounced = debounce((value) => {
+  if (!webIframe.value) return
+  if (lastBlobUrl) {
+    URL.revokeObjectURL(lastBlobUrl)
+  }
   const blob = new Blob([value], {type: 'text/html'})
-  webIframe.value.src = URL.createObjectURL(blob)
+  lastBlobUrl = URL.createObjectURL(blob)
+  webIframe.value.src = lastBlobUrl
   save()
+}, 250)
+const updateIframeContent = (value) => {
+  if (value === undefined) return
+  contentValue.value = value
+  updateIframeDebounced(value)
 }
 
 function edit() {
@@ -65,6 +75,14 @@ function save() {
 
 onMounted(() => {
   load()
+})
+
+onUnmounted(() => {
+  updateIframeDebounced.cancel()
+  if (lastBlobUrl) {
+    URL.revokeObjectURL(lastBlobUrl)
+    lastBlobUrl = null
+  }
 })
 
 function load(data) {
@@ -98,6 +116,7 @@ defineExpose({
         :init-text="content"
         ref="inputRef"
         :class="['editContainer', isEditing ? 'editContainerOnFocus' : '']"
+        :active="isEditing"
         :placeholder="t('placeholder.htmlInput')"
         @update="updateIframeContent"
         @change="save"
