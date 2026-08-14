@@ -92,7 +92,7 @@ function load(data) {
     content.value = parse.text
     params = parse.params
     nextTick(() => {
-      inputRef.value.load({text: content.value, params})
+      inputRef.value.load(parse)
     })
   }
 }
