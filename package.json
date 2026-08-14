@@ -1,6 +1,6 @@
 {
   "name": "one",
-  "version": "1.9.1",
+  "version": "1.9.2-fixed",
   "private": true,
   "type": "module",
   "engines": {
