@@ -284,7 +284,7 @@
 </template>
 
 <script setup>
-import {createApp, h, nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
+import {createVNode, getCurrentInstance, h, nextTick, onMounted, onUnmounted, ref, render, watch} from 'vue'
 import {GridStack} from 'gridstack'
 import {
   ElButton,
@@ -324,7 +324,6 @@ import {clearWorkspace, getNowWorkspace, setWorkspace, TEMP_WORKSPACE} from "@/j
 import CrosshairBackground from "@/items/crosshairBackground.vue"
 import GlobalStyle from "@/items/globalStyle.vue"
 import NameDescDialog from "@/items/nameDescDialog.vue"
-import i18n from './i18n'
 import {itemType} from "@/js/components.js"
 import versionInfo from '@/items/versionInfo.vue'
 
@@ -344,6 +343,8 @@ import {ZipItem} from "@/js/zip/zipItem.ts"
 import JSZip from "jszip";
 
 const {t} = useI18n()
+// 根应用上下文：所有格子共用根应用的渲染器与上下文，不再为每个格子创建独立 Vue 应用
+const instance = getCurrentInstance()
 
 const components = ref([])
 for (let item of itemType) {
@@ -797,16 +798,16 @@ const addItem = (type, x, y, w = '4', h = '4', id) => {
     error(t('error.noSuchComponent_') + type)
     return
   }
-  const app = createApp(createItemComponent(type, component), {
+  // 使用根应用的渲染器与上下文挂载，所有组件共享同一套响应式系统与插件注入
+  const vnode = createVNode(createItemComponent(type, component), {
     id: itemEl.id,
     enableEdit: enableEdit,
     enableMove: enableMove,
     ctrl: ctrl
   })
-  app.use(i18n)
-  elementMap[itemEl.id] = app.mount(itemEl)
-
-  itemEl.element = app
+  vnode.appContext = instance.appContext
+  render(vnode, itemEl)
+  elementMap[itemEl.id] = vnode.component?.exposed
   // 添加到GridStack
   grid.makeWidget(itemEl)
   return itemEl.id
@@ -841,7 +842,8 @@ function deleteItem(id) {
   nextTick(() => {
     // 卸载Vue组件
     const elementById = document.getElementById(id.value)
-    elementById.element.unmount(elementById)
+    render(null, elementById)
+    delete elementMap[id.value]
     // 删除DOM元素
     grid.removeWidget(elementById)
     // 删除本地存储
