@@ -31,6 +31,13 @@ const nowWorkspace = ref('')
 const workspaceList = ref([])
 // 创建时加载工作区
 onMounted(() => {
+  // 从地址栏尝试获取config参数
+  const urlParams = new URLSearchParams(window.location.search)
+  // 设定打开的工作区
+  const workspace = urlParams.get('workspace')
+  if (workspace && workspace !== getNowWorkspace()) {
+    setWorkspace(workspace)
+  }
   workspaceList.value.push(...listWorkspace())
   if (getNowWorkspace() === TEMP_WORKSPACE) {
     warning(t('workspace.temp.warning'))

@@ -86,6 +86,11 @@
       <div ref="gridEl" class="grid-stack"></div>
     </div>
 
+    <!-- 工作区配置弹窗 -->
+    <workspaceHolder
+        ref="workspaceHolder"
+    />
+
     <!-- 配置加载弹窗 -->
     <common-dialog
         :title="$t('config.load')"
@@ -228,11 +233,6 @@
     <globalStyle
         ref="globalStyleRef"
         @load-style="loadStyle"
-    />
-
-    <!-- 工作区配置弹窗 -->
-    <workspaceHolder
-        ref="workspaceHolder"
     />
 
     <!-- 名称与描述输入框 -->
@@ -534,11 +534,6 @@ onMounted(async () => {
 
   // 从地址栏尝试获取config参数
   const urlParams = new URLSearchParams(window.location.search)
-  // 设定打开的工作区
-  const workspace = urlParams.get('workspace')
-  if (workspace) {
-    setWorkspace(workspace)
-  }
 
   // 跳过刷新后的url同步
   removeDataDirect('skipReload')
